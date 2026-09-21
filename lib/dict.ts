@@ -16,7 +16,7 @@ export const dict = {
         ["Durée", "8 semaines", "12 semaines"],
         ["Fréquence", "3 à 4 séances par semaine", "2 séances de 30 à 40 min par semaine"],
       ],
-      goalsLb: "Objectifs au choix (les deux formules)", priceLb: "Prix", price: "Prix à définir",
+      goalsLb: "Objectifs au choix (les deux formules)", priceLb: "Prix", price: ["39 €", "29 €"],
       choose: ["Choisir la pré-saison", "Choisir le maintien"],
     },
     pick: {
@@ -51,7 +51,7 @@ export const dict = {
         ["Duration", "8 weeks", "12 weeks"],
         ["Frequency", "3 to 4 sessions per week", "2 sessions of 30 to 40 min per week"],
       ],
-      goalsLb: "Goals to choose from (both programs)", priceLb: "Price", price: "Price to be set",
+      goalsLb: "Goals to choose from (both programs)", priceLb: "Price", price: ["€39", "€29"],
       choose: ["Choose pre-season", "Choose in-season"],
     },
     pick: {

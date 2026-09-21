@@ -42,8 +42,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           <div className="lb">{d.cmp.goalsLb}</div>
           <div className="c all rv">{d.goals.map((g) => <span key={g[0]}>{g[0]}</span>)}</div>
           <div className="lb">{d.cmp.priceLb}</div>
-          <div className="c a pr rv">{d.cmp.price}</div>
-          <div className="c b pr rv">{d.cmp.price}</div>
+          <div className="c a pr rv">{d.cmp.price[0]}</div>
+          <div className="c b pr rv">{d.cmp.price[1]}</div>
           <div className="ft">
             <a className="btn a" href="#objectif" data-pick="0">{d.cmp.choose[0]}</a>
             <a className="btn b" href="#objectif" data-pick="1">{d.cmp.choose[1]}</a>
