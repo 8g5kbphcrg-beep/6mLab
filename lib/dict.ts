@@ -1,6 +1,6 @@
 export const locales = ["fr", "en"] as const;
 export type Lang = (typeof locales)[number];
-export const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://6mlab.com";
+export const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://6mlab.com";
 
 export const dict = {
   fr: {
