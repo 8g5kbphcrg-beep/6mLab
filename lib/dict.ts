@@ -23,7 +23,7 @@ export const dict = {
       title: "Choisis ton objectif", where: "Où en es-tu ?", moments: ["Avant la saison", "En pleine saison"], goalLb: "Ton objectif",
       names: ["Pré-saison", "Maintien en saison"],
       meta: ["8 semaines, 3 à 4 séances par semaine", "12 semaines, 2 séances de 30 à 40 min par semaine"],
-      note: "Aperçu : le questionnaire complet (niveau, matériel, blessure) et l'achat arrivent avec la version finale. Nos programmes portent sur l'entraînement, sans plan alimentaire.",
+      note: "Pour une recommandation plus précise (niveau, matériel, blessure), fais le questionnaire. Nos programmes portent sur l'entraînement, sans plan alimentaire.",
     },
     goals: [
       ["Force", "Charges progressives pour gagner en puissance de tir et en solidité dans les duels."],
@@ -58,7 +58,7 @@ export const dict = {
       title: "Pick your goal", where: "Where are you?", moments: ["Before the season", "During the season"], goalLb: "Your goal",
       names: ["Pre-season", "In-season maintenance"],
       meta: ["8 weeks, 3 to 4 sessions per week", "12 weeks, 2 sessions of 30 to 40 min per week"],
-      note: "Preview: the full questionnaire (level, equipment, injury) and checkout come with the final version. Our programs cover training only, with no meal plans.",
+      note: "For a more precise recommendation (level, equipment, injury), take the questionnaire. Our programs cover training only, with no meal plans.",
     },
     goals: [
       ["Strength", "Progressive loading to build throwing power and strength in duels."],

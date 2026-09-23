@@ -6,3 +6,6 @@
 .avow strong{font-family:var(--font-display),sans-serif;font-weight:400;font-size:1.3rem;color:var(--A)}
 .contactcard{margin-top:1.5rem;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.6rem}
 .contactcard p{color:var(--muted);margin-bottom:1.2rem}
+.legal h2{font-size:clamp(1.5rem,4.5vw,2rem);margin-top:2.2rem}.legal p,.legal li{font-size:1rem;max-width:68ch}
+.legal ul{padding-left:1.2rem;margin:0 0 1rem;display:grid;gap:.4rem}
+.todo{background:var(--cta);color:#100A24;border-radius:4px;padding:0 .25rem}

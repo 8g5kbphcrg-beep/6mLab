@@ -15,7 +15,6 @@ export const quiz = {
     result: "Ton programme recommandé", summary: "Tes réponses",
     notes: ["Cette formule compte 3 séances par semaine, plus une séance bonus facultative. Avec 2 séances disponibles, tu la suivras plus lentement.", "Cette formule prévoit 2 séances courtes par semaine, pensées pour rester frais pour les matchs."],
     hurt: { t: "Demande d'abord un avis médical", p: "Avec une blessure ou une douleur, le mieux est de consulter un professionnel de santé avant de commencer un programme. Aucune formule n'est recommandée dans ce cas." },
-    buy: "Acheter (bientôt disponible)", buyNote: "Le paiement sera activé prochainement.",
     diet: "Nos programmes portent sur l'entraînement, sans plan alimentaire.",
   },
   en: {
@@ -34,7 +33,6 @@ export const quiz = {
     result: "Your recommended program", summary: "Your answers",
     notes: ["This program has 3 sessions per week, plus an optional bonus session. With 2 sessions available, you will follow it more slowly.", "This program has 2 short sessions per week, designed to keep you fresh for matches."],
     hurt: { t: "Get medical advice first", p: "With an injury or pain, it is best to see a health professional before starting a program. No program is recommended in this case." },
-    buy: "Buy (coming soon)", buyNote: "Payment will be enabled soon.",
     diet: "Our programs cover training only, with no meal plans.",
   },
 };

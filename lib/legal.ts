@@ -1,0 +1,234 @@
+import type { Lang } from "@/lib/dict";
+
+// Fill these in once the micro-entreprise is registered. Anything in [brackets] is shown
+// highlighted on the site as "to complete".
+export const owner = {
+  name: "[Prénom Nom]",
+  siret: "[SIRET]",
+  address: "[Adresse postale]",
+  email: "6mlab.contact@gmail.com",
+  mediator: "[Nom et site web du médiateur de la consommation]",
+};
+
+export const updated = { fr: "23 septembre 2026", en: "23 September 2026" };
+
+export type LegalDoc = "notice" | "privacy" | "cgv";
+
+export const legalPaths: Record<Lang, Record<LegalDoc, string>> = {
+  fr: { notice: "/fr/mentions-legales", privacy: "/fr/confidentialite", cgv: "/fr/cgv" },
+  en: { notice: "/en/legal-notice", privacy: "/en/privacy", cgv: "/en/terms" },
+};
+
+// A body item is a paragraph, or a bullet list when it is an array.
+type Section = { h: string; body: (string | string[])[] };
+type Doc = { title: string; desc: string; intro?: string; sections: Section[] };
+
+const o = owner;
+const host = "Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis (vercel.com)";
+const hostEn = "Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA (vercel.com)";
+
+export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
+  fr: {
+    notice: {
+      title: "Mentions légales",
+      desc: "Mentions légales du site 6M Lab : éditeur, hébergeur et propriété intellectuelle.",
+      sections: [
+        { h: "Éditeur du site", body: [
+          `Le site 6M Lab est édité par ${o.name}, entrepreneur individuel (micro-entreprise).`,
+          [`Adresse : ${o.address}`, `SIRET : ${o.siret}`, "TVA non applicable, article 293 B du Code général des impôts", `Email : ${o.email}`],
+        ] },
+        { h: "Directeur de la publication", body: [o.name] },
+        { h: "Hébergement", body: [`Le site est hébergé par ${host}.`] },
+        { h: "Propriété intellectuelle", body: [
+          "Les textes, illustrations, logos, programmes et vidéos présents sur ce site sont la propriété de 6M Lab, sauf mention contraire. Toute reproduction ou diffusion, totale ou partielle, sans autorisation écrite préalable est interdite.",
+        ] },
+        { h: "Données personnelles", body: ["Le traitement de tes données est décrit dans la politique de confidentialité."] },
+        { h: "Santé", body: [
+          "Les contenus du site et des programmes sont destinés à des personnes en bonne santé. Ils ne remplacent pas l'avis d'un médecin ou d'un professionnel de santé.",
+        ] },
+      ],
+    },
+    privacy: {
+      title: "Politique de confidentialité",
+      desc: "Quelles données 6M Lab collecte, pourquoi, combien de temps, et comment exercer tes droits.",
+      intro: "6M Lab collecte le moins de données possible. Cette page explique lesquelles, pourquoi, et comment exercer tes droits.",
+      sections: [
+        { h: "Responsable du traitement", body: [`${o.name}, éditeur de 6M Lab. Contact : ${o.email}.`] },
+        { h: "Données collectées et pourquoi", body: [[
+          "Lors d'un achat : ton nom, ton adresse email, ton pays, le programme et l'objectif choisis. Ces données servent à traiter ta commande, t'envoyer ton programme et tenir la comptabilité (base légale : exécution du contrat et obligations comptables). Les données de carte bancaire sont saisies directement chez Stripe : 6M Lab n'y a jamais accès.",
+          "Quand tu nous écris par email : ton adresse et le contenu de ton message, pour te répondre (base légale : intérêt légitime).",
+          "Le questionnaire : tes réponses restent dans ton navigateur. Elles ne sont ni envoyées ni enregistrées.",
+          "Données techniques : l'hébergeur enregistre des journaux (adresse IP, pages consultées) nécessaires au fonctionnement et à la sécurité du site (base légale : intérêt légitime).",
+        ]] },
+        { h: "Cookies", body: [
+          "Le site n'utilise aucun cookie de mesure d'audience ou de publicité. La page de paiement Stripe peut déposer des cookies strictement nécessaires à la sécurité du paiement et à la lutte contre la fraude, qui ne nécessitent pas ton consentement.",
+        ] },
+        { h: "Destinataires", body: [
+          "Tes données ne sont jamais vendues. Elles sont transmises uniquement aux prestataires nécessaires au service :",
+          ["Stripe (paiement)", "Vercel (hébergement du site)", "Google (messagerie Gmail, pour les échanges par email)"],
+          "Certains de ces prestataires peuvent traiter des données hors de l'Union européenne, notamment aux États-Unis. Ces transferts sont encadrés par le Data Privacy Framework UE–États-Unis ou par les clauses contractuelles types de la Commission européenne.",
+        ] },
+        { h: "Durée de conservation", body: [[
+          "Commandes et factures : 10 ans, durée imposée par les obligations comptables.",
+          "Échanges par email : 3 ans après notre dernier échange.",
+          "Journaux techniques : durée limitée fixée par l'hébergeur.",
+        ]] },
+        { h: "Tes droits", body: [
+          `Tu peux demander l'accès à tes données, leur rectification, leur effacement, leur portabilité, la limitation du traitement ou t'y opposer, en écrivant à ${o.email}. Nous répondons sous un mois.`,
+          "Si tu estimes que tes droits ne sont pas respectés, tu peux adresser une réclamation à la CNIL (cnil.fr).",
+        ] },
+      ],
+    },
+    cgv: {
+      title: "Conditions générales de vente",
+      desc: "Conditions générales de vente des programmes de préparation physique 6M Lab.",
+      sections: [
+        { h: "1. Objet", body: [
+          `Les présentes conditions régissent la vente en ligne des programmes 6M Lab à des consommateurs. Le vendeur est ${o.name}, entrepreneur individuel (micro-entreprise), ${o.address}, SIRET ${o.siret}, joignable à ${o.email}.`,
+          "Toute commande implique l'acceptation de ces conditions, qui peuvent être modifiées à tout moment. Les conditions applicables sont celles en vigueur au jour de la commande.",
+        ] },
+        { h: "2. Les programmes", body: [
+          "Les programmes sont des contenus numériques : un document PDF présentant le planning complet semaine par semaine, et des vidéos montrant chaque exercice, accessibles en ligne. L'acheteur choisit son objectif (force, explosivité, prise de masse ou perte de poids) lors de la commande. Le contenu et la durée de chaque programme sont décrits sur sa page.",
+          "Les programmes portent sur l'entraînement uniquement. Ils ne comprennent ni plan alimentaire ni suivi individuel.",
+          "Ils sont destinés à des personnes en bonne santé. En cas de blessure, de douleur ou de doute sur ton état de santé, demande l'avis d'un médecin avant de commencer. L'acheteur reste responsable de l'adaptation de l'effort à sa condition physique et du respect des consignes.",
+        ] },
+        { h: "3. Prix", body: [
+          "Les prix sont indiqués en euros, toutes taxes comprises. TVA non applicable, article 293 B du Code général des impôts. Le prix facturé est celui affiché au moment de la commande.",
+        ] },
+        { h: "4. Commande", body: [
+          "Pour commander, l'acheteur choisit un programme et un objectif, accepte les présentes conditions, demande l'exécution immédiate du contrat et renonce à son droit de rétractation dans les conditions de l'article 7, puis procède au paiement.",
+          "Le contrat est conclu dès la confirmation du paiement. Une confirmation de commande est envoyée par email, reprenant les caractéristiques du programme, son prix, les présentes conditions et l'accord de l'acheteur mentionné ci-dessus.",
+        ] },
+        { h: "5. Paiement", body: [
+          "Le paiement s'effectue par carte bancaire via le prestataire sécurisé Stripe. Le montant est débité au moment de la commande. 6M Lab n'a jamais accès aux données bancaires de l'acheteur.",
+        ] },
+        { h: "6. Livraison", body: [
+          "Le programme est envoyé par email à l'adresse indiquée lors du paiement, dans un délai de 48 heures. Si tu ne l'as pas reçu passé ce délai, vérifie tes courriers indésirables puis écris-nous.",
+        ] },
+        { h: "7. Droit de rétractation", body: [
+          "Conformément à l'article L221-28, 13° du Code de la consommation, le droit de rétractation ne peut pas être exercé pour un contenu numérique fourni sans support matériel dont l'exécution a commencé avec l'accord préalable et exprès du consommateur, qui a renoncé à son droit de rétractation.",
+          `En cochant la case prévue lors de la commande, l'acheteur donne cet accord. L'exécution commence à l'envoi du programme. Tant que le programme n'a pas été envoyé, l'acheteur peut se rétracter en écrivant à ${o.email}, par exemple à l'aide du modèle ci-dessous. Il est alors remboursé sous 14 jours, par le même moyen de paiement.`,
+          `Modèle de formulaire de rétractation : « À l'attention de ${o.name}, 6M Lab, ${o.address}, ${o.email}. Je notifie par la présente ma rétractation du contrat portant sur le programme ci-dessous : [programme], commandé le [date]. Nom : [nom]. Adresse email utilisée pour la commande : [email]. Date : [date]. »`,
+        ] },
+        { h: "8. Garantie de conformité", body: [
+          "Le vendeur répond des défauts de conformité du contenu numérique dans les conditions des articles L224-25-12 et suivants du Code de la consommation. En cas de problème (fichier illisible, vidéo inaccessible), écris-nous : le programme sera mis en conformité, ou à défaut le prix sera réduit ou remboursé.",
+        ] },
+        { h: "9. Utilisation des programmes", body: [
+          "L'achat donne droit à un usage personnel et non transférable du programme. Il est interdit de le revendre, de le partager ou de le diffuser, en tout ou en partie, sans autorisation écrite.",
+        ] },
+        { h: "10. Responsabilité", body: [
+          "6M Lab ne saurait être tenu responsable d'un dommage résultant d'une mauvaise exécution des exercices, du non-respect des consignes ou de la pratique malgré une contre-indication médicale.",
+        ] },
+        { h: "11. Données personnelles", body: ["Les données collectées lors de la commande sont traitées comme décrit dans la politique de confidentialité."] },
+        { h: "12. Réclamations et médiation", body: [
+          `Pour toute réclamation, écris d'abord à ${o.email}. En l'absence de solution, tu peux recourir gratuitement au médiateur de la consommation : ${o.mediator}.`,
+        ] },
+        { h: "13. Droit applicable", body: [
+          "Les présentes conditions sont soumises au droit français. En cas de litige, le consommateur peut saisir la juridiction de son lieu de domicile ou toute autre juridiction compétente.",
+        ] },
+      ],
+    },
+  },
+  en: {
+    notice: {
+      title: "Legal notice",
+      desc: "Legal notice for the 6M Lab website: publisher, host and intellectual property.",
+      sections: [
+        { h: "Publisher", body: [
+          `The 6M Lab website is published by ${o.name}, sole trader (French micro-entreprise).`,
+          [`Address: ${o.address}`, `SIRET: ${o.siret}`, "VAT not applicable, article 293 B of the French General Tax Code", `Email: ${o.email}`],
+        ] },
+        { h: "Publication director", body: [o.name] },
+        { h: "Hosting", body: [`The website is hosted by ${hostEn}.`] },
+        { h: "Intellectual property", body: [
+          "The texts, illustrations, logos, programs and videos on this website belong to 6M Lab unless stated otherwise. Any reproduction or distribution, in whole or in part, without prior written permission is prohibited.",
+        ] },
+        { h: "Personal data", body: ["How your data is handled is described in the privacy policy."] },
+        { h: "Health", body: [
+          "The content of this website and of the programs is intended for healthy people. It does not replace the advice of a doctor or health professional.",
+        ] },
+      ],
+    },
+    privacy: {
+      title: "Privacy policy",
+      desc: "What data 6M Lab collects, why, for how long, and how to exercise your rights.",
+      intro: "6M Lab collects as little data as possible. This page explains which data, why, and how to exercise your rights.",
+      sections: [
+        { h: "Data controller", body: [`${o.name}, publisher of 6M Lab. Contact: ${o.email}.`] },
+        { h: "Data collected and why", body: [[
+          "When you buy: your name, email address, country, and the program and goal you chose. This data is used to process your order, send you your program and keep the accounts (legal basis: performance of the contract and accounting obligations). Card details are entered directly with Stripe: 6M Lab never has access to them.",
+          "When you email us: your address and your message, to reply to you (legal basis: legitimate interest).",
+          "The questionnaire: your answers stay in your browser. They are neither sent nor saved.",
+          "Technical data: the host keeps logs (IP address, pages viewed) needed to run and secure the website (legal basis: legitimate interest).",
+        ]] },
+        { h: "Cookies", body: [
+          "The website uses no analytics or advertising cookies. The Stripe payment page may set cookies that are strictly necessary for payment security and fraud prevention, which do not require your consent.",
+        ] },
+        { h: "Recipients", body: [
+          "Your data is never sold. It is only shared with the providers needed to run the service:",
+          ["Stripe (payment)", "Vercel (website hosting)", "Google (Gmail, for email exchanges)"],
+          "Some of these providers may process data outside the European Union, in particular in the United States. These transfers are covered by the EU–US Data Privacy Framework or by the European Commission's standard contractual clauses.",
+        ] },
+        { h: "Retention", body: [[
+          "Orders and invoices: 10 years, as required by accounting rules.",
+          "Email exchanges: 3 years after our last exchange.",
+          "Technical logs: a limited period set by the host.",
+        ]] },
+        { h: "Your rights", body: [
+          `You can ask to access, correct, erase or port your data, restrict its processing or object to it, by writing to ${o.email}. We reply within one month.`,
+          "If you believe your rights have not been respected, you can complain to the French data protection authority, the CNIL (cnil.fr).",
+        ] },
+      ],
+    },
+    cgv: {
+      title: "Terms of sale",
+      desc: "Terms of sale for 6M Lab physical training programs.",
+      intro: "This is a translation. The French version of these terms is the one that applies.",
+      sections: [
+        { h: "1. Purpose", body: [
+          `These terms govern the online sale of 6M Lab programs to consumers. The seller is ${o.name}, sole trader (French micro-entreprise), ${o.address}, SIRET ${o.siret}, reachable at ${o.email}.`,
+          "Placing an order means accepting these terms, which may change at any time. The terms that apply are those in force on the day of the order.",
+        ] },
+        { h: "2. The programs", body: [
+          "The programs are digital content: a PDF with the full week-by-week plan, and videos showing every exercise, available online. The buyer chooses a goal (strength, explosiveness, mass gain or weight loss) when ordering. Each program's content and length are described on its page.",
+          "The programs cover training only. They include no meal plan and no individual coaching.",
+          "They are intended for healthy people. If you have an injury, pain or any doubt about your health, see a doctor before starting. The buyer remains responsible for adapting the effort to their fitness and for following the instructions.",
+        ] },
+        { h: "3. Prices", body: [
+          "Prices are shown in euros, all taxes included. VAT not applicable, article 293 B of the French General Tax Code. The price charged is the one shown when the order is placed.",
+        ] },
+        { h: "4. Ordering", body: [
+          "To order, the buyer chooses a program and a goal, accepts these terms, asks for the contract to be performed immediately and waives the right of withdrawal as set out in section 7, then pays.",
+          "The contract is concluded once payment is confirmed. An order confirmation is sent by email, stating the program, its price, these terms and the buyer's consent mentioned above.",
+        ] },
+        { h: "5. Payment", body: [
+          "Payment is made by card through the secure provider Stripe. The amount is charged when the order is placed. 6M Lab never has access to the buyer's card details.",
+        ] },
+        { h: "6. Delivery", body: [
+          "The program is sent by email to the address given at payment, within 48 hours. If you have not received it by then, check your spam folder, then contact us.",
+        ] },
+        { h: "7. Right of withdrawal", body: [
+          "Under article L221-28, 13° of the French Consumer Code, the right of withdrawal cannot be exercised for digital content not supplied on a tangible medium once performance has begun with the consumer's prior express consent and waiver of the right of withdrawal.",
+          `By ticking the box when ordering, the buyer gives this consent. Performance begins when the program is sent. Until then, the buyer can withdraw by writing to ${o.email}, for example using the template below, and is refunded within 14 days by the same means of payment.`,
+          `Withdrawal template: "To ${o.name}, 6M Lab, ${o.address}, ${o.email}. I hereby give notice that I withdraw from the contract for the following program: [program], ordered on [date]. Name: [name]. Email used for the order: [email]. Date: [date]."`,
+        ] },
+        { h: "8. Conformity guarantee", body: [
+          "The seller is liable for any lack of conformity of the digital content under articles L224-25-12 and following of the French Consumer Code. If there is a problem (unreadable file, video not accessible), contact us: the program will be brought into conformity or, failing that, the price will be reduced or refunded.",
+        ] },
+        { h: "9. Use of the programs", body: [
+          "Buying a program grants a personal, non-transferable right to use it. Reselling, sharing or distributing it, in whole or in part, without written permission is prohibited.",
+        ] },
+        { h: "10. Liability", body: [
+          "6M Lab cannot be held liable for any harm resulting from exercises performed incorrectly, failure to follow the instructions, or training despite a medical contraindication.",
+        ] },
+        { h: "11. Personal data", body: ["Data collected when ordering is handled as described in the privacy policy."] },
+        { h: "12. Complaints and mediation", body: [
+          `For any complaint, first write to ${o.email}. If no solution is found, you can refer the matter free of charge to the consumer mediator: ${o.mediator}.`,
+        ] },
+        { h: "13. Governing law", body: [
+          "These terms are governed by French law. In the event of a dispute, the consumer may bring the matter before the court of their place of residence or any other competent court.",
+        ] },
+      ],
+    },
+  },
+};

@@ -2,9 +2,12 @@
 import { useEffect, useRef, useState } from "react";
 import { dict, type Lang } from "@/lib/dict";
 import { quiz } from "@/lib/quiz";
+import { goalIds } from "@/lib/checkout";
+import { programSlugs } from "@/lib/programs";
+import BuyForm from "@/components/BuyForm";
 import "@/app/quiz.css";
 
-export default function Quiz({ lang }: { lang: Lang }) {
+export default function Quiz({ lang, test }: { lang: Lang; test: boolean }) {
   const t = quiz[lang];
   const d = dict[lang];
   const [a, setA] = useState<number[]>([]);
@@ -57,8 +60,8 @@ export default function Quiz({ lang }: { lang: Lang }) {
         <ul className="qsum">
           {t.labels.map((l, k) => <li key={l}>{l} : <b>{t.steps[k].o[a[k]]}</b></li>)}
         </ul>
-        <button type="button" className="btn" disabled>{t.buy}</button>
-        <p className="note">{t.buyNote} {d.why.note}</p>
+        <BuyForm lang={lang} slug={programSlugs[f]} goal={goalIds[a[1]]} test={test} />
+        <p className="note" style={{ marginTop: "1rem" }}>{d.why.note}</p>
         <button type="button" className="qlink" onClick={() => setA([])}>{t.restart}</button>
       </>
     );

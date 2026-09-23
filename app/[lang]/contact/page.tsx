@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { dict, type Lang } from "@/lib/dict";
+import { owner } from "@/lib/legal";
 import "@/app/pages.css";
 
-const EMAIL = "6mlab.contact@gmail.com";
+const EMAIL = owner.email;
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;

@@ -3,9 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { dict, type Lang } from "@/lib/dict";
 import { programs, programSlugs, type ProgramSlug } from "@/lib/programs";
+import BuyForm from "@/components/BuyForm";
+import { testMode } from "@/lib/checkout";
 import "@/app/programme.css";
 
-type P = { params: Promise<{ lang: string; slug: string }> };
+type P = { params: Promise<{ lang: string; slug: string }>; searchParams?: Promise<{ paiement?: string }> };
 
 export const generateStaticParams = () =>
   (["fr", "en"] as const).flatMap((lang) => programSlugs.map((slug) => ({ lang, slug })));
@@ -17,12 +19,13 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
   return { title: `${p.name} | 6M Lab`, description: p.pitch, alternates: { canonical: `/${lang}/programmes/${slug}` } };
 }
 
-export default async function Programme({ params }: P) {
+export default async function Programme({ params, searchParams }: P) {
   const { lang, slug } = await params;
   if (!(lang in dict) || !(slug in programs[lang as Lang])) notFound();
   const d = dict[lang as Lang];
   const p = programs[lang as Lang][slug as ProgramSlug];
   const b = p.color === "b";
+  const error = !!(await searchParams)?.paiement;
   return (
     <div className="prog">
       <Link className="pback" href={`/${lang}/programmes`}>← {d.cmp.title}</Link>
@@ -32,6 +35,7 @@ export default async function Programme({ params }: P) {
       <p className="pprice">{d.cmp.price[p.idx]}</p>
       <p>{p.pitch}</p>
       <ul className={b ? "pinc b" : "pinc"}>{p.includes.map((i) => <li key={i}>{i}</li>)}</ul>
+      <BuyForm lang={lang as Lang} slug={slug as ProgramSlug} test={testMode} error={error} />
       <h2>{lang === "fr" ? "Le déroulé" : "The breakdown"}</h2>
       {p.phases.map((ph) => (
         <div key={ph.t} className={b ? "phase b" : "phase"}>
@@ -50,7 +54,7 @@ export default async function Programme({ params }: P) {
       </div>
       <p className="note" style={{ marginTop: "1.5rem" }}>{d.why.note}</p>
       <p style={{ marginTop: "2rem" }}>
-        <Link className="btn" href={`/${lang}/questionnaire`}>{lang === "fr" ? "Trouver mon objectif" : "Find my goal"}</Link>
+        <Link className="btn" href={`/${lang}/questionnaire`}>{lang === "fr" ? "Pas sûr de ton objectif ? Fais le questionnaire" : "Not sure about your goal? Take the questionnaire"}</Link>
       </p>
     </div>
   );

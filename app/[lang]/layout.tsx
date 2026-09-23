@@ -3,6 +3,7 @@ import { Anton, Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { dict, locales, SITE, type Lang } from "@/lib/dict";
+import { legalPaths } from "@/lib/legal";
 import Defs from "@/components/Defs";
 import Enhance from "@/components/Enhance";
 import "../globals.css";
@@ -47,7 +48,14 @@ export default async function RootLayout({ children, params }: { children: React
           </nav>
         </header>
         <main id="main">{children}</main>
-        <footer className="foot"><p>© {new Date().getFullYear()} 6M Lab</p></footer>
+        <footer className="foot">
+          <nav aria-label={lang === "fr" ? "Informations légales" : "Legal"}>
+            <Link href={legalPaths[lang as Lang].notice}>{lang === "fr" ? "Mentions légales" : "Legal notice"}</Link>
+            <Link href={legalPaths[lang as Lang].privacy}>{lang === "fr" ? "Confidentialité" : "Privacy"}</Link>
+            <Link href={legalPaths[lang as Lang].cgv}>{lang === "fr" ? "CGV" : "Terms of sale"}</Link>
+          </nav>
+          <p>© {new Date().getFullYear()} 6M Lab</p>
+        </footer>
         <Enhance cta={d.hero.cta} />
       </body>
     </html>
