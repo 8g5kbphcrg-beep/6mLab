@@ -36,3 +36,8 @@
 .bpay{width:100%;text-align:center}
 .berr{color:var(--At);font-weight:600;margin:0;font-size:.95rem}
 .buy .note{margin:0;font-size:.85rem}.btest{border-left:3px solid var(--cta);padding-left:.7rem}
+.bfields{display:grid;grid-template-columns:1fr 6.5rem;gap:.6rem}
+.bfield{display:grid;gap:.3rem;font-size:.9rem;font-weight:600;color:var(--muted)}
+.bfield input{font:inherit;font-size:1rem;font-weight:400;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:.65rem .8rem;min-height:46px;width:100%}
+.bfield input:focus{outline:none;border-color:var(--ink)}
+.bgender{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}.bgender .lab{width:100%;margin:0 0 .1rem}

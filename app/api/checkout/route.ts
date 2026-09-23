@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { locales, type Lang } from "@/lib/dict";
 import { programs, programSlugs, type ProgramSlug } from "@/lib/programs";
-import { prices, RUNNING_PRICE } from "@/lib/checkout";
+import { genders, prices, RUNNING_PRICE, type Gender } from "@/lib/checkout";
 import { comboTitle, validGoals } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
 
@@ -12,18 +12,22 @@ export async function POST(req: NextRequest) {
   const slug = form.get("program") as ProgramSlug;
   const goals = form.getAll("goal").map(String);
   const running = form.get("running") === "on";
+  const firstName = String(form.get("firstName") ?? "").trim().slice(0, 50);
+  const age = Number(form.get("age"));
+  const gender = String(form.get("gender")) as Gender;
+  const profileOk = firstName.length > 0 && Number.isInteger(age) && age >= 10 && age <= 99 && genders.includes(gender);
   const origin = req.nextUrl.origin;
   const back = (reason: string) =>
     NextResponse.redirect(`${origin}/${lang}/programmes/${programSlugs.includes(slug) ? slug : ""}?paiement=${reason}#acheter`, 303);
 
-  if (!programSlugs.includes(slug) || !validGoals(goals) || form.get("consent") !== "on") return back("invalide");
+  if (!programSlugs.includes(slug) || !validGoals(goals) || !profileOk || form.get("consent") !== "on") return back("invalide");
 
   const key = process.env.STRIPE_SECRET_KEY;
   // Live payments stay off until the legal pages are filled in (SIRET, address, mediator).
   if (!key || (key.startsWith("sk_live_") && process.env.STRIPE_ALLOW_LIVE !== "1")) return back("indisponible");
 
   const p = programs[lang][slug];
-  const meta = { program: slug, goals: goals.join("+"), running: running ? "oui" : "non", lang };
+  const meta = { program: slug, goals: goals.join("+"), running: running ? "oui" : "non", firstName, age: String(age), gender, lang };
   const stripe = new Stripe(key);
   try {
     const session = await stripe.checkout.sessions.create({

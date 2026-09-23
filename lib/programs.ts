@@ -6,16 +6,16 @@ export const programs = {
     "pre-saison": {
       idx: 0, name: "Pré-saison", tag: "Avant la saison", color: "a",
       duration: "8 semaines", freq: "3 à 4 séances par semaine",
-      pitch: "Repars sur des bases solides avant la reprise avec ton club : plus fort, plus explosif, prêt à enchaîner les efforts.",
+      pitch: "Repars sur des bases solides avant la reprise avec ton club : gagne en force et en explosivité pour enchaîner les efforts.",
       includes: ["Un PDF avec le planning complet, semaine par semaine", "Des vidéos qui montrent chaque exercice", "2 objectifs au choix, ou la réathlétisation après une blessure", "En option : un programme de course à pied (+9 €)"],
       phases: [
         { t: "Semaines 1-2 — Bases", d: "Réhabituer progressivement le corps à l'effort, avec un travail général et de la mobilité." },
         { t: "Semaines 3-5 — Force", d: "Montée en charge progressive pour construire une base solide, avec un volume qui augmente semaine après semaine." },
         { t: "Semaines 6-7 — Explosivité", d: "Un travail plus dynamique pour retrouver la vivacité propre au handball." },
-        { t: "Semaine 8 — Affûtage", d: "Une dernière semaine plus légère, pour arriver frais au premier entraînement collectif." },
+        { t: "Semaine 8 — Affûtage", d: "Une dernière semaine plus légère, pour aborder le premier entraînement collectif en pleine forme." },
       ],
       faq: [
-        { q: "Je débute en préparation physique, ce programme est fait pour moi ?", a: "Oui, chaque séance indique une version allégée pour les débutants." },
+        { q: "Je débute en préparation physique, ce programme est fait pour moi ?", a: "Oui, chaque séance indique une version allégée pour les personnes qui débutent." },
         { q: "J'ai besoin de matériel ?", a: "Non, le programme fonctionne au poids du corps. Des variantes avec haltères sont proposées si tu as accès à une salle." },
         { q: "Que se passe-t-il après les 8 semaines ?", a: "Tu peux enchaîner avec la formule Maintien en saison pour garder ta forme toute l'année." },
       ],

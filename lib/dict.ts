@@ -5,14 +5,14 @@ export const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://6mlab.com";
 export const dict = {
   fr: {
     title: "6M Lab | Préparation physique handball",
-    desc: "Programmes de préparation physique pour handballeurs : pré-saison et maintien en saison, conçus par un joueur étudiant en STAPS.",
+    desc: "Programmes de préparation physique pour les joueurs et joueuses de handball : pré-saison et maintien en saison, conçus par un joueur étudiant en STAPS.",
     nav: { cmp: "Comparer", goal: "Ton objectif", other: "EN", skip: "Aller au contenu" },
-    hero: { h1: "Prépare ta saison de handball comme un pro", sub: "Des programmes de préparation physique conçus par un joueur, étudiant en STAPS.", cta: "Comparer les deux formules", trust: "Conçu par un joueur de handball, étudiant en STAPS (entraînement sportif)." },
+    hero: { h1: "Prépare ta saison de handball comme au haut niveau", sub: "Des programmes de préparation physique conçus par un joueur, étudiant en STAPS.", cta: "Comparer les deux formules", trust: "Conçu par un joueur de handball, étudiant en STAPS (entraînement sportif)." },
     cmp: {
       title: "Compare les deux formules", sub: "Les mêmes objectifs au choix, deux moments de la saison.",
       heads: [["Pré-saison", "Avant la saison"], ["Maintien en saison", "Pendant la saison"]],
       rows: [
-        ["Objectif de la formule", "Reprendre fort : base physique, force, explosivité, affûtage", "Rester affûté sans nuire aux entraînements du club"],
+        ["Objectif de la formule", "Reprendre fort : base physique, force, explosivité, affûtage", "Garder ton niveau sans nuire aux entraînements du club"],
         ["Durée", "8 semaines", "12 semaines"],
         ["Fréquence", "3 à 4 séances par semaine", "2 séances de 30 à 40 min par semaine"],
       ],
@@ -30,14 +30,14 @@ export const dict = {
     why: {
       title: "Pensé pour le handball",
       items: [["Explosivité et appuis", "Sauts, changements de direction, tirs : le travail cible les gestes du jeu."], ["Charge planifiée", "Des semaines construites pour progresser sans t'épuiser."], ["Prévention des blessures", "Épaules, genoux et chevilles sont travaillés à chaque cycle."]],
-      note: "Programmes destinés à des joueurs en bonne santé. En cas de doute ou de blessure, demande l'avis d'un professionnel de santé.",
+      note: "Programmes destinés aux personnes en bonne santé. En cas de doute ou de blessure, demande l'avis d'un professionnel de santé.",
     },
   },
   en: {
     title: "6M Lab | Handball Performance & Physical Training",
     desc: "Physical training programs for handball players: pre-season and in-season plans, designed by a sport-science student who plays.",
     nav: { cmp: "Compare", goal: "Your goal", other: "FR", skip: "Skip to content" },
-    hero: { h1: "Train for your handball season like a pro", sub: "Physical training programs built by a player who studies sport science.", cta: "Compare the two programs", trust: "Built by a handball player studying sport science (training and coaching)." },
+    hero: { h1: "Train for your handball season like the elite", sub: "Physical training programs built by a player who studies sport science.", cta: "Compare the two programs", trust: "Built by a handball player studying sport science (training and coaching)." },
     cmp: {
       title: "Compare the two programs", sub: "Same goals to choose from, two moments in the season.",
       heads: [["Pre-season", "Before the season"], ["In-season maintenance", "During the season"]],

@@ -33,6 +33,7 @@ export default async function Article({ params }: P) {
     datePublished: post.date,
     inLanguage: "fr",
     publisher: { "@type": "Organization", name: "6M Lab", url: SITE },
+    ...(post.source && { citation: post.source.cite }),
   };
   return (
     <article className="post">
@@ -46,8 +47,16 @@ export default async function Article({ params }: P) {
       {post.body.map((b, i) =>
         "h" in b ? <h2 key={i}>{b.h}</h2> : "ul" in b ? <ul key={i}>{b.ul.map((x) => <li key={x}>{x}</li>)}</ul> : <p key={i}>{b.p}</p>,
       )}
+      {post.source && (
+        <aside className="psource">
+          <p className="lab">Source</p>
+          <p>{post.source.cite}</p>
+          <p className="note">{post.source.access} Ce résumé est rédigé par 6M Lab et ne remplace pas la lecture de l'étude.</p>
+          <a href={post.source.url} target="_blank" rel="noopener">Lire l'étude originale ↗</a>
+        </aside>
+      )}
       <div className="postcta">
-        <p><strong>Prêt à passer à la pratique ?</strong> Réponds à quelques questions, on te recommande la formule adaptée.</p>
+        <p><strong>Envie de passer à la pratique ?</strong> Réponds à quelques questions, on te recommande la formule adaptée.</p>
         <Link className="btn" href="/fr/questionnaire">Trouver mon programme</Link>
       </div>
     </article>

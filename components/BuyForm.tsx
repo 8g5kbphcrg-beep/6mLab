@@ -2,7 +2,7 @@
 import { useState } from "react";
 import type { Lang } from "@/lib/dict";
 import { programs, type ProgramSlug } from "@/lib/programs";
-import { buy, fmtPrice, prices, RUNNING_PRICE } from "@/lib/checkout";
+import { buy, fmtPrice, genders, prices, RUNNING_PRICE } from "@/lib/checkout";
 import { combos, comboTitle, goalCats, goalNames, REATH, type GoalId } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
 import "@/app/buy.css";
@@ -78,8 +78,24 @@ export default function BuyForm({ lang, slug, goals = [], test, error }: { lang:
         </label>
       </fieldset>
 
+      <fieldset className="bstep">
+        <legend><span className="bnum">3</span>{t.step3}</legend>
+        <p className="bhint">{t.profileHint}</p>
+        <div className="bfields">
+          <label className="bfield">{t.firstName}<input name="firstName" required maxLength={50} autoComplete="given-name" /></label>
+          <label className="bfield bage">{t.age}<input name="age" type="number" required min={10} max={99} inputMode="numeric" /></label>
+        </div>
+        <div className="bgender" role="radiogroup" aria-label={t.gender}>
+          <span className="lab">{t.gender}</span>
+          {genders.map((g) => (
+            <label key={g} className="bchip"><input type="radio" name="gender" value={g} required />{t.genders[g]}</label>
+          ))}
+        </div>
+        <p className="note" style={{ margin: 0 }}>{t.minor}</p>
+      </fieldset>
+
       <div className="bstep">
-        <p className="blegend"><span className="bnum">3</span>{t.step3}</p>
+        <p className="blegend"><span className="bnum">4</span>{t.step4}</p>
         <dl className="bsum">
           <div><dt>{p.name}</dt><dd>{fmtPrice(prices[slug], lang)}</dd></div>
           <div><dt>{t.goalsLb}</dt><dd>{sel.length ? comboTitle(sel, lang) : t.none}</dd></div>

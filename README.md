@@ -8,7 +8,7 @@
 4. Teste un achat avec la carte `4242 4242 4242 4242`, une date future et n'importe quel code.
 
 Les commandes payées apparaissent dans Stripe (Paiements) et dans les logs Vercel (`[order]`),
-avec le programme, les objectifs et l'option course choisis. L'envoi du programme se fait à la main pour l'instant.
+avec le programme, les objectifs, l'option course et le profil (prénom, âge, genre). L'envoi du programme se fait à la main pour l'instant.
 
 Les clés live (`sk_live_...`) sont refusées tant que `STRIPE_ALLOW_LIVE=1` n'est pas défini.
 

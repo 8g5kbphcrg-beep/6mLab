@@ -5,11 +5,18 @@ import type { ProgramSlug } from "@/lib/programs";
 export const prices: Record<ProgramSlug, number> = { "pre-saison": 3900, "maintien-saison": 2900 };
 export const RUNNING_PRICE = 900;
 
+export const genders = ["femme", "homme", "non-precise"] as const;
+export type Gender = (typeof genders)[number];
+
 export const fmtPrice = (cents: number, lang: Lang) => (lang === "fr" ? `${cents / 100} €` : `€${cents / 100}`);
 
 export const buy = {
   fr: {
-    step1: "Tes objectifs", step2: "Option", step3: "Récapitulatif",
+    step1: "Tes objectifs", step2: "Option", step3: "Ton profil", step4: "Récapitulatif",
+    profileHint: "Pour adapter ton programme et te l'envoyer à ton nom.",
+    firstName: "Prénom", age: "Âge", gender: "Genre",
+    genders: { femme: "Femme", homme: "Homme", "non-precise": "Je préfère ne pas le dire" },
+    minor: "Moins de 18 ans ? La commande doit être passée avec l'accord d'un parent.",
     count: (n: number) => `${n}/2`,
     hint: "Choisis une combinaison conseillée, ou compose la tienne avec 2 objectifs.",
     own: "Composer ma combinaison",
@@ -23,10 +30,14 @@ export const buy = {
     secure: "Paiement sécurisé par Stripe. Programme envoyé par email sous 48 heures.",
     test: "Mode test : aucun paiement réel. Carte 4242 4242 4242 4242, date future, code au choix.",
     off: "Le paiement est momentanément indisponible. Réessaie plus tard ou écris-nous.",
-    invalid: "Choisis 2 objectifs (ou la réathlétisation seule) et accepte les CGV.",
+    invalid: "Choisis 2 objectifs (ou la réathlétisation seule), remplis ton profil et accepte les CGV.",
   },
   en: {
-    step1: "Your goals", step2: "Option", step3: "Summary",
+    step1: "Your goals", step2: "Option", step3: "About you", step4: "Summary",
+    profileHint: "So we can adapt your program and send it in your name.",
+    firstName: "First name", age: "Age", gender: "Gender",
+    genders: { femme: "Woman", homme: "Man", "non-precise": "I'd rather not say" },
+    minor: "Under 18? The order must be placed with a parent's consent.",
     count: (n: number) => `${n}/2`,
     hint: "Pick a suggested combination, or build your own with 2 goals.",
     own: "Build my own combination",
@@ -40,7 +51,7 @@ export const buy = {
     secure: "Secure payment by Stripe. Program sent by email within 48 hours.",
     test: "Test mode: no real payment. Card 4242 4242 4242 4242, any future date, any code.",
     off: "Payment is temporarily unavailable. Please try again later or contact us.",
-    invalid: "Pick 2 goals (or return to play alone) and accept the terms.",
+    invalid: "Pick 2 goals (or return to play alone), fill in your details and accept the terms.",
   },
 };
 

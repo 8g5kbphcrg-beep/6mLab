@@ -42,7 +42,7 @@ export default async function Programme({ params, searchParams }: P) {
         </header>
         <aside className="pside">
           <BuyForm lang={lang as Lang} slug={slug as ProgramSlug} goals={validGoals(pre) ? pre : []} test={testMode} error={sp?.paiement} />
-          <p className="pquiz">{fr ? "Pas sûr de tes objectifs ?" : "Not sure about your goals?"} <Link href={`/${lang}/questionnaire`}>{fr ? "Fais le questionnaire" : "Take the questionnaire"}</Link></p>
+          <p className="pquiz">{fr ? "Tu hésites sur tes objectifs ?" : "Not sure about your goals?"} <Link href={`/${lang}/questionnaire`}>{fr ? "Fais le questionnaire" : "Take the questionnaire"}</Link></p>
         </aside>
         <div className="pmain">
           <section>

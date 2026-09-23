@@ -63,7 +63,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
       <section className="sec wrap">
         <div className="endcta">
-          <h2>{fr ? "Prêt pour ta saison ?" : "Ready for your season?"}</h2>
+          <h2>{fr ? "Ta saison commence ici" : "Ready for your season?"}</h2>
           <p>{fr ? "Choisis ta formule et tes objectifs, reçois ton programme par email." : "Pick your program and goals, get your plan by email."}</p>
           <a className="btn" href={`/${lang}/programmes`}>{fr ? "Voir les programmes" : "See the programs"}</a>
         </div>

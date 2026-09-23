@@ -17,9 +17,10 @@ export default function Enhance({ cta }: { cta: string }) {
       els.forEach((e) => o!.observe(e));
     }
     if (rm) {
-      document.querySelector("#ball animateMotion")?.remove();
-      document.querySelectorAll("#ball animateTransform").forEach((n) => n.remove());
-      document.getElementById("ball")?.setAttribute("transform", "translate(428 180)");
+      // Freeze the scene on the frame where the ball is in the net.
+      const svg = document.querySelector<SVGSVGElement>("svg.scene");
+      svg?.setCurrentTime(1.6);
+      svg?.pauseAnimations();
     }
     const hero = document.querySelector<HTMLElement>(".hero");
     let t = false;

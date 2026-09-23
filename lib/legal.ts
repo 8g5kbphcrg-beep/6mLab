@@ -55,7 +55,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
       sections: [
         { h: "Responsable du traitement", body: [`${o.name}, éditeur de 6M Lab. Contact : ${o.email}.`] },
         { h: "Données collectées et pourquoi", body: [[
-          "Lors d'un achat : ton nom, ton adresse email, ton pays, le programme, les objectifs et les options choisis. Ces données servent à traiter ta commande, t'envoyer ton programme et tenir la comptabilité (base légale : exécution du contrat et obligations comptables). Les données de carte bancaire sont saisies directement chez Stripe : 6M Lab n'y a jamais accès.",
+          "Lors d'un achat : ton nom, ton adresse email, ton pays, le programme, les objectifs et les options choisis, ainsi que ton prénom, ton âge et ton genre (tu peux choisir de ne pas le préciser). Ces données servent à traiter ta commande, adapter et t'envoyer ton programme, et tenir la comptabilité (base légale : exécution du contrat et obligations comptables). Les données de carte bancaire sont saisies directement chez Stripe : 6M Lab n'y a jamais accès.",
           "Quand tu nous écris par email : ton adresse et le contenu de ton message, pour te répondre (base légale : intérêt légitime).",
           "Le questionnaire : tes réponses restent dans ton navigateur. Elles ne sont ni envoyées ni enregistrées.",
           "Données techniques : l'hébergeur enregistre des journaux (adresse IP, pages consultées) nécessaires au fonctionnement et à la sécurité du site (base légale : intérêt légitime).",
@@ -97,7 +97,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
         ] },
         { h: "4. Commande", body: [
           "Pour commander, l'acheteur choisit un programme, ses objectifs et, s'il le souhaite, l'option course à pied, accepte les présentes conditions, demande l'exécution immédiate du contrat et renonce à son droit de rétractation dans les conditions de l'article 7, puis procède au paiement.",
-          "Le contrat est conclu dès la confirmation du paiement. Une confirmation de commande est envoyée par email, reprenant les caractéristiques du programme, son prix, les présentes conditions et l'accord de l'acheteur mentionné ci-dessus.",
+          "Si l'acheteur est mineur, la commande doit être passée avec l'accord d'un parent ou d'un représentant légal. Le contrat est conclu dès la confirmation du paiement. Une confirmation de commande est envoyée par email, reprenant les caractéristiques du programme, son prix, les présentes conditions et l'accord de l'acheteur mentionné ci-dessus.",
         ] },
         { h: "5. Paiement", body: [
           "Le paiement s'effectue par carte bancaire via le prestataire sécurisé Stripe. Le montant est débité au moment de la commande. 6M Lab n'a jamais accès aux données bancaires de l'acheteur.",
@@ -156,7 +156,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
       sections: [
         { h: "Data controller", body: [`${o.name}, publisher of 6M Lab. Contact: ${o.email}.`] },
         { h: "Data collected and why", body: [[
-          "When you buy: your name, email address, country, and the program, goals and options you chose. This data is used to process your order, send you your program and keep the accounts (legal basis: performance of the contract and accounting obligations). Card details are entered directly with Stripe: 6M Lab never has access to them.",
+          "When you buy: your name, email address, country, the program, goals and options you chose, and your first name, age and gender (you can choose not to say). This data is used to process your order, adapt and send your program, and keep the accounts (legal basis: performance of the contract and accounting obligations). Card details are entered directly with Stripe: 6M Lab never has access to them.",
           "When you email us: your address and your message, to reply to you (legal basis: legitimate interest).",
           "The questionnaire: your answers stay in your browser. They are neither sent nor saved.",
           "Technical data: the host keeps logs (IP address, pages viewed) needed to run and secure the website (legal basis: legitimate interest).",
@@ -199,7 +199,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
         ] },
         { h: "4. Ordering", body: [
           "To order, the buyer chooses a program, their goals and, if they wish, the running option, accepts these terms, asks for the contract to be performed immediately and waives the right of withdrawal as set out in section 7, then pays.",
-          "The contract is concluded once payment is confirmed. An order confirmation is sent by email, stating the program, its price, these terms and the buyer's consent mentioned above.",
+          "If the buyer is a minor, the order must be placed with the consent of a parent or legal guardian. The contract is concluded once payment is confirmed. An order confirmation is sent by email, stating the program, its price, these terms and the buyer's consent mentioned above.",
         ] },
         { h: "5. Payment", body: [
           "Payment is made by card through the secure provider Stripe. The amount is charged when the order is placed. 6M Lab never has access to the buyer's card details.",
