@@ -2,25 +2,28 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { locales, type Lang } from "@/lib/dict";
 import { programs, programSlugs, type ProgramSlug } from "@/lib/programs";
-import { goalIds, prices, type GoalId } from "@/lib/checkout";
+import { prices, RUNNING_PRICE } from "@/lib/checkout";
+import { comboTitle, validGoals } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
 
 export async function POST(req: NextRequest) {
   const form = await req.formData();
   const lang = (locales as readonly string[]).includes(String(form.get("lang"))) ? (form.get("lang") as Lang) : "fr";
   const slug = form.get("program") as ProgramSlug;
-  const goal = form.get("goal") as GoalId;
+  const goals = form.getAll("goal").map(String);
+  const running = form.get("running") === "on";
   const origin = req.nextUrl.origin;
   const back = (reason: string) =>
     NextResponse.redirect(`${origin}/${lang}/programmes/${programSlugs.includes(slug) ? slug : ""}?paiement=${reason}#acheter`, 303);
 
-  if (!programSlugs.includes(slug) || !goalIds.includes(goal) || form.get("consent") !== "on") return back("invalide");
+  if (!programSlugs.includes(slug) || !validGoals(goals) || form.get("consent") !== "on") return back("invalide");
 
   const key = process.env.STRIPE_SECRET_KEY;
   // Live payments stay off until the legal pages are filled in (SIRET, address, mediator).
   if (!key || (key.startsWith("sk_live_") && process.env.STRIPE_ALLOW_LIVE !== "1")) return back("indisponible");
 
   const p = programs[lang][slug];
+  const meta = { program: slug, goals: goals.join("+"), running: running ? "oui" : "non", lang };
   const stripe = new Stripe(key);
   try {
     const session = await stripe.checkout.sessions.create({
@@ -31,11 +34,18 @@ export async function POST(req: NextRequest) {
         price_data: {
           currency: "eur",
           unit_amount: prices[slug],
-          product_data: { name: `6M Lab · ${p.name}`, description: `${p.duration} · ${p.freq}` },
+          product_data: { name: `6M Lab · ${p.name}`, description: `${comboTitle(goals, lang)} · ${p.duration}` },
         },
-      }],
-      metadata: { program: slug, goal, lang, consent: new Date().toISOString() },
-      payment_intent_data: { metadata: { program: slug, goal, lang } },
+      }, ...(running ? [{
+        quantity: 1,
+        price_data: {
+          currency: "eur",
+          unit_amount: RUNNING_PRICE,
+          product_data: { name: lang === "fr" ? "Option course à pied" : "Running option", description: lang === "fr" ? "Séances de 30 à 45 min" : "30 to 45 min sessions" },
+        },
+      }] : [])],
+      metadata: { ...meta, consent: new Date().toISOString() },
+      payment_intent_data: { metadata: meta },
       custom_text: {
         submit: {
           message: lang === "fr"

@@ -55,7 +55,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
       sections: [
         { h: "Responsable du traitement", body: [`${o.name}, éditeur de 6M Lab. Contact : ${o.email}.`] },
         { h: "Données collectées et pourquoi", body: [[
-          "Lors d'un achat : ton nom, ton adresse email, ton pays, le programme et l'objectif choisis. Ces données servent à traiter ta commande, t'envoyer ton programme et tenir la comptabilité (base légale : exécution du contrat et obligations comptables). Les données de carte bancaire sont saisies directement chez Stripe : 6M Lab n'y a jamais accès.",
+          "Lors d'un achat : ton nom, ton adresse email, ton pays, le programme, les objectifs et les options choisis. Ces données servent à traiter ta commande, t'envoyer ton programme et tenir la comptabilité (base légale : exécution du contrat et obligations comptables). Les données de carte bancaire sont saisies directement chez Stripe : 6M Lab n'y a jamais accès.",
           "Quand tu nous écris par email : ton adresse et le contenu de ton message, pour te répondre (base légale : intérêt légitime).",
           "Le questionnaire : tes réponses restent dans ton navigateur. Elles ne sont ni envoyées ni enregistrées.",
           "Données techniques : l'hébergeur enregistre des journaux (adresse IP, pages consultées) nécessaires au fonctionnement et à la sécurité du site (base légale : intérêt légitime).",
@@ -88,7 +88,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           "Toute commande implique l'acceptation de ces conditions, qui peuvent être modifiées à tout moment. Les conditions applicables sont celles en vigueur au jour de la commande.",
         ] },
         { h: "2. Les programmes", body: [
-          "Les programmes sont des contenus numériques : un document PDF présentant le planning complet semaine par semaine, et des vidéos montrant chaque exercice, accessibles en ligne. L'acheteur choisit son objectif (force, explosivité, prise de masse ou perte de poids) lors de la commande. Le contenu et la durée de chaque programme sont décrits sur sa page.",
+          "Les programmes sont des contenus numériques : un document PDF présentant le planning complet semaine par semaine, et des vidéos montrant chaque exercice, accessibles en ligne. Lors de la commande, l'acheteur choisit deux objectifs parmi ceux proposés, ou le programme Réathlétisation seul. Il peut ajouter l'option course à pied, un programme complémentaire de séances de course de 30 à 45 minutes, vendue 9 € en plus du programme. Le contenu et la durée de chaque programme sont décrits sur sa page.",
           "Les programmes portent sur l'entraînement uniquement. Ils ne comprennent ni plan alimentaire ni suivi individuel.",
           "Ils sont destinés à des personnes en bonne santé. En cas de blessure, de douleur ou de doute sur ton état de santé, demande l'avis d'un médecin avant de commencer. L'acheteur reste responsable de l'adaptation de l'effort à sa condition physique et du respect des consignes.",
         ] },
@@ -96,7 +96,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           "Les prix sont indiqués en euros, toutes taxes comprises. TVA non applicable, article 293 B du Code général des impôts. Le prix facturé est celui affiché au moment de la commande.",
         ] },
         { h: "4. Commande", body: [
-          "Pour commander, l'acheteur choisit un programme et un objectif, accepte les présentes conditions, demande l'exécution immédiate du contrat et renonce à son droit de rétractation dans les conditions de l'article 7, puis procède au paiement.",
+          "Pour commander, l'acheteur choisit un programme, ses objectifs et, s'il le souhaite, l'option course à pied, accepte les présentes conditions, demande l'exécution immédiate du contrat et renonce à son droit de rétractation dans les conditions de l'article 7, puis procède au paiement.",
           "Le contrat est conclu dès la confirmation du paiement. Une confirmation de commande est envoyée par email, reprenant les caractéristiques du programme, son prix, les présentes conditions et l'accord de l'acheteur mentionné ci-dessus.",
         ] },
         { h: "5. Paiement", body: [
@@ -156,7 +156,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
       sections: [
         { h: "Data controller", body: [`${o.name}, publisher of 6M Lab. Contact: ${o.email}.`] },
         { h: "Data collected and why", body: [[
-          "When you buy: your name, email address, country, and the program and goal you chose. This data is used to process your order, send you your program and keep the accounts (legal basis: performance of the contract and accounting obligations). Card details are entered directly with Stripe: 6M Lab never has access to them.",
+          "When you buy: your name, email address, country, and the program, goals and options you chose. This data is used to process your order, send you your program and keep the accounts (legal basis: performance of the contract and accounting obligations). Card details are entered directly with Stripe: 6M Lab never has access to them.",
           "When you email us: your address and your message, to reply to you (legal basis: legitimate interest).",
           "The questionnaire: your answers stay in your browser. They are neither sent nor saved.",
           "Technical data: the host keeps logs (IP address, pages viewed) needed to run and secure the website (legal basis: legitimate interest).",
@@ -190,7 +190,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           "Placing an order means accepting these terms, which may change at any time. The terms that apply are those in force on the day of the order.",
         ] },
         { h: "2. The programs", body: [
-          "The programs are digital content: a PDF with the full week-by-week plan, and videos showing every exercise, available online. The buyer chooses a goal (strength, explosiveness, mass gain or weight loss) when ordering. Each program's content and length are described on its page.",
+          "The programs are digital content: a PDF with the full week-by-week plan, and videos showing every exercise, available online. When ordering, the buyer chooses two of the goals offered, or the return-to-play program on its own. The buyer can add the running option, an additional program of 30 to 45 minute running sessions, sold for €9 on top of the program. Each program's content and length are described on its page.",
           "The programs cover training only. They include no meal plan and no individual coaching.",
           "They are intended for healthy people. If you have an injury, pain or any doubt about your health, see a doctor before starting. The buyer remains responsible for adapting the effort to their fitness and for following the instructions.",
         ] },
@@ -198,7 +198,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           "Prices are shown in euros, all taxes included. VAT not applicable, article 293 B of the French General Tax Code. The price charged is the one shown when the order is placed.",
         ] },
         { h: "4. Ordering", body: [
-          "To order, the buyer chooses a program and a goal, accepts these terms, asks for the contract to be performed immediately and waives the right of withdrawal as set out in section 7, then pays.",
+          "To order, the buyer chooses a program, their goals and, if they wish, the running option, accepts these terms, asks for the contract to be performed immediately and waives the right of withdrawal as set out in section 7, then pays.",
           "The contract is concluded once payment is confirmed. An order confirmation is sent by email, stating the program, its price, these terms and the buyer's consent mentioned above.",
         ] },
         { h: "5. Payment", body: [

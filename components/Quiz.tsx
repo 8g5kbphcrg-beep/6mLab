@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { dict, type Lang } from "@/lib/dict";
 import { quiz } from "@/lib/quiz";
-import { goalIds } from "@/lib/checkout";
+import { combos, comboTitle } from "@/lib/goals";
 import { programSlugs } from "@/lib/programs";
 import BuyForm from "@/components/BuyForm";
 import "@/app/quiz.css";
@@ -43,24 +43,24 @@ export default function Quiz({ lang, test }: { lang: Lang; test: boolean }) {
     );
   } else {
     const f = a[0];
-    const goal = d.goals[a[1]];
+    const combo = combos[a[1]];
     const note = f === 0 && a[4] === 0 ? t.notes[0] : f === 1 && a[4] === 2 ? t.notes[1] : "";
     body = (
       <>
         <p className="lab" style={{ margin: 0 }}>{t.result}</p>
-        <h2 className="qq" tabIndex={-1} ref={head}>{d.pick.names[f]}, {goal[0].toLowerCase()}</h2>
+        <h2 className="qq" tabIndex={-1} ref={head}>{d.pick.names[f]}{combo && `, ${comboTitle(combo.goals, lang).toLowerCase()}`}</h2>
         <div className={f === 1 ? "qres b" : "qres"}>
           <p className="qprice">{d.cmp.price[f]}</p>
-          <p>{goal[1]}</p>
+          {combo && <p>{combo[lang].obj}</p>}
           <p><strong style={{ color: "var(--ink)" }}>{d.pick.meta[f]}</strong></p>
           {note && <p>{note}</p>}
-          {a[1] >= 2 && <p className="note">{t.diet}</p>}
+          {combo?.goals.some((g) => g === "masse" || g === "perte-masse") && <p className="note">{t.diet}</p>}
         </div>
         <p className="lab" style={{ marginTop: "1.5rem" }}>{t.summary}</p>
         <ul className="qsum">
           {t.labels.map((l, k) => <li key={l}>{l} : <b>{t.steps[k].o[a[k]]}</b></li>)}
         </ul>
-        <BuyForm lang={lang} slug={programSlugs[f]} goal={goalIds[a[1]]} test={test} />
+        <BuyForm lang={lang} slug={programSlugs[f]} goals={combo?.goals} test={test} />
         <p className="note" style={{ marginTop: "1rem" }}>{d.why.note}</p>
         <button type="button" className="qlink" onClick={() => setA([])}>{t.restart}</button>
       </>

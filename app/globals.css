@@ -48,9 +48,14 @@ svg.i{width:1.6rem;height:1.6rem;fill:none;stroke:currentColor;stroke-width:2;st
 a.lang{text-decoration:none;display:inline-flex;align-items:center}
 .skip{position:absolute;left:-999px}.skip:focus{left:1rem;top:1rem;background:#fff;color:#100A24;padding:.5rem 1rem;z-index:40}
 .buy{margin-top:1.5rem;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.4rem;display:grid;gap:1rem}.buy .note{margin:0}
-.bgoal{border:0;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:.5rem}.bgoal legend{margin-bottom:.5rem}
-.bgoal label{display:flex;gap:.4rem;align-items:center;border:2px solid var(--line);border-radius:999px;padding:.45rem 1rem;min-height:44px;cursor:pointer}
-.bgoal label:has(:checked){border-color:var(--cta);background:var(--band)}
 .bconsent{display:flex;gap:.7rem;align-items:flex-start;font-size:.95rem;cursor:pointer}.bconsent input{width:1.2rem;height:1.2rem;margin-top:.2rem;flex:none}
 .berr{color:var(--At);font-weight:600;margin:0}.btest{border-left:4px solid var(--cta);padding-left:.7rem}
 .foot nav{display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem 1.2rem;margin-bottom:.8rem}
+.bgoals{border:0;padding:0;margin:0;display:grid;gap:.6rem}.bgoals .lab{margin:0}.bcount{font-weight:400;margin-left:.4rem}
+.bcombos{display:flex;flex-wrap:wrap;gap:.5rem}
+.bcombos button{font:inherit;font-size:.95rem;background:var(--card);color:inherit;border:2px solid var(--line);border-radius:999px;padding:.45rem 1rem;min-height:44px;cursor:pointer}
+.bcombos button[aria-pressed=true]{background:var(--cta);color:#100A24;border-color:var(--cta)}
+.bcat{border-top:1px solid var(--line);padding-top:.6rem}.bcat p{margin:0 0 .3rem;font-weight:600}
+.bchk{display:flex;gap:.6rem;align-items:flex-start;padding:.3rem 0;cursor:pointer}.bchk input{width:1.15rem;height:1.15rem;margin-top:.25rem;flex:none}
+.bchk:has(:disabled){color:var(--muted);cursor:default}
+.breath,.brun{border:2px solid var(--line);border-radius:var(--r);padding:.7rem .9rem}.breath:has(:checked),.brun:has(:checked){border-color:var(--cta);background:var(--band)}

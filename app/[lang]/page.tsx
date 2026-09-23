@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { dict, type Lang } from "@/lib/dict";
 import Scene from "@/components/Scene";
 import Picker from "@/components/Picker";
+import { goalCats } from "@/lib/goals";
 
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
@@ -40,7 +41,9 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           {row(rowDur)}
           {row(rowFreq)}
           <div className="lb">{d.cmp.goalsLb}</div>
-          <div className="c all rv">{d.goals.map((g) => <span key={g[0]}>{g[0]}</span>)}</div>
+          <div className="c all rv">{goalCats.map((c) => <span key={c.fr}><span aria-hidden="true">{c.icon}</span> {c[lang as Lang]}</span>)}</div>
+          <div className="lb">{d.cmp.runLb}</div>
+          <div className="c all rv" style={{ fontWeight: 600 }}>{d.cmp.run}</div>
           <div className="lb">{d.cmp.priceLb}</div>
           <div className="c a pr rv">{d.cmp.price[0]}</div>
           <div className="c b pr rv">{d.cmp.price[1]}</div>
@@ -55,7 +58,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       </section>
 
       <section id="objectif" className="band">
-        <div className="sec wrap"><Picker pick={d.pick} goals={d.goals} /><p><a className="btn" href={`/${lang}/questionnaire`}>{lang === "fr" ? "Faire le questionnaire complet" : "Take the full questionnaire"}</a></p></div>
+        <div className="sec wrap"><Picker lang={lang as Lang} pick={d.pick} /><p><a className="btn" href={`/${lang}/questionnaire`}>{lang === "fr" ? "Faire le questionnaire complet" : "Take the full questionnaire"}</a></p></div>
       </section>
 
       <section className="sec wrap">

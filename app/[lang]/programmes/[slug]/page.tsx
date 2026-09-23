@@ -5,9 +5,10 @@ import { dict, type Lang } from "@/lib/dict";
 import { programs, programSlugs, type ProgramSlug } from "@/lib/programs";
 import BuyForm from "@/components/BuyForm";
 import { testMode } from "@/lib/checkout";
+import { validGoals } from "@/lib/goals";
 import "@/app/programme.css";
 
-type P = { params: Promise<{ lang: string; slug: string }>; searchParams?: Promise<{ paiement?: string }> };
+type P = { params: Promise<{ lang: string; slug: string }>; searchParams?: Promise<{ paiement?: string; objectifs?: string }> };
 
 export const generateStaticParams = () =>
   (["fr", "en"] as const).flatMap((lang) => programSlugs.map((slug) => ({ lang, slug })));
@@ -25,7 +26,8 @@ export default async function Programme({ params, searchParams }: P) {
   const d = dict[lang as Lang];
   const p = programs[lang as Lang][slug as ProgramSlug];
   const b = p.color === "b";
-  const error = !!(await searchParams)?.paiement;
+  const sp = await searchParams;
+  const pre = sp?.objectifs?.split(",") ?? [];
   return (
     <div className="prog">
       <Link className="pback" href={`/${lang}/programmes`}>← {d.cmp.title}</Link>
@@ -35,7 +37,7 @@ export default async function Programme({ params, searchParams }: P) {
       <p className="pprice">{d.cmp.price[p.idx]}</p>
       <p>{p.pitch}</p>
       <ul className={b ? "pinc b" : "pinc"}>{p.includes.map((i) => <li key={i}>{i}</li>)}</ul>
-      <BuyForm lang={lang as Lang} slug={slug as ProgramSlug} test={testMode} error={error} />
+      <BuyForm lang={lang as Lang} slug={slug as ProgramSlug} goals={validGoals(pre) ? pre : []} test={testMode} error={sp?.paiement} />
       <h2>{lang === "fr" ? "Le déroulé" : "The breakdown"}</h2>
       {p.phases.map((ph) => (
         <div key={ph.t} className={b ? "phase b" : "phase"}>
