@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { LOGO_BALL } from "@/components/Logo";
 import { dict, locales, type Lang } from "@/lib/dict";
@@ -7,16 +9,9 @@ export const contentType = "image/png";
 export const alt = "6M Lab";
 export const generateStaticParams = () => locales.map((lang) => ({ lang }));
 
-// Anton for the "6M" of the logo; falls back to the default font if Google Fonts is unreachable.
-async function anton() {
-  try {
-    const css = await (await fetch("https://fonts.googleapis.com/css2?family=Anton&text=6M")).text();
-    const url = css.match(/src: url\((.+?)\)/)?.[1];
-    return url ? await (await fetch(url)).arrayBuffer() : null;
-  } catch {
-    return null;
-  }
-}
+// Anton, subset to the two glyphs "6M" (SIL Open Font License). Bundled so the build never
+// depends on the network.
+const anton = () => readFile(join(process.cwd(), "app/[lang]/anton-6m.ttf")).catch(() => null);
 
 // The preview shown when a page of the site is shared (WhatsApp, Instagram, Facebook, etc.).
 export default async function OgImage({ params }: { params: Promise<{ lang: string }> }) {
