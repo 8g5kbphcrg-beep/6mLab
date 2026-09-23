@@ -41,7 +41,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           {row(rowDur)}
           {row(rowFreq)}
           <div className="lb">{d.cmp.goalsLb}</div>
-          <div className="c all rv">{goalCats.map((c) => <span key={c.fr}><span aria-hidden="true">{c.icon}</span> {c[lang as Lang]}</span>)}</div>
+          <div className="c all rv">{goalCats.map((c) => <span key={c.fr}>{c[lang as Lang]}</span>)}</div>
           <div className="lb">{d.cmp.runLb}</div>
           <div className="c all rv" style={{ fontWeight: 600 }}>{d.cmp.run}</div>
           <div className="lb">{d.cmp.priceLb}</div>

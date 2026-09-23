@@ -30,20 +30,24 @@ export default function Picker({ lang, pick }: Props) {
           <button key={t} type="button" aria-pressed={m === i} onClick={() => setM(i)}>{t}</button>
         ))}
       </div>
-      <div className="pick" role="group" aria-labelledby="l2">
-        <span className="lab" id="l2">{pick.goalLb}</span>
+      <p className="lab" id="l2">{pick.goalLb}</p>
+      <div className="combos" role="group" aria-labelledby="l2">
         {combos.map((x, i) => (
-          <button key={x.goals.join()} type="button" aria-pressed={g === i} onClick={() => setG(i)}>{comboTitle(x.goals, lang)}</button>
+          <button key={x.goals.join()} type="button" className="combo" aria-pressed={g === i} onClick={() => setG(i)}>
+            <strong>{comboTitle(x.goals, lang)}</strong>
+            <span>{x[lang].profile}</span>
+          </button>
         ))}
       </div>
       <div className={m === 1 ? "res b" : "res"} aria-live="polite">
-        <h3>{pick.names[m]}, {comboTitle(c.goals, lang).toLowerCase()}</h3>
-        <p>{c[lang].obj}</p>
-        <p><strong style={{ color: "var(--ink)" }}>{pick.profileLb} :</strong> {c[lang].profile}</p>
-        <p style={{ fontWeight: 600, color: "var(--ink)" }}>{pick.meta[m]}</p>
-        <p><a className="btn" href={`/${lang}/programmes/${programSlugs[m]}?objectifs=${c.goals.join(",")}#acheter`}>{pick.go}</a></p>
-        <p className="note">{pick.note}</p>
+        <div>
+          <h3>{pick.names[m]} · {comboTitle(c.goals, lang)}</h3>
+          <p>{c[lang].obj}</p>
+          <p className="note">{pick.meta[m]}</p>
+        </div>
+        <a className="btn" href={`/${lang}/programmes/${programSlugs[m]}?objectifs=${c.goals.join(",")}#acheter`}>{pick.go}</a>
       </div>
+      <p className="note" style={{ marginTop: "1rem" }}>{pick.note}</p>
     </>
   );
 }

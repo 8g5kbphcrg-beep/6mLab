@@ -28,36 +28,46 @@ export default async function Programme({ params, searchParams }: P) {
   const b = p.color === "b";
   const sp = await searchParams;
   const pre = sp?.objectifs?.split(",") ?? [];
+  const fr = lang === "fr";
   return (
     <div className="prog">
       <Link className="pback" href={`/${lang}/programmes`}>← {d.cmp.title}</Link>
-      <p><span className={b ? "ptag b" : "ptag a"}>{p.tag}</span></p>
-      <h1>{p.name}</h1>
-      <p className="pmeta2">{p.duration} · {p.freq}</p>
-      <p className="pprice">{d.cmp.price[p.idx]}</p>
-      <p>{p.pitch}</p>
-      <ul className={b ? "pinc b" : "pinc"}>{p.includes.map((i) => <li key={i}>{i}</li>)}</ul>
-      <BuyForm lang={lang as Lang} slug={slug as ProgramSlug} goals={validGoals(pre) ? pre : []} test={testMode} error={sp?.paiement} />
-      <h2>{lang === "fr" ? "Le déroulé" : "The breakdown"}</h2>
-      {p.phases.map((ph) => (
-        <div key={ph.t} className={b ? "phase b" : "phase"}>
-          <h3>{ph.t}</h3>
-          <p>{ph.d}</p>
+      <div className="pgrid">
+        <header className="phead">
+          <span className={b ? "ptag b" : "ptag a"}>{p.tag}</span>
+          <h1>{p.name}</h1>
+          <p className="pmeta2">{p.duration} · {p.freq}</p>
+          <p className="plead">{p.pitch}</p>
+          <ul className={b ? "pinc b" : "pinc"}>{p.includes.map((i) => <li key={i}>{i}</li>)}</ul>
+        </header>
+        <aside className="pside">
+          <BuyForm lang={lang as Lang} slug={slug as ProgramSlug} goals={validGoals(pre) ? pre : []} test={testMode} error={sp?.paiement} />
+          <p className="pquiz">{fr ? "Pas sûr de tes objectifs ?" : "Not sure about your goals?"} <Link href={`/${lang}/questionnaire`}>{fr ? "Fais le questionnaire" : "Take the questionnaire"}</Link></p>
+        </aside>
+        <div className="pmain">
+          <section>
+            <h2>{fr ? "Le déroulé" : "The breakdown"}</h2>
+            {p.phases.map((ph) => (
+              <div key={ph.t} className={b ? "phase b" : "phase"}>
+                <h3>{ph.t}</h3>
+                <p>{ph.d}</p>
+              </div>
+            ))}
+          </section>
+          <section>
+            <h2>FAQ</h2>
+            <div className="faq">
+              {p.faq.map((f) => (
+                <details key={f.q}>
+                  <summary>{f.q}</summary>
+                  <p>{f.a}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+          <p className="note">{d.why.note}</p>
         </div>
-      ))}
-      <h2>FAQ</h2>
-      <div className="faq">
-        {p.faq.map((f) => (
-          <details key={f.q}>
-            <summary>{f.q}</summary>
-            <p>{f.a}</p>
-          </details>
-        ))}
       </div>
-      <p className="note" style={{ marginTop: "1.5rem" }}>{d.why.note}</p>
-      <p style={{ marginTop: "2rem" }}>
-        <Link className="btn" href={`/${lang}/questionnaire`}>{lang === "fr" ? "Pas sûr de ton objectif ? Fais le questionnaire" : "Not sure about your goal? Take the questionnaire"}</Link>
-      </p>
     </div>
   );
 }

@@ -1,9 +1,9 @@
-.prog{max-width:760px;margin:0 auto;padding:3rem 1.25rem 5rem}
+.prog{max-width:1120px;margin:0 auto;padding:2rem 1.25rem 5rem}
 .prog h1{font-size:clamp(2.2rem,7vw,3.6rem)}
-.ptag{display:inline-block;font-weight:600;padding:.3rem .9rem;border-radius:999px;color:#100A24;margin-bottom:1rem}
+.ptag{display:inline-block;font-weight:600;font-size:.9rem;padding:.25rem .8rem;border-radius:999px;color:#100A24;margin-bottom:.8rem}
 .ptag.a{background:var(--A)}.ptag.b{background:var(--B)}
 .pmeta2{color:var(--muted);margin:0 0 1.5rem}.pprice{font:400 2.4rem var(--font-display),sans-serif}
-.pinc{list-style:none;padding:0;margin:1.5rem 0;display:grid;gap:.6rem}
+.pinc{list-style:none;padding:0;margin:1.5rem 0 0;display:grid;gap:.6rem}
 .pinc li{padding-left:1.6rem;position:relative}.pinc li::before{content:"✓";position:absolute;left:0;color:var(--A)}
 .pinc.b li::before{color:var(--B)}
 .phase{border-left:4px solid var(--line);padding:0 0 1.2rem 1.2rem;margin-left:.2rem;position:relative}
@@ -19,3 +19,12 @@
 .plink.b{border-top-color:var(--B)}.plink h2{margin:0 0 .3rem}.plink p{color:var(--muted);margin:0 0 .8rem}
 @media(hover:hover){.plink:hover{border-color:var(--cta)}}
 @media(min-width:760px){.plist{grid-template-columns:1fr 1fr}}
+
+.pgrid{display:grid;gap:2.5rem;margin-top:1.2rem}
+.plead{font-size:1.15rem}
+.pmain{display:grid;gap:2.5rem}.pmain h2{font-size:clamp(1.8rem,5vw,2.4rem)}.pmain .note{margin:0}
+.pquiz{text-align:center;color:var(--muted);font-size:.95rem;margin:1rem auto 0}.pquiz a{color:var(--ink);font-weight:600}
+@media(min-width:900px){
+  .pgrid{grid-template-columns:minmax(0,1fr) 420px;grid-template-areas:"head side" "main side";grid-template-rows:auto 1fr;column-gap:4rem;row-gap:3rem;align-items:start}
+  .phead{grid-area:head}.pmain{grid-area:main}.pside{grid-area:side}
+}

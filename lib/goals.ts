@@ -28,12 +28,12 @@ export type GoalId = keyof typeof goalNames;
 export const REATH: GoalId = "reathletisation";
 export const goalIds = Object.keys(goalNames) as GoalId[];
 
-export const goalCats: { icon: string; fr: string; en: string; goals: GoalId[] }[] = [
-  { icon: "🏋️", fr: "Développement musculaire", en: "Muscle development", goals: ["force", "masse", "gainage"] },
-  { icon: "⚡", fr: "Puissance & explosivité", en: "Power & explosiveness", goals: ["explosivite", "puissance", "vitesse", "acceleration", "agilite"] },
-  { icon: "🫀", fr: "Condition physique", en: "Fitness", goals: ["endurance", "repetition", "perte-masse", "condition"] },
-  { icon: "🛡️", fr: "Prévention & santé", en: "Prevention & health", goals: ["prevention", "renforcement", "mobilite", "articulaire"] },
-  { icon: "🔄", fr: "Entretien & retour au sport", en: "Maintenance & return to sport", goals: ["maintien", "recuperation"] },
+export const goalCats: { fr: string; en: string; goals: GoalId[] }[] = [
+  { fr: "Développement musculaire", en: "Muscle development", goals: ["force", "masse", "gainage"] },
+  { fr: "Puissance & explosivité", en: "Power & explosiveness", goals: ["explosivite", "puissance", "vitesse", "acceleration", "agilite"] },
+  { fr: "Condition physique", en: "Fitness", goals: ["endurance", "repetition", "perte-masse", "condition"] },
+  { fr: "Prévention & santé", en: "Prevention & health", goals: ["prevention", "renforcement", "mobilite", "articulaire"] },
+  { fr: "Entretien & retour au sport", en: "Maintenance & return to sport", goals: ["maintien", "recuperation"] },
 ];
 
 type Combo = { goals: GoalId[]; fr: { obj: string; profile: string }; en: { obj: string; profile: string } };
