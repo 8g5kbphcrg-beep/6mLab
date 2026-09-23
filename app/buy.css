@@ -18,10 +18,6 @@
 .bcard:has(:focus-visible){outline:3px solid var(--cta);outline-offset:2px}
 .brun b{margin-left:auto;white-space:nowrap;font-size:1rem}
 @media(hover:hover){.bcard:hover{border-color:var(--muted)}}
-.bown{border:1.5px dashed var(--line);border-radius:12px;padding:0 1rem}
-.bown summary{cursor:pointer;font-weight:600;padding:.8rem 0;list-style:none;display:flex;justify-content:space-between;min-height:44px;align-items:center}
-.bown summary::-webkit-details-marker{display:none}.bown summary::after{content:"+";font-size:1.3rem;color:var(--muted)}.bown[open] summary::after{content:"–"}
-.bcat{padding:.2rem 0 .9rem}.bcat p{margin:0 0 .45rem;font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .bchips{display:flex;flex-wrap:wrap;gap:.4rem}
 .bchip{display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:999px;padding:.4rem .85rem;font-size:.9rem;cursor:pointer;min-height:38px;transition:background .15s,border-color .15s}
 .bchip input{position:absolute;opacity:0;width:1px;height:1px}
@@ -41,3 +37,4 @@
 .bfield input{font:inherit;font-size:1rem;font-weight:400;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:.65rem .8rem;min-height:46px;width:100%}
 .bfield input:focus{outline:none;border-color:var(--ink)}
 .bgender{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}.bgender .lab{width:100%;margin:0 0 .1rem}
+.bgoal:has(:disabled){opacity:.45;cursor:not-allowed}

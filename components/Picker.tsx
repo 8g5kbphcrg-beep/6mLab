@@ -2,16 +2,16 @@
 import { useEffect, useState } from "react";
 import type { Lang } from "@/lib/dict";
 import { programSlugs } from "@/lib/programs";
-import { combos, comboTitle } from "@/lib/goals";
+import { goalIds, goals, goalName, goalsTitle, REATH, type GoalId } from "@/lib/goals";
 
 type Props = {
   lang: Lang;
-  pick: { title: string; where: string; moments: string[]; goalLb: string; profileLb: string; go: string; names: string[]; meta: string[]; note: string };
+  pick: { title: string; where: string; moments: string[]; goalLb: string; go: string; pickTwo: string; names: string[]; meta: string[]; note: string };
 };
 
 export default function Picker({ lang, pick }: Props) {
   const [m, setM] = useState(0);
-  const [g, setG] = useState(0);
+  const [sel, setSel] = useState<GoalId[]>(["muscle", "explosivite"]);
   useEffect(() => {
     const h = (e: MouseEvent) => {
       const el = (e.target as HTMLElement).closest<HTMLElement>("[data-pick]");
@@ -20,7 +20,10 @@ export default function Picker({ lang, pick }: Props) {
     document.addEventListener("click", h);
     return () => document.removeEventListener("click", h);
   }, []);
-  const c = combos[g];
+  // Picking a third goal drops the oldest one; Réathlétisation always stands alone.
+  const toggle = (g: GoalId) =>
+    setSel(sel.includes(g) ? sel.filter((x) => x !== g) : g === REATH ? [REATH] : [...sel.filter((x) => x !== REATH), g].slice(-2));
+  const done = sel.includes(REATH) || sel.length === 2;
   return (
     <>
       <h2>{pick.title}</h2>
@@ -32,20 +35,19 @@ export default function Picker({ lang, pick }: Props) {
       </div>
       <p className="lab" id="l2">{pick.goalLb}</p>
       <div className="combos" role="group" aria-labelledby="l2">
-        {combos.map((x, i) => (
-          <button key={x.goals.join()} type="button" className="combo" aria-pressed={g === i} onClick={() => setG(i)}>
-            <strong>{comboTitle(x.goals, lang)}</strong>
-            <span>{x[lang].profile}</span>
+        {[...goalIds, REATH].map((g) => (
+          <button key={g} type="button" className="combo" aria-pressed={sel.includes(g)} onClick={() => toggle(g)}>
+            <strong>{goalName(g, lang)}</strong>
+            <span>{goals[g][lang].details.join(" · ")}</span>
           </button>
         ))}
       </div>
       <div className={m === 1 ? "res b" : "res"} aria-live="polite">
         <div>
-          <h3>{pick.names[m]} · {comboTitle(c.goals, lang)}</h3>
-          <p>{c[lang].obj}</p>
-          <p className="note">{pick.meta[m]}</p>
+          <h3>{pick.names[m]}{sel.length > 0 && ` · ${goalsTitle(sel, lang)}`}</h3>
+          <p className="note">{done ? pick.meta[m] : pick.pickTwo}</p>
         </div>
-        <a className="btn" href={`/${lang}/programmes/${programSlugs[m]}?objectifs=${c.goals.join(",")}#acheter`}>{pick.go}</a>
+        {done && <a className="btn" href={`/${lang}/programmes/${programSlugs[m]}?objectifs=${sel.join(",")}#acheter`}>{pick.go}</a>}
       </div>
       <p className="note" style={{ marginTop: "1rem" }}>{pick.note}</p>
     </>

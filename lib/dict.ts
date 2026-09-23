@@ -21,10 +21,10 @@ export const dict = {
       choose: ["Choisir la pré-saison", "Choisir le maintien"],
     },
     pick: {
-      title: "Choisis tes objectifs", where: "Où en es-tu ?", moments: ["Avant la saison", "En pleine saison"], goalLb: "Combinaisons conseillées", profileLb: "Pour qui", go: "Choisir cette combinaison",
+      title: "Choisis tes objectifs", where: "Où en es-tu ?", moments: ["Avant la saison", "En pleine saison"], goalLb: "Tes 2 objectifs", go: "Choisir ce programme", pickTwo: "Choisis 2 objectifs, ou la réathlétisation seule.",
       names: ["Pré-saison", "Maintien en saison"],
       meta: ["8 semaines, 3 à 4 séances par semaine", "12 semaines, 2 séances de 30 à 40 min par semaine"],
-      note: "Tu peux aussi composer ta propre combinaison de 2 objectifs au moment de l'achat. Nos programmes portent sur l'entraînement, sans plan alimentaire.",
+      note: "Tu pourras encore modifier tes objectifs au moment de l'achat. Nos programmes portent sur l'entraînement, sans plan alimentaire.",
     },
     how: { title: "Comment ça marche", steps: ["Réponds à quelques questions sur ton objectif et ton niveau.", "Reçois le programme recommandé pour toi.", "Paie en ligne et reçois ton accès par email."] },
     why: {
@@ -51,10 +51,10 @@ export const dict = {
       choose: ["Choose pre-season", "Choose in-season"],
     },
     pick: {
-      title: "Pick your goals", where: "Where are you?", moments: ["Before the season", "During the season"], goalLb: "Suggested combinations", profileLb: "Who it's for", go: "Choose this combination",
+      title: "Pick your goals", where: "Where are you?", moments: ["Before the season", "During the season"], goalLb: "Your 2 goals", go: "Choose this program", pickTwo: "Pick 2 goals, or return to play alone.",
       names: ["Pre-season", "In-season maintenance"],
       meta: ["8 weeks, 3 to 4 sessions per week", "12 weeks, 2 sessions of 30 to 40 min per week"],
-      note: "You can also build your own combination of 2 goals at checkout. Our programs cover training only, with no meal plans.",
+      note: "You can still change your goals at checkout. Our programs cover training only, with no meal plans.",
     },
     how: { title: "How it works", steps: ["Answer a few questions about your goal and level.", "Get the program recommended for you.", "Pay online and get access by email."] },
     why: {

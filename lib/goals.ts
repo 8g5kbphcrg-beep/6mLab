@@ -1,68 +1,42 @@
 import type { Lang } from "@/lib/dict";
 
-// Every goal a buyer can pick. The buyer picks exactly 2, or Réathlétisation alone:
-// it is the single goal for anything injury-related (return after injury, reathletisation).
-export const goalNames = {
-  force: { fr: "Force", en: "Strength" },
-  masse: { fr: "Prise de masse", en: "Mass gain" },
-  gainage: { fr: "Gainage / stabilité", en: "Core / stability" },
-  explosivite: { fr: "Explosivité", en: "Explosiveness" },
-  puissance: { fr: "Puissance", en: "Power" },
-  vitesse: { fr: "Vitesse", en: "Speed" },
-  acceleration: { fr: "Accélération", en: "Acceleration" },
-  agilite: { fr: "Changements de direction / agilité", en: "Change of direction / agility" },
-  endurance: { fr: "Endurance", en: "Endurance" },
-  repetition: { fr: "Capacité à répéter les efforts", en: "Repeated effort capacity" },
-  "perte-masse": { fr: "Perte de masse", en: "Fat loss" },
-  condition: { fr: "Condition physique générale", en: "General fitness" },
-  prevention: { fr: "Prévention des blessures", en: "Injury prevention" },
-  renforcement: { fr: "Renforcement spécifique (genoux, chevilles, épaules, ischios…)", en: "Targeted strengthening (knees, ankles, shoulders, hamstrings…)" },
-  mobilite: { fr: "Mobilité / souplesse", en: "Mobility / flexibility" },
-  articulaire: { fr: "Stabilité articulaire", en: "Joint stability" },
-  maintien: { fr: "Maintien des qualités physiques", en: "Maintaining physical qualities" },
-  recuperation: { fr: "Récupération", en: "Recovery" },
-  reathletisation: { fr: "Réathlétisation / retour après blessure", en: "Return to play after injury" },
+// The 5 goals a buyer picks from (exactly 2), or Réathlétisation on its own for anything
+// injury-related. "details" only describe what each goal works on; they are not choices.
+export const goals = {
+  muscle: {
+    fr: { name: "Développement musculaire", details: ["Force", "Prise de masse", "Gainage / stabilité"] },
+    en: { name: "Muscle development", details: ["Strength", "Mass gain", "Core / stability"] },
+  },
+  explosivite: {
+    fr: { name: "Explosivité", details: ["Vitesse", "Accélération", "Changements de direction / agilité"] },
+    en: { name: "Explosiveness", details: ["Speed", "Acceleration", "Change of direction / agility"] },
+  },
+  puissance: {
+    fr: { name: "Puissance", details: ["Tirs", "Sauts", "Duels"] },
+    en: { name: "Power", details: ["Shots", "Jumps", "Duels"] },
+  },
+  condition: {
+    fr: { name: "Condition physique", details: ["Endurance", "Capacité à répéter les efforts", "Perte de masse", "Condition physique générale"] },
+    en: { name: "Fitness", details: ["Endurance", "Repeated effort capacity", "Fat loss", "General fitness"] },
+  },
+  prevention: {
+    fr: { name: "Prévention & santé", details: ["Prévention des blessures", "Renforcement genoux, chevilles, épaules, ischios", "Mobilité / souplesse", "Stabilité articulaire"] },
+    en: { name: "Prevention & health", details: ["Injury prevention", "Knees, ankles, shoulders, hamstrings", "Mobility / flexibility", "Joint stability"] },
+  },
+  reathletisation: {
+    fr: { name: "Réathlétisation / retour après blessure", details: ["Reprise progressive, avec le feu vert de ton médecin"] },
+    en: { name: "Return to play after injury", details: ["Gradual comeback, with your doctor's clearance"] },
+  },
 } as const;
 
-export type GoalId = keyof typeof goalNames;
+export type GoalId = keyof typeof goals;
 export const REATH: GoalId = "reathletisation";
-export const goalIds = Object.keys(goalNames) as GoalId[];
+export const goalIds = (Object.keys(goals) as GoalId[]).filter((g) => g !== REATH);
 
-export const goalCats: { fr: string; en: string; goals: GoalId[] }[] = [
-  { fr: "Développement musculaire", en: "Muscle development", goals: ["force", "masse", "gainage"] },
-  { fr: "Puissance & explosivité", en: "Power & explosiveness", goals: ["explosivite", "puissance", "vitesse", "acceleration", "agilite"] },
-  { fr: "Condition physique", en: "Fitness", goals: ["endurance", "repetition", "perte-masse", "condition"] },
-  { fr: "Prévention & santé", en: "Prevention & health", goals: ["prevention", "renforcement", "mobilite", "articulaire"] },
-  { fr: "Entretien & retour au sport", en: "Maintenance & return to sport", goals: ["maintien", "recuperation"] },
-];
-
-type Combo = { goals: GoalId[]; fr: { obj: string; profile: string }; en: { obj: string; profile: string } };
-
-// Suggested pairs, plus Réathlétisation on its own (last).
-export const combos: Combo[] = [
-  { goals: ["force", "explosivite"],
-    fr: { obj: "Développer la force et la capacité à produire des actions explosives.", profile: "Pour viser la performance." },
-    en: { obj: "Build strength and the ability to produce explosive actions.", profile: "To chase performance." } },
-  { goals: ["explosivite", "vitesse"],
-    fr: { obj: "Améliorer les accélérations, démarrages et déplacements rapides.", profile: "Pour gagner en rapidité et en vivacité." },
-    en: { obj: "Improve acceleration, first steps and quick movement.", profile: "To get faster and sharper." } },
-  { goals: ["force", "masse"],
-    fr: { obj: "Développer la force tout en favorisant le développement musculaire.", profile: "Pour se renforcer et prendre de la masse musculaire." },
-    en: { obj: "Build strength while promoting muscle growth.", profile: "To get stronger and build muscle." } },
-  { goals: ["endurance", "perte-masse"],
-    fr: { obj: "Améliorer la condition physique générale tout en accompagnant une perte de masse.", profile: "Pour améliorer son cardio et sa condition physique." },
-    en: { obj: "Improve overall fitness while supporting fat loss.", profile: "To improve cardio and fitness." } },
-  { goals: ["prevention", "maintien"],
-    fr: { obj: "Entretenir les qualités physiques et réduire les risques de blessure pendant la saison.", profile: "Pour maintenir son niveau physique pendant la saison." },
-    en: { obj: "Maintain physical qualities and reduce injury risk during the season.", profile: "To hold your level during the season." } },
-  { goals: [REATH],
-    fr: { obj: "Un programme adapté à une reprise progressive après blessure, une fois le feu vert médical obtenu.", profile: "Pour reprendre après une blessure." },
-    en: { obj: "A program built for a gradual comeback after injury, once you have medical clearance.", profile: "To come back after an injury." } },
-];
-
-export const comboTitle = (goals: readonly GoalId[], lang: Lang) => goals.map((g) => goalNames[g][lang]).join(" + ");
+export const goalName = (g: GoalId, lang: Lang) => goals[g][lang].name;
+export const goalsTitle = (sel: readonly GoalId[], lang: Lang) => sel.map((g) => goalName(g, lang)).join(" + ");
 
 // Exactly 2 distinct goals (not Réathlétisation), or Réathlétisation alone.
 export const validGoals = (g: string[]): g is GoalId[] =>
   g.length === 1 ? g[0] === REATH
-    : g.length === 2 && g[0] !== g[1] && g.every((x) => x in goalNames && x !== REATH);
+    : g.length === 2 && g[0] !== g[1] && g.every((x) => x in goals && x !== REATH);

@@ -66,7 +66,7 @@ export const posts: Post[] = [
       { p: "La revue identifie plusieurs familles de qualités, qui se combinent :" },
       { ul: ["l'endurance, pour répéter les efforts intenses jusqu'à la fin du match", "la force et la puissance, pour les duels, les sauts et la vitesse de tir", "la vitesse et l'agilité, pour les démarrages et les changements de direction", "la coordination et la technique", "les qualités mentales et la lecture du jeu"] },
       { h: "Ce qu'on en retient" },
-      { ul: ["Courir longtemps à allure régulière ne suffit pas : il faut s'entraîner à répéter des efforts courts et intenses.", "La force et l'explosivité sont aussi importantes que le cardio.", "C'est pour cela que nos programmes combinent plusieurs objectifs, par exemple force et explosivité, ou endurance et capacité à répéter les efforts."] },
+      { ul: ["Courir longtemps à allure régulière ne suffit pas : il faut s'entraîner à répéter des efforts courts et intenses.", "La force et l'explosivité sont aussi importantes que le cardio.", "C'est pour cela que nos programmes combinent deux objectifs, par exemple développement musculaire et explosivité, ou condition physique et puissance."] },
     ],
   },
   {

@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { locales, type Lang } from "@/lib/dict";
 import { programs, programSlugs, type ProgramSlug } from "@/lib/programs";
 import { genders, prices, RUNNING_PRICE, type Gender } from "@/lib/checkout";
-import { comboTitle, validGoals } from "@/lib/goals";
+import { goalsTitle, validGoals } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
 
 export async function POST(req: NextRequest) {
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
         price_data: {
           currency: "eur",
           unit_amount: prices[slug],
-          product_data: { name: `6M Lab · ${p.name}`, description: `${comboTitle(goals, lang)} · ${p.duration}` },
+          product_data: { name: `6M Lab · ${p.name}`, description: `${goalsTitle(goals, lang)} · ${p.duration}` },
         },
       }, ...(running ? [{
         quantity: 1,
