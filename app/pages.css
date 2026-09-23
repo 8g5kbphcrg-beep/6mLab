@@ -11,4 +11,4 @@
 .legal h2{font-size:clamp(1.5rem,4.5vw,2rem);margin-top:2.2rem}.legal p,.legal li{font-size:1rem;max-width:68ch}
 .legal ul{padding-left:1.2rem;margin:0 0 1rem;display:grid;gap:.4rem}
 .todo{background:var(--cta);color:#100A24;border-radius:4px;padding:0 .25rem}
-.merci-mark{border-radius:18px;margin-bottom:1.2rem;box-shadow:var(--shadow)}
+.merci-logo{background:var(--night);border-radius:20px;padding:1.6rem 2rem 1.2rem;display:inline-flex;margin-bottom:1.5rem}

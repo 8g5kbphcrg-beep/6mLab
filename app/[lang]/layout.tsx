@@ -65,7 +65,7 @@ export default async function RootLayout({ children, params }: { children: React
         <footer className="foot">
           <div className="fwrap">
             <div>
-              <Link href={`/${lang}`} className="logo" aria-label="6M Lab"><Logo size={36} /></Link>
+              <Link href={`/${lang}`} className="logo" aria-label="6M Lab"><Logo /></Link>
               <p>{d.hero.trust}</p>
             </div>
             <nav aria-label={fr ? "Site" : "Site"}>
