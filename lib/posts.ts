@@ -55,3 +55,7 @@ export const posts: Post[] = [
     ],
   },
 ];
+
+// About 200 words per minute.
+export const readTime = (p: Post) =>
+  Math.max(1, Math.round(p.body.map((b) => ("h" in b ? b.h : "p" in b ? b.p : b.ul.join(" "))).join(" ").split(/\s+/).length / 200));

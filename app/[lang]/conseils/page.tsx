@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { posts } from "@/lib/posts";
+import { posts, readTime } from "@/lib/posts";
+
+const fmt = (d: string) => new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
 import "@/app/blog.css";
 
 export const metadata: Metadata = {
@@ -14,14 +16,18 @@ export default async function Blog({ params }: { params: Promise<{ lang: string 
   const { lang } = await params;
   if (lang !== "fr") notFound();
   return (
-    <div className="post">
-      <h1>Conseils de préparation physique</h1>
-      <p>Des conseils simples pour les handballeurs : reprise, prévention des blessures, forme en pleine saison.</p>
+    <div className="blog">
+      <header className="shead page">
+        <h1>Conseils de préparation physique</h1>
+        <p>Des conseils simples pour les handballeurs : reprise, prévention des blessures, forme en pleine saison.</p>
+      </header>
       <div className="cards">
         {posts.map((p) => (
           <Link key={p.slug} href={`/fr/conseils/${p.slug}`} className="pc">
+            <span className="pdate">{fmt(p.date)} · {readTime(p)} min de lecture</span>
             <h2>{p.title}</h2>
             <p>{p.desc}</p>
+            <span className="pread">Lire l'article →</span>
           </Link>
         ))}
       </div>

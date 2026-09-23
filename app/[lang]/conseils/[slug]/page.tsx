@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { posts } from "@/lib/posts";
+import { posts, readTime } from "@/lib/posts";
 import { SITE } from "@/lib/dict";
 import "@/app/blog.css";
 
@@ -39,6 +39,10 @@ export default async function Article({ params }: P) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
       <p className="pmeta"><Link href="/fr/conseils">← Tous les conseils</Link></p>
       <h1>{post.title}</h1>
+      <p className="pmeta">
+        <time dateTime={post.date}>{new Date(post.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}</time>
+        <span>{readTime(post)} min de lecture</span>
+      </p>
       {post.body.map((b, i) =>
         "h" in b ? <h2 key={i}>{b.h}</h2> : "ul" in b ? <ul key={i}>{b.ul.map((x) => <li key={x}>{x}</li>)}</ul> : <p key={i}>{b.p}</p>,
       )}

@@ -31,6 +31,14 @@ export default async function RootLayout({ children, params }: { children: React
   if (!(lang in dict)) notFound();
   const d = dict[lang as Lang];
   const other = lang === "fr" ? "en" : "fr";
+  const fr = lang === "fr";
+  const links: [string, string][] = [
+    [`/${lang}/programmes`, fr ? "Programmes" : "Programs"],
+    [`/${lang}#objectif`, d.nav.goal],
+    ...(fr ? [["/fr/conseils", "Conseils"] as [string, string]] : []),
+    [fr ? "/fr/a-propos" : "/en/about", fr ? "À propos" : "About"],
+    [`/${lang}/contact`, "Contact"],
+  ];
   return (
     <html lang={lang} className={`${display.variable} ${text.variable}`}>
       <body>
@@ -39,22 +47,38 @@ export default async function RootLayout({ children, params }: { children: React
         <a className="skip" href="#main">{d.nav.skip}</a>
         <header className="bar">
           <Link href={`/${lang}`} className="logo" aria-label="6M Lab">6M<b>Lab</b></Link>
-          <nav aria-label="Navigation">
-            <a className="h" href={`/${lang}#formules`}>{d.nav.cmp}</a>
-            <a className="h" href={`/${lang}#objectif`}>{d.nav.goal}</a>
-            {lang === "fr" && <a className="h" href="/fr/conseils">Conseils</a>}
-{lang === "fr" ? <><a className="h" href="/fr/a-propos">À propos</a><a className="h" href="/fr/contact">Contact</a></> : <><a className="h" href="/en/about">About</a><a className="h" href="/en/contact">Contact</a></>}
+          <nav className="navd" aria-label="Navigation">
+            {links.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
             <Link className="lang" href={`/${other}`} hrefLang={other} lang={other}>{d.nav.other}</Link>
+            <a className="btn btn-s" href={`/${lang}/programmes`}>{fr ? "Voir les programmes" : "See the programs"}</a>
           </nav>
+          <details className="menu">
+            <summary aria-label="Menu"><span /></summary>
+            <nav aria-label="Navigation">
+              {links.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
+              <a href={`/${other}`} hrefLang={other} lang={other}>{fr ? "English" : "Français"}</a>
+            </nav>
+          </details>
         </header>
         <main id="main">{children}</main>
         <footer className="foot">
-          <nav aria-label={lang === "fr" ? "Informations légales" : "Legal"}>
-            <Link href={legalPaths[lang as Lang].notice}>{lang === "fr" ? "Mentions légales" : "Legal notice"}</Link>
-            <Link href={legalPaths[lang as Lang].privacy}>{lang === "fr" ? "Confidentialité" : "Privacy"}</Link>
-            <Link href={legalPaths[lang as Lang].cgv}>{lang === "fr" ? "CGV" : "Terms of sale"}</Link>
-          </nav>
-          <p>© {new Date().getFullYear()} 6M Lab</p>
+          <div className="fwrap">
+            <div>
+              <Link href={`/${lang}`} className="logo" aria-label="6M Lab">6M<b>Lab</b></Link>
+              <p>{d.hero.trust}</p>
+            </div>
+            <nav aria-label={fr ? "Site" : "Site"}>
+              <p className="flab">{fr ? "Site" : "Site"}</p>
+              {links.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
+            </nav>
+            <nav aria-label={fr ? "Informations légales" : "Legal"}>
+              <p className="flab">{fr ? "Informations légales" : "Legal"}</p>
+              <Link href={legalPaths[lang as Lang].notice}>{fr ? "Mentions légales" : "Legal notice"}</Link>
+              <Link href={legalPaths[lang as Lang].privacy}>{fr ? "Confidentialité" : "Privacy"}</Link>
+              <Link href={legalPaths[lang as Lang].cgv}>{fr ? "CGV" : "Terms of sale"}</Link>
+            </nav>
+          </div>
+          <p className="fcopy">© {new Date().getFullYear()} 6M Lab</p>
         </footer>
         <Enhance cta={d.hero.cta} />
       </body>
