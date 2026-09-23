@@ -1,6 +1,7 @@
 import type { Lang } from "@/lib/dict";
 
-// Every goal a buyer can pick. The buyer picks exactly 2, or Réathlétisation alone.
+// Every goal a buyer can pick. The buyer picks exactly 2, or Réathlétisation alone:
+// it is the single goal for anything injury-related (return after injury, reathletisation).
 export const goalNames = {
   force: { fr: "Force", en: "Strength" },
   masse: { fr: "Prise de masse", en: "Mass gain" },
@@ -20,8 +21,7 @@ export const goalNames = {
   articulaire: { fr: "Stabilité articulaire", en: "Joint stability" },
   maintien: { fr: "Maintien des qualités physiques", en: "Maintaining physical qualities" },
   recuperation: { fr: "Récupération", en: "Recovery" },
-  "retour-blessure": { fr: "Retour progressif après blessure", en: "Gradual return after injury" },
-  reathletisation: { fr: "Réathlétisation", en: "Return-to-play (reathletisation)" },
+  reathletisation: { fr: "Réathlétisation / retour après blessure", en: "Return to play after injury" },
 } as const;
 
 export type GoalId = keyof typeof goalNames;
@@ -33,7 +33,7 @@ export const goalCats: { icon: string; fr: string; en: string; goals: GoalId[] }
   { icon: "⚡", fr: "Puissance & explosivité", en: "Power & explosiveness", goals: ["explosivite", "puissance", "vitesse", "acceleration", "agilite"] },
   { icon: "🫀", fr: "Condition physique", en: "Fitness", goals: ["endurance", "repetition", "perte-masse", "condition"] },
   { icon: "🛡️", fr: "Prévention & santé", en: "Prevention & health", goals: ["prevention", "renforcement", "mobilite", "articulaire"] },
-  { icon: "🔄", fr: "Entretien & retour au sport", en: "Maintenance & return to sport", goals: ["maintien", "recuperation", "retour-blessure"] },
+  { icon: "🔄", fr: "Entretien & retour au sport", en: "Maintenance & return to sport", goals: ["maintien", "recuperation"] },
 ];
 
 type Combo = { goals: GoalId[]; fr: { obj: string; profile: string }; en: { obj: string; profile: string } };
