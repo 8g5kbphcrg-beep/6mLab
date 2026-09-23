@@ -12,6 +12,19 @@ avec le programme, les objectifs, l'option course et le profil (prénom, âge, g
 
 Les clés live (`sk_live_...`) sont refusées tant que `STRIPE_ALLOW_LIVE=1` n'est pas défini.
 
+## Emails automatiques (Gmail)
+
+Après chaque paiement, le webhook Stripe envoie :
+- au client, la confirmation de commande (récapitulatif, CGV, renonciation au droit de rétractation) ;
+- à 6M Lab, un résumé de la commande (prénom, âge, genre, objectifs, option course).
+
+Les PDF déposés dans `programmes/` (voir `programmes/LISEZMOI.md`) sont joints automatiquement
+dès que tous les fichiers d'une commande existent ; sinon l'email annonce un envoi sous 48 heures.
+
+1. Compte Google : active la validation en deux étapes, puis crée un « mot de passe d'application ».
+2. Vercel : ajoute `GMAIL_USER` et `GMAIL_APP_PASSWORD`, puis redéploie.
+3. Stripe : le webhook (`STRIPE_WEBHOOK_SECRET`) doit être configuré, voir plus haut.
+
 ## Avant de passer en production
 
 Complète `lib/legal.ts` (nom, SIRET, adresse, médiateur de la consommation) : les champs manquants

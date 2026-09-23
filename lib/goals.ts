@@ -12,8 +12,8 @@ export const goals = {
     en: { name: "Explosiveness", details: ["Speed", "Acceleration", "Change of direction / agility"] },
   },
   puissance: {
-    fr: { name: "Puissance", details: ["Tirs", "Sauts", "Duels"] },
-    en: { name: "Power", details: ["Shots", "Jumps", "Duels"] },
+    fr: { name: "Puissance", details: ["Pousser lourd", "Force maximale en un temps très court", "Tirs, sauts et duels plus puissants"] },
+    en: { name: "Power", details: ["Pushing heavy loads", "Maximum force in a very short time", "More powerful shots, jumps and duels"] },
   },
   condition: {
     fr: { name: "Condition physique", details: ["Endurance", "Capacité à répéter les efforts", "Perte de masse", "Condition physique générale"] },
