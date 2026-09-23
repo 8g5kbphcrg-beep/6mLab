@@ -44,6 +44,9 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           <div className="lb">{d.cmp.priceLb}</div>
           <div className="c a pr rv">{d.cmp.price[0]}</div>
           <div className="c b pr rv">{d.cmp.price[1]}</div>
+                    <div className="lb">{lang === "fr" ? "En savoir plus" : "Learn more"}</div>
+          <a className="c a rv" href={`/${lang}/programmes/pre-saison`}>{lang === "fr" ? "Voir le programme complet" : "See the full program"}</a>
+          <a className="c b rv" href={`/${lang}/programmes/maintien-saison`}>{lang === "fr" ? "Voir le programme complet" : "See the full program"}</a>
           <div className="ft">
             <a className="btn a" href="#objectif" data-pick="0">{d.cmp.choose[0]}</a>
             <a className="btn b" href="#objectif" data-pick="1">{d.cmp.choose[1]}</a>
