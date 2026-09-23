@@ -5,6 +5,7 @@ import Link from "next/link";
 import { dict, locales, SITE, type Lang } from "@/lib/dict";
 import { legalPaths } from "@/lib/legal";
 import Defs from "@/components/Defs";
+import Logo from "@/components/Logo";
 import Enhance from "@/components/Enhance";
 import "../globals.css";
 
@@ -46,7 +47,7 @@ export default async function RootLayout({ children, params }: { children: React
         <Defs />
         <a className="skip" href="#main">{d.nav.skip}</a>
         <header className="bar">
-          <Link href={`/${lang}`} className="logo" aria-label="6M Lab">6M<b>Lab</b></Link>
+          <Link href={`/${lang}`} className="logo" aria-label="6M Lab"><Logo /></Link>
           <nav className="navd" aria-label="Navigation">
             {links.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
             <Link className="lang" href={`/${other}`} hrefLang={other} lang={other}>{d.nav.other}</Link>
@@ -64,7 +65,7 @@ export default async function RootLayout({ children, params }: { children: React
         <footer className="foot">
           <div className="fwrap">
             <div>
-              <Link href={`/${lang}`} className="logo" aria-label="6M Lab">6M<b>Lab</b></Link>
+              <Link href={`/${lang}`} className="logo" aria-label="6M Lab"><Logo size={36} /></Link>
               <p>{d.hero.trust}</p>
             </div>
             <nav aria-label={fr ? "Site" : "Site"}>

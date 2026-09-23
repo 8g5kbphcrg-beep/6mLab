@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Stripe from "stripe";
 import { dict, type Lang } from "@/lib/dict";
+import { Mark } from "@/components/Logo";
 import "@/app/pages.css";
 
 export const metadata: Metadata = { title: "Merci | 6M Lab", robots: { index: false } };
@@ -27,6 +28,7 @@ export default async function Merci({ params, searchParams }: P) {
 
   return (
     <div className="pg">
+      <Mark size={72} className="merci-mark" />
       <h1>{fr ? "Merci !" : "Thank you!"}</h1>
       {paid ? (
         <p>{fr

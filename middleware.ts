@@ -10,4 +10,4 @@ export function middleware(req: NextRequest) {
   return NextResponse.redirect(url);
 }
 
-export const config = { matcher: ["/((?!_next|api|.*\\..*).*)"] };
+export const config = { matcher: ["/((?!_next|api|apple-icon|.*\\..*).*)"] };
