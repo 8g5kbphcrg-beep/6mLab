@@ -42,6 +42,7 @@ export default async function RootLayout({ children, params }: { children: React
             <a className="h" href={`/${lang}#formules`}>{d.nav.cmp}</a>
             <a className="h" href={`/${lang}#objectif`}>{d.nav.goal}</a>
             {lang === "fr" && <a className="h" href="/fr/conseils">Conseils</a>}
+{lang === "fr" ? <><a className="h" href="/fr/a-propos">À propos</a><a className="h" href="/fr/contact">Contact</a></> : <><a className="h" href="/en/about">About</a><a className="h" href="/en/contact">Contact</a></>}
             <Link className="lang" href={`/${other}`} hrefLang={other} lang={other}>{d.nav.other}</Link>
           </nav>
         </header>

@@ -1,0 +1,8 @@
+.pg{max-width:680px;margin:0 auto;padding:3rem 1.25rem 5rem}
+.pg h1{font-size:clamp(2.2rem,7vw,3.4rem)}
+.pg p{font-size:1.1rem}
+.avow{display:grid;gap:.5rem;margin:1.5rem 0;padding:1.2rem 1.4rem;background:var(--band);border-radius:var(--r)}
+.avow div{display:flex;gap:.6rem;align-items:baseline}
+.avow strong{font-family:var(--font-display),sans-serif;font-weight:400;font-size:1.3rem;color:var(--A)}
+.contactcard{margin-top:1.5rem;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.6rem}
+.contactcard p{color:var(--muted);margin-bottom:1.2rem}
