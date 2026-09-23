@@ -1,6 +1,6 @@
 // A 7-metre throw seen from behind the shooter: striped handball goal, goalkeeper,
 // 6 m zone and dashed 9 m line. One SMIL timeline of 3.6 s drives the arm, the ball and the keeper.
-import { MARK } from "@/components/Logo";
+import { BALL, MARK } from "@/components/Logo";
 
 const T = { dur: "3.6s", repeatCount: "indefinite" } as const;
 const KT = "0;.1;.15;.24;.6;1";
@@ -22,6 +22,7 @@ export default function Scene() {
   return (
     <svg className="scene" viewBox="0 0 480 340" aria-hidden="true" focusable="false">
       <defs>
+        <clipPath id="ballclip"><circle r="10" /></clipPath>
         <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#241B4A" />
           <stop offset="1" stopColor="#15102E" />
@@ -73,8 +74,7 @@ export default function Scene() {
         <animateMotion {...T} path="M171 150Q248 138 314 156" keyPoints="0;0;1;1" keyTimes="0;.15;.38;1" calcMode="linear" />
         <g>
           <animateTransform attributeName="transform" type="scale" {...T} values="1;1;.55;.55" keyTimes="0;.15;.38;1" />
-          <circle r="10" fill="#FFE14A" stroke="#100A24" strokeWidth="1.3" />
-          <path d="M-10 0Q0 -5 10 0M0 -10Q-5 0 0 10M-6 -8Q2 -3 7 7" fill="none" stroke="#100A24" strokeWidth="1.1" />
+          <g dangerouslySetInnerHTML={{ __html: BALL }} />
         </g>
       </g>
 
@@ -115,11 +115,11 @@ export default function Scene() {
         <path d={`M${S}L${E[0]}`} stroke={SKIN} strokeWidth="11" fill="none"><animate attributeName="d" {...T} values={upper} keyTimes={KT} /></path>
         <path d={`M${E[0]}L${H[0]}`} stroke={SKIN} strokeWidth="9" fill="none"><animate attributeName="d" {...T} values={fore} keyTimes={KT} /></path>
         <path d={`M${S}L${lerp(S, E[0], 0.5)}`} stroke="url(#jersey)" strokeWidth="15" fill="none"><animate attributeName="d" {...T} values={sleeve} keyTimes={KT} /></path>
-        <circle cx={H[0][0]} cy={H[0][1] - 9} r="10" fill="#FFE14A" stroke="#100A24" strokeWidth="1.3">
-          <animate attributeName="cx" {...T} values={H.map((h) => h[0]).join(";")} keyTimes={KT} />
-          <animate attributeName="cy" {...T} values={H.map((h) => h[1] - 9).join(";")} keyTimes={KT} />
+        <g opacity="1">
+          <animateTransform attributeName="transform" type="translate" {...T} values={H.map((h) => `${h[0]} ${h[1] - 9}`).join(";")} keyTimes={KT} />
           <animate attributeName="opacity" {...T} values="1;0;1" keyTimes="0;.15;.95" calcMode="discrete" />
-        </circle>
+          <g dangerouslySetInnerHTML={{ __html: BALL }} />
+        </g>
         <circle cx={H[0][0]} cy={H[0][1]} r="5.5" fill={SKIN}>
           <animate attributeName="cx" {...T} values={H.map((h) => h[0]).join(";")} keyTimes={KT} />
           <animate attributeName="cy" {...T} values={H.map((h) => h[1]).join(";")} keyTimes={KT} />
