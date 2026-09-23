@@ -52,7 +52,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       </section>
 
       <section id="objectif" className="band">
-        <div className="sec wrap"><Picker pick={d.pick} goals={d.goals} /></div>
+        <div className="sec wrap"><Picker pick={d.pick} goals={d.goals} /><p><a className="btn" href={`/${lang}/questionnaire`}>{lang === "fr" ? "Faire le questionnaire complet" : "Take the full questionnaire"}</a></p></div>
       </section>
 
       <section className="sec wrap">

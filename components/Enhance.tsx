@@ -26,7 +26,7 @@ export default function Enhance({ cta }: { cta: string }) {
     const s = () => {
       if (t) return;
       t = true;
-      requestAnimationFrame(() => { t = false; setOn(scrollY > (hero?.offsetHeight ?? 600) * 0.7); });
+      requestAnimationFrame(() => { t = false; setOn(!!hero && scrollY > hero.offsetHeight * 0.7); });
     };
     addEventListener("scroll", s, { passive: true });
     return () => { removeEventListener("scroll", s); o?.disconnect(); };

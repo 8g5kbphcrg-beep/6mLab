@@ -1,0 +1,51 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { posts } from "@/lib/posts";
+import { SITE } from "@/lib/dict";
+import "@/app/blog.css";
+
+type P = { params: Promise<{ lang: string; slug: string }> };
+
+export const generateStaticParams = () => posts.map((p) => ({ lang: "fr", slug: p.slug }));
+
+export async function generateMetadata({ params }: P): Promise<Metadata> {
+  const { slug } = await params;
+  const post = posts.find((p) => p.slug === slug);
+  if (!post) return {};
+  return {
+    title: `${post.title} | 6M Lab`,
+    description: post.desc,
+    alternates: { canonical: `/fr/conseils/${post.slug}` },
+    openGraph: { title: post.title, description: post.desc, type: "article", locale: "fr_FR" },
+  };
+}
+
+export default async function Article({ params }: P) {
+  const { lang, slug } = await params;
+  const post = posts.find((p) => p.slug === slug);
+  if (lang !== "fr" || !post) notFound();
+  const ld = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.desc,
+    datePublished: post.date,
+    inLanguage: "fr",
+    publisher: { "@type": "Organization", name: "6M Lab", url: SITE },
+  };
+  return (
+    <article className="post">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
+      <p className="pmeta"><Link href="/fr/conseils">← Tous les conseils</Link></p>
+      <h1>{post.title}</h1>
+      {post.body.map((b, i) =>
+        "h" in b ? <h2 key={i}>{b.h}</h2> : "ul" in b ? <ul key={i}>{b.ul.map((x) => <li key={x}>{x}</li>)}</ul> : <p key={i}>{b.p}</p>,
+      )}
+      <div className="postcta">
+        <p><strong>Prêt à passer à la pratique ?</strong> Réponds à quelques questions, on te recommande la formule adaptée.</p>
+        <Link className="btn" href="/fr/questionnaire">Trouver mon programme</Link>
+      </div>
+    </article>
+  );
+}
