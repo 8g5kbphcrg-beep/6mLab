@@ -14,6 +14,12 @@ import optionCourse from "../programmes/source/option-course.mjs";
 import { figure, variants } from "../programmes/source/figures.mjs";
 
 const out = join(import.meta.dirname, "..", "programmes");
+// Website address used by the eye icons (animation of each exercise). The PDFs must be
+// rebuilt if it changes (domain name).
+const SITE = (process.env.PROGRAMMES_SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || "https://6m-lab-seven.vercel.app").replace(/\/$/, "");
+const EYE = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.2" fill="currentColor"/></svg>`;
+// Eye icon linking to the exercise's animation (only for exercises that have one).
+const eye = (id, text = "") => (id && variants(id).length ? `<a class="eye${text ? " big" : ""}" href="${SITE}/fr/exercices/${id}">${EYE}${text}</a>` : "");
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
 const md = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
 
@@ -36,13 +42,13 @@ const exerciseCard = (n, e, id) => {
   const vs = id ? variants(id) : [];
   const label = { poids: "Au poids du corps", materiel: "Avec matériel" };
   const fig = vs.length ? `<div class="figs">${vs.map((v) => `<div class="fig">${vs.length > 1 ? `<span class="flab">${label[v]}</span>` : ""}${figure(id, v)}</div>`).join("")}</div>` : "";
-  return `<div class="ex${fig ? " hasfig" : ""}">${fig}<div class="extext"><div class="exname">${n ? `<span class="num">${n}</span>` : ""}${md(e.name)}</div><p>${md(e.how)}</p>${e.cues ? `<p class="cues"><strong>Points clés :</strong> ${md(e.cues)}</p>` : ""}${e.easier ? `<p class="lvl"><strong>Plus facile :</strong> ${md(e.easier)}</p>` : ""}</div></div>`;
+  return `<div class="ex${fig ? " hasfig" : ""}">${fig}<div class="extext"><div class="exname">${n ? `<span class="num">${n}</span>` : ""}${md(e.name)}${eye(id, "Voir l'animation")}</div><p>${md(e.how)}</p>${e.cues ? `<p class="cues"><strong>Points clés :</strong> ${md(e.cues)}</p>` : ""}${e.easier ? `<p class="lvl"><strong>Plus facile :</strong> ${md(e.easier)}</p>` : ""}</div></div>`;
 };
 
 // A session: its steps, each a small table of exercises numbered from the library.
 const session = (title, steps, num) => `<section class="session"><div class="stitle">${md(title)}</div>${steps.map((st, i) => `
   <div class="step"><div class="sname"><span class="snum">${i + 1}</span>${md(st.name)}${st.duree ? `<span class="sdur">${esc(st.duree)}</span>` : ""}</div>
-  ${st.text ? `<p class="stext">${md(st.text)}</p>` : `<table><tbody>${st.rows.map(([id, dose, rest, prec]) => `<tr><td class="c1"><span class="ref">${num(id)}</span>${md(exercices[id].name)}${prec ? ` <span class="prec">(${md(prec)})</span>` : ""}</td><td class="c2">${md(dose)}</td><td class="c3">${md(rest ?? "")}</td></tr>`).join("")}</tbody></table>`}</div>`).join("")}</section>`;
+  ${st.text ? `<p class="stext">${md(st.text)}</p>` : `<table><tbody>${st.rows.map(([id, dose, rest, prec]) => `<tr><td class="c1"><span class="ref">${num(id)}</span>${md(exercices[id].name)}${prec ? ` <span class="prec">(${md(prec)})</span>` : ""}${eye(id)}</td><td class="c2">${md(dose)}</td><td class="c3">${md(rest ?? "")}</td></tr>`).join("")}</tbody></table>`}</div>`).join("")}</section>`;
 
 const css = (color) => `
 @page{size:A4;margin:16mm 15mm 18mm}@page cover{margin:0}
@@ -75,6 +81,8 @@ tr:nth-child(even) td{background:#F6F5FB}
 .ex{border:1px solid #E3E0F0;border-left:4px solid var(--c);border-radius:3mm;padding:3mm 4mm;margin:0 0 3mm;page-break-inside:avoid;display:flex;gap:5mm;align-items:flex-start}
 .ex.hasfig{flex-direction:column}.figs{display:flex;gap:3mm;align-self:stretch}.fig{flex:1;background:#F6F5FB;border-radius:2mm;padding:2mm 3mm;display:flex;flex-direction:column;align-items:center}.fig svg{height:40mm;width:auto;max-width:100%;display:block}.flab{align-self:flex-start;font-size:7.5pt;font-weight:700;background:#100A24;color:#fff;border-radius:99px;padding:0.3mm 2.5mm}
 .exname{font-size:12.5pt;margin-bottom:1mm;display:flex;align-items:center;gap:2mm}.num{display:inline-grid;place-items:center;min-width:7mm;height:7mm;border-radius:2mm;background:#100A24;color:#fff;font:700 9pt Inter}
+.eye{display:inline-flex;align-items:center;gap:1.2mm;margin-left:1.5mm;vertical-align:middle;color:#100A24;background:var(--c);border-radius:99px;padding:0.4mm 1.6mm;text-decoration:none}.eye svg{width:3.6mm;height:3.6mm;display:block}
+.ex.hasfig .extext{align-self:stretch}.eye.big{margin-left:auto;font:700 8pt Inter;padding:0.8mm 2.6mm}.eye.big svg{width:4.2mm;height:4.2mm}
 .ex p{margin:0 0 1.5mm}.cues,.lvl{font-size:9pt;color:#3A3452}
 `;
 
@@ -132,7 +140,7 @@ const seancesDoc = (fid, pair) => {
   <li>« 2-4 × 8 » : 2 séries au niveau 1, 3 au niveau 2, 4 au niveau 3, de 8 répétitions. « 2-3 × 8 » : 2 séries aux niveaux 1 et 2, 3 au niveau 3.</li>
   <li>Le numéro devant chaque exercice renvoie à sa fiche illustrée, à la fin de ce document.</li>
   <li>Si tu ne connais pas ton niveau, relis le guide, page « Choisir ton niveau ».</li></ul>`;
-  const library = `<div class="pb"></div><h2>Les exercices</h2><p>Dans l'ordre des numéros utilisés dans tes séances.</p>${[...nums].map(([id, n]) => exerciseCard(n, exercices[id], id)).join("")}`;
+  const library = `<div class="pb"></div><h2>Les exercices</h2><p>Dans l'ordre des numéros utilisés dans tes séances. Touche l'œil pour voir l'exercice en mouvement.</p>${[...nums].map(([id, n]) => exerciseCard(n, exercices[id], id)).join("")}`;
   const d = { title: "Tes séances", tag: f.name, color: f.color, subtitle: title, meta: [["Formule", f.name], ["Durée", f.duree], ["Séance", f.seance]] };
   return { file: `seances-${fid}-${pair.join("-")}`, d, body: goals + sessions + library };
 };

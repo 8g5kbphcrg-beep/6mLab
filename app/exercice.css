@@ -1,0 +1,13 @@
+.exo-back{position:fixed;inset:0;z-index:100;background:rgba(16,10,36,.72);display:grid;place-items:center;padding:16px;overflow-y:auto}
+.exo-card{position:relative;background:#fff;color:#100A24;border-radius:20px;width:min(100%,880px);padding:2.2rem 1.4rem 1.6rem;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.exo-card h1{font:400 clamp(1.6rem,5vw,2.3rem)/1.1 var(--font-display),sans-serif;margin:0 3rem 1rem 0}
+.exo-x{position:absolute;top:12px;right:12px;width:44px;height:44px;border-radius:50%;border:0;background:#F1EFF8;cursor:pointer;display:grid;place-items:center}
+.exo-x svg{width:22px;height:22px;fill:none;stroke:#100A24;stroke-width:2.6;stroke-linecap:round}
+.exo-x:hover{background:#E3E0F0}.exo-x:focus-visible{outline:3px solid #FF5A1F;outline-offset:2px}
+.exo-anims{display:grid;gap:12px;margin-bottom:1rem}
+@media (min-width:700px){.exo-anims.n2{grid-template-columns:1fr 1fr}}
+.exo-anims figure{margin:0;background:#F6F5FB;border-radius:14px;padding:10px 12px}
+.exo-anims figcaption{display:inline-block;font-size:.8rem;font-weight:700;background:#100A24;color:#fff;border-radius:99px;padding:.15rem .7rem}
+.exo-svg svg{display:block;width:100%;height:auto;max-height:min(55vh,420px)}
+@media (max-width:699px){.exo-anims.n2 .exo-svg svg{max-height:30vh}}
+.exo-card p{margin:0 0 .6rem;font-size:1rem;line-height:1.55;max-width:68ch}.exo-cues{color:#3A3452}

@@ -34,3 +34,11 @@ npm run programmes -- seances-pre-saison-explosivite-muscle  # un seul
 ```
 
 La première fois sur un nouvel ordinateur : `npx playwright install chromium`.
+
+## Animations
+
+Chaque exercice qui a une illustration porte un œil dans les PDF. Il ouvre la page
+`/fr/exercices/<exercice>` du site : l'animation dans une grande carte blanche, fermée par la
+croix en haut à droite. L'adresse du site est prise dans `PROGRAMMES_SITE_URL` (sinon
+`NEXT_PUBLIC_SITE_URL`, sinon https://6m-lab-seven.vercel.app) : **régénère les PDF
+(`npm run programmes`) quand le nom de domaine change.**
