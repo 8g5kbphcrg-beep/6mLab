@@ -3,6 +3,7 @@ import { dict, type Lang } from "@/lib/dict";
 import Scene from "@/components/Scene";
 import Picker from "@/components/Picker";
 import ProgramCards from "@/components/ProgramCards";
+import { SLOGAN } from "@/lib/brand";
 
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
@@ -15,6 +16,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       <section className="hero">
         <div className="wrap">
           <div>
+            <p className="slogan rise">{SLOGAN}</p>
             <h1 className="rise">{d.hero.h1}</h1>
             <p className="lead rise" style={d3(2)}>{d.hero.sub}</p>
             <div className="hcta rise" style={d3(3)}>

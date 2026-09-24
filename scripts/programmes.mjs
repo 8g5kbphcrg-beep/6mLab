@@ -13,6 +13,7 @@ import { objectifs, ordre, solos } from "../programmes/source/objectifs.mjs";
 import { formules } from "../programmes/source/communs.mjs";
 import optionCourse from "../programmes/source/option-course.mjs";
 import { figure, variants } from "../programmes/source/figures.mjs";
+import { MARK_VIEWBOX, markSvg, SLOGAN } from "../lib/mark.mjs";
 
 const out = join(import.meta.dirname, "..", "programmes");
 // Website address used by the eye icons (animation of each exercise). The PDFs must be
@@ -56,8 +57,8 @@ const css = (color) => `
 @page{size:A4;margin:16mm 15mm 18mm}@page cover{margin:0}
 *{box-sizing:border-box}body{font:10pt/1.5 Inter,sans-serif;color:#100A24;margin:0;--c:${color}}
 h1,h2,h3,.exname,.stitle{font-family:Anton,Impact,sans-serif;font-weight:400;letter-spacing:.01em}
-.cover{page:cover;width:210mm;height:296mm;overflow:hidden;background:#100A24;color:#F3F1FB;padding:30mm 24mm 22mm;display:flex;flex-direction:column;page-break-after:always}
-.logo{display:flex;align-items:flex-start;gap:4px}.logo b{font:400 64pt/1 Anton;color:#FFE14A;letter-spacing:-1px}.lab{font:700 11pt Inter;letter-spacing:.35em;color:#fff;opacity:.85;margin:6px 0 0 4px}
+.cover{page:cover;width:210mm;height:296mm;overflow:hidden;background:linear-gradient(120deg,#16123F 0%,#3E1858 55%,#9E3456 100%);color:#F3F1FB;padding:30mm 24mm 22mm;display:flex;flex-direction:column;page-break-after:always}
+.brand{display:inline-flex;flex-direction:column;align-items:center;gap:3mm;align-self:flex-start}.brand svg{height:34mm;width:auto}.brand b{font:400 17pt/1 "Bebas Neue";letter-spacing:.22em;margin-right:-.22em;color:#FFC75F;text-transform:uppercase}
 .cover .tag{display:inline-block;align-self:flex-start;background:var(--c);color:#100A24;font-weight:700;border-radius:99px;padding:4px 14px;margin-top:auto}
 .cover h1{font-size:48pt;line-height:1.02;margin:14px 0 10px}.cover .sub{font-size:14pt;color:#CFC8EE;max-width:140mm}
 .cover .meta{margin-top:16mm;display:flex;gap:10mm;font-size:10pt;color:#CFC8EE}.cover .meta strong{display:block;color:#fff;font-size:13pt}
@@ -88,9 +89,8 @@ tr:nth-child(even) td{background:#F6F5FB}
 .ex p{margin:0 0 1.5mm}.cues,.lvl{font-size:9pt;color:#3A3452}
 `;
 
-const LOGO_BALL = `<svg viewBox="0 0 100 100" width="44" height="44"><circle cx="50" cy="50" r="44" fill="none" stroke="#FF5A1F" stroke-width="7"/><path d="M18 32Q50 12 82 32M18 68Q50 88 82 68M12 50Q50 34 88 50" fill="none" stroke="#FF5A1F" stroke-width="6"/></svg>`;
 const cover = (d) => `<section class="cover">
-  <div><div class="logo"><b>6M</b>${LOGO_BALL}</div><div class="lab">LAB</div></div>
+  <div class="brand"><svg viewBox="${MARK_VIEWBOX}">${markSvg()}</svg><b>${SLOGAN}</b></div>
   <span class="tag">${esc(d.tag)}</span><h1>${esc(d.title)}</h1><p class="sub">${esc(d.subtitle)}</p>
   <div class="meta">${d.meta.map(([k, v]) => `<div>${esc(k)}<strong>${esc(v)}</strong></div>`).join("")}</div>
   <p class="disc">Document réservé à un usage personnel, ne pas diffuser. Programme destiné aux personnes en bonne santé : en cas de douleur, de blessure ou de doute, arrête et demande l'avis d'un professionnel de santé.</p>
@@ -163,7 +163,7 @@ const docs = [
 
 // Anton and Inter, fetched once and embedded so the PDF never depends on a web font loading.
 async function fonts() {
-  const css = await (await fetch("https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700")).text();
+  const css = await (await fetch("https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@400;600;700")).text();
   const faces = [...css.matchAll(/@font-face\s*{[^}]*font-family:\s*'([^']+)'[^}]*font-weight:\s*(\d+)[^}]*src:\s*url\(([^)]+)\)[^}]*}/g)];
   const res = [];
   for (const [, family, weight, url] of faces) {

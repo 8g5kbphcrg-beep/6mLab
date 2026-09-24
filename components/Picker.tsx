@@ -49,7 +49,7 @@ export default function Picker({ lang, pick }: Props) {
           <h3>{pick.names[m]}{sel.length > 0 && ` · ${goalsTitle(sel, lang)}`}</h3>
           <p className="note">{done ? pick.meta[m] : pick.pickTwo}</p>
         </div>
-        {done && <a className="btn" href={`/${lang}/programmes/${programSlugs[m]}?objectifs=${sel.join(",")}#acheter`}>{pick.go}</a>}
+        {done && <a className="btn" data-go href={`/${lang}/programmes/${programSlugs[m]}?objectifs=${sel.join(",")}#acheter`}>{pick.go}</a>}
       </div>
       <p className="note" style={{ marginTop: "1rem" }}>{pick.note}</p>
     </>

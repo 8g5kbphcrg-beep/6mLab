@@ -1,17 +1,20 @@
 import type { Metadata } from "next";
-import { Anton, Inter } from "next/font/google";
+import { Anton, Bebas_Neue, Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { dict, locales, SITE, type Lang } from "@/lib/dict";
 import { legalPaths } from "@/lib/legal";
 import Defs from "@/components/Defs";
-import Logo from "@/components/Logo";
+import Logo, { Lockup } from "@/components/Logo";
 import Enhance from "@/components/Enhance";
 import ThemeToggle from "@/components/ThemeToggle";
+import { Splash, Transition } from "@/components/Brand";
+import { splashScript } from "@/lib/brand";
 import "../globals.css";
 
 const display = Anton({ subsets: ["latin"], weight: "400", variable: "--font-display" });
 const text = Inter({ subsets: ["latin"], variable: "--font-text" });
+const slogan = Bebas_Neue({ subsets: ["latin"], weight: "400", variable: "--font-slogan" });
 
 export const generateStaticParams = () => locales.map((lang) => ({ lang }));
 
@@ -42,13 +45,16 @@ export default async function RootLayout({ children, params }: { children: React
     [`/${lang}/contact`, "Contact"],
   ];
   return (
-    <html lang={lang} className={`${display.variable} ${text.variable}`} suppressHydrationWarning>
+    <html lang={lang} className={`${display.variable} ${text.variable} ${slogan.variable}`} suppressHydrationWarning>
       <head>
         {/* Applies the theme chosen with the theme button before the page paints (no flash). */}
         <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}` }} />
+        <script dangerouslySetInnerHTML={{ __html: splashScript }} />
       </head>
       <body>
-        <noscript><style>{".rv,.rise{opacity:1!important;transform:none!important}"}</style></noscript>
+        <noscript><style>{".rv,.rise{opacity:1!important;transform:none!important}.splash{display:none!important}"}</style></noscript>
+        <Splash />
+        <Transition paying={fr ? "Redirection vers le paiement sécurisé…" : "Taking you to secure payment…"} />
         <Defs />
         <a className="skip" href="#main">{d.nav.skip}</a>
         <header className="bar">
@@ -71,7 +77,7 @@ export default async function RootLayout({ children, params }: { children: React
         <footer className="foot">
           <div className="fwrap">
             <div>
-              <Link href={`/${lang}`} className="logo" aria-label="6M Lab"><Logo /></Link>
+              <Link href={`/${lang}`} className="logo" aria-label="6M Lab"><Lockup size={54} /></Link>
               <p>{d.hero.trust}</p>
             </div>
             <nav aria-label={fr ? "Site" : "Site"}>

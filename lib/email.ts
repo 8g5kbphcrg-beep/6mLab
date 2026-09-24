@@ -80,7 +80,7 @@ export async function sendConfirmation(o: Order) {
     : "Our programs are for healthy people. If you have doubts or an injury, ask a health professional first.";
 
   const html = `<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;color:#100A24">
-  <div style="background:#100A24;padding:20px 24px;border-radius:12px 12px 0 0"><span style="font:700 26px Arial;color:#FFE14A">6M</span><span style="font:700 12px Arial;letter-spacing:4px;color:#fff;margin-left:8px">LAB</span></div>
+  <div style="background:#16123F;padding:16px 20px;border-radius:12px 12px 0 0"><img src="${SITE}/brand/logo-email.png" width="189" height="56" alt="6M Lab · Be ready." style="display:block;border:0;color:#FFC75F;font:700 22px Arial"></div>
   <div style="border:1px solid #E3E0F0;border-top:0;border-radius:0 0 12px 12px;padding:24px">
     <p>${esc(hello)}</p><p>${intro}</p>
     <table style="width:100%;border-collapse:collapse;margin:16px 0">${rows.map(([k, v]) => `<tr><td style="padding:8px 0;color:#5B5673;border-bottom:1px solid #E3E0F0">${k}</td><td style="padding:8px 0;text-align:right;font-weight:700;border-bottom:1px solid #E3E0F0">${esc(v)}</td></tr>`).join("")}</table>
