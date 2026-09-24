@@ -80,17 +80,20 @@ export const toOrder = (pi: Stripe.PaymentIntent): FeedbackOrder => {
   };
 };
 
-// Every paid 6M Lab order (Stripe search, newest first).
+// Every paid 6M Lab order (Stripe search, newest first). Stripe's search language can't mix AND
+// and OR in one query, so each program is searched separately.
 export async function paidOrders(s: Stripe, since?: number): Promise<FeedbackOrder[]> {
-  const query = `status:'succeeded' AND (metadata['program']:'pre-saison' OR metadata['program']:'maintien-saison')${since ? ` AND created>${since}` : ""}`;
   const out: FeedbackOrder[] = [];
-  let page: string | undefined;
-  do {
-    const res = await s.paymentIntents.search({ query, limit: 100, page, expand: ["data.latest_charge"] });
-    out.push(...res.data.map(toOrder));
-    page = res.next_page ?? undefined;
-  } while (page && out.length < 2000);
-  return out;
+  for (const program of ["pre-saison", "maintien-saison"]) {
+    const query = `status:'succeeded' AND metadata['program']:'${program}'${since ? ` AND created>${since}` : ""}`;
+    let page: string | undefined;
+    do {
+      const res = await s.paymentIntents.search({ query, limit: 100, page, expand: ["data.latest_charge"] });
+      out.push(...res.data.map(toOrder));
+      page = res.next_page ?? undefined;
+    } while (page && out.length < 2000);
+  }
+  return out.sort((a, b) => b.created - a.created);
 }
 
 // A single-use discount code for the next program, given after the final questionnaire.
