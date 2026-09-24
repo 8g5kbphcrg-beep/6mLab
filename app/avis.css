@@ -1,0 +1,20 @@
+.avis h1{font-size:clamp(2rem,6vw,3rem)}
+.avf{display:grid;gap:1rem;margin-top:1.5rem}
+.avq{border:1px solid var(--line);border-radius:var(--r);background:var(--card);padding:1rem 1.1rem;margin:0}
+.avq legend{float:left;width:100%;font-weight:700;padding:0;margin:0 0 .5rem;font-size:1rem}.avq legend+*{clear:both}.avq legend span{font-weight:400;color:var(--muted);font-size:.9rem}
+.avopts{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.4rem}
+.avchip{display:inline-flex;align-items:center;gap:.4rem;border:1.5px solid var(--line);border-radius:999px;padding:.5rem .9rem;cursor:pointer;background:var(--bg)}
+.avchip:has(:checked){border-color:var(--ink);background:var(--band);font-weight:600}.avchip input{accent-color:var(--A)}
+.avstars{display:inline-flex;flex-direction:row-reverse;gap:.2rem}.avstars input{position:absolute;opacity:0;pointer-events:none}
+.avstars label{font-size:2.4rem;line-height:1;color:var(--line);cursor:pointer;transition:color .1s}
+.avstars label:hover,.avstars label:hover~label,.avstars input:checked~label{color:#FFC75F}
+.avstars input:focus-visible+label{outline:3px solid var(--A);outline-offset:2px;border-radius:6px}
+.avnps{display:grid;grid-template-columns:repeat(11,1fr);gap:.25rem;margin-top:.4rem}
+.avnps label{position:relative}.avnps input{position:absolute;opacity:0}
+.avnps span{display:grid;place-items:center;height:2.4rem;border:1.5px solid var(--line);border-radius:8px;cursor:pointer;font-weight:600;background:var(--bg)}
+.avnps input:checked+span{background:var(--A);border-color:var(--A);color:#100A24}.avnps input:focus-visible+span{outline:3px solid var(--A)}
+.avscale{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin:.3rem 0 0;max-width:none}
+.avq textarea{width:100%;font:inherit;color:inherit;background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:.6rem .7rem;margin-top:.4rem;resize:vertical}
+.avf .btn{justify-self:start}
+.avcode{font:700 1.6rem var(--font-text),sans-serif;letter-spacing:.08em;background:var(--band);border-radius:12px;padding:1rem;text-align:center;max-width:24rem}
+body:has(.avis) .cta{display:none}
