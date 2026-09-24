@@ -55,6 +55,7 @@ export async function POST(req: NextRequest) {
           product_data: { name: lang === "fr" ? "Option course à pied" : "Running option", description: lang === "fr" ? "Séances de 30 à 45 min" : "30 to 45 min sessions" },
         },
       }] : [])],
+      allow_promotion_codes: true,
       metadata: { ...meta, consent: new Date().toISOString() },
       payment_intent_data: { metadata: meta },
       custom_text: {

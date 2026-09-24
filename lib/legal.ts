@@ -57,6 +57,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
         { h: "Données collectées et pourquoi", body: [[
           "Lors d'un achat : ton nom, ton adresse email, ton pays, le programme, les objectifs et les options choisis, ainsi que ton prénom, ton âge et ton genre (tu peux choisir de ne pas le préciser). Ces données servent à traiter ta commande, adapter et t'envoyer ton programme, et tenir la comptabilité (base légale : exécution du contrat et obligations comptables). Les données de carte bancaire sont saisies directement chez Stripe : 6M Lab n'y a jamais accès.",
           "Quand tu nous écris par email : ton adresse et le contenu de ton message, pour te répondre (base légale : intérêt légitime).",
+          "Après un achat, nous t'envoyons deux questionnaires facultatifs (2 semaines après l'achat et à la fin du programme). Tes réponses servent à améliorer les programmes (base légale : intérêt légitime). Ton témoignage et ta note ne sont publiés sur le site qu'avec ton accord, avec ton seul prénom (base légale : consentement, que tu peux retirer à tout moment en nous écrivant).",
           "Le questionnaire : tes réponses restent dans ton navigateur. Elles ne sont ni envoyées ni enregistrées.",
           "Données techniques : l'hébergeur enregistre des journaux (adresse IP, pages consultées) nécessaires au fonctionnement et à la sécurité du site (base légale : intérêt légitime).",
         ]] },
@@ -65,12 +66,13 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
         ] },
         { h: "Destinataires", body: [
           "Tes données ne sont jamais vendues. Elles sont transmises uniquement aux prestataires nécessaires au service :",
-          ["Stripe (paiement)", "Vercel (hébergement du site)", "Google (messagerie Gmail, pour les échanges par email)"],
+          ["Stripe (paiement)", "Vercel (hébergement du site)", "Apple (messagerie iCloud, pour les emails)"],
           "Certains de ces prestataires peuvent traiter des données hors de l'Union européenne, notamment aux États-Unis. Ces transferts sont encadrés par le Data Privacy Framework UE–États-Unis ou par les clauses contractuelles types de la Commission européenne.",
         ] },
         { h: "Durée de conservation", body: [[
           "Commandes et factures : 10 ans, durée imposée par les obligations comptables.",
           "Échanges par email : 3 ans après notre dernier échange.",
+          "Réponses aux questionnaires : 3 ans. Avis publiés : jusqu'à ce que tu demandes leur retrait.",
           "Journaux techniques : durée limitée fixée par l'hébergeur.",
         ]] },
         { h: "Tes droits", body: [
@@ -123,7 +125,11 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
         { h: "12. Réclamations et médiation", body: [
           `Pour toute réclamation, écris d'abord à ${o.email}. En l'absence de solution, tu peux recourir gratuitement au médiateur de la consommation : ${o.mediator}.`,
         ] },
-        { h: "13. Droit applicable", body: [
+        { h: "13. Avis clients", body: [
+          "Après son achat, l'acheteur reçoit par email deux questionnaires facultatifs, 2 semaines après l'achat et à la fin du programme. Les avis publiés sur le site proviennent uniquement de ces questionnaires, donc d'acheteurs vérifiés. Pour avoir répondu au questionnaire final, l'acheteur reçoit un code de réduction de 15 % sur un prochain programme, quel que soit le contenu de son avis.",
+          "Les avis ne sont pas modifiés. Seuls sont publiés ceux dont l'auteur a accepté la publication, avec son prénom et la date de l'avis. La note moyenne affichée tient compte de toutes les réponses au questionnaire final, y compris les avis non publiés. L'auteur peut demander le retrait de son avis à tout moment.",
+        ] },
+        { h: "14. Droit applicable", body: [
           "Les présentes conditions sont soumises au droit français. En cas de litige, le consommateur peut saisir la juridiction de son lieu de domicile ou toute autre juridiction compétente.",
         ] },
       ],
@@ -158,6 +164,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
         { h: "Data collected and why", body: [[
           "When you buy: your name, email address, country, the program, goals and options you chose, and your first name, age and gender (you can choose not to say). This data is used to process your order, adapt and send your program, and keep the accounts (legal basis: performance of the contract and accounting obligations). Card details are entered directly with Stripe: 6M Lab never has access to them.",
           "When you email us: your address and your message, to reply to you (legal basis: legitimate interest).",
+          "After a purchase, we send you two optional questionnaires (2 weeks after the purchase and at the end of the program). Your answers are used to improve the programs (legal basis: legitimate interest). Your review and rating are only published on the website with your consent, with your first name only (legal basis: consent, which you can withdraw at any time by emailing us).",
           "The questionnaire: your answers stay in your browser. They are neither sent nor saved.",
           "Technical data: the host keeps logs (IP address, pages viewed) needed to run and secure the website (legal basis: legitimate interest).",
         ]] },
@@ -166,12 +173,13 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
         ] },
         { h: "Recipients", body: [
           "Your data is never sold. It is only shared with the providers needed to run the service:",
-          ["Stripe (payment)", "Vercel (website hosting)", "Google (Gmail, for email exchanges)"],
+          ["Stripe (payment)", "Vercel (website hosting)", "Apple (iCloud Mail, for emails)"],
           "Some of these providers may process data outside the European Union, in particular in the United States. These transfers are covered by the EU–US Data Privacy Framework or by the European Commission's standard contractual clauses.",
         ] },
         { h: "Retention", body: [[
           "Orders and invoices: 10 years, as required by accounting rules.",
           "Email exchanges: 3 years after our last exchange.",
+          "Questionnaire answers: 3 years. Published reviews: until you ask for their removal.",
           "Technical logs: a limited period set by the host.",
         ]] },
         { h: "Your rights", body: [
@@ -225,7 +233,11 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
         { h: "12. Complaints and mediation", body: [
           `For any complaint, first write to ${o.email}. If no solution is found, you can refer the matter free of charge to the consumer mediator: ${o.mediator}.`,
         ] },
-        { h: "13. Governing law", body: [
+        { h: "13. Customer reviews", body: [
+          "After the purchase, the buyer receives two optional questionnaires by email, 2 weeks after the purchase and at the end of the program. The reviews published on the website only come from these questionnaires, so from verified buyers. For answering the final questionnaire, the buyer receives a 15% discount code for a next program, whatever the content of the review.",
+          "Reviews are not edited. Only those whose author agreed to publication are shown, with the first name and the date of the review. The average rating shown takes into account every answer to the final questionnaire, including unpublished reviews. The author can ask for their review to be removed at any time.",
+        ] },
+        { h: "14. Governing law", body: [
           "These terms are governed by French law. In the event of a dispute, the consumer may bring the matter before the court of their place of residence or any other competent court.",
         ] },
       ],

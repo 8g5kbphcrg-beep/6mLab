@@ -1,0 +1,16 @@
+.adm{margin:0;font:15px/1.5 system-ui,sans-serif;color:#100A24;background:#FCF8F9}
+.adm main{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
+.adm h1{font-size:26px;margin:0 0 4px}.adm h2{font-size:19px;margin:32px 0 10px}.adm .sub{color:#5B5673;margin:0 0 16px}
+.adm .kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.adm .kpi{background:#fff;border:1px solid #ECDFE4;border-radius:14px;padding:12px 14px}.adm .kpi b{display:block;font-size:26px}.adm .kpi span{color:#5B5673;font-size:13px}
+.adm .card{background:#fff;border:1px solid #ECDFE4;border-radius:14px;padding:14px;margin-bottom:10px}
+.adm .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.adm .bar{display:grid;grid-template-columns:140px 1fr 40px;gap:8px;align-items:center;font-size:13px;margin:4px 0}
+.adm .bar i{display:block;height:12px;border-radius:6px;background:#FF7A59}.adm .bar s{display:block;height:12px;border-radius:6px;background:#F5EDF0;text-decoration:none}
+.adm table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid #ECDFE4;border-radius:14px;overflow:hidden}
+.adm th,.adm td{text-align:left;padding:8px;border-bottom:1px solid #F5EDF0;vertical-align:top}.adm th{background:#16123F;color:#fff;font-weight:600}
+.adm .tbl{overflow-x:auto}
+.adm button,.adm .btn{font:inherit;font-size:13px;border:0;border-radius:999px;padding:6px 12px;background:#FF7A59;color:#100A24;cursor:pointer;text-decoration:none;display:inline-block}
+.adm button.ghost{background:#F5EDF0}.adm form{display:inline}
+.adm .muted{color:#5B5673}.adm .stars{color:#E0A100;letter-spacing:1px}.adm .quote{font-style:italic}
+.adm .tag{display:inline-block;font-size:12px;border-radius:999px;padding:1px 8px;background:#F5EDF0}.adm .tag.ok{background:#D6F5F1}

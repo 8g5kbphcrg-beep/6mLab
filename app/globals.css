@@ -158,3 +158,10 @@ html.splash-seen .splash{display:none}html.splash-out .splash{opacity:0;pointer-
 .bar,.hero{background:var(--sky)}
 .offer.b .btn,.res.b .btn,.buy.b .bpay{background:var(--B)}
 .offer.b .btn:hover,.res.b .btn:hover,.buy.b .bpay:hover{box-shadow:0 8px 24px rgba(46,196,182,.35)}
+
+/* Customer reviews */
+.rstars{color:#FFC75F;letter-spacing:.08em}.rstars .off{color:var(--line)}
+.rlist{list-style:none;margin:0 0 1rem;padding:0;display:grid;gap:1rem}
+.rlist li{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.2rem 1.3rem;box-shadow:var(--shadow)}
+.rlist li p{margin:.5rem 0 0}.rby{color:var(--muted);font-size:.9rem}
+@media(min-width:760px){.rlist{grid-template-columns:repeat(3,1fr)}}

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Reviews from "@/components/Reviews";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { dict, type Lang } from "@/lib/dict";
@@ -9,6 +10,9 @@ import { validGoals } from "@/lib/goals";
 import "@/app/programme.css";
 
 type P = { params: Promise<{ lang: string; slug: string }>; searchParams?: Promise<{ paiement?: string; objectifs?: string }> };
+
+// Rebuilt every hour at most, to show newly published reviews.
+export const revalidate = 3600;
 
 export const generateStaticParams = () =>
   (["fr", "en"] as const).flatMap((lang) => programSlugs.map((slug) => ({ lang, slug })));
@@ -68,6 +72,7 @@ export default async function Programme({ params, searchParams }: P) {
           <p className="note">{d.why.note}</p>
         </div>
       </div>
+      <Reviews lang={lang as Lang} />
     </div>
   );
 }

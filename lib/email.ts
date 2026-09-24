@@ -129,3 +129,39 @@ export async function notifyOwner(o: Order, delivered: boolean) {
   });
   if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
 }
+
+// Shared frame of the customer emails: header with the logo, then the content.
+const frame = (body: string) => `<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;color:#100A24">
+  <div style="background:#16123F;padding:16px 20px;border-radius:12px 12px 0 0"><img src="${SITE}/brand/logo-email.png" width="189" height="56" alt="6M Lab · Be ready." style="display:block;border:0;color:#FFC75F;font:700 22px Arial"></div>
+  <div style="border:1px solid #E3E0F0;border-top:0;border-radius:0 0 12px 12px;padding:24px">${body}</div></div>`;
+const button = (href: string, label: string) => `<p style="margin:24px 0"><a href="${href}" style="background:#FF7A59;color:#100A24;text-decoration:none;font-weight:700;padding:14px 24px;border-radius:999px;display:inline-block">${label}</a></p>`;
+
+// Feedback request: "mid" 2 weeks after the purchase, "end" when the program is over.
+export async function sendFeedbackRequest(o: { email: string; lang: Lang; firstName: string; program: ProgramSlug }, stage: "mid" | "end", link: string, promoPercent: number) {
+  const fr = o.lang === "fr";
+  const p = programs[o.lang][o.program];
+  const hello = fr ? `Bonjour ${o.firstName},` : `Hi ${o.firstName},`;
+  const lines = stage === "mid"
+    ? fr
+      ? [`Tu as commencé ton programme ${p.name} il y a deux semaines. Comment ça se passe ?`, "4 questions, 1 minute : ça nous aide à corriger vite ce qui bloque."]
+      : [`You started your ${p.name} program two weeks ago. How is it going?`, "4 questions, 1 minute: it helps us fix quickly anything that gets in the way."]
+    : fr
+      ? [`Ton programme ${p.name} touche à sa fin : bravo pour le travail !`, `Donne-nous ton avis en 2 minutes. Pour te remercier, tu recevras un code de -${promoPercent} % sur ton prochain programme, quel que soit ton avis.`]
+      : [`Your ${p.name} program is coming to an end: well done!`, `Tell us what you think in 2 minutes. As a thank-you, you will get a ${promoPercent}% discount code for your next program, whatever your feedback.`];
+  const cta = stage === "mid" ? (fr ? "Répondre (1 min)" : "Answer (1 min)") : (fr ? "Donner mon avis" : "Give my feedback");
+  const subject = stage === "mid" ? (fr ? "Tes 2 premières semaines : comment ça se passe ?" : "Your first 2 weeks: how is it going?") : (fr ? "Ton avis sur ton programme 6M Lab" : "Your feedback on your 6M Lab program");
+  const html = frame(`<p>${esc(hello)}</p>${lines.map((l) => `<p>${esc(l)}</p>`).join("")}${button(link, cta)}<p style="font-size:12px;color:#5B5673">${fr ? "Ce lien est personnel. Tu peux aussi répondre directement à cet email." : "This link is personal. You can also simply reply to this email."}</p>`);
+  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: o.email, replyTo: owner.email, subject, html, text: [hello, "", ...lines, "", `${cta} : ${link}`].join("\n") });
+  if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
+}
+
+// The discount code, sent after the final questionnaire so the customer keeps it.
+export async function sendPromoCode(o: { email: string; lang: Lang; firstName: string }, code: string, promoPercent: number) {
+  const fr = o.lang === "fr";
+  const hello = fr ? `Bonjour ${o.firstName},` : `Hi ${o.firstName},`;
+  const l1 = fr ? "Merci pour ton avis !" : "Thank you for your feedback!";
+  const l2 = fr ? `Voici ton code de -${promoPercent} % sur ton prochain programme 6M Lab, valable un an, à saisir au moment du paiement :` : `Here is your ${promoPercent}% discount code for your next 6M Lab program, valid for one year, to enter at checkout:`;
+  const html = frame(`<p>${esc(hello)}</p><p>${l1}</p><p>${l2}</p><p style="font:700 22px Arial;letter-spacing:2px;background:#F5EDF0;border-radius:10px;padding:14px;text-align:center">${esc(code)}</p>${button(`${SITE}/${o.lang}/programmes`, fr ? "Voir les programmes" : "See the programs")}`);
+  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: o.email, replyTo: owner.email, subject: fr ? `Ton code de -${promoPercent} %` : `Your ${promoPercent}% discount code`, html, text: [hello, "", l1, l2, code].join("\n") });
+  if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
+}

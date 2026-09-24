@@ -4,6 +4,10 @@ import Scene from "@/components/Scene";
 import Picker from "@/components/Picker";
 import ProgramCards from "@/components/ProgramCards";
 import { SLOGAN } from "@/lib/brand";
+import Reviews from "@/components/Reviews";
+
+// Rebuilt every hour at most, to show newly published reviews.
+export const revalidate = 3600;
 
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
@@ -47,6 +51,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           <p className="more">{fr ? "Tu hésites ?" : "Not sure?"} <a href={`/${lang}/questionnaire`}>{fr ? "Fais le questionnaire complet" : "Take the full questionnaire"}</a></p>
         </div>
       </section>
+
+      <Reviews lang={lang as Lang} />
 
       <section className="sec wrap">
         <header className="shead"><h2>{d.how.title}</h2></header>
