@@ -37,7 +37,8 @@ export const goalIds = (Object.keys(goals) as GoalId[]).filter((g) => g !== REAT
 // "ordre" in programmes/source/objectifs.mjs.
 export const goalOrder: GoalId[] = ["explosivite", "puissance", "muscle", "condition", "prevention", "reathletisation"];
 
-export const goalName = (g: GoalId, lang: Lang) => goals[g][lang].name;
+// Old orders may carry goal ids that no longer exist: their raw id is shown instead.
+export const goalName = (g: GoalId, lang: Lang) => goals[g]?.[lang].name ?? g;
 export const goalsTitle = (sel: readonly GoalId[], lang: Lang) => sel.map((g) => goalName(g, lang)).join(" + ");
 
 // 1 goal, or 2 distinct goals (the second one is paid extra), or Réathlétisation alone.
