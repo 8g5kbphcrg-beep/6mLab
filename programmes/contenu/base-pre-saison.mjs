@@ -19,11 +19,11 @@ export default {
     { p: "Rien d'obligatoire : tout peut se faire au poids du corps. Si tu as accès à une salle ou à un peu de matériel (haltères, élastique, banc), les fiches objectifs indiquent des variantes." },
     { h3: "Choisir ton niveau" },
     { table: { head: ["Niveau", "Pour qui", "Dans les séances"], rows: [
-      ["Débutant", "Peu ou pas de préparation physique jusqu'ici", "Nombre de séries le plus bas, versions « plus facile »"],
-      ["Intermédiaire", "Déjà une saison de musculation ou de préparation", "Nombre de séries du milieu"],
-      ["Confirmé", "Plusieurs saisons d'entraînement régulier", "Nombre de séries le plus haut, versions avancées"],
+      ["Niveau 1", "Tu débutes : peu ou pas de préparation physique jusqu'ici", "Nombre de séries le plus bas, versions « plus facile »"],
+      ["Niveau 2", "Tu as quelques bases : une saison de musculation ou de préparation", "Nombre de séries du milieu"],
+      ["Niveau 3", "Tu as de l'expérience : plusieurs saisons d'entraînement régulier", "Nombre de séries le plus haut, versions avancées"],
     ] } },
-    { p: "Dans les tableaux, « 2-4 × 8 » veut dire 2 séries (débutant), 3 séries (intermédiaire) ou 4 séries (confirmé) de 8 répétitions." },
+    { p: "Dans les tableaux, « 2-4 × 8 » veut dire 2 séries (niveau 1), 3 séries (niveau 2) ou 4 séries (niveau 3) de 8 répétitions." },
     { h3: "Régler l'intensité : l'échelle d'effort" },
     { p: "Chaque exercice a une intensité cible notée sur 10. Elle se ressent : tu n'as besoin d'aucun appareil." },
     { table: { head: ["Note", "Ressenti", "Repère"], rows: [
@@ -57,7 +57,6 @@ export default {
     ] } },
     { note: "**Dans quel ordre faire les deux blocs ?** Si l'un de tes objectifs est Explosivité ou Puissance, fais-le toujours en premier, quand tu as encore toute ton énergie. Sinon, alterne l'ordre d'une séance à l'autre." },
 
-    { pagebreak: true },
     { h2: "L'échauffement" },
     { p: "Identique à chaque séance. Il prépare le corps et réduit le risque de blessure : une grande étude menée dans 120 clubs de handball norvégiens a montré qu'un échauffement structuré de ce type divisait environ par deux les blessures du genou et de la cheville (Olsen et al., BMJ, 2005)." },
     { session: "Échauffement · 10 à 12 min", rows: [
@@ -81,7 +80,7 @@ export default {
     ] },
     { session: "Séance B", rows: [
       ["Dead bug (bras et jambe opposés)", "2-3 × 8 par côté", "30 s"],
-      ["Y-T-W allongé sur le ventre (épaules)", "2-3 × 8", "30 s"],
+      ["Y-T-W à plat ventre (épaules)", "2-3 × 8", "30 s"],
       ["Équilibre sur un pied en lançant une balle contre un mur", "2 × 30 s par jambe", "20 s"],
     ] },
     { session: "Séance C", rows: [

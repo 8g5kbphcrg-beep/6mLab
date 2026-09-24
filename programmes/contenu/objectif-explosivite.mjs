@@ -22,7 +22,7 @@ export default {
       "**Arrête la série** si tu sens que tu ralentis ou que tes réceptions deviennent lourdes.",
       "Sol non glissant et chaussures de sport qui tiennent bien le pied.",
     ] },
-    { note: "Débutant : ne dépasse pas **60 sauts** par séance. Intermédiaire : 80. Confirmé : 100. Chaque réception compte pour un saut." },
+    { note: "Niveau 1 : ne dépasse pas **60 sauts** par séance. Niveau 2 : 80. Niveau 3 : 100. Chaque réception compte pour un saut." },
 
     { pagebreak: true },
     { h2: "Les exercices" },
@@ -36,11 +36,11 @@ export default {
     { exercise: "Sprint 20 m", how: "Départ lancé ou arrêté, sprint à vitesse maximale sur 20 m.", cues: "Relâché, sans crisper les épaules." },
     { exercise: "Freinage (décélération)", how: "Sprint sur 10 m, puis arrêt complet en 3 appuis, en position défensive basse.", cues: "Centre de gravité bas, appuis larges, genoux dans l'axe." },
     { exercise: "Navette 5-10-5", how: "Départ au centre, 5 m à droite (touche la ligne), 10 m à gauche (touche), retour au centre.", cues: "Abaisse-toi avant chaque changement de direction, repousse avec la jambe extérieure." },
-    { exercise: "Drop jump (confirmé uniquement)", how: "Laisse-toi tomber d'une marche basse (20-30 cm), et dès que tes pieds touchent le sol, rebondis le plus haut possible.", cues: "Contact au sol très court. Seulement à partir de la semaine 6, et si tes réceptions sont parfaites." },
+    { exercise: "Drop jump (niveau 3 uniquement)", how: "Laisse-toi tomber d'une marche basse (20-30 cm), et dès que tes pieds touchent le sol, rebondis le plus haut possible.", cues: "Contact au sol très court. Seulement à partir de la semaine 6, et si tes réceptions sont parfaites." },
 
     { pagebreak: true },
     { h2: "Pré-saison : tes séances" },
-    { p: "Prends la séance (A, B ou C) qui correspond au jour, dans la phase où tu en es. « 2-4 × 5 » : 2 séries en débutant, 3 en intermédiaire, 4 en confirmé." },
+    { p: "Prends la séance (A, B ou C) qui correspond au jour, dans la phase où tu en es. « 2-4 × 5 » : 2 séries au niveau 1, 3 au niveau 2, 4 au niveau 3." },
     { h3: "Semaines 1-2 · Bases" },
     { session: "Séance A", rows: [["Réception stabilisée", "2-4 × 5", "45 s"], ["Pogos", "2-3 × 10", "45 s"], ["Accélérations progressives 15 m (80 %)", "4 passages", "retour en marchant"]] },
     { session: "Séance B", rows: [["Saut latéral stabilisé", "2-3 × 4 par jambe", "45 s"], ["Freinage", "3-5 passages", "60 s"], ["Pogos", "2 × 10", "45 s"]] },
@@ -53,7 +53,7 @@ export default {
 
     { h3: "Semaines 6-7 · Explosivité" },
     { p: "C'est la phase clé de cette fiche : moins de volume, chaque répétition à intensité maximale." },
-    { session: "Séance A", rows: [["Squat jump (hauteur maximale)", "3-4 × 4", "90 s"], ["Drop jump (confirmé) ou squat jump", "3 × 4", "90 s"], ["Sprint 20 m", "4-5 passages", "2 min"]] },
+    { session: "Séance A", rows: [["Squat jump (hauteur maximale)", "3-4 × 4", "90 s"], ["Drop jump (niveau 3) ou squat jump", "3 × 4", "90 s"], ["Sprint 20 m", "4-5 passages", "2 min"]] },
     { session: "Séance B", rows: [["Triple bond", "3-4 × 3", "90 s"], ["Saut latéral enchaîné (sans pause)", "3 × 6 par jambe", "60 s"], ["Navette 5-10-5", "3-5 passages", "90 s"]] },
     { session: "Séance C", rows: [["Départs réactifs", "6-10 passages", "60 s"], ["Freinage puis réaccélération sur 5 m", "4-6 passages", "75 s"], ["Pogos", "3 × 15", "45 s"]] },
     { h3: "Semaine 8 · Affûtage" },

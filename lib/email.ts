@@ -35,9 +35,11 @@ const transport = () =>
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
-// The PDFs an order needs, from the programmes/ folder. Returns null unless every one exists,
-// so a customer never gets half a program.
+// The PDFs an order needs, from the programmes/ folder. Returns null unless automatic sending is
+// switched on (PROGRAMMES_ENVOI_AUTO=1, once the programs are validated) and every file exists,
+// so a customer never gets a draft or half a program.
 export async function programFiles(o: Order) {
+  if (process.env.PROGRAMMES_ENVOI_AUTO !== "1") return null;
   const names = [`base-${o.program}.pdf`, ...o.goals.map((g) => `objectif-${g}.pdf`), ...(o.running ? ["option-course.pdf"] : [])];
   const paths = names.map((n) => join(process.cwd(), "programmes", n));
   try {

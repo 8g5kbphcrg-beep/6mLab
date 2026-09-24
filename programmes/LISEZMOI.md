@@ -1,8 +1,9 @@
 # Programmes envoyés automatiquement
 
-Dépose ici les PDF des programmes, avec exactement ces noms. Après un paiement, l'email de
-confirmation les joint automatiquement dès que **tous** les fichiers d'une commande existent ;
-sinon il annonce un envoi sous 48 heures et tu envoies le programme à la main.
+Les PDF des programmes, avec exactement ces noms. Après un paiement, l'email de confirmation les
+joint automatiquement si l'envoi automatique est activé (variable `PROGRAMMES_ENVOI_AUTO=1` sur
+Vercel) et que **tous** les fichiers de la commande existent. Sinon, il annonce un envoi sous
+48 heures et tu envoies le programme à la main.
 
 | Fichier | Contenu |
 |---|---|
