@@ -1,12 +1,13 @@
 import { notFound } from "next/navigation";
 import { dict, type Lang } from "@/lib/dict";
 import Scene from "@/components/Scene";
-import Picker from "@/components/Picker";
 import ProgramCards from "@/components/ProgramCards";
 import { SLOGAN } from "@/lib/brand";
 import Reviews from "@/components/Reviews";
+import { Founder, FreeSession, Parents, Product } from "@/components/HomeSections";
+import "@/app/home.css";
 
-// Rebuilt every hour at most, to show newly published reviews.
+// Rebuilt every hour at most, to show newly published reviews and the formula that fits the calendar.
 export const revalidate = 3600;
 
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
@@ -25,10 +26,10 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             <p className="lead rise" style={d3(2)}>{d.hero.sub}</p>
             <div className="hcta rise" style={d3(3)}>
               <a className="btn" href="#formules">{d.hero.cta}</a>
-              <a className="btn btn-ghost" href={`/${lang}/questionnaire`}>{fr ? "Trouver mon programme" : "Find my program"}</a>
             </div>
+            <p className="hquiz rise" style={d3(3)}>{fr ? "Pas sûr de ton choix ?" : "Not sure?"} <a href={`/${lang}/questionnaire`}>{fr ? "Trouve ton programme en 1 minute" : "Find your program in 1 minute"}</a></p>
             <ul className="trust rise" style={d3(4)}>
-              <li>{fr ? "Conçu par un joueur, étudiant en STAPS" : "Built by a player studying sport science"}</li>
+              <li>{d.hero.trust}</li>
               <li>{fr ? "Sans matériel obligatoire" : "No equipment required"}</li>
               <li>{fr ? "Paiement sécurisé" : "Secure payment"}</li>
             </ul>
@@ -42,32 +43,14 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           <h2>{d.cmp.title}</h2>
           <p>{d.cmp.sub}</p>
         </header>
-        <ProgramCards lang={lang as Lang} />
+        <ProgramCards lang={lang as Lang} shared={false} />
       </section>
 
-      <section id="objectif" className="band">
-        <div className="sec wrap">
-          <Picker lang={lang as Lang} pick={d.pick} />
-          <p className="more">{fr ? "Tu hésites ?" : "Not sure?"} <a href={`/${lang}/questionnaire`}>{fr ? "Fais le questionnaire complet" : "Take the full questionnaire"}</a></p>
-        </div>
-      </section>
-
+      <Product lang={lang as Lang} />
+      <Founder lang={lang as Lang} />
       <Reviews lang={lang as Lang} />
-
-      <section className="sec wrap">
-        <header className="shead"><h2>{d.how.title}</h2></header>
-        <ol className="steps">{d.how.steps.map((s, i) => <li key={s} className="rv" style={d3(i)}>{s}</li>)}</ol>
-      </section>
-
-      <section className="band">
-        <div className="sec wrap">
-          <header className="shead"><h2>{d.why.title}</h2></header>
-          <ul className="why">
-            {d.why.items.map((w) => <li className="rv" key={w[0]}><strong>{w[0]}</strong><span>{w[1]}</span></li>)}
-          </ul>
-          <p className="note">{d.why.note}</p>
-        </div>
-      </section>
+      <FreeSession lang={lang as Lang} />
+      <Parents lang={lang as Lang} />
 
       <section className="sec wrap">
         <div className="endcta">
@@ -75,6 +58,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           <p>{fr ? "Choisis ta formule et tes objectifs, reçois ton programme par email." : "Pick your program and goals, get your plan by email."}</p>
           <a className="btn" href={`/${lang}/programmes`}>{fr ? "Voir les programmes" : "See the programs"}</a>
         </div>
+        <p className="note" style={{ marginTop: "1rem" }}>{d.why.note}</p>
       </section>
     </>
   );

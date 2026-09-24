@@ -2,7 +2,7 @@
 import { useState } from "react";
 import type { Lang } from "@/lib/dict";
 import { programs, type ProgramSlug } from "@/lib/programs";
-import { buy, fmtPrice, genders, orderTotal, prices, RUNNING_PRICE, SECOND_GOAL_PRICE } from "@/lib/checkout";
+import { buy, fmtPrice, genders, orderTotal, PACK_EXTRA, prices, RUNNING_PRICE, SECOND_GOAL_PRICE } from "@/lib/checkout";
 import { goalIds, goals as goalInfo, goalName, goalsTitle, REATH, type GoalId } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
 import Suggestions from "@/components/Suggestions";
@@ -10,16 +10,19 @@ import "@/app/buy.css";
 
 // Posts to /api/checkout. The goal checkboxes are real form fields, so the form still submits
 // without JavaScript; the server checks the count.
-export default function BuyForm({ lang, slug, goals = [], test, error }: { lang: Lang; slug: ProgramSlug; goals?: GoalId[]; test: boolean; error?: string }) {
+export default function BuyForm({ lang, slug, goals = [], pack: packInit = false, test, error }: { lang: Lang; slug: ProgramSlug; goals?: GoalId[]; pack?: boolean; test: boolean; error?: string }) {
   const t = buy[lang];
   const p = programs[lang][slug];
   const [sel, setSel] = useState<GoalId[]>(goals);
   const [running, setRunning] = useState(false);
+  const canPack = slug === "pre-saison";
+  const [pack, setPack] = useState(canPack && packInit);
   const [err, setErr] = useState(error);
   const reath = sel.includes(REATH);
   const toggle = (g: GoalId) => setSel(sel.includes(g) ? sel.filter((x) => x !== g) : [...sel.filter((x) => x !== REATH), g]);
   const done = sel.length > 0;
-  const total = orderTotal(slug, sel, running);
+  const total = orderTotal(slug, sel, running, pack);
+  const other = programs[lang]["maintien-saison"];
 
   return (
     <form className={`buy ${slug === "maintien-saison" ? "b" : "a"}`} id="acheter" method="post" action="/api/checkout" data-go
@@ -56,6 +59,13 @@ export default function BuyForm({ lang, slug, goals = [], test, error }: { lang:
 
       <fieldset className="bstep">
         <legend><span className="bnum">2</span>{t.step2}</legend>
+        {canPack && (
+          <label className="bcard bpack">
+            <input type="checkbox" name="pack" checked={pack} onChange={() => setPack(!pack)} />
+            <span><strong>{t.packT}</strong> {t.packD} <em>{t.packSave(fmtPrice(prices["maintien-saison"] - PACK_EXTRA, lang))}</em></span>
+            <b>+{fmtPrice(PACK_EXTRA, lang)}</b>
+          </label>
+        )}
         <label className="bcard brun">
           <input type="checkbox" name="running" checked={running} onChange={() => setRunning(!running)} />
           <span><strong>{t.runT}</strong> {t.runD}</span>
@@ -85,6 +95,7 @@ export default function BuyForm({ lang, slug, goals = [], test, error }: { lang:
           <div><dt>{p.name}</dt><dd>{fmtPrice(prices[slug], lang)}</dd></div>
           <div><dt>{t.goalsLb}</dt><dd>{sel.length ? goalsTitle(sel, lang) : t.none}</dd></div>
           {sel.length === 2 && <div><dt>{t.second}</dt><dd>{fmtPrice(SECOND_GOAL_PRICE, lang)}</dd></div>}
+          {pack && <div><dt>{t.packT} (+ {other.name})</dt><dd>{fmtPrice(PACK_EXTRA, lang)}</dd></div>}
           {running && <div><dt>{t.runT}</dt><dd>{fmtPrice(RUNNING_PRICE, lang)}</dd></div>}
           <div className="btotal"><dt>{t.total}</dt><dd>{fmtPrice(total, lang)}</dd></div>
         </dl>

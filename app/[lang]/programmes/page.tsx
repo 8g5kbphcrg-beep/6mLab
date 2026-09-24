@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import { dict, type Lang } from "@/lib/dict";
 import ProgramCards from "@/components/ProgramCards";
 
+// Rebuilt every hour at most, so the recommended formula follows the calendar.
+export const revalidate = 3600;
+
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   if (!(lang in dict)) return {};

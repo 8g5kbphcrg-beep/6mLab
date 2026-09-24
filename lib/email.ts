@@ -15,6 +15,7 @@ export type Order = {
   program: ProgramSlug;
   goals: GoalId[];
   running: boolean;
+  pack?: boolean;
   firstName: string;
   age: string;
   gender: string;
@@ -46,7 +47,9 @@ export const deliversNow = (goals: string[]) => process.env.PROGRAMMES_ENVOI_AUT
 export async function programFiles(o: Order) {
   if (!deliversNow(o.goals)) return null;
   const goals = [...o.goals].sort((a, b) => goalOrder.indexOf(a) - goalOrder.indexOf(b));
-  const names = [`guide-${o.program}.pdf`, `seances-${o.program}-${goals.join("-")}.pdf`, ...(o.running ? ["option-course.pdf"] : [])];
+  // The "Saison complète" pack adds the Maintien en saison with the same goals.
+  const formulas = o.pack ? [o.program, "maintien-saison"] : [o.program];
+  const names = [...formulas.flatMap((f) => [`guide-${f}.pdf`, `seances-${f}-${goals.join("-")}.pdf`]), ...(o.running ? ["option-course.pdf"] : [])];
   const paths = names.map((n) => join(process.cwd(), "programmes", n));
   try {
     await Promise.all(paths.map((p) => access(p)));
@@ -62,6 +65,7 @@ export async function sendConfirmation(o: Order) {
   const files = await programFiles(o);
   const rows: [string, string][] = [
     [fr ? "Programme" : "Program", `${p.name} (${p.duration})`],
+    ...(o.pack ? [[fr ? "Pack Saison complète" : "Full season pack", `${programs[o.lang]["maintien-saison"].name} (${programs[o.lang]["maintien-saison"].duration})`] as [string, string]] : []),
     [fr ? "Objectifs" : "Goals", goalsTitle(o.goals, o.lang)],
     ...(o.running ? [[fr ? "Option" : "Option", fr ? "Programme course à pied" : "Running program"] as [string, string]] : []),
     [fr ? "Total payé" : "Total paid", fmtPrice(o.amount, o.lang)],
@@ -109,6 +113,7 @@ export async function notifyOwner(o: Order, delivered: boolean) {
   const lines = [
     `Programme : ${programs.fr[o.program].name}`,
     `Objectifs : ${goalsTitle(o.goals, "fr")}`,
+    `Pack Saison complète (+ Maintien) : ${o.pack ? "oui" : "non"}`,
     `Option course : ${o.running ? "oui" : "non"}`,
     `Prénom : ${o.firstName}`,
     `Âge : ${o.age}`,
