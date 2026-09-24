@@ -21,13 +21,15 @@ export type Order = {
   amount: number;
 };
 
-// Sent through Gmail with an app password (Google account > Security > App passwords).
-export const mailReady = () => !!(process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD);
+// Sent through iCloud Mail by default, with an app-specific password (appleid.apple.com >
+// Sign-In and Security > App-Specific Passwords). MAIL_SERVICE=gmail switches to Gmail.
+const MAIL_USER = () => process.env.MAIL_USER;
+export const mailReady = () => !!(process.env.MAIL_USER && process.env.MAIL_PASSWORD);
 // MAIL_DRY_RUN=1 builds the emails without sending them (local development).
 const transport = () =>
   process.env.MAIL_DRY_RUN === "1"
     ? nodemailer.createTransport({ jsonTransport: true })
-    : nodemailer.createTransport({ service: "gmail", auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASSWORD } });
+    : nodemailer.createTransport({ service: process.env.MAIL_SERVICE || "iCloud", auth: { user: process.env.MAIL_USER, pass: process.env.MAIL_PASSWORD } });
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
@@ -80,7 +82,7 @@ export async function sendConfirmation(o: Order) {
   const text = [hello, "", intro, "", ...rows.map(([k, v]) => `${k} : ${v}`), "", delivery, "", health, "", legal].join("\n");
 
   const info = await transport().sendMail({
-    from: `6M Lab <${process.env.GMAIL_USER}>`,
+    from: `6M Lab <${MAIL_USER()}>`,
     to: o.email,
     replyTo: owner.email,
     subject: fr ? "Ta commande 6M Lab est confirmée" : "Your 6M Lab order is confirmed",
@@ -109,8 +111,8 @@ export async function notifyOwner(o: Order, delivered: boolean) {
     delivered ? "Programme envoyé automatiquement en pièce jointe." : "À FAIRE : envoyer le programme sous 48 heures (répondre au client à cette adresse).",
   ];
   const info = await transport().sendMail({
-    from: `6M Lab <${process.env.GMAIL_USER}>`,
-    to: process.env.GMAIL_USER,
+    from: `6M Lab <${MAIL_USER()}>`,
+    to: MAIL_USER(),
     replyTo: o.email,
     subject: `${delivered ? "Nouvelle commande" : "Nouvelle commande à envoyer"} : ${o.firstName}, ${programs.fr[o.program].name}`,
     text: lines.join("\n"),

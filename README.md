@@ -12,7 +12,7 @@ avec le programme, les objectifs, l'option course et le profil (prénom, âge, g
 
 Les clés live (`sk_live_...`) sont refusées tant que `STRIPE_ALLOW_LIVE=1` n'est pas défini.
 
-## Emails automatiques (Gmail)
+## Emails automatiques (iCloud Mail)
 
 Après chaque paiement, le webhook Stripe envoie :
 - au client, la confirmation de commande (récapitulatif, CGV, renonciation au droit de rétractation) ;
@@ -21,8 +21,8 @@ Après chaque paiement, le webhook Stripe envoie :
 Les PDF déposés dans `programmes/` (voir `programmes/LISEZMOI.md`) sont joints automatiquement
 dès que tous les fichiers d'une commande existent ; sinon l'email annonce un envoi sous 48 heures.
 
-1. Compte Google : active la validation en deux étapes, puis crée un « mot de passe d'application ».
-2. Vercel : ajoute `GMAIL_USER` et `GMAIL_APP_PASSWORD`, puis redéploie.
+1. Sur appleid.apple.com : Connexion et sécurité > Mots de passe pour app > créer « 6M Lab ».
+2. Vercel : ajoute `MAIL_USER` (ton adresse iCloud) et `MAIL_PASSWORD` (le mot de passe pour app), puis redéploie.
 3. Stripe : le webhook (`STRIPE_WEBHOOK_SECRET`) doit être configuré, voir plus haut.
 
 ## Avant de passer en production

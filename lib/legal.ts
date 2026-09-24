@@ -6,7 +6,7 @@ export const owner = {
   name: "[Prénom Nom]",
   siret: "[SIRET]",
   address: "[Adresse postale]",
-  email: "6mlab.contact@gmail.com",
+  email: "sixmlab.contact@icloud.com",
   mediator: "[Nom et site web du médiateur de la consommation]",
 };
 
