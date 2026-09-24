@@ -7,6 +7,7 @@ import { legalPaths } from "@/lib/legal";
 import Defs from "@/components/Defs";
 import Logo from "@/components/Logo";
 import Enhance from "@/components/Enhance";
+import ThemeToggle from "@/components/ThemeToggle";
 import "../globals.css";
 
 const display = Anton({ subsets: ["latin"], weight: "400", variable: "--font-display" });
@@ -41,7 +42,11 @@ export default async function RootLayout({ children, params }: { children: React
     [`/${lang}/contact`, "Contact"],
   ];
   return (
-    <html lang={lang} className={`${display.variable} ${text.variable}`}>
+    <html lang={lang} className={`${display.variable} ${text.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Applies the theme chosen with the theme button before the page paints (no flash). */}
+        <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}` }} />
+      </head>
       <body>
         <noscript><style>{".rv,.rise{opacity:1!important;transform:none!important}"}</style></noscript>
         <Defs />
@@ -53,6 +58,7 @@ export default async function RootLayout({ children, params }: { children: React
             <Link className="lang" href={`/${other}`} hrefLang={other} lang={other}>{d.nav.other}</Link>
             <a className="btn btn-s" href={`/${lang}/programmes`}>{fr ? "Voir les programmes" : "See the programs"}</a>
           </nav>
+          <ThemeToggle fr={fr} />
           <details className="menu">
             <summary aria-label="Menu"><span /></summary>
             <nav aria-label="Navigation">

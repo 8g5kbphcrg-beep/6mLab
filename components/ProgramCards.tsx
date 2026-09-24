@@ -21,7 +21,7 @@ export default function ProgramCards({ lang }: { lang: Lang }) {
                 <li><span>{d.cmp.rows[1][0]}</span>{p.duration}</li>
                 <li><span>{d.cmp.rows[2][0]}</span>{p.freq}</li>
               </ul>
-              <Link className="btn" href={`/${lang}/programmes/${s}`}>{fr ? "Voir le programme" : "See the program"}</Link>
+              <Link className="btn" href={`/${lang}/programmes/${s}#acheter`}>{fr ? "Acheter ce programme" : "Buy this program"}</Link>
             </article>
           );
         })}
