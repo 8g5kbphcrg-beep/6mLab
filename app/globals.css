@@ -118,3 +118,10 @@ p{max-width:62ch;margin:0 0 1rem}a{color:inherit}:focus-visible{outline:3px soli
 .lg-stack{flex-direction:column;align-items:center;gap:.1em}.lgrow{display:flex;align-items:flex-start;gap:.06em}
 .lg-stack .lglab{font-size:.18em;margin-left:.35em}.lgarc{width:2.3em;height:.31em;color:var(--lball);margin-top:.04em}
 .foot .lg,.lg.on-light{--l6:var(--ink);--llab:var(--muted)}
+.sugg{margin:0 0 1rem}.sugg .lab{margin:0 0 .5rem}.sugg-x{text-transform:none;letter-spacing:0;font-weight:600}
+.sugg-list{display:grid;gap:.5rem}
+.sugg-c{text-align:left;font:inherit;color:inherit;background:var(--card);border:1.5px dashed var(--line);border-radius:12px;padding:.75rem .9rem;cursor:pointer;display:grid;gap:.2rem}
+.sugg-c strong{font-size:.98rem}.sugg-c span{color:var(--ink);font-size:.9rem;line-height:1.45}.sugg-c em{color:var(--muted);font-size:.85rem;font-style:normal}
+.sugg-c[aria-pressed=true]{border-style:solid;border-color:var(--ink);background:var(--band)}
+@media(hover:hover){.sugg-c:hover{border-color:var(--muted)}}
+@media(min-width:760px){.sugg-list{grid-template-columns:repeat(3,1fr)}}

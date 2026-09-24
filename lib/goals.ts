@@ -46,3 +46,25 @@ export const validGoals = (g: string[]): g is GoalId[] =>
     : g.length === 2 && g[0] !== g[1] && g.every((x) => x in goals && x !== REATH);
 // Whether the order pays for a second goal.
 export const hasSecondGoal = (g: readonly string[]) => g.length === 2;
+
+// Suggested pairs of goals: what the pair builds, and who it suits.
+export const suggestions: { goals: [GoalId, GoalId]; fr: { gain: string; who: string }; en: { gain: string; who: string } }[] = [
+  { goals: ["explosivite", "puissance"],
+    fr: { gain: "Produire beaucoup de force en très peu de temps : démarrages, sauts et tirs plus puissants.", who: "Pour qui cherche la performance, surtout arrières et ailiers." },
+    en: { gain: "Produce a lot of force very fast: stronger first steps, jumps and shots.", who: "For players chasing performance, especially backs and wings." } },
+  { goals: ["explosivite", "condition"],
+    fr: { gain: "Répéter les sprints et les changements de direction jusqu'à la dernière minute du match.", who: "Pour les ailiers, demi-centres et joueurs de contre-attaque." },
+    en: { gain: "Repeat sprints and changes of direction until the last minute of the game.", who: "For wings, centre backs and fast-break players." } },
+  { goals: ["puissance", "muscle"],
+    fr: { gain: "Prendre du muscle et le rendre efficace dans les duels, les contacts et les tirs.", who: "Pour les pivots, les arrières et qui veut s'étoffer." },
+    en: { gain: "Build muscle and make it count in duels, contacts and shots.", who: "For pivots, backs and players who want to bulk up." } },
+  { goals: ["explosivite", "prevention"],
+    fr: { gain: "Gagner en vivacité tout en protégeant genoux et chevilles.", who: "Pour les jeunes et celles et ceux qui se blessent souvent." },
+    en: { gain: "Get sharper while protecting knees and ankles.", who: "For young players and those who often get injured." } },
+  { goals: ["muscle", "prevention"],
+    fr: { gain: "Se renforcer en douceur et solidifier épaules, genoux et chevilles.", who: "Pour qui débute en préparation physique." },
+    en: { gain: "Get stronger gradually and protect shoulders, knees and ankles.", who: "For beginners in physical training." } },
+  { goals: ["condition", "prevention"],
+    fr: { gain: "Retrouver du cardio et reprendre sans se blesser, avec une perte de masse possible.", who: "Pour une reprise après une longue pause." },
+    en: { gain: "Rebuild your fitness and return safely, with possible fat loss.", who: "For a comeback after a long break." } },
+];

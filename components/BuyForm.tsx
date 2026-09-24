@@ -5,6 +5,7 @@ import { programs, type ProgramSlug } from "@/lib/programs";
 import { buy, fmtPrice, genders, orderTotal, prices, RUNNING_PRICE, SECOND_GOAL_PRICE } from "@/lib/checkout";
 import { goalIds, goals as goalInfo, goalName, goalsTitle, REATH, type GoalId } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
+import Suggestions from "@/components/Suggestions";
 import "@/app/buy.css";
 
 // Posts to /api/checkout. The goal checkboxes are real form fields, so the form still submits
@@ -34,6 +35,7 @@ export default function BuyForm({ lang, slug, goals = [], test, error }: { lang:
       <fieldset className="bstep">
         <legend><span className="bnum">1</span>{t.step1}{!reath && <span className={done ? "bbadge ok" : "bbadge"}>{t.count(sel.length)}</span>}</legend>
         <p className="bhint">{t.hint}</p>
+        <Suggestions lang={lang} sel={sel} onPick={setSel} extra={`${lang === "fr" ? "2 objectifs" : "2 goals"} +${fmtPrice(SECOND_GOAL_PRICE, lang)}`} />
         <div className="bcards">
           {goalIds.map((g) => {
             const on = sel.includes(g);
