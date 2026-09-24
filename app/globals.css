@@ -139,3 +139,18 @@ p{max-width:62ch;margin:0 0 1rem}a{color:inherit}:focus-visible{outline:3px soli
 .theme-m button{font:inherit;font-size:.95rem;text-align:left;background:none;border:0;color:inherit;border-radius:9px;padding:.6rem .7rem;cursor:pointer}
 .theme-m button:hover{background:var(--band)}.theme-m button[aria-pressed=true]{background:var(--band);font-weight:600}
 .theme-m button[aria-pressed=true]::after{content:" ✓"}
+
+/* Slogan, opening screen and transitions */
+.slogan{font:400 1.25rem/1 var(--font-display),Impact,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--cta);margin:0 0 .8rem}
+.foot .slogan{color:var(--A);font-size:1.1rem;margin:0 0 .6rem}
+.splash{position:fixed;inset:0;z-index:300;background:#100A24;color:#fff;display:grid;place-items:center;align-content:center;gap:1.4rem;transition:opacity .45s;cursor:pointer}
+html.splash-seen .splash{display:none}html.splash-out .splash{opacity:0;pointer-events:none}
+.splash .lg{animation:splIn .8s cubic-bezier(.2,.7,.2,1) both}
+.slogan-big{margin:0;font:400 clamp(2.6rem,10vw,4.4rem)/1 var(--font-display),Impact,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#FFE14A;animation:splUp .7s .45s cubic-bezier(.2,.7,.2,1) both}
+@keyframes splIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
+@keyframes splUp{from{opacity:0;transform:translateY(18px);letter-spacing:.3em}to{opacity:1;transform:none}}
+.trans{position:fixed;inset:0;z-index:250;background:#100A24;color:#fff;display:grid;place-items:center;align-content:center;gap:.9rem;animation:trIn .25s ease both}
+.trans-logo{font-size:2.6rem;animation:trPulse 1s ease-in-out infinite alternate}.trans-logo .lg{font-size:2.6rem}
+.trans-s{margin:0;font:400 1.6rem/1 var(--font-display),Impact,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#FFE14A}
+.trans[hidden]{display:none}.trans-m{margin:0;color:#CFC8EE;font-size:.95rem}.trans-m:empty{display:none}
+@keyframes trIn{from{opacity:0}to{opacity:1}}@keyframes trPulse{from{transform:scale(1)}to{transform:scale(1.06)}}

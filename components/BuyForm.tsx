@@ -22,7 +22,7 @@ export default function BuyForm({ lang, slug, goals = [], test, error }: { lang:
   const total = orderTotal(slug, sel, running);
 
   return (
-    <form className="buy" id="acheter" method="post" action="/api/checkout"
+    <form className="buy" id="acheter" method="post" action="/api/checkout" data-go
       onSubmit={(e) => { if (!done) { e.preventDefault(); setErr("invalide"); } }}>
       <input type="hidden" name="lang" value={lang} />
       <input type="hidden" name="program" value={slug} />

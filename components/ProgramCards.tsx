@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { dict, type Lang } from "@/lib/dict";
 import { programs, programSlugs } from "@/lib/programs";
 
@@ -21,7 +20,7 @@ export default function ProgramCards({ lang }: { lang: Lang }) {
                 <li><span>{d.cmp.rows[1][0]}</span>{p.duration}</li>
                 <li><span>{d.cmp.rows[2][0]}</span>{p.freq}</li>
               </ul>
-              <Link className="btn" href={`/${lang}/programmes/${s}#acheter`}>{fr ? "Acheter ce programme" : "Buy this program"}</Link>
+              <a className="btn" data-go href={`/${lang}/programmes/${s}#acheter`}>{fr ? "Acheter ce programme" : "Buy this program"}</a>
             </article>
           );
         })}
