@@ -23,7 +23,9 @@ export type Order = {
 
 // Sent through iCloud Mail by default, with an app-specific password (appleid.apple.com >
 // Sign-In and Security > App-Specific Passwords). MAIL_SERVICE=gmail switches to Gmail.
-const MAIL_USER = () => process.env.MAIL_USER;
+// MAIL_USER is the account login (for iCloud, the main address of the Apple account). MAIL_FROM
+// is the address emails are sent from and 6M Lab's inbox, e.g. an iCloud alias of that account.
+const MAIL_FROM = () => process.env.MAIL_FROM || process.env.MAIL_USER;
 export const mailReady = () => !!(process.env.MAIL_USER && process.env.MAIL_PASSWORD);
 // MAIL_DRY_RUN=1 builds the emails without sending them (local development).
 const transport = () =>
@@ -82,7 +84,7 @@ export async function sendConfirmation(o: Order) {
   const text = [hello, "", intro, "", ...rows.map(([k, v]) => `${k} : ${v}`), "", delivery, "", health, "", legal].join("\n");
 
   const info = await transport().sendMail({
-    from: `6M Lab <${MAIL_USER()}>`,
+    from: `6M Lab <${MAIL_FROM()}>`,
     to: o.email,
     replyTo: owner.email,
     subject: fr ? "Ta commande 6M Lab est confirmée" : "Your 6M Lab order is confirmed",
@@ -111,8 +113,8 @@ export async function notifyOwner(o: Order, delivered: boolean) {
     delivered ? "Programme envoyé automatiquement en pièce jointe." : "À FAIRE : envoyer le programme sous 48 heures (répondre au client à cette adresse).",
   ];
   const info = await transport().sendMail({
-    from: `6M Lab <${MAIL_USER()}>`,
-    to: MAIL_USER(),
+    from: `6M Lab <${MAIL_FROM()}>`,
+    to: MAIL_FROM(),
     replyTo: o.email,
     subject: `${delivered ? "Nouvelle commande" : "Nouvelle commande à envoyer"} : ${o.firstName}, ${programs.fr[o.program].name}`,
     text: lines.join("\n"),

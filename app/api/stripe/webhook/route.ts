@@ -48,7 +48,8 @@ export async function POST(req: NextRequest) {
         await notifyOwner(order, delivered).catch((e) => console.error("[notify]", e));
       } catch (e) {
         console.error("[email]", e);
-        return NextResponse.json({ error: "email failed" }, { status: 500 });
+        // The reason (e.g. "Invalid login: 535 ...") shows up in Stripe's webhook log; it never contains the password.
+        return NextResponse.json({ error: "email failed", reason: e instanceof Error ? e.message.slice(0, 200) : String(e) }, { status: 500 });
       }
     }
   }

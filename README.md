@@ -22,7 +22,7 @@ Les PDF déposés dans `programmes/` (voir `programmes/LISEZMOI.md`) sont joints
 dès que tous les fichiers d'une commande existent ; sinon l'email annonce un envoi sous 48 heures.
 
 1. Sur appleid.apple.com : Connexion et sécurité > Mots de passe pour app > créer « 6M Lab ».
-2. Vercel : ajoute `MAIL_USER` (ton adresse iCloud) et `MAIL_PASSWORD` (le mot de passe pour app), puis redéploie.
+2. Vercel : ajoute `MAIL_USER` (l'adresse principale du compte iCloud), `MAIL_PASSWORD` (le mot de passe pour app de ce compte) et `MAIL_FROM` (`sixmlab.contact@icloud.com`, l'alias d'envoi), puis redéploie.
 3. Stripe : le webhook (`STRIPE_WEBHOOK_SECRET`) doit être configuré, voir plus haut.
 
 ## Avant de passer en production
