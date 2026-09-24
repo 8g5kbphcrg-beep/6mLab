@@ -119,13 +119,17 @@ p{max-width:62ch;margin:0 0 1rem}a{color:inherit}:focus-visible{outline:3px soli
 .lg-stack{flex-direction:column;align-items:center;gap:.1em}.lgrow{display:flex;align-items:flex-start;gap:.06em}
 .lg-stack .lglab{font-size:.18em;margin-left:.35em}.lgarc{width:2.3em;height:.31em;color:var(--lball);margin-top:.04em}
 .foot .lg,.lg.on-light{--l6:var(--ink);--llab:var(--muted)}
-.sugg{margin:0 0 1rem}.sugg .lab{margin:0 0 .5rem}.sugg-x{text-transform:none;letter-spacing:0;font-weight:600}
-.sugg-list{display:grid;gap:.5rem}
-.sugg-c{text-align:left;font:inherit;color:inherit;background:var(--card);border:1.5px dashed var(--line);border-radius:12px;padding:.75rem .9rem;cursor:pointer;display:grid;gap:.2rem}
-.sugg-c strong{font-size:.98rem}.sugg-c span{color:var(--ink);font-size:.9rem;line-height:1.45}.sugg-c em{color:var(--muted);font-size:.85rem;font-style:normal}
-.sugg-c[aria-pressed=true]{border-style:solid;border-color:var(--ink);background:var(--band)}
+/* Suggested pairs of goals: a tinted panel, apart from the list of goals to pick one by one. */
+.sugg{margin:0 0 1.2rem;background:var(--band);border-radius:14px;padding:.9rem;min-width:0}
+.sugg-h{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.2rem .8rem;margin:0 0 .6rem}
+.sugg-h strong{font-size:1rem}.sugg-h span{color:var(--muted);font-size:.85rem}
+.sugg-list{display:grid;gap:.5rem;grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr))}
+.sugg-c{min-width:0;text-align:left;font:inherit;color:inherit;background:var(--card);border:1.5px solid transparent;border-radius:11px;padding:.65rem .8rem;cursor:pointer;display:grid;gap:.15rem;align-content:start;box-shadow:0 1px 2px rgba(16,10,36,.06)}
+.sugg-c strong{font-size:.92rem;line-height:1.3}.sugg-c span{color:var(--ink);font-size:.84rem;line-height:1.4}.sugg-c em{color:var(--muted);font-size:.8rem;font-style:normal;line-height:1.35}
+.sugg-c[aria-pressed=true]{border-color:var(--ink)}
 @media(hover:hover){.sugg-c:hover{border-color:var(--muted)}}
-@media(min-width:760px){.sugg-list{grid-template-columns:repeat(3,1fr)}}
+.sugg-or{display:flex;align-items:center;gap:.7rem;margin:0 0 .7rem;color:var(--muted);font-size:.9rem;font-weight:600}
+.sugg-or::before,.sugg-or::after{content:"";flex:1;height:1px;background:var(--line)}
 
 /* Theme button (header) */
 .theme{position:relative;margin-left:auto}@media(min-width:960px){.theme{margin-left:0}}.theme summary{list-style:none;cursor:pointer;width:40px;height:40px;display:grid;place-items:center;border-radius:10px;color:#fff}.theme summary::-webkit-details-marker{display:none}
