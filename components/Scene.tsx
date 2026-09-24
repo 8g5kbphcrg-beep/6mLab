@@ -17,7 +17,7 @@ const upper = seq((i) => `M${S}L${E[i]}`);
 const sleeve = seq((i) => `M${S}L${lerp(S, E[i], 0.5)}`);
 const fore = seq((i) => `M${E[i]}L${H[i]}`);
 
-const SKIN = "#C98E6B", SKIN2 = "#7A4A32", HAIR = "#2B1D17", JERSEY = "#FF5A1F", SHORTS = "#1E1745";
+const SKIN = "#C98E6B", SKIN2 = "#7A4A32", HAIR = "#2B1D17", JERSEY = "#FF7A59", SHORTS = "#1E1745";
 
 export default function Scene() {
   return (
@@ -60,9 +60,9 @@ export default function Scene() {
         <path d="M235 236L230 250M245 236L250 250" stroke="#111" strokeWidth="6.5" />
         <path d="M224 259h7M249 259h7" stroke="#fff" strokeWidth="4" />
         <path d="M233 234L231 244H249L247 234Z" fill="#111" />
-        <path d="M232 208Q240 205 248 208L249 236H231Z" fill="#00C2B2" />
+        <path d="M232 208Q240 205 248 208L249 236H231Z" fill="#2EC4B6" />
         <svg x="236" y="212" width="8" height="9" viewBox={MARK_VIEWBOX} dangerouslySetInnerHTML={{ __html: markSvg("#100A24", "#fff") }} />
-        <path d="M233 210L221 192M247 210L259 192" stroke="#00C2B2" strokeWidth="5.5" />
+        <path d="M233 210L221 192M247 210L259 192" stroke="#2EC4B6" strokeWidth="5.5" />
         <circle cx="220" cy="189" r="3.2" fill={SKIN2} /><circle cx="260" cy="189" r="3.2" fill={SKIN2} />
         <path d="M237 203h6v6h-6z" fill={SKIN2} />
         <circle cx="240" cy="197" r="7" fill={SKIN2} />
@@ -93,7 +93,7 @@ export default function Scene() {
         <path d="M176 337H195" stroke="#100A24" strokeWidth="2" />
         {/* Shorts */}
         <path d="M133 268H169L173 296L153 298L151 288L149 298L129 296Z" fill={SHORTS} />
-        <path d="M131 292L149 293M153 293L171 292" stroke="#FFE14A" strokeWidth="1.5" />
+        <path d="M131 292L149 293M153 293L171 292" stroke="#FFC75F" strokeWidth="1.5" />
         {/* Left arm, relaxed */}
         <path d="M128 222L114 244L108 262" stroke={SKIN} strokeWidth="10" fill="none" />
         <circle cx="107" cy="265" r="5.5" fill={SKIN} />
@@ -102,7 +102,7 @@ export default function Scene() {
         <path d="M125 222Q126 213 138 211H164Q176 213 177 222L171 274H131Z" fill="url(#jersey)" />
         <path d="M168 218L171 274H163Z" fill="#000" opacity=".12" />
         <path d="M138 211Q151 216 164 211" stroke="#C73A0A" strokeWidth="3" fill="none" />
-        <svg x="145" y="218" width="12" height="14" viewBox={MARK_VIEWBOX} dangerouslySetInnerHTML={{ __html: markSvg("#FFE14A", "#fff") }} />
+        <svg x="145" y="218" width="12" height="14" viewBox={MARK_VIEWBOX} dangerouslySetInnerHTML={{ __html: markSvg("#FFC75F", "#fff") }} />
         <text x="151" y="265" textAnchor="middle" fontSize="28" fill="#fff" style={{ fontFamily: "var(--font-display), Impact, sans-serif" }}>7</text>
         {/* Neck and head, from behind: hair, ears */}
         <path d="M145 200h12v12h-12z" fill={SKIN} />

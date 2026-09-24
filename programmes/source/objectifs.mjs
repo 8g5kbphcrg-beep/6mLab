@@ -6,7 +6,7 @@ export const ordre = ["explosivite", "puissance", "muscle", "condition", "preven
 export const objectifs = {
   explosivite: {
     name: "Explosivité",
-    color: "#FFE14A",
+    color: "#FFC75F",
     intro: "Au handball, les actions décisives durent moins de 3 secondes : un démarrage pour prendre l'intervalle, un changement de direction pour passer son vis-à-vis, un retour défensif.",
     qualites: ["**Vitesse** : aller vite sur quelques mètres.", "**Accélération** : atteindre ta vitesse le plus tôt possible.", "**Changements de direction et agilité** : freiner, réorienter et repartir sans perdre de temps."],
     regles: ["**Chaque répétition à fond**, ou presque : la qualité compte plus que la quantité.", "**Récupère complètement** entre les répétitions : c'est normal d'attendre.", "**Arrête la série** si tu ralentis ou si tes réceptions deviennent lourdes.", "Sol non glissant et chaussures qui tiennent bien le pied."],
@@ -23,7 +23,7 @@ export const objectifs = {
 
   puissance: {
     name: "Puissance",
-    color: "#FFE14A",
+    color: "#FFC75F",
     intro: "La puissance, c'est la force multipliée par la vitesse. Un tir en suspension, un duel au poste de pivot ou un démarrage demandent de produire beaucoup de force en une fraction de seconde.",
     qualites: ["**Pousser lourd** : augmenter la force maximale avec des charges lourdes et peu de répétitions.", "**Aller vite** : transformer cette force en gestes rapides (lancers, sauts, poussées).", "**Relier les deux** : enchaîner un exercice lourd et un geste rapide qui lui ressemble (méthode de contraste)."],
     regles: ["**Peu de répétitions, beaucoup de repos** : 3 à 5 répétitions, 2 à 3 minutes de récupération.", "**Chaque répétition à vitesse maximale**, même avec une charge lourde : c'est l'intention qui compte.", "Charges lourdes seulement si la technique est parfaite."],
@@ -40,7 +40,7 @@ export const objectifs = {
 
   muscle: {
     name: "Développement musculaire",
-    color: "#FF5A1F",
+    color: "#FF7A59",
     intro: "Au handball, on encaisse des contacts à chaque attaque et à chaque défense. Des muscles plus forts protègent les articulations et rendent plus difficile à déséquilibrer.",
     qualites: ["**Force** : pousser, tirer et soulever plus lourd.", "**Prise de masse** : développer le volume musculaire.", "**Gainage et stabilité** : transmettre la force des jambes au bras et rester stable dans les contacts."],
     regles: ["**La technique d'abord** : une charge n'augmente que si le mouvement reste propre.", "**Progresser un peu chaque semaine** : une répétition de plus, ou une charge un peu plus lourde.", "**Contrôler la descente** : 2 à 3 secondes pour descendre, puis remonter avec énergie.", "Garde 2 à 3 répétitions en réserve : pas d'échec musculaire."],
@@ -57,7 +57,7 @@ export const objectifs = {
 
   condition: {
     name: "Condition physique",
-    color: "#00C2B2",
+    color: "#2EC4B6",
     intro: "Pendant un match, on parcourt en moyenne environ 4 km en alternant marche, course, sprints et contacts (Wagner et al., 2014). Ce qui fait la différence en fin de match, c'est la capacité à répéter les efforts intenses et à récupérer vite entre eux.",
     qualites: ["**Endurance** : la base qui permet de récupérer entre les actions.", "**Capacité à répéter les efforts** : enchaîner les sprints sans perdre de vitesse.", "**Perte de masse** : augmenter la dépense d'énergie tout en gardant la performance.", "**Condition physique générale** : tenir sur un match et sur une saison."],
     regles: ["**Progressif** : le volume augmente semaine après semaine, jamais d'un coup.", "**Respecte les allures** : facile = tu peux parler ; soutenu = quelques mots ; intense = impossible de parler.", "Sur les sprints répétés, arrête la série si ta vitesse chute nettement."],
@@ -74,7 +74,7 @@ export const objectifs = {
 
   prevention: {
     name: "Prévention & santé",
-    color: "#00C2B2",
+    color: "#2EC4B6",
     intro: "Au handball, les blessures les plus fréquentes touchent les chevilles, les genoux, les épaules et les muscles de l'arrière et de l'intérieur de la cuisse. Des études montrent qu'une grande partie peut être évitée avec des exercices simples faits régulièrement : un échauffement ciblé a divisé environ par deux les blessures du genou et de la cheville (Olsen et al., 2005), et un programme pour l'épaule a réduit de 28 % les problèmes d'épaule (Andersson et al., 2017).",
     qualites: ["**Prévention des blessures** : équilibre, réception de saut, contrôle du genou.", "**Renforcement ciblé** : genoux, chevilles, épaules et ischios.", "**Mobilité et souplesse** : hanches, chevilles et haut du dos.", "**Stabilité articulaire** : garder les articulations alignées dans les contacts."],
     regles: ["**La régularité avant l'intensité** : c'est la répétition des séances qui protège.", "**Le geste parfait** : un genou qui rentre vers l'intérieur à la réception, c'est justement ce qu'on corrige.", "Ces exercices ne doivent pas faire mal : une gêne est un signal pour alléger."],

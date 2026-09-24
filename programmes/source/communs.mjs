@@ -34,7 +34,7 @@ export const formules = {
   "pre-saison": {
     name: "Pré-saison",
     tag: "Avant la saison",
-    color: "#FF5A1F",
+    color: "#FF7A59",
     duree: "8 semaines",
     frequence: "3 séances + 1 bonus",
     seance: "45 à 60 min",
@@ -101,7 +101,7 @@ export const formules = {
   "maintien-saison": {
     name: "Maintien en saison",
     tag: "Pendant la saison",
-    color: "#00C2B2",
+    color: "#2EC4B6",
     duree: "12 semaines",
     frequence: "2 séances par semaine",
     seance: "30 à 40 min",

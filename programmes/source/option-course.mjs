@@ -2,7 +2,7 @@
 export default {
   title: "Option course à pied",
   tag: "Option",
-  color: "#FF5A1F",
+  color: "#FF7A59",
   subtitle: "Des séances de course de 30 à 45 minutes, en plus de ton programme, pour développer ton foncier et ta capacité à enchaîner.",
   meta: [["Séance", "30 à 45 min"], ["Pré-saison", "1 à 2 par semaine"], ["En saison", "1 par semaine"]],
   blocks: [

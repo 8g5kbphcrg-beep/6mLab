@@ -57,8 +57,8 @@ const css = (color) => `
 @page{size:A4;margin:16mm 15mm 18mm}@page cover{margin:0}
 *{box-sizing:border-box}body{font:10pt/1.5 Inter,sans-serif;color:#100A24;margin:0;--c:${color}}
 h1,h2,h3,.exname,.stitle{font-family:Anton,Impact,sans-serif;font-weight:400;letter-spacing:.01em}
-.cover{page:cover;width:210mm;height:296mm;overflow:hidden;background:#100A24;color:#F3F1FB;padding:30mm 24mm 22mm;display:flex;flex-direction:column;page-break-after:always}
-.brand{display:inline-flex;flex-direction:column;align-items:center;gap:3mm;align-self:flex-start}.brand svg{height:34mm;width:auto}.brand b{font:400 17pt/1 "Bebas Neue";letter-spacing:.22em;margin-right:-.22em;color:#FFE14A;text-transform:uppercase}
+.cover{page:cover;width:210mm;height:296mm;overflow:hidden;background:linear-gradient(120deg,#16123F 0%,#3E1858 55%,#9E3456 100%);color:#F3F1FB;padding:30mm 24mm 22mm;display:flex;flex-direction:column;page-break-after:always}
+.brand{display:inline-flex;flex-direction:column;align-items:center;gap:3mm;align-self:flex-start}.brand svg{height:34mm;width:auto}.brand b{font:400 17pt/1 "Bebas Neue";letter-spacing:.22em;margin-right:-.22em;color:#FFC75F;text-transform:uppercase}
 .cover .tag{display:inline-block;align-self:flex-start;background:var(--c);color:#100A24;font-weight:700;border-radius:99px;padding:4px 14px;margin-top:auto}
 .cover h1{font-size:48pt;line-height:1.02;margin:14px 0 10px}.cover .sub{font-size:14pt;color:#CFC8EE;max-width:140mm}
 .cover .meta{margin-top:16mm;display:flex;gap:10mm;font-size:10pt;color:#CFC8EE}.cover .meta strong{display:block;color:#fff;font-size:13pt}

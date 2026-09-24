@@ -23,16 +23,16 @@ export default async function OgImage({ params }: { params: Promise<{ lang: stri
     inter7 && { name: "Inter", data: inter7, weight: 700 as const },
     bebas && { name: "Bebas", data: bebas, weight: 400 as const },
   ].filter((f) => !!f);
-  const mark = `data:image/svg+xml;base64,${Buffer.from(markFile("#FFE14A", "#FF5A1F")).toString("base64")}`;
+  const mark = `data:image/svg+xml;base64,${Buffer.from(markFile("#FFC75F", "#FF7A59")).toString("base64")}`;
   return new ImageResponse(
     (
-      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", fontFamily: "Inter", background: "#100A24", color: "#F3F1FB", padding: "0 80px", gap: 80 }}>
+      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", fontFamily: "Inter", backgroundImage: "linear-gradient(120deg, #16123F 0%, #3E1858 55%, #9E3456 100%)", color: "#F3F1FB", padding: "0 80px", gap: 80 }}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: "none" }}>
           <img width={250} height={298} src={mark} alt="" />
-          <span style={{ fontFamily: "Bebas", fontSize: 64, letterSpacing: 14, color: "#FFE14A", marginTop: 26, paddingLeft: 14 }}>{SLOGAN.toUpperCase()}</span>
+          <span style={{ fontFamily: "Bebas", fontSize: 64, letterSpacing: 14, color: "#FFC75F", marginTop: 26, paddingLeft: 14 }}>{SLOGAN.toUpperCase()}</span>
         </div>
         <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 30, fontWeight: 700, letterSpacing: 6, color: "#FF5A1F", marginBottom: 18 }}>6M LAB</div>
+          <div style={{ fontSize: 30, fontWeight: 700, letterSpacing: 6, color: "#FF7A59", marginBottom: 18 }}>6M LAB</div>
           <div style={{ fontSize: 50, fontWeight: 700, lineHeight: 1.12 }}>{d.hero.h1}</div>
           <div style={{ fontSize: 28, color: "#CFC8EE", marginTop: 24, lineHeight: 1.4 }}>{d.hero.sub}</div>
         </div>
