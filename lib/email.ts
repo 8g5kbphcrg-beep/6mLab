@@ -39,8 +39,12 @@ const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`)
 // for its pair of goals (in block order) and the running option. Returns null unless automatic
 // sending is switched on (PROGRAMMES_ENVOI_AUTO=1, once the programs are validated) and every
 // file exists, so a customer never gets a draft or half a program.
+// True when the PDFs go out automatically with the confirmation (every combination except
+// réathlétisation, whose program is not written yet).
+export const deliversNow = (goals: string[]) => process.env.PROGRAMMES_ENVOI_AUTO === "1" && !goals.includes("reathletisation");
+
 export async function programFiles(o: Order) {
-  if (process.env.PROGRAMMES_ENVOI_AUTO !== "1") return null;
+  if (!deliversNow(o.goals)) return null;
   const goals = [...o.goals].sort((a, b) => goalOrder.indexOf(a) - goalOrder.indexOf(b));
   const names = [`guide-${o.program}.pdf`, `seances-${o.program}-${goals.join("-")}.pdf`, ...(o.running ? ["option-course.pdf"] : [])];
   const paths = names.map((n) => join(process.cwd(), "programmes", n));
