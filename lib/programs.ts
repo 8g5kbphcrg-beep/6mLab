@@ -7,7 +7,7 @@ export const programs = {
       idx: 0, name: "Pré-saison", tag: "Avant la saison", color: "a",
       duration: "8 semaines", freq: "3 à 4 séances par semaine",
       pitch: "Repars sur des bases solides avant la reprise avec ton club : gagne en force et en explosivité pour enchaîner les efforts.",
-      includes: ["Un PDF avec le planning complet, semaine par semaine", "Des vidéos qui montrent chaque exercice", "2 objectifs au choix, ou la réathlétisation après une blessure", "En option : un programme de course à pied (+9 €)"],
+      includes: ["Un PDF avec le planning complet, semaine par semaine", "Des animations qui montrent chaque exercice", "1 objectif au choix (+5 € pour un 2e), ou la réathlétisation après une blessure", "En option : un programme de course à pied (+9 €)"],
       phases: [
         { t: "Semaines 1-2 — Bases", d: "Réhabituer progressivement le corps à l'effort, avec un travail général et de la mobilité." },
         { t: "Semaines 3-5 — Force", d: "Montée en charge progressive pour construire une base solide, avec un volume qui augmente semaine après semaine." },
@@ -24,7 +24,7 @@ export const programs = {
       idx: 1, name: "Maintien en saison", tag: "Pendant la saison", color: "b",
       duration: "12 semaines", freq: "2 séances de 30 à 40 min par semaine",
       pitch: "Deux séances courtes par semaine pour conserver ta force et ta vivacité, sans jamais empiéter sur tes entraînements de club ni tes matchs.",
-      includes: ["Un PDF avec le planning complet, semaine par semaine", "Des vidéos qui montrent chaque exercice", "2 objectifs au choix, ou la réathlétisation après une blessure", "En option : un programme de course à pied (+9 €)"],
+      includes: ["Un PDF avec le planning complet, semaine par semaine", "Des animations qui montrent chaque exercice", "1 objectif au choix (+5 € pour un 2e), ou la réathlétisation après une blessure", "En option : un programme de course à pied (+9 €)"],
       phases: [
         { t: "Séance 1 — Force", d: "Un travail de force générale, à placer loin des matchs." },
         { t: "Séance 2 — Vivacité", d: "Un travail plus dynamique, pour garder les jambes réactives." },
@@ -41,7 +41,7 @@ export const programs = {
       idx: 0, name: "Pre-season", tag: "Before the season", color: "a",
       duration: "8 weeks", freq: "3 to 4 sessions per week",
       pitch: "Build a solid base before pre-season training starts: stronger, more explosive, ready for the workload ahead.",
-      includes: ["A PDF with the full week-by-week plan", "Videos showing every exercise", "2 goals of your choice, or return to play after injury", "Optional: a running program (+€9)"],
+      includes: ["A PDF with the full week-by-week plan", "Animations showing every exercise", "1 goal of your choice (+€5 for a 2nd), or return to play after injury", "Optional: a running program (+€9)"],
       phases: [
         { t: "Weeks 1-2 — Base", d: "Gradually get the body used to effort again, with general work and mobility." },
         { t: "Weeks 3-5 — Strength", d: "Progressive loading to build a solid base, with volume increasing week by week." },
@@ -58,7 +58,7 @@ export const programs = {
       idx: 1, name: "In-season maintenance", tag: "During the season", color: "b",
       duration: "12 weeks", freq: "2 sessions of 30 to 40 min per week",
       pitch: "Two short sessions a week to keep your strength and sharpness, without ever getting in the way of club training or matches.",
-      includes: ["A PDF with the full week-by-week plan", "Videos showing every exercise", "2 goals of your choice, or return to play after injury", "Optional: a running program (+€9)"],
+      includes: ["A PDF with the full week-by-week plan", "Animations showing every exercise", "1 goal of your choice (+€5 for a 2nd), or return to play after injury", "Optional: a running program (+€9)"],
       phases: [
         { t: "Session 1 — Strength", d: "General strength work, best placed away from matches." },
         { t: "Session 2 — Sharpness", d: "More dynamic work, to keep your legs reactive." },

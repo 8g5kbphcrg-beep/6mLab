@@ -40,7 +40,9 @@ export const goalOrder: GoalId[] = ["explosivite", "puissance", "muscle", "condi
 export const goalName = (g: GoalId, lang: Lang) => goals[g][lang].name;
 export const goalsTitle = (sel: readonly GoalId[], lang: Lang) => sel.map((g) => goalName(g, lang)).join(" + ");
 
-// Exactly 2 distinct goals (not Réathlétisation), or Réathlétisation alone.
+// 1 goal, or 2 distinct goals (the second one is paid extra), or Réathlétisation alone.
 export const validGoals = (g: string[]): g is GoalId[] =>
-  g.length === 1 ? g[0] === REATH
+  g.length === 1 ? g[0] in goals
     : g.length === 2 && g[0] !== g[1] && g.every((x) => x in goals && x !== REATH);
+// Whether the order pays for a second goal.
+export const hasSecondGoal = (g: readonly string[]) => g.length === 2;

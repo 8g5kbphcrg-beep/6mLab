@@ -48,7 +48,8 @@ export default function Quiz({ lang, test }: { lang: Lang; test: boolean }) {
     );
   } else {
     const f = a[0];
-    const sel: GoalId[] = a[1] === R ? [REATH] : [goalIds[a[1]], goalIds[a[2]]];
+    // Last option of step 2: no second goal.
+    const sel: GoalId[] = a[1] === R ? [REATH] : a[2] === R ? [goalIds[a[1]]] : [goalIds[a[1]], goalIds[a[2]]];
     const note = f === 0 && a[5] === 0 ? t.notes[0] : f === 1 && a[5] === 2 ? t.notes[1] : "";
     body = (
       <>

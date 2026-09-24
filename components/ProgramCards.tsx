@@ -30,8 +30,8 @@ export default function ProgramCards({ lang }: { lang: Lang }) {
         <p className="lab">{fr ? "Inclus dans les deux formules" : "Included in both programs"}</p>
         <ul>
           <li>{fr ? "Le planning complet en PDF, semaine par semaine" : "The full week-by-week plan as a PDF"}</li>
-          <li>{fr ? "Des vidéos pour chaque exercice" : "Videos for every exercise"}</li>
-          <li>{fr ? "2 objectifs au choix, ou la réathlétisation" : "2 goals of your choice, or return to play"}</li>
+          <li>{fr ? "Une animation pour chaque exercice" : "An animation for every exercise"}</li>
+          <li>{fr ? "1 objectif au choix, +5 € pour un 2e, ou la réathlétisation" : "1 goal of your choice, +€5 for a 2nd, or return to play"}</li>
           <li>{fr ? "Option course à pied : +9 €" : "Running option: +€9"}</li>
         </ul>
       </div>
