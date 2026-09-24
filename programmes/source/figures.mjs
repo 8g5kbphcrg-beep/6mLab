@@ -116,3 +116,42 @@ export function figure(id) {
 }
 
 export const figureIds = Object.keys(defs);
+
+// Animated version (SVG + SMIL): the joint angles are interpolated between the poses, so limbs
+// keep their length, and the movement loops start → end → start. Works in browsers, not in PDFs.
+const lerpPose = (a, b, t) => {
+  const mix = (x, y) => (x ?? 0) + ((y ?? 0) - (x ?? 0)) * t;
+  const side = (s, u) => Object.fromEntries(["thigh", "shin", "foot", "upper", "fore"].map((k) => [k, mix(s[k] ?? (k === "foot" ? 90 : 0), u[k] ?? (k === "foot" ? 90 : 0))]));
+  return { torso: mix(a.torso, b.torso), head: mix(a.head, b.head), lift: mix(a.lift, b.lift), bench: a.bench,
+    near: side(a.near, b.near), far: side(a.far ?? a.near, b.far ?? b.near) };
+};
+
+export function animatedFigure(id, { seconds = 1.6, steps = 12 } = {}) {
+  const poses = defs[id];
+  if (!poses) return null;
+  const seq = poses.length > 1 ? [...poses, ...poses.slice(0, -1).reverse()] : [poses[0], poses[0]];
+  const frames = [];
+  for (let i = 0; i < seq.length - 1; i++)
+    for (let k = 0; k < steps; k++) {
+      const t = k / steps, e = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2; // ease in-out
+      frames.push(lerpPose(seq[i], seq[i + 1], e));
+    }
+  frames.push(seq[seq.length - 1]);
+  const placedF = frames.map((p) => {
+    if (!p.bench) return placed(p, G - (p.lift ?? 0));
+    const j = joints(p);
+    return placed({ ...p, at: [0, G - BENCH - 5 - j.sh[1]] }, G);
+  });
+  const boxes = placedF.map(bbox);
+  const x1 = Math.min(...boxes.map((b) => b[0])), x2 = Math.max(...boxes.map((b) => b[2]));
+  const pad = 20, W = x2 - x1 + 2 * pad, y0 = G - 225;
+  const F = placedF.map((j) => each(j, (q) => [q[0] - x1 + pad, q[1]]));
+  const d = (ps) => "M" + ps.map((q) => q.map((v) => v.toFixed(1)).join(" ")).join("L");
+  const anim = (attr, vals) => `<animate attributeName="${attr}" dur="${seconds * (seq.length - 1)}s" repeatCount="indefinite" values="${vals.join(";")}"/>`;
+  const path = (get, w, c) => `<path d="${d(get(F[0]))}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${anim("d", F.map((j) => d(get(j))))}</path>`;
+  const legs = (s) => (j) => [j.hip, j[s].knee, j[s].ankle, j[s].toe], arms = (s) => (j) => [j.sh, j[s].elbow, j[s].hand];
+  const bench = poses[0].bench ? P.box((F[0].sh[0] - 16).toFixed(1), G, 34, BENCH) : "";
+  const body = path(legs("far"), 9, FAR) + path(arms("far"), 7, FAR) + path((j) => [j.hip, j.sh], 13, JERSEY) + path(legs("near"), 9, INK) + path(arms("near"), 7, INK)
+    + `<circle r="${L.head}" fill="${INK}" cx="${F[0].headC[0].toFixed(1)}" cy="${F[0].headC[1].toFixed(1)}">${anim("cx", F.map((j) => j.headC[0].toFixed(1)))}${anim("cy", F.map((j) => j.headC[1].toFixed(1)))}</circle>`;
+  return `<svg viewBox="0 ${y0} ${W.toFixed(0)} ${G + 6 - y0}" xmlns="http://www.w3.org/2000/svg">${P.floor(W, G)}${bench}${body}</svg>`;
+}
