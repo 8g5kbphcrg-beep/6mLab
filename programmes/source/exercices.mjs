@@ -1,0 +1,80 @@
+// Every exercise used in the programs, referenced by id from objectifs.mjs and communs.mjs.
+// "how" explains the movement, "cues" the key points, "easier" an easier version.
+export const exercices = {
+  // Échauffement
+  "footing-dynamique": { name: "Course légère et gammes", how: "Course légère en alternant pas chassés, montées de genoux et talons-fesses.", cues: "Commence doucement, augmente progressivement le rythme." },
+  "fente-rotation": { name: "Fente avant avec rotation du buste", how: "Fais un grand pas en avant, descends en fente, puis tourne le buste du côté de la jambe avant. Reviens et change de jambe.", cues: "Genou avant au-dessus de la cheville, rotation lente." },
+  "ouverture-hanche": { name: "Ouverture de hanche en marchant", how: "En marchant, lève le genou devant toi puis fais-le passer sur le côté, comme pour enjamber une barrière.", cues: "Buste droit, grand cercle avec le genou." },
+  "pont-fessier": { name: "Pont fessier", how: "Sur le dos, genoux pliés, pieds au sol, monte le bassin jusqu'à aligner épaules, hanches et genoux, puis redescends.", cues: "Serre les fessiers en haut, ne cambre pas le bas du dos." },
+  "planche": { name: "Planche", how: "En appui sur les avant-bras et la pointe des pieds, corps aligné de la tête aux talons.", cues: "Serre les fessiers et le ventre, respire normalement.", easier: "Genoux au sol." },
+  "equilibre": { name: "Équilibre sur une jambe", how: "Sur un pied, genou légèrement fléchi. Pour progresser : bouge les bras, ferme les yeux, puis tiens-toi sur un coussin.", cues: "Le genou reste au-dessus du pied, le bassin horizontal." },
+  "saut-reception": { name: "Petit saut, réception stabilisée", how: "Petit saut sur place, atterris en douceur sur les deux pieds et tiens la position 2 secondes.", cues: "Réception sur l'avant du pied, genoux fléchis et alignés avec les orteils : ils ne rentrent jamais vers l'intérieur." },
+  "accelerations": { name: "Accélérations progressives", how: "Course sur 15 m en augmentant la vitesse : 60 %, puis 80 %, puis 90 % de ta vitesse maximale. Retour en marchant.", cues: "Relâché, sans crisper les épaules." },
+
+  // Gainage et prévention
+  "gainage-lateral": { name: "Gainage latéral", how: "Sur le côté, en appui sur un avant-bras et le bord du pied, corps aligné, bassin haut.", cues: "Le bassin ne descend pas.", easier: "Genoux au sol." },
+  "nordic": { name: "Nordic ischios", how: "À genoux, pieds bloqués (sous un canapé ou tenus par une autre personne), laisse-toi tomber vers l'avant le plus lentement possible, corps droit. Rattrape-toi avec les mains, puis remonte en t'aidant des mains.", cues: "Hanches tendues : le corps reste droit des genoux à la tête.", easier: "Descente plus courte." },
+  "dead-bug": { name: "Dead bug", how: "Sur le dos, bras tendus vers le plafond, genoux pliés à 90°. Allonge un bras et la jambe opposée sans toucher le sol, puis change de côté.", cues: "Le bas du dos reste collé au sol." },
+  "ytw": { name: "Y-T-W", how: "À plat ventre, lève les bras en forme de Y, puis de T, puis de W, en serrant les omoplates.", cues: "Pouces vers le plafond, pas de cambrure." },
+  "equilibre-balle": { name: "Équilibre avec balle", how: "Sur une jambe, lance une balle contre un mur et rattrape-la.", cues: "Le genou d'appui reste dans l'axe." },
+  "pont-une-jambe": { name: "Pont fessier sur une jambe", how: "Comme le pont fessier, avec une jambe tendue en l'air.", cues: "Le bassin reste horizontal." },
+  "copenhague": { name: "Gainage Copenhague", how: "Sur le côté, en appui sur l'avant-bras, jambe du dessus posée sur un banc (au genou, ou au pied pour plus de difficulté). Monte le bassin et tiens la position.", cues: "Corps aligné : c'est l'intérieur de la cuisse du dessus qui travaille." },
+  "rotation-externe": { name: "Rotation externe de l'épaule", how: "Coude collé au corps et plié à 90°, écarte l'avant-bras vers l'extérieur contre un élastique, puis reviens lentement.", cues: "Le coude ne bouge pas, retour en 2 secondes.", easier: "Sans élastique." },
+  "rotation-externe-haute": { name: "Rotation externe bras levé", how: "Bras à l'horizontale, coude à 90°, fais pivoter l'avant-bras vers le haut contre l'élastique : c'est la position du bras armé au tir.", cues: "Lent et contrôlé, sans douleur." },
+
+  // Explosivité
+  "snap-down": { name: "Réception stabilisée (snap-down)", how: "Debout, bras en l'air, lance-toi vers le bas en ramenant les bras et atterris en demi-flexion sur les deux pieds. Tiens 2 secondes.", cues: "Genoux alignés avec les orteils, poitrine au-dessus des genoux, réception silencieuse." },
+  "pogos": { name: "Pogos", how: "Petits sauts rapides sur place, jambes presque tendues : ce sont les chevilles qui rebondissent.", cues: "Contact au sol le plus court possible.", easier: "Sauts moins hauts, rythme plus lent." },
+  "squat-jump": { name: "Squat jump", how: "Descends en demi-squat, pause d'une seconde, puis saute le plus haut possible. Réception stabilisée.", cues: "Pousse fort dans le sol, bras qui accompagnent.", easier: "Sans la pause." },
+  "skater-hop": { name: "Saut latéral stabilisé", how: "Sur une jambe, saute sur le côté vers l'autre jambe et stabilise 2 secondes, comme un patineur.", cues: "Le genou d'appui reste dans l'axe à la réception.", easier: "Saut plus court, le pied libre touche le sol pour aider." },
+  "bonds": { name: "Bonds horizontaux et triple bond", how: "Saut en longueur à pieds joints, réception stabilisée. Triple bond : trois sauts enchaînés, pied droit, pied gauche, puis réception à deux pieds.", cues: "Bras qui balancent vers l'avant, réception contrôlée." },
+  "departs-10": { name: "Départs sur 10 m", how: "Position de départ en fente, buste penché vers l'avant. Sprint à fond sur 10 m.", cues: "Premiers appuis courts et puissants, bras qui cognent vers l'arrière." },
+  "departs-reactifs": { name: "Départs réactifs", how: "Départ au signal d'un partenaire (clap, voix) ou en réagissant à une balle lâchée, depuis différentes positions : de face, de dos, en pas chassés.", cues: "Réagis, ne devine pas." },
+  "sprint-20": { name: "Sprint 20 m", how: "Sprint à vitesse maximale sur 20 m.", cues: "Relâché, sans crisper les épaules." },
+  "freinage": { name: "Freinage", how: "Sprint sur 10 m, puis arrêt complet en 3 appuis, en position défensive basse.", cues: "Centre de gravité bas, appuis larges, genoux dans l'axe." },
+  "navette-5105": { name: "Navette 5-10-5", how: "Départ au centre : 5 m à droite (touche la ligne), 10 m à gauche (touche), retour au centre.", cues: "Abaisse-toi avant chaque changement de direction, repousse avec la jambe extérieure." },
+  "drop-jump": { name: "Drop jump (niveau 3)", how: "Laisse-toi tomber d'une marche basse (20-30 cm) et, dès que tes pieds touchent le sol, rebondis le plus haut possible.", cues: "Contact très court. Seulement si tes réceptions sont parfaites." },
+
+  // Développement musculaire
+  "squat": { name: "Squat", how: "Pieds largeur d'épaules, descends comme pour t'asseoir, cuisses au moins parallèles au sol, puis remonte. Avec charge : un haltère contre la poitrine ou une barre.", cues: "Dos droit, talons au sol, genoux dans l'axe des pieds.", easier: "S'asseoir sur une chaise et se relever." },
+  "fente-arriere": { name: "Fente arrière", how: "Recule une jambe et descends jusqu'à ce que le genou arrière frôle le sol. Reviens en poussant sur la jambe avant. Avec charge : un haltère dans chaque main.", cues: "Buste droit, genou avant au-dessus de la cheville.", easier: "Avec un appui (mur, chaise)." },
+  "squat-bulgare": { name: "Squat bulgare", how: "Pied arrière posé sur un banc ou une chaise, descends sur la jambe avant puis remonte.", cues: "C'est la jambe avant qui travaille, le pied arrière sert d'équilibre." },
+  "sdt-roumain": { name: "Soulevé de terre jambes tendues", how: "Genoux légèrement fléchis, penche le buste vers l'avant en reculant les fesses, dos plat, jusqu'à sentir l'étirement derrière les cuisses, puis redresse-toi. Avec charge : haltères ou barre.", cues: "Dos plat du début à la fin, la charge glisse le long des jambes." },
+  "hip-thrust": { name: "Hip thrust", how: "Haut du dos appuyé sur un banc ou un canapé, pieds au sol, monte le bassin jusqu'à aligner épaules, hanches et genoux. Avec charge : haltère ou barre sur les hanches.", cues: "Serre les fessiers en haut une seconde.", easier: "Pont fessier au sol." },
+  "pompes": { name: "Pompes", how: "Mains un peu plus larges que les épaules, corps gainé, descends la poitrine près du sol puis pousse. Avec charge : développé couché.", cues: "Coudes à 45° du corps, le bassin ne s'affaisse pas.", easier: "Mains sur une table ou genoux au sol." },
+  "rowing": { name: "Rowing", how: "Buste penché, dos plat, tire un haltère (ou un sac lesté) vers la hanche. Sans matériel : rowing inversé sous une table solide.", cues: "Tire avec le dos, l'omoplate se rapproche de la colonne." },
+  "developpe-militaire": { name: "Développé militaire", how: "Debout ou en position assise, pousse les haltères au-dessus de la tête, puis redescends aux épaules.", cues: "Gainage serré, ne cambre pas le bas du dos.", easier: "Pompes en V (fesses en l'air)." },
+  "tractions": { name: "Tractions", how: "En suspension à une barre, tire jusqu'à passer le menton au-dessus, puis redescends.", cues: "Descente contrôlée, bras presque tendus en bas.", easier: "Avec un élastique, ou seulement la descente lente." },
+  "pallof": { name: "Pallof press", how: "Élastique attaché sur le côté à hauteur de poitrine, tends les bras devant toi sans laisser le buste tourner.", cues: "Résiste à la rotation : c'est un exercice de gainage." },
+  "fermier": { name: "Marche du fermier", how: "Marche 20 m avec une charge lourde dans chaque main (haltères, sacs, bidons).", cues: "Épaules basses, buste droit, pas réguliers." },
+
+  // Puissance
+  "squat-lourd": { name: "Squat lourd", how: "Squat avec une barre ou des haltères lourds, 3 à 5 répétitions. Sans salle : squat bulgare avec un sac à dos lesté.", cues: "Descente contrôlée, remontée la plus rapide possible." },
+  "hip-thrust-lourd": { name: "Hip thrust lourd", how: "Haut du dos sur un banc, charge lourde sur les hanches, monte le bassin avec force.", cues: "Pousse dans les talons, bloque les fessiers en haut." },
+  "developpe-couche": { name: "Développé couché ou pompes lestées", how: "Développé couché avec barre ou haltères lourds. Sans salle : pompes avec un sac à dos lesté.", cues: "Omoplates serrées, poussée explosive." },
+  "tirage-lourd": { name: "Tirage lourd", how: "Rowing lourd à un bras avec haltère, ou tractions lestées.", cues: "Tire vite, redescends lentement." },
+  "lancer-poitrine": { name: "Lancer de ballon à deux mains", how: "Face à un mur, ballon lesté (2 à 4 kg) ou ballon de handball à la poitrine, lance le plus fort possible.", cues: "Pousse avec les jambes et les bras en même temps." },
+  "lancer-rotation": { name: "Lancer en rotation", how: "De profil au mur, ballon tenu à la hanche, pivote et lance sur le côté, comme un tir.", cues: "Le mouvement part des hanches, pas des bras." },
+  "lancer-haut": { name: "Lancer au-dessus de la tête", how: "Ballon lesté au-dessus de la tête, lance-le fort vers le sol ou contre un mur.", cues: "Tout le corps participe, gainage serré." },
+  "pompes-explosives": { name: "Pompes explosives", how: "Pousse assez fort pour décoller les mains du sol à chaque répétition.", cues: "Réception bras légèrement fléchis.", easier: "Mains sur un banc." },
+  "box-jump": { name: "Saut sur caisse", how: "Saute sur une caisse ou une marche stable, réception en douceur, redescends en marchant.", cues: "Saute haut, pas loin. Redescendre en marchant protège les tendons." },
+  "squat-jump-leste": { name: "Squat jump lesté", how: "Squat jump avec un sac à dos léger ou des haltères légers (10 à 20 % de ton poids).", cues: "Réception stabilisée, genoux dans l'axe." },
+
+  // Condition physique
+  "footing": { name: "Footing facile", how: "Course continue à une allure où tu peux tenir une conversation.", cues: "Si tu ne peux pas parler, ralentis ou alterne course et marche." },
+  "intervalles-1515": { name: "Intervalles 15-15", how: "15 secondes de course rapide, 15 secondes de marche ou de trot très lent, en continu.", cues: "Même distance à chaque répétition : repère un point d'arrivée.", easier: "15 secondes rapides, 30 secondes de récupération." },
+  "intervalles-3030": { name: "Intervalles 30-30", how: "30 secondes rapides (tu ne peux dire que quelques mots), 30 secondes de trot.", cues: "Allure régulière d'une répétition à l'autre." },
+  "sprints-repetes": { name: "Sprints répétés", how: "6 sprints de 20 m. Tu repars toutes les 20 secondes : le temps qui reste sert à revenir en marchant.", cues: "Chaque sprint à fond." },
+  "navettes-hand": { name: "Navettes handball", how: "Allers-retours entre deux lignes à 10 m, en avant, en pas chassés et en arrière.", cues: "Reste bas dans les changements de direction." },
+  "circuit": { name: "Circuit training", how: "Enchaîne 30 secondes de chaque exercice : squats, pompes, fentes alternées, mountain climbers, burpees, planche.", cues: "La qualité du geste avant la vitesse.", easier: "20 secondes d'effort, 10 secondes de pause." },
+  "montees-genoux": { name: "Montées de genoux", how: "Sur 15 m, monte les genoux rapidement en avançant.", cues: "Appuis sur l'avant du pied, bras actifs." },
+
+  // Prévention & santé
+  "reception-unipodale": { name: "Réception sur une jambe", how: "Petit saut vers l'avant (puis sur le côté, puis en diagonale), réception sur une jambe, tiens 3 secondes.", cues: "Atterris en douceur, genou dans l'axe du pied." },
+  "squat-une-jambe": { name: "Squat sur une jambe", how: "Sur une jambe, descends lentement en quart de squat puis remonte.", cues: "Le genou ne part pas vers l'intérieur.", easier: "Avec un appui sur un mur." },
+  "mollets-excentrique": { name: "Mollets : descente lente", how: "Au bord d'une marche, monte sur la pointe des deux pieds, puis redescends en 3 secondes sur un seul pied.", cues: "Le talon passe sous le niveau de la marche." },
+  "pompes-scapulaires": { name: "Pompes scapulaires", how: "En planche bras tendus, rapproche puis écarte les omoplates sans plier les coudes.", cues: "Petit mouvement : ce sont les omoplates qui bougent." },
+  "hanches-9090": { name: "Mobilité des hanches 90/90", how: "Au sol, en position assise, jambes pliées à 90° (une devant, une sur le côté), pivote d'un côté à l'autre.", cues: "Buste droit, mouvement lent." },
+  "cheville-mur": { name: "Mobilité de cheville au mur", how: "Face à un mur, pied à 10 cm, avance le genou pour toucher le mur sans décoller le talon.", cues: "Talon collé au sol. Recule le pied si c'est facile." },
+  "rotation-thoracique": { name: "Rotation du haut du dos", how: "À quatre pattes, une main derrière la tête, fais pivoter le coude vers le plafond, puis vers le coude opposé.", cues: "Le bassin ne bouge pas." },
+};

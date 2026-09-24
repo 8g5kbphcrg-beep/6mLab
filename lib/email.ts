@@ -3,7 +3,7 @@ import { join } from "node:path";
 import nodemailer from "nodemailer";
 import type { Lang } from "@/lib/dict";
 import { programs, type ProgramSlug } from "@/lib/programs";
-import { goalsTitle, type GoalId } from "@/lib/goals";
+import { goalOrder, goalsTitle, type GoalId } from "@/lib/goals";
 import { fmtPrice } from "@/lib/checkout";
 import { legalPaths, owner } from "@/lib/legal";
 import { SITE } from "@/lib/dict";
@@ -35,12 +35,14 @@ const transport = () =>
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
-// The PDFs an order needs, from the programmes/ folder. Returns null unless automatic sending is
-// switched on (PROGRAMMES_ENVOI_AUTO=1, once the programs are validated) and every file exists,
-// so a customer never gets a draft or half a program.
+// The PDFs an order needs, from the programmes/ folder: the guide of the formula, the sessions
+// for its pair of goals (in block order) and the running option. Returns null unless automatic
+// sending is switched on (PROGRAMMES_ENVOI_AUTO=1, once the programs are validated) and every
+// file exists, so a customer never gets a draft or half a program.
 export async function programFiles(o: Order) {
   if (process.env.PROGRAMMES_ENVOI_AUTO !== "1") return null;
-  const names = [`base-${o.program}.pdf`, ...o.goals.map((g) => `objectif-${g}.pdf`), ...(o.running ? ["option-course.pdf"] : [])];
+  const goals = [...o.goals].sort((a, b) => goalOrder.indexOf(a) - goalOrder.indexOf(b));
+  const names = [`guide-${o.program}.pdf`, `seances-${o.program}-${goals.join("-")}.pdf`, ...(o.running ? ["option-course.pdf"] : [])];
   const paths = names.map((n) => join(process.cwd(), "programmes", n));
   try {
     await Promise.all(paths.map((p) => access(p)));

@@ -33,6 +33,10 @@ export type GoalId = keyof typeof goals;
 export const REATH: GoalId = "reathletisation";
 export const goalIds = (Object.keys(goals) as GoalId[]).filter((g) => g !== REATH);
 
+// Order of the blocks in a session (explosive work first) and in the PDF file names. Must match
+// "ordre" in programmes/source/objectifs.mjs.
+export const goalOrder: GoalId[] = ["explosivite", "puissance", "muscle", "condition", "prevention", "reathletisation"];
+
 export const goalName = (g: GoalId, lang: Lang) => goals[g][lang].name;
 export const goalsTitle = (sel: readonly GoalId[], lang: Lang) => sel.map((g) => goalName(g, lang)).join(" + ");
 
