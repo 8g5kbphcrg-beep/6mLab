@@ -40,7 +40,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
         { h: "Directeur de la publication", body: [o.name] },
         { h: "Hébergement", body: [`Le site est hébergé par ${host}.`] },
         { h: "Propriété intellectuelle", body: [
-          "Les textes, illustrations, logos, programmes et vidéos présents sur ce site sont la propriété de 6M Lab, sauf mention contraire. Toute reproduction ou diffusion, totale ou partielle, sans autorisation écrite préalable est interdite.",
+          "Les textes, illustrations, logos, programmes et animations présents sur ce site sont la propriété de 6M Lab, sauf mention contraire. Toute reproduction ou diffusion, totale ou partielle, sans autorisation écrite préalable est interdite.",
         ] },
         { h: "Données personnelles", body: ["Le traitement de tes données est décrit dans la politique de confidentialité."] },
         { h: "Santé", body: [
@@ -88,7 +88,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           "Toute commande implique l'acceptation de ces conditions, qui peuvent être modifiées à tout moment. Les conditions applicables sont celles en vigueur au jour de la commande.",
         ] },
         { h: "2. Les programmes", body: [
-          "Les programmes sont des contenus numériques : un document PDF présentant le planning complet semaine par semaine, et des vidéos montrant chaque exercice, accessibles en ligne. Lors de la commande, l'acheteur choisit deux objectifs parmi ceux proposés, ou le programme Réathlétisation seul. Il peut ajouter l'option course à pied, un programme complémentaire de séances de course de 30 à 45 minutes, vendue 9 € en plus du programme. Le contenu et la durée de chaque programme sont décrits sur sa page.",
+          "Les programmes sont des contenus numériques : un document PDF présentant le planning complet semaine par semaine, et des animations montrant chaque exercice, accessibles en ligne. Lors de la commande, l'acheteur choisit un objectif parmi ceux proposés, ou le programme Réathlétisation seul. Il peut ajouter un deuxième objectif, vendu 5 € en plus du programme. Il peut ajouter l'option course à pied, un programme complémentaire de séances de course de 30 à 45 minutes, vendue 9 € en plus du programme. Le contenu et la durée de chaque programme sont décrits sur sa page.",
           "Les programmes portent sur l'entraînement uniquement. Ils ne comprennent ni plan alimentaire ni suivi individuel.",
           "Ils sont destinés à des personnes en bonne santé. En cas de blessure, de douleur ou de doute sur ton état de santé, demande l'avis d'un médecin avant de commencer. L'acheteur reste responsable de l'adaptation de l'effort à sa condition physique et du respect des consignes.",
         ] },
@@ -111,7 +111,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           `Modèle de formulaire de rétractation : « À l'attention de ${o.name}, 6M Lab, ${o.address}, ${o.email}. Je notifie par la présente ma rétractation du contrat portant sur le programme ci-dessous : [programme], commandé le [date]. Nom : [nom]. Adresse email utilisée pour la commande : [email]. Date : [date]. »`,
         ] },
         { h: "8. Garantie de conformité", body: [
-          "Le vendeur répond des défauts de conformité du contenu numérique dans les conditions des articles L224-25-12 et suivants du Code de la consommation. En cas de problème (fichier illisible, vidéo inaccessible), écris-nous : le programme sera mis en conformité, ou à défaut le prix sera réduit ou remboursé.",
+          "Le vendeur répond des défauts de conformité du contenu numérique dans les conditions des articles L224-25-12 et suivants du Code de la consommation. En cas de problème (fichier illisible, animation inaccessible), écris-nous : le programme sera mis en conformité, ou à défaut le prix sera réduit ou remboursé.",
         ] },
         { h: "9. Utilisation des programmes", body: [
           "L'achat donne droit à un usage personnel et non transférable du programme. Il est interdit de le revendre, de le partager ou de le diffuser, en tout ou en partie, sans autorisation écrite.",
@@ -141,7 +141,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
         { h: "Publication director", body: [o.name] },
         { h: "Hosting", body: [`The website is hosted by ${hostEn}.`] },
         { h: "Intellectual property", body: [
-          "The texts, illustrations, logos, programs and videos on this website belong to 6M Lab unless stated otherwise. Any reproduction or distribution, in whole or in part, without prior written permission is prohibited.",
+          "The texts, illustrations, logos, programs and animations on this website belong to 6M Lab unless stated otherwise. Any reproduction or distribution, in whole or in part, without prior written permission is prohibited.",
         ] },
         { h: "Personal data", body: ["How your data is handled is described in the privacy policy."] },
         { h: "Health", body: [
@@ -190,7 +190,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           "Placing an order means accepting these terms, which may change at any time. The terms that apply are those in force on the day of the order.",
         ] },
         { h: "2. The programs", body: [
-          "The programs are digital content: a PDF with the full week-by-week plan, and videos showing every exercise, available online. When ordering, the buyer chooses two of the goals offered, or the return-to-play program on its own. The buyer can add the running option, an additional program of 30 to 45 minute running sessions, sold for €9 on top of the program. Each program's content and length are described on its page.",
+          "The programs are digital content: a PDF with the full week-by-week plan, and animations showing every exercise, available online. When ordering, the buyer chooses one of the goals offered, or the return-to-play program on its own. The buyer can add a second goal, sold for €5 on top of the program. The buyer can add the running option, an additional program of 30 to 45 minute running sessions, sold for €9 on top of the program. Each program's content and length are described on its page.",
           "The programs cover training only. They include no meal plan and no individual coaching.",
           "They are intended for healthy people. If you have an injury, pain or any doubt about your health, see a doctor before starting. The buyer remains responsible for adapting the effort to their fitness and for following the instructions.",
         ] },
@@ -213,7 +213,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           `Withdrawal template: "To ${o.name}, 6M Lab, ${o.address}, ${o.email}. I hereby give notice that I withdraw from the contract for the following program: [program], ordered on [date]. Name: [name]. Email used for the order: [email]. Date: [date]."`,
         ] },
         { h: "8. Conformity guarantee", body: [
-          "The seller is liable for any lack of conformity of the digital content under articles L224-25-12 and following of the French Consumer Code. If there is a problem (unreadable file, video not accessible), contact us: the program will be brought into conformity or, failing that, the price will be reduced or refunded.",
+          "The seller is liable for any lack of conformity of the digital content under articles L224-25-12 and following of the French Consumer Code. If there is a problem (unreadable file, animation not accessible), contact us: the program will be brought into conformity or, failing that, the price will be reduced or refunded.",
         ] },
         { h: "9. Use of the programs", body: [
           "Buying a program grants a personal, non-transferable right to use it. Reselling, sharing or distributing it, in whole or in part, without written permission is prohibited.",

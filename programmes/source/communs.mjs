@@ -58,7 +58,7 @@ export const formules = {
     guide: [
       { h2: "Avant de commencer" },
       { p: "8 semaines pour reprendre sur des bases solides avant la reprise avec ton club. Ce guide t'explique comment fonctionne ton programme." },
-      ...documents("l'échauffement, tes deux objectifs, le gainage et le retour au calme"),
+      ...documents("l'échauffement, ton ou tes objectifs, le gainage et le retour au calme"),
       { h3: "Matériel" },
       { p: "Rien d'obligatoire : tout peut se faire au poids du corps. Si tu as accès à une salle ou à un peu de matériel (haltères, élastique, banc), les fiches exercices indiquent des variantes." },
       ...niveaux,
@@ -70,8 +70,8 @@ export const formules = {
       { h2: "Comment se déroule une séance" },
       { table: { head: ["Étape", "Durée", "À quoi ça sert"], rows: [
         ["1. Échauffement", "10-12 min", "Préparer le corps et réduire le risque de blessure. Le même à chaque séance."],
-        ["2. Objectif n° 1", "15-20 min", "Ton premier objectif. Explosivité et Puissance passent toujours en premier, quand tu as toute ton énergie."],
-        ["3. Objectif n° 2", "15-20 min", "Ton deuxième objectif."],
+        ["2. Premier bloc", "15-20 min", "Ton premier objectif. Explosivité et Puissance passent toujours en premier, quand tu as toute ton énergie."],
+        ["3. Deuxième bloc", "15-20 min", "Ton deuxième objectif. Si tu as choisi un seul objectif, ce bloc le travaille sous un autre angle."],
         ["4. Gainage et prévention", "5-8 min", "Renforcer les zones les plus exposées au handball : genoux, chevilles, épaules, ischios, adducteurs."],
         ["5. Retour au calme", "5 min", "Marche et étirements légers."],
       ] } },
@@ -118,7 +118,7 @@ export const formules = {
     guide: [
       { h2: "Avant de commencer" },
       { p: "Pendant la saison, ton club s'occupe déjà d'une grande partie de ta charge d'entraînement. Le but de ce programme n'est pas d'en rajouter, mais d'**entretenir** ce que tu as construit : sans travail complémentaire, la force et l'explosivité baissent au fil des semaines de compétition." },
-      ...documents("l'échauffement, tes deux objectifs, le gainage et le retour au calme"),
+      ...documents("l'échauffement, ton ou tes objectifs, le gainage et le retour au calme"),
       { h3: "Matériel" },
       { p: "Rien d'obligatoire : tout peut se faire au poids du corps. Les fiches exercices indiquent des variantes si tu as accès à une salle ou à un peu de matériel." },
       ...niveaux,
@@ -132,8 +132,8 @@ export const formules = {
       { h2: "Comment se déroule une séance" },
       { table: { head: ["Étape", "Durée", "À quoi ça sert"], rows: [
         ["1. Échauffement", "8 min", "Préparer le corps et réduire le risque de blessure."],
-        ["2. Objectif n° 1", "10-12 min", "Ton premier objectif. Explosivité et Puissance passent toujours en premier."],
-        ["3. Objectif n° 2", "10-12 min", "Ton deuxième objectif."],
+        ["2. Premier bloc", "10-12 min", "Ton premier objectif. Explosivité et Puissance passent toujours en premier."],
+        ["3. Deuxième bloc", "10-12 min", "Ton deuxième objectif. Si tu as choisi un seul objectif, ce bloc le travaille sous un autre angle."],
         ["4. Gainage et prévention", "5 min", "Épaules, ischios et adducteurs, très sollicités au handball."],
         ["5. Retour au calme", "3-5 min", "Marche et étirements légers."],
       ] } },

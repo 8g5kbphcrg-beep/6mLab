@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { locales, type Lang } from "@/lib/dict";
 import { programs, programSlugs, type ProgramSlug } from "@/lib/programs";
-import { genders, prices, RUNNING_PRICE, type Gender } from "@/lib/checkout";
-import { goalsTitle, validGoals } from "@/lib/goals";
+import { genders, prices, RUNNING_PRICE, SECOND_GOAL_PRICE, type Gender } from "@/lib/checkout";
+import { goalName, goalsTitle, hasSecondGoal, validGoals } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
 
 export async function POST(req: NextRequest) {
@@ -40,7 +40,14 @@ export async function POST(req: NextRequest) {
           unit_amount: prices[slug],
           product_data: { name: `6M Lab · ${p.name}`, description: `${goalsTitle(goals, lang)} · ${p.duration}` },
         },
-      }, ...(running ? [{
+      }, ...(hasSecondGoal(goals) ? [{
+        quantity: 1,
+        price_data: {
+          currency: "eur",
+          unit_amount: SECOND_GOAL_PRICE,
+          product_data: { name: lang === "fr" ? "Deuxième objectif" : "Second goal", description: goalName(goals[1], lang) },
+        },
+      }] : []), ...(running ? [{
         quantity: 1,
         price_data: {
           currency: "eur",

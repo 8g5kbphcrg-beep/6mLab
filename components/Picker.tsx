@@ -11,7 +11,7 @@ type Props = {
 
 export default function Picker({ lang, pick }: Props) {
   const [m, setM] = useState(0);
-  const [sel, setSel] = useState<GoalId[]>(["muscle", "explosivite"]);
+  const [sel, setSel] = useState<GoalId[]>(["explosivite"]);
   useEffect(() => {
     const h = (e: MouseEvent) => {
       const el = (e.target as HTMLElement).closest<HTMLElement>("[data-pick]");
@@ -23,7 +23,7 @@ export default function Picker({ lang, pick }: Props) {
   // Picking a third goal drops the oldest one; Réathlétisation always stands alone.
   const toggle = (g: GoalId) =>
     setSel(sel.includes(g) ? sel.filter((x) => x !== g) : g === REATH ? [REATH] : [...sel.filter((x) => x !== REATH), g].slice(-2));
-  const done = sel.includes(REATH) || sel.length === 2;
+  const done = sel.length > 0;
   return (
     <>
       <h2>{pick.title}</h2>

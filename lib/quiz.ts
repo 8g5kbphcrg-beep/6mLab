@@ -8,7 +8,7 @@ export const quiz = {
     steps: [
       { q: "Où en es-tu dans la saison ?", o: ["Avant la saison", "En pleine saison"] },
       { q: "Quel est ton premier objectif ?", o: [...goalIds, REATH].map((g) => goalName(g, "fr")) },
-      { q: "Et ton deuxième objectif ?", o: goalIds.map((g) => goalName(g, "fr")) },
+      { q: "Veux-tu ajouter un deuxième objectif (+5 €) ?", o: [...goalIds.map((g) => goalName(g, "fr")), "Non, un seul objectif"] },
       { q: "Quel est ton niveau en préparation physique ?", o: ["Je débute", "J'ai quelques bases", "J'ai de l'expérience"] },
       { q: "Où t'entraînes-tu ?", o: ["À la maison, sans matériel", "À la maison, avec petit matériel", "En salle de sport"] },
       { q: "Combien de séances par semaine peux-tu ajouter à ton club ?", o: ["2", "3", "4"] },
@@ -27,7 +27,7 @@ export const quiz = {
     steps: [
       { q: "Where are you in the season?", o: ["Before the season", "During the season"] },
       { q: "What is your first goal?", o: [...goalIds, REATH].map((g) => goalName(g, "en")) },
-      { q: "And your second goal?", o: goalIds.map((g) => goalName(g, "en")) },
+      { q: "Do you want to add a second goal (+€5)?", o: [...goalIds.map((g) => goalName(g, "en")), "No, just one goal"] },
       { q: "What is your level in physical training?", o: ["Beginner", "Intermediate", "Advanced"] },
       { q: "Where do you train?", o: ["At home, no equipment", "At home, small equipment", "At the gym"] },
       { q: "How many sessions per week can you add to your club training?", o: ["2", "3", "4"] },

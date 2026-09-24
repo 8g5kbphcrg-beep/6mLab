@@ -1,6 +1,7 @@
 // Builds the program PDFs sent by email, from programmes/source/:
 //   guide-<formule>.pdf               how the program works (explanations only)
 //   seances-<formule>-<obj1>-<obj2>.pdf  every session written out in order + illustrated exercises
+//   seances-<formule>-<obj>.pdf       the same with a single goal
 //   option-course.pdf                 the running option
 // Usage: npm run programmes            (all)
 //        npm run programmes -- seances-pre-saison-explosivite-muscle   (one, by file name)
@@ -8,7 +9,7 @@ import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { chromium } from "playwright";
 import { exercices } from "../programmes/source/exercices.mjs";
-import { objectifs, ordre } from "../programmes/source/objectifs.mjs";
+import { objectifs, ordre, solos } from "../programmes/source/objectifs.mjs";
 import { formules } from "../programmes/source/communs.mjs";
 import optionCourse from "../programmes/source/option-course.mjs";
 import { figure, variants } from "../programmes/source/figures.mjs";
@@ -105,37 +106,42 @@ const guideDoc = (fid) => {
   return { file: `guide-${fid}`, d, body: f.guide.map(block).join("\n") };
 };
 
+// pair: two goals, or a single goal (its two blocks then come from solos).
 const seancesDoc = (fid, pair) => {
   const f = formules[fid];
-  const [g1, g2] = pair.map((g) => objectifs[g]);
-  const title = `${g1.name} + ${g2.name}`;
+  const gs = pair.map((g) => objectifs[g]);
+  const solo = pair.length === 1 ? solos[pair[0]] : null;
+  const title = gs.map((g) => g.name).join(" + ");
   // Exercises are numbered in order of first appearance, so the library follows the sessions.
   const nums = new Map();
   const num = (id) => { if (!exercices[id]) throw new Error("Exercice inconnu : " + id); if (!nums.has(id)) nums.set(id, nums.size + 1); return nums.get(id); };
+  const dur = (isPre) => (isPre ? "15-20 min" : "10-12 min");
+  const goalSteps = (key, isPre) => solo
+    ? (isPre ? solo.pre[isPre][key] : solo.maintien[key]).map((rows, i) => ({ name: `${gs[0].name} · ${solo.names[isPre || "maintien"][i]}`, duree: dur(isPre), rows }))
+    : gs.map((g) => ({ name: g.name, duree: dur(isPre), rows: isPre ? g.pre[isPre][key] : g.maintien[key] }));
   const steps = (key, gainage, isPre) => [
     { name: "Échauffement", duree: isPre ? "10-12 min" : "8 min", rows: f.echauffement.rows },
-    { name: g1.name, duree: isPre ? "15-20 min" : "10-12 min", rows: isPre ? g1.pre[isPre][key] : g1.maintien[key] },
-    { name: g2.name, duree: isPre ? "15-20 min" : "10-12 min", rows: isPre ? g2.pre[isPre][key] : g2.maintien[key] },
+    ...goalSteps(key, isPre),
     { name: "Gainage et prévention", duree: "5-8 min", rows: gainage },
     { name: "Retour au calme", duree: "5 min", text: f.retourAuCalme },
   ];
   let sessions = "";
   if (fid === "pre-saison") {
     for (const ph of f.phases) {
-      const notes = [g1, g2].map((g) => g.phaseNotes?.[ph.id]).filter(Boolean);
+      const notes = solo ? [solo.phaseNotes[ph.id]] : gs.map((g) => g.phaseNotes?.[ph.id]).filter(Boolean);
       sessions += `<div class="phase"><h2>${esc(ph.title)}</h2><p>${md(ph.texte)}</p>${notes.map((n) => `<div class="note">${md(n)}</div>`).join("")}`;
       for (const k of ["A", "B", "C"]) sessions += session(`Séance ${k}`, steps(k, f.gainage[k], ph.id), num);
       if (ph.id === "bases") sessions += `<p class="stext">Semaine après semaine, tu peux ajouter la séance bonus, facultative :</p>` + session(f.bonus.title, [{ name: "Échauffement", duree: "10 min", rows: f.echauffement.rows }, { name: "Prévention et mobilité", duree: "10 min", rows: f.bonus.rows }], num);
       sessions += `</div>`;
     }
-    const aff = [g1, g2].map((g) => g.affutage && `**${g.name}** : ${g.affutage}`).filter(Boolean);
+    const aff = gs.map((g) => g.affutage && `**${g.name}** : ${g.affutage}`).filter(Boolean);
     sessions += `<h2>${esc(f.affutage.title)}</h2><p>${md(f.affutage.texte)}</p>${aff.length ? `<ul>${aff.map((a) => `<li>${md(a)}</li>`).join("")}</ul>` : ""}`;
   } else {
     sessions += `<h2>Tes deux séances</h2><p>${md(f.blocs)}</p><div class="note">**Placement** : la séance 1 au moins 3 jours avant le match, la séance 2 au plus tard 2 jours avant. Jamais la veille d'un match.</div>`.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
     sessions += session("Séance 1 · la plus exigeante, loin du match", steps("s1", f.gainage["1"], null), num);
     sessions += session("Séance 2 · plus légère", steps("s2", f.gainage["2"], null), num);
   }
-  const goals = `<h2>Tes objectifs</h2>${[g1, g2].map((g) => `<div class="goal" style="--gc:${g.color}"><h3>${esc(g.name)}</h3><p>${md(g.intro)}</p><ul>${g.qualites.map((q) => `<li>${md(q)}</li>`).join("")}</ul><p><strong>Les règles d'or</strong></p><ul>${g.regles.map((q) => `<li>${md(q)}</li>`).join("")}</ul>${(g.notes ?? []).map(block).join("")}</div>`).join("")}
+  const goals = `<h2>${solo ? "Ton objectif" : "Tes objectifs"}</h2>${solo ? `<p>Tu as choisi un seul objectif : chaque séance lui consacre deux blocs, et l'accent change au fil des semaines. Ce que tu as travaillé avant reste dans les séances, avec moins de séries, pour ne pas le perdre.</p>` : ""}${gs.map((g) => `<div class="goal" style="--gc:${g.color}"><h3>${esc(g.name)}</h3><p>${md(g.intro)}</p><ul>${g.qualites.map((q) => `<li>${md(q)}</li>`).join("")}</ul><p><strong>Les règles d'or</strong></p><ul>${g.regles.map((q) => `<li>${md(q)}</li>`).join("")}</ul>${(g.notes ?? []).map(block).join("")}</div>`).join("")}
   <h2>Comment lire tes séances</h2><ul>
   <li>Chaque séance est écrite en entier, dans l'ordre : fais les étapes de haut en bas.</li>
   <li>« 2-4 × 8 » : 2 séries au niveau 1, 3 au niveau 2, 4 au niveau 3, de 8 répétitions. « 2-3 × 8 » : 2 séries aux niveaux 1 et 2, 3 au niveau 3.</li>
@@ -148,7 +154,7 @@ const seancesDoc = (fid, pair) => {
 
 const courseDoc = () => ({ file: "option-course", d: optionCourse, body: optionCourse.blocks.map(block).join("\n") });
 
-const pairs = ordre.flatMap((a, i) => ordre.slice(i + 1).map((b) => [a, b]));
+const pairs = [...ordre.map((a) => [a]), ...ordre.flatMap((a, i) => ordre.slice(i + 1).map((b) => [a, b]))];
 const docs = [
   ...Object.keys(formules).map(guideDoc),
   ...Object.keys(formules).flatMap((fid) => pairs.map((p) => seancesDoc(fid, p))),

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import type { Lang } from "@/lib/dict";
 import { programs, type ProgramSlug } from "@/lib/programs";
-import { buy, fmtPrice, genders, prices, RUNNING_PRICE } from "@/lib/checkout";
+import { buy, fmtPrice, genders, orderTotal, prices, RUNNING_PRICE, SECOND_GOAL_PRICE } from "@/lib/checkout";
 import { goalIds, goals as goalInfo, goalName, goalsTitle, REATH, type GoalId } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
 import "@/app/buy.css";
@@ -17,7 +17,8 @@ export default function BuyForm({ lang, slug, goals = [], test, error }: { lang:
   const [err, setErr] = useState(error);
   const reath = sel.includes(REATH);
   const toggle = (g: GoalId) => setSel(sel.includes(g) ? sel.filter((x) => x !== g) : [...sel.filter((x) => x !== REATH), g]);
-  const done = reath || sel.length === 2;
+  const done = sel.length > 0;
+  const total = orderTotal(slug, sel, running);
 
   return (
     <form className="buy" id="acheter" method="post" action="/api/checkout"
@@ -40,6 +41,7 @@ export default function BuyForm({ lang, slug, goals = [], test, error }: { lang:
               <label key={g} className="bcard bgoal">
                 <input type="checkbox" name="goal" value={g} checked={on} disabled={!on && !reath && sel.length >= 2} onChange={() => toggle(g)} />
                 <span><strong>{goalName(g, lang)}</strong> {goalInfo[g][lang].details.join(" · ")}</span>
+                {!on && !reath && sel.length === 1 && <b>+{fmtPrice(SECOND_GOAL_PRICE, lang)}</b>}
               </label>
             );
           })}
@@ -80,15 +82,16 @@ export default function BuyForm({ lang, slug, goals = [], test, error }: { lang:
         <dl className="bsum">
           <div><dt>{p.name}</dt><dd>{fmtPrice(prices[slug], lang)}</dd></div>
           <div><dt>{t.goalsLb}</dt><dd>{sel.length ? goalsTitle(sel, lang) : t.none}</dd></div>
+          {sel.length === 2 && <div><dt>{t.second}</dt><dd>{fmtPrice(SECOND_GOAL_PRICE, lang)}</dd></div>}
           {running && <div><dt>{t.runT}</dt><dd>{fmtPrice(RUNNING_PRICE, lang)}</dd></div>}
-          <div className="btotal"><dt>{t.total}</dt><dd>{fmtPrice(prices[slug] + (running ? RUNNING_PRICE : 0), lang)}</dd></div>
+          <div className="btotal"><dt>{t.total}</dt><dd>{fmtPrice(total, lang)}</dd></div>
         </dl>
         <label className="bconsent">
           <input type="checkbox" name="consent" required />
           <span>{t.consent} <a href={legalPaths[lang].cgv} target="_blank">{t.cgv}</a></span>
         </label>
         {err && <p className="berr" role="alert">{err === "invalide" ? t.invalid : t.off}</p>}
-        <button type="submit" className="btn bpay">{t.btn(fmtPrice(prices[slug] + (running ? RUNNING_PRICE : 0), lang))}</button>
+        <button type="submit" className="btn bpay">{t.btn(fmtPrice(total, lang))}</button>
         <p className="note">{t.secure}</p>
         {test && <p className="note btest">{t.test}</p>}
       </div>

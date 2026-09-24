@@ -17,6 +17,7 @@
 .bcard input{position:absolute;left:1rem;top:1rem;width:1.05rem;height:1.05rem;margin:0;accent-color:var(--ink)}
 .bcard:has(:focus-visible){outline:3px solid var(--cta);outline-offset:2px}
 .brun b{margin-left:auto;white-space:nowrap;font-size:1rem}
+.bgoal > b{position:absolute;top:.8rem;right:1rem;font-size:.9rem}.bgoal span{padding-right:3.2rem}
 @media(hover:hover){.bcard:hover{border-color:var(--muted)}}
 .bchips{display:flex;flex-wrap:wrap;gap:.4rem}
 .bchip{display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:999px;padding:.4rem .85rem;font-size:.9rem;cursor:pointer;min-height:38px;transition:background .15s,border-color .15s}
