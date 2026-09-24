@@ -11,7 +11,7 @@ import { exercices } from "../programmes/source/exercices.mjs";
 import { objectifs, ordre } from "../programmes/source/objectifs.mjs";
 import { formules } from "../programmes/source/communs.mjs";
 import optionCourse from "../programmes/source/option-course.mjs";
-import { figure } from "../programmes/source/figures.mjs";
+import { figure, variants } from "../programmes/source/figures.mjs";
 
 const out = join(import.meta.dirname, "..", "programmes");
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
@@ -32,8 +32,11 @@ const block = (b) => {
 };
 
 const exerciseCard = (n, e, id) => {
-  const fig = id ? figure(id) : null;
-  return `<div class="ex${fig ? " hasfig" : ""}">${fig ? `<div class="fig">${fig}</div>` : ""}<div class="extext"><div class="exname">${n ? `<span class="num">${n}</span>` : ""}${md(e.name)}</div><p>${md(e.how)}</p>${e.cues ? `<p class="cues"><strong>Points clés :</strong> ${md(e.cues)}</p>` : ""}${e.easier ? `<p class="lvl"><strong>Plus facile :</strong> ${md(e.easier)}</p>` : ""}</div></div>`;
+  // One drawing per version (bodyweight, with equipment), labelled when there are two.
+  const vs = id ? variants(id) : [];
+  const label = { poids: "Au poids du corps", materiel: "Avec matériel" };
+  const fig = vs.length ? `<div class="figs">${vs.map((v) => `<div class="fig">${vs.length > 1 ? `<span class="flab">${label[v]}</span>` : ""}${figure(id, v)}</div>`).join("")}</div>` : "";
+  return `<div class="ex${fig ? " hasfig" : ""}">${fig}<div class="extext"><div class="exname">${n ? `<span class="num">${n}</span>` : ""}${md(e.name)}</div><p>${md(e.how)}</p>${e.cues ? `<p class="cues"><strong>Points clés :</strong> ${md(e.cues)}</p>` : ""}${e.easier ? `<p class="lvl"><strong>Plus facile :</strong> ${md(e.easier)}</p>` : ""}</div></div>`;
 };
 
 // A session: its steps, each a small table of exercises numbered from the library.
@@ -70,7 +73,7 @@ tr:nth-child(even) td{background:#F6F5FB}
 .ref{display:inline-block;min-width:6mm;margin-right:2mm;padding:0 1.2mm;border-radius:2mm;background:#100A24;color:#fff;font-size:7.5pt;font-weight:700;text-align:center}
 .prec{color:#5B5673}
 .ex{border:1px solid #E3E0F0;border-left:4px solid var(--c);border-radius:3mm;padding:3mm 4mm;margin:0 0 3mm;page-break-inside:avoid;display:flex;gap:5mm;align-items:flex-start}
-.ex.hasfig{flex-direction:column}.fig{background:#F6F5FB;border-radius:2mm;padding:2mm 3mm;align-self:stretch;display:flex;justify-content:center}.fig svg{height:48mm;width:auto;max-width:100%;display:block}
+.ex.hasfig{flex-direction:column}.figs{display:flex;gap:3mm;align-self:stretch}.fig{flex:1;background:#F6F5FB;border-radius:2mm;padding:2mm 3mm;display:flex;flex-direction:column;align-items:center}.fig svg{height:40mm;width:auto;max-width:100%;display:block}.flab{align-self:flex-start;font-size:7.5pt;font-weight:700;background:#100A24;color:#fff;border-radius:99px;padding:0.3mm 2.5mm}
 .exname{font-size:12.5pt;margin-bottom:1mm;display:flex;align-items:center;gap:2mm}.num{display:inline-grid;place-items:center;min-width:7mm;height:7mm;border-radius:2mm;background:#100A24;color:#fff;font:700 9pt Inter}
 .ex p{margin:0 0 1.5mm}.cues,.lvl{font-size:9pt;color:#3A3452}
 `;
