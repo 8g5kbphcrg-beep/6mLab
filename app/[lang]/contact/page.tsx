@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { dict, type Lang } from "@/lib/dict";
+import { owner } from "@/lib/legal";
 import "@/app/pages.css";
 
-const EMAIL = "6mlab.contact@gmail.com";
+const EMAIL = owner.email;
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -22,8 +23,9 @@ export default async function Contact({ params }: { params: Promise<{ lang: stri
   return (
     <div className="pg">
       <h1>Contact</h1>
-      <p>{fr ? "Une question sur les programmes, sur ton profil, ou autre chose ? Écris-moi directement." : "A question about the programs, your profile, or anything else? Write to me directly."}</p>
+      <p className="lead2">{fr ? "Une question sur les programmes, sur ton profil, ou autre chose ? Écris-moi directement." : "A question about the programs, your profile, or anything else? Write to me directly."}</p>
       <div className="contactcard">
+        <p className="mail">{EMAIL}</p>
         <p>{fr ? "Je réponds en général sous 48 heures." : "I usually reply within 48 hours."}</p>
         <a className="btn" href={`mailto:${EMAIL}?subject=${encodeURIComponent(subject)}`}>{fr ? "Envoyer un email" : "Send an email"}</a>
       </div>

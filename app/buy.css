@@ -1,0 +1,40 @@
+.buy{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:1.4rem;display:grid;gap:1.6rem;box-shadow:0 1px 2px rgba(16,10,36,.04),0 12px 32px rgba(16,10,36,.06)}
+.bprice{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap;padding-bottom:1.2rem;border-bottom:1px solid var(--line)}
+.bprice strong{font:400 2.6rem/1 var(--font-display),sans-serif}.bprice span{color:var(--muted);font-size:.95rem}
+.bstep{border:0;padding:0;margin:0;display:grid;gap:.75rem;min-width:0}
+.bstep legend,.blegend{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:1.1rem;margin:0 0 .75rem;padding:0;width:100%}
+.bnum{flex:none;width:1.7rem;height:1.7rem;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-size:.85rem}
+.bbadge{margin-left:auto;font-size:.85rem;font-weight:600;color:var(--muted);background:var(--band);border-radius:999px;padding:.15rem .6rem}
+.bbadge.ok{background:var(--cta);color:#100A24}
+.bhint{margin:0;color:var(--muted);font-size:.95rem}
+.bcards{display:grid;gap:.5rem}
+.bcard{position:relative;display:flex;gap:.8rem;align-items:flex-start;text-align:left;width:100%;font:inherit;color:inherit;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:.8rem 1rem .8rem 2.6rem;cursor:pointer;transition:border-color .15s,background .15s}
+.bcard strong{display:block;font-size:1rem}.bcard span{color:var(--muted);font-size:.9rem;line-height:1.45}.bcard span strong{color:var(--ink);margin-bottom:.1rem}
+.bcards .bcard{flex-direction:column;gap:.15rem}
+.bcards .bcard::before{content:"";position:absolute;left:1rem;top:1.05rem;width:1rem;height:1rem;border-radius:50%;border:1.5px solid var(--muted)}
+.bcard[aria-pressed=true],.bcard:has(:checked){border-color:var(--ink);background:var(--band)}
+.bcards .bcard[aria-pressed=true]::before{border-color:var(--ink);background:var(--ink);box-shadow:inset 0 0 0 3px var(--card)}
+.bcard input{position:absolute;left:1rem;top:1rem;width:1.05rem;height:1.05rem;margin:0;accent-color:var(--ink)}
+.bcard:has(:focus-visible){outline:3px solid var(--cta);outline-offset:2px}
+.brun b{margin-left:auto;white-space:nowrap;font-size:1rem}
+@media(hover:hover){.bcard:hover{border-color:var(--muted)}}
+.bchips{display:flex;flex-wrap:wrap;gap:.4rem}
+.bchip{display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:999px;padding:.4rem .85rem;font-size:.9rem;cursor:pointer;min-height:38px;transition:background .15s,border-color .15s}
+.bchip input{position:absolute;opacity:0;width:1px;height:1px}
+.bchip:has(:checked){background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.bchip:has(:disabled){opacity:.4;cursor:not-allowed}
+.bchip:has(:focus-visible){outline:3px solid var(--cta);outline-offset:2px}
+.bsum{margin:0;display:grid;gap:.45rem;font-size:.95rem}.bsum div{display:flex;justify-content:space-between;gap:1rem}
+.bsum dt{color:var(--muted)}.bsum dd{margin:0;text-align:right;font-weight:600}
+.btotal{border-top:1px solid var(--line);padding-top:.6rem;margin-top:.2rem;font-size:1.1rem}.btotal dt{color:var(--ink);font-weight:700}
+.bconsent{display:flex;gap:.7rem;align-items:flex-start;font-size:.88rem;color:var(--muted);cursor:pointer;line-height:1.5}
+.bconsent input{width:1.1rem;height:1.1rem;margin-top:.15rem;flex:none;accent-color:var(--ink)}.bconsent a{color:var(--ink)}
+.bpay{width:100%;text-align:center}
+.berr{color:var(--At);font-weight:600;margin:0;font-size:.95rem}
+.buy .note{margin:0;font-size:.85rem}.btest{border-left:3px solid var(--cta);padding-left:.7rem}
+.bfields{display:grid;grid-template-columns:1fr 6.5rem;gap:.6rem}
+.bfield{display:grid;gap:.3rem;font-size:.9rem;font-weight:600;color:var(--muted)}
+.bfield input{font:inherit;font-size:1rem;font-weight:400;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:.65rem .8rem;min-height:46px;width:100%}
+.bfield input:focus{outline:none;border-color:var(--ink)}
+.bgender{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}.bgender .lab{width:100%;margin:0 0 .1rem}
+.bgoal:has(:disabled){opacity:.45;cursor:not-allowed}

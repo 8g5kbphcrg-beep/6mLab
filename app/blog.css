@@ -1,8 +1,18 @@
 .post{max-width:720px;margin:0 auto;padding:3rem 1.25rem 5rem}
-.post h1{font-size:clamp(2.2rem,7vw,3.6rem)}.post h2{font-size:1.7rem;margin-top:2rem}
-.post p,.post li{font-size:1.1rem}.post ul{padding-left:1.2rem}.pmeta{color:var(--muted);font-size:.9rem}
-.cards{display:grid;gap:1.2rem;margin-top:1.5rem}
-.pc{display:block;text-decoration:none;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--A);border-radius:var(--r);padding:1.2rem 1.4rem}
-.pc:nth-child(even){border-left-color:var(--B)}.pc h2{font-size:1.6rem;margin:0 0 .4rem}.pc p{color:var(--muted);margin:0}
-.postcta{margin-top:2.5rem;background:var(--band);border-radius:var(--r);padding:1.4rem}.postcta p{margin:0 0 1rem}
-@media(hover:hover){.pc:hover{border-color:var(--cta)}}
+.post h1{font-size:clamp(2.2rem,6.5vw,3.4rem)}.post h2{font-size:1.8rem;margin-top:2.4rem}
+.post p,.post li{font-size:1.1rem;line-height:1.75}.post ul{padding-left:1.2rem;display:grid;gap:.4rem}
+.pmeta{color:var(--muted);font-size:.9rem;display:flex;flex-wrap:wrap;gap:.3rem 1rem;margin-bottom:1.5rem}.pmeta a{text-decoration:none}
+.blog{max-width:1120px;margin:0 auto;padding:3rem 1.25rem 5rem}
+.cards{display:grid;gap:1.25rem}
+.pc{display:flex;flex-direction:column;gap:.5rem;text-decoration:none;background:var(--card);border:1px solid var(--line);border-top:6px solid var(--A);border-radius:var(--r);padding:1.5rem;box-shadow:var(--shadow);transition:transform .2s}
+.pc:nth-child(even):not(.study){border-top-color:var(--B)}.pc h2{font-size:1.6rem;margin:0}.pc p{color:var(--muted);margin:0}
+.pc .pdate{font-size:.85rem;color:var(--muted)}.pc .pread{margin-top:auto;padding-top:.6rem;font-weight:600;color:var(--ink)}
+@media(hover:hover){.pc:hover{transform:translateY(-3px)}}
+@media(min-width:760px){.cards{grid-template-columns:1fr 1fr}}
+.postcta{margin-top:3rem;background:var(--night);color:#F3F1FB;border-radius:20px;padding:2rem}.postcta p{margin:0 0 1.2rem;color:#CFC8EE}.postcta strong{color:#fff}
+.bgroup{margin-top:2.5rem}.bgroup h2{font-size:clamp(1.6rem,4vw,2.2rem);margin-bottom:1rem}
+.pc h3{font-size:1.5rem;margin:0}
+.ptype{display:inline-block;background:var(--night);color:#fff;font-size:.75rem;font-weight:600;border-radius:999px;padding:.1rem .6rem;margin-right:.6rem}
+.pc.study{border-top-color:var(--night)}
+.psource{margin-top:2.5rem;border:1px solid var(--line);border-left:6px solid var(--night);border-radius:var(--r);background:var(--card);padding:1.4rem}
+.psource p{font-size:.95rem!important;line-height:1.6!important;margin:0 0 .6rem}.psource a{font-weight:600}
