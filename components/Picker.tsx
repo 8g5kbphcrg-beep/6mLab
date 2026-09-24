@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import type { Lang } from "@/lib/dict";
 import { programSlugs } from "@/lib/programs";
 import { goalIds, goals, goalName, goalsTitle, REATH, type GoalId } from "@/lib/goals";
+import Suggestions from "@/components/Suggestions";
 
 type Props = {
   lang: Lang;
@@ -33,6 +34,7 @@ export default function Picker({ lang, pick }: Props) {
           <button key={t} type="button" aria-pressed={m === i} onClick={() => setM(i)}>{t}</button>
         ))}
       </div>
+      <Suggestions lang={lang} sel={sel} onPick={setSel} />
       <p className="lab" id="l2">{pick.goalLb}</p>
       <div className="combos" role="group" aria-labelledby="l2">
         {[...goalIds, REATH].map((g) => (
