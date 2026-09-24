@@ -9,22 +9,27 @@ export const contentType = "image/png";
 export const alt = "6M Lab · Be ready.";
 export const generateStaticParams = () => locales.map((lang) => ({ lang }));
 
-// Bebas Neue, the slogan's font (SIL Open Font License). Bundled so the build never depends on
-// the network.
-const bebas = () => readFile(join(process.cwd(), "app/[lang]/bebas-neue.ttf")).catch(() => null);
+// Inter for the text, Bebas Neue for the slogan (SIL Open Font License). Bundled so the build
+// never depends on the network.
+const font = (f: string) => readFile(join(process.cwd(), "app/[lang]", f)).catch(() => null);
 
 // The preview shown when a page of the site is shared (WhatsApp, Instagram, Facebook, etc.).
 export default async function OgImage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   const d = dict[(lang in dict ? lang : "fr") as Lang];
-  const font = await bebas();
+  const [inter4, inter7, bebas] = await Promise.all([font("inter-400.ttf"), font("inter-700.ttf"), font("bebas-neue.ttf")]);
+  const fonts = [
+    inter4 && { name: "Inter", data: inter4, weight: 400 as const },
+    inter7 && { name: "Inter", data: inter7, weight: 700 as const },
+    bebas && { name: "Bebas", data: bebas, weight: 400 as const },
+  ].filter((f) => !!f);
   const mark = `data:image/svg+xml;base64,${Buffer.from(markFile("#FFE14A", "#FF5A1F")).toString("base64")}`;
   return new ImageResponse(
     (
-      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", background: "#100A24", color: "#F3F1FB", padding: "0 80px", gap: 80 }}>
+      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", fontFamily: "Inter", background: "#100A24", color: "#F3F1FB", padding: "0 80px", gap: 80 }}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: "none" }}>
           <img width={250} height={298} src={mark} alt="" />
-          <span style={{ fontFamily: font ? "Bebas" : undefined, fontSize: 64, letterSpacing: 14, color: "#FFE14A", marginTop: 26, paddingLeft: 14 }}>{SLOGAN.toUpperCase()}</span>
+          <span style={{ fontFamily: "Bebas", fontSize: 64, letterSpacing: 14, color: "#FFE14A", marginTop: 26, paddingLeft: 14 }}>{SLOGAN.toUpperCase()}</span>
         </div>
         <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: 30, fontWeight: 700, letterSpacing: 6, color: "#FF5A1F", marginBottom: 18 }}>6M LAB</div>
@@ -33,6 +38,6 @@ export default async function OgImage({ params }: { params: Promise<{ lang: stri
         </div>
       </div>
     ),
-    { ...size, fonts: font ? [{ name: "Bebas", data: font, weight: 400 }] : undefined },
+    { ...size, fonts: fonts.length ? fonts : undefined },
   );
 }
