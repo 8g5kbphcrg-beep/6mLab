@@ -17,3 +17,27 @@ sinon il annonce un envoi sous 48 heures et tu envoies le programme à la main.
 | `option-course.pdf` | Option course à pied |
 
 Ce dossier n'est pas publié sur le site : les fichiers ne sont accessibles qu'en pièce jointe.
+
+## Modifier le contenu des programmes
+
+Le texte de chaque PDF est dans `programmes/contenu/<nom>.mjs` (titres, paragraphes, tableaux de
+séances, fiches d'exercices). Après une modification, regénère les PDF :
+
+```bash
+npm run programmes                     # tous les PDF
+npm run programmes -- base-pre-saison  # un seul
+```
+
+La première fois sur un nouvel ordinateur : `npx playwright install chromium`.
+
+## Modifier le contenu des programmes
+
+Le texte de chaque PDF est dans `programmes/contenu/<nom>.mjs` (titres, paragraphes, tableaux de
+séances, fiches d'exercices). Après une modification, regénère les PDF :
+
+```bash
+npm run programmes                     # tous les PDF
+npm run programmes -- base-pre-saison  # un seul
+```
+
+La première fois sur un nouvel ordinateur : `npx playwright install chromium`.
