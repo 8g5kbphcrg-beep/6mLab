@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { locales } from "@/lib/dict";
 import { exercices } from "@/programmes/source/exercices.mjs";
 import { animatedFigure, variants } from "@/programmes/source/figures.mjs";
-import CloseX from "@/components/CloseX";
+import CloseX, { Reopen } from "@/components/CloseX";
 import "@/app/exercice.css";
 
 // Opened from the eye icon next to each exercise in the program PDFs: the animation in a large
@@ -32,7 +32,7 @@ export default async function Exercice({ params }: P) {
   return (
     <div className="exo-back">
       <div className="exo-card" role="dialog" aria-modal="true" aria-labelledby="exo-title">
-        <CloseX home={`/${lang}`} label={fr ? "Fermer" : "Close"} />
+        <CloseX label={fr ? "Fermer" : "Close"} />
         <h1 id="exo-title">{ex.name}</h1>
         <div className={`exo-anims n${vs.length}`}>
           {vs.map((v) => (
@@ -44,6 +44,12 @@ export default async function Exercice({ params }: P) {
         </div>
         <p>{ex.how}</p>
         {ex.cues && <p className="exo-cues"><strong>{fr ? "Points clés :" : "Key points:"}</strong> {ex.cues}</p>}
+      </div>
+      <div className="exo-back-msg" role="status">
+        <p className="exo-back-t">{fr ? "Pour revenir à ton programme" : "To go back to your program"}</p>
+        <p><strong>iPhone :</strong> {fr ? "touche « ◀ Mail » ou « ◀ Fichiers » tout en haut à gauche de l'écran." : "tap “◀ Mail” or “◀ Files” at the very top left of the screen."}</p>
+        <p><strong>Android :</strong> {fr ? "utilise le bouton ou le geste retour de ton téléphone." : "use your phone's back button or gesture."}</p>
+        <Reopen label={fr ? "Revoir l'animation" : "Watch the animation again"} />
       </div>
     </div>
   );
