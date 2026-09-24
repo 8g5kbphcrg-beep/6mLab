@@ -29,7 +29,13 @@ const count = (orders: FeedbackOrder[], key: string) => {
 export default async function AdminAvis() {
   const s = stripe();
   if (!s) return <main><h1>Avis clients</h1><p>Stripe n'est pas configuré.</p></main>;
-  const orders = await paidOrders(s);
+  let orders: FeedbackOrder[];
+  try {
+    orders = await paidOrders(s);
+  } catch (e) {
+    console.error("[admin/avis]", e);
+    return <main><h1>Avis clients</h1><p>Impossible de lire les commandes dans Stripe : {e instanceof Error ? e.message : String(e)}</p></main>;
+  }
   const mid = orders.filter((o) => o.meta.m_at), end = orders.filter((o) => o.meta.f_at);
   const sentMid = orders.filter((o) => o.meta.s_mid).length, sentEnd = orders.filter((o) => o.meta.s_end).length;
   const stars = end.map((o) => Number(o.meta.f_stars)).filter(Boolean);
