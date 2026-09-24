@@ -1,6 +1,7 @@
 // A 7-metre throw seen from behind the shooter: striped handball goal, goalkeeper,
 // 6 m zone and dashed 9 m line. One SMIL timeline of 3.6 s drives the arm, the ball and the keeper.
-import { BALL, LOGO_BALL } from "@/components/Logo";
+import { BALL } from "@/components/Logo";
+import { MARK_VIEWBOX, markSvg } from "@/lib/mark.mjs";
 
 const T = { dur: "3.6s", repeatCount: "indefinite" } as const;
 const KT = "0;.1;.15;.24;.6;1";
@@ -60,7 +61,7 @@ export default function Scene() {
         <path d="M224 259h7M249 259h7" stroke="#fff" strokeWidth="4" />
         <path d="M233 234L231 244H249L247 234Z" fill="#111" />
         <path d="M232 208Q240 205 248 208L249 236H231Z" fill="#00C2B2" />
-        <svg x="236.5" y="213" width="7" height="7" viewBox="0 0 100 100" color="#100A24" dangerouslySetInnerHTML={{ __html: LOGO_BALL }} />
+        <svg x="236" y="212" width="8" height="9" viewBox={MARK_VIEWBOX} dangerouslySetInnerHTML={{ __html: markSvg("#100A24", "#fff") }} />
         <path d="M233 210L221 192M247 210L259 192" stroke="#00C2B2" strokeWidth="5.5" />
         <circle cx="220" cy="189" r="3.2" fill={SKIN2} /><circle cx="260" cy="189" r="3.2" fill={SKIN2} />
         <path d="M237 203h6v6h-6z" fill={SKIN2} />
@@ -101,9 +102,7 @@ export default function Scene() {
         <path d="M125 222Q126 213 138 211H164Q176 213 177 222L171 274H131Z" fill="url(#jersey)" />
         <path d="M168 218L171 274H163Z" fill="#000" opacity=".12" />
         <path d="M138 211Q151 216 164 211" stroke="#C73A0A" strokeWidth="3" fill="none" />
-        <text x="146" y="235" textAnchor="middle" fontSize="12" fill="#FFE14A" style={{ fontFamily: "var(--font-display), Impact, sans-serif" }}>6M</text>
-        <svg x="153.5" y="224" width="4.6" height="4.6" viewBox="0 0 100 100" color="#100A24" dangerouslySetInnerHTML={{ __html: LOGO_BALL }} />
-        <text x="163" y="235" textAnchor="middle" fontSize="3.6" fill="#fff" fontWeight="700" letterSpacing="1" style={{ fontFamily: "var(--font-text), sans-serif" }}>LAB</text>
+        <svg x="145" y="218" width="12" height="14" viewBox={MARK_VIEWBOX} dangerouslySetInnerHTML={{ __html: markSvg("#FFE14A", "#fff") }} />
         <text x="151" y="265" textAnchor="middle" fontSize="28" fill="#fff" style={{ fontFamily: "var(--font-display), Impact, sans-serif" }}>7</text>
         {/* Neck and head, from behind: hair, ears */}
         <path d="M145 200h12v12h-12z" fill={SKIN} />

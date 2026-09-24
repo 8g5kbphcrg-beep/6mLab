@@ -1,4 +1,4 @@
-export const SLOGAN = "Be ready.";
+export { SLOGAN } from "@/lib/mark.mjs";
 
 // Runs before the page paints: hides the opening screen (components/Brand.tsx) when it was shown
 // less than 30 minutes ago, so it appears on arrival but not on every page or every eye icon.

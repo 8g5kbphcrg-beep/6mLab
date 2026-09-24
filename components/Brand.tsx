@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
-import Logo, { LogoStacked } from "@/components/Logo";
-import { SLOGAN } from "@/lib/brand";
+import { Lockup } from "@/components/Logo";
 
 // Opening screen: logo and slogan, shown on arrival and at most every 30 minutes (also when a
 // program's eye icon opens an exercise, often in a new tab). Its markup is in the page from the
@@ -21,8 +20,7 @@ export function Splash() {
   }, []);
   return (
     <div className="splash" aria-hidden="true">
-      <LogoStacked size={92} />
-      <p className="slogan-big">{SLOGAN}</p>
+      <Lockup size={130} />
     </div>
   );
 }
@@ -58,8 +56,7 @@ export function Transition({ paying }: { paying: string }) {
   }, [paying]);
   return (
     <div className="trans" role="status" hidden ref={box}>
-      <span className="trans-logo"><Logo /></span>
-      <p className="trans-s">{SLOGAN}</p>
+      <span className="trans-logo"><Lockup size={70} /></span>
       <p className="trans-m" />
     </div>
   );

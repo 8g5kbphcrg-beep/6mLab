@@ -109,16 +109,15 @@ p{max-width:62ch;margin:0 0 1rem}a{color:inherit}:focus-visible{outline:3px soli
 .shead.page h1{font-size:clamp(2.4rem,6vw,3.6rem)}
 .goalnet{transform-box:fill-box;transform-origin:50% 50%;animation:net 3.6s ease-out infinite}
 @keyframes net{0%,37%{transform:none}41%{transform:scale(1.025) translate(2px,-1px)}48%,100%{transform:none}}
-/* Logo */
-.lg{--l6:#FFE14A;--lball:#FF5A1F;--llab:#fff;display:inline-flex;line-height:1}
-.lg6{font-family:var(--font-display),Impact,sans-serif;color:var(--l6);letter-spacing:-.02em}
-.lball{color:var(--lball);flex:none}
-.lglab{font:700 .3em var(--font-text),sans-serif;letter-spacing:.35em;text-transform:uppercase;color:var(--llab);opacity:.85}
-.lg-inline{align-items:flex-start;gap:.08em;font-size:1.9rem}.lg-inline .lball{margin-top:.02em}
-.lg-inline .lglab{font-size:.34em;align-self:flex-end;margin:0 0 .12em .15em}
-.lg-stack{flex-direction:column;align-items:center;gap:.1em}.lgrow{display:flex;align-items:flex-start;gap:.06em}
-.lg-stack .lglab{font-size:.18em;margin-left:.35em}.lgarc{width:2.3em;height:.31em;color:var(--lball);margin-top:.04em}
-.foot .lg,.lg.on-light{--l6:var(--ink);--llab:var(--muted)}
+/* Logo: the mark (blades in currentColor, orange ball), with the name (header) or the slogan */
+.lg{display:inline-flex;line-height:1;color:#FFE14A}
+.mark{display:block;height:1.2em;width:auto;flex:none}
+.lg-inline{align-items:center;gap:.35em;font-size:1.7rem}
+.lgname{font:400 .9em var(--font-display),Impact,sans-serif;letter-spacing:.02em;color:#FFE14A;display:inline-flex;align-items:baseline;gap:.3em}
+.lgname span{font:700 .34em var(--font-text),sans-serif;letter-spacing:.35em;text-transform:uppercase;color:#fff;opacity:.85}
+.lg-lock{flex-direction:column;align-items:center;gap:.14em}.lg-lock .mark{height:1em}
+.lgslogan{font:400 .3em/1 var(--font-slogan),var(--font-display),Impact,sans-serif;letter-spacing:.22em;text-transform:uppercase;margin-right:-.22em;color:#FFE14A}
+.foot .lg{color:var(--ink)}.foot .lgslogan{color:var(--A)}.foot .lg-lock{align-items:flex-start}
 /* Suggested pairs of goals: a tinted panel, apart from the list of goals to pick one by one. */
 .sugg{margin:0 0 1.2rem;background:var(--band);border-radius:14px;padding:.9rem;min-width:0}
 .sugg-h{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.2rem .8rem;margin:0 0 .6rem}
@@ -141,16 +140,15 @@ p{max-width:62ch;margin:0 0 1rem}a{color:inherit}:focus-visible{outline:3px soli
 .theme-m button[aria-pressed=true]::after{content:" ✓"}
 
 /* Slogan, opening screen and transitions */
-.slogan{font:400 1.25rem/1 var(--font-display),Impact,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--cta);margin:0 0 .8rem}
+.slogan{font:400 1.35rem/1 var(--font-slogan),var(--font-display),Impact,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--cta);margin:0 0 .8rem}
 .foot .slogan{color:var(--A);font-size:1.1rem;margin:0 0 .6rem}
 .splash{position:fixed;inset:0;z-index:300;background:#100A24;color:#fff;display:grid;place-items:center;align-content:center;gap:1.4rem;transition:opacity .45s;cursor:pointer}
 html.splash-seen .splash{display:none}html.splash-out .splash{opacity:0;pointer-events:none}
-.splash .lg{animation:splIn .8s cubic-bezier(.2,.7,.2,1) both}
-.slogan-big{margin:0;font:400 clamp(2.6rem,10vw,4.4rem)/1 var(--font-display),Impact,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#FFE14A;animation:splUp .7s .45s cubic-bezier(.2,.7,.2,1) both}
+.splash .mark{animation:splIn .8s cubic-bezier(.2,.7,.2,1) both}.splash .lgslogan{animation:splUp .7s .45s cubic-bezier(.2,.7,.2,1) both}
 @keyframes splIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
 @keyframes splUp{from{opacity:0;transform:translateY(18px);letter-spacing:.3em}to{opacity:1;transform:none}}
 .trans{position:fixed;inset:0;z-index:250;background:#100A24;color:#fff;display:grid;place-items:center;align-content:center;gap:.9rem;animation:trIn .25s ease both}
-.trans-logo{font-size:2.6rem;animation:trPulse 1s ease-in-out infinite alternate}.trans-logo .lg{font-size:2.6rem}
-.trans-s{margin:0;font:400 1.6rem/1 var(--font-display),Impact,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#FFE14A}
+.trans-logo .mark{animation:trPulse .8s ease-in-out infinite alternate}
+
 .trans[hidden]{display:none}.trans-m{margin:0;color:#CFC8EE;font-size:.95rem}.trans-m:empty{display:none}
 @keyframes trIn{from{opacity:0}to{opacity:1}}@keyframes trPulse{from{transform:scale(1)}to{transform:scale(1.06)}}
