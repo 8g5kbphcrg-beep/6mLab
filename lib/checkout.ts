@@ -2,13 +2,17 @@ import type { Lang } from "@/lib/dict";
 import type { ProgramSlug } from "@/lib/programs";
 
 // Prices in cents. Source of truth for what Stripe charges: the prices shown in dict.ts must match.
-export const prices: Record<ProgramSlug, number> = { "pre-saison": 3900, "maintien-saison": 2900 };
+export const prices: Record<ProgramSlug, number> = { "pre-saison": 3999, "maintien-saison": 2999 };
 export const RUNNING_PRICE = 900;
 
 export const genders = ["femme", "homme", "non-precise"] as const;
 export type Gender = (typeof genders)[number];
 
-export const fmtPrice = (cents: number, lang: Lang) => (lang === "fr" ? `${cents / 100} €` : `€${cents / 100}`);
+// 39,99 € / €39.99 (no decimals for whole euros: 9 €).
+export const fmtPrice = (cents: number, lang: Lang) => {
+  const n = cents % 100 ? (cents / 100).toFixed(2) : String(cents / 100);
+  return lang === "fr" ? `${n.replace(".", ",")} €` : `€${n}`;
+};
 
 export const buy = {
   fr: {
