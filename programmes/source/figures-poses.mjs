@@ -26,7 +26,9 @@ const run = (o) => [stride(o), stride({ ...o, swap: true })];
 const STAND = { near: { upper: 6, fore: 10 }, far: { upper: -4, fore: 2 } };
 // Landing / jump preparation: hips back, arms back.
 const crouch = (o = {}) => ({ torso: 42, ...o, ...legs({ thigh: 72, shin: -30 }, { upper: -55, fore: -30 }) });
-const air = (o = {}) => ({ torso: 0, lift: 24, ...o, ...legs({ thigh: 2, shin: -2, foot: 22 }, { upper: 160, fore: 168 }) });
+// In the air: toes pulled up towards the shins (ankle "armed" for the landing).
+const ARMED = 90;
+const air = (o = {}) => ({ torso: 0, lift: 24, ...o, ...legs({ thigh: 2, shin: -2, foot: ARMED }, { upper: 160, fore: 168 }) });
 const landing = (o = {}) => ({ torso: 34, ...o, ...legs({ thigh: 68, shin: -28 }, { upper: 70, fore: 85 }) });
 
 // Lying on the back (support 0: shoulders on the floor), knees bent, heels on the floor.
@@ -51,16 +53,17 @@ const thrust = (top, arms, gear) => ({ support: BENCH, gear, torso: top ? -90 : 
   solve: [{ vary: ["near.shin", "far.shin"], a: "near.heel", b: "sh", dy: BENCH + 5 }] });
 const thrustBar = [thrust(false, { upper: 108, fore: 8 }, ["barHip"]), thrust(true, { upper: 105, fore: 125 }, ["barHip"])];
 
-// Glute bridge on the floor. far: the raised leg (single-leg version).
+// Glute bridge on the floor, feet flat far enough from the hips (knees at about 90° at the top,
+// the hips never come down onto the heels). far: the raised leg (single-leg version).
 const bridge = (top, far) => {
-  const t = top ? -118 : -90, th = top ? 118 : 132;
-  return { ...onBack, torso: t, head: top ? 50 : 25, near: { thigh: th, shin: -20, ...armsFloor }, far: far ? { ...far(th), ...armsFloor } : { thigh: th, shin: -20, ...armsFloor },
+  const t = top ? -118 : -90, th = top ? 118 : 135;
+  return { ...onBack, torso: t, head: top ? 50 : 25, pin: ["near.heel", 62], near: { thigh: th, shin: 40, ...armsFloor }, far: far ? { ...far(th), ...armsFloor } : { thigh: th, shin: 40, ...armsFloor },
     solve: [{ vary: far ? ["near.shin"] : ["near.shin", "far.shin"], a: "near.heel", b: "sh", dy: 5 }] };
 };
 
 // Forward / backward lunge, bottom position.
 const lungeLow = (arms = { near: { upper: 3, fore: 3 }, far: { upper: -4, fore: -4 } }, gear) => ({ gear, torso: 3, contact: "near.heel",
-  near: { thigh: 90, shin: 2, ...arms.near }, far: { thigh: -8, shin: -70, foot: 40, ...arms.far }, solve: [{ vary: ["far.shin"], a: "far.toe", b: "near.heel" }] });
+  near: { thigh: 90, shin: 2, ...arms.near }, far: { thigh: -8, shin: -70, foot: 40, ...arms.far }, solve: [{ vary: ["far.shin"], a: "far.toe", b: "near.heel", dy: -2 }] });
 
 // Bulgarian split squat: back foot (laces down) on a bench behind.
 const BULG_X = -62;
@@ -99,14 +102,11 @@ const hips9090 = (front) => {
 const allFours = (up) => {
   const down = { upper: 0, fore: 0, hand: 90 }, high = { upper: 180, fore: 180, hand: 180 };
   const leg = { thigh: 0, shin: -90, foot: -100 };
-  return { torso: 78, twist: up === "far" ? 40 : up === "near" ? -40 : 0, head: 0, contact: "near.knee",
+  // The head turns with the arm: the gaze follows the hand.
+  return { torso: 78, twist: up === "far" ? 40 : up === "near" ? -40 : 0, head: 0, headTurn: up === "far" ? -85 : up === "near" ? 85 : 0, contact: "near.knee",
     near: { ...leg, ...(up === "near" ? high : down) }, far: { ...leg, ...(up === "far" ? high : down) },
     solve: [{ vary: ["torso"], a: `${up === "near" ? "far" : "near"}.wrist`, b: "near.knee", dy: -3 }] };
 };
-
-// Pike push-up (shoulders): hips high, hands and toes on the floor.
-const pike = (arm) => ({ torso: 132, head: 0, contact: "near.toe", near: { thigh: -42, shin: -42, foot: 20, ...arm, hand: 90 }, far: { thigh: -42, shin: -42, foot: 20, ...arm, hand: 90 },
-  solve: [{ vary: ["near.thigh", "near.shin", "far.thigh", "far.shin"], a: "near.wrist", b: "near.toe", dy: -3 }] });
 
 // Inverted row under a table: body straight from the heels, hands on the edge.
 const invRow = (arm) => ({ hang: TABLE, pin: ["near.hand", 0], torso: -72, head: 10, near: { thigh: 72, shin: 72, foot: 160, ...arm, hand: 180 }, far: { thigh: 72, shin: 72, foot: 160, ...arm, hand: 180 },
@@ -121,6 +121,10 @@ const ROW_BENCH = { box: [30, 46, 43], z: [-34, 4] };
 // Pull-up.
 const pullUp = (top) => ({ hang: BAR, pin: ["near.hand", 0], torso: top ? 6 : 0, head: 0, ...legs({ thigh: top ? 18 : 10, shin: top ? -45 : -55, foot: 40 }, top ? { upper: 35, fore: 176, hand: 180 } : { upper: 180, fore: 180, hand: 180 }) });
 
+// Seated on a bench (seat height SEAT), back against a backrest inclined at 70°, feet flat.
+const SEAT = 50; // hip height; the seat top is a little lower
+const seated = { torso: -20, head: 12, lift: SEAT, contact: "hip", pin: ["hip", 0], near: { thigh: 90, shin: 0 }, far: { thigh: 90, shin: 0 } };
+
 // Kneeling upright, shins on the floor behind.
 const KNEEL = { thigh: 0, shin: -90, foot: -100 };
 
@@ -134,11 +138,14 @@ const squatHands = { torso: 70, near: { thigh: 108, shin: -42, upper: 0, fore: 0
 
 export const defs = {
   // ---- Warm-up -----------------------------------------------------------------------------
+  // Seen from the front side: in the lunge, the shoulders and the arms held in front turn towards
+  // the front leg (near side).
   "fente-rotation": {
+    cam: { yaw: 40, pitch: 12 },
     poids: [
       { near: { upper: 90, fore: 90 }, far: { upper: 88, fore: 88 } },
       lungeLow({ near: { upper: 90, fore: 90 }, far: { upper: 88, fore: 88 } }),
-      lungeLow({ near: { upper: -95, fore: -95 }, far: { upper: 70, fore: 70 } }),
+      { ...lungeLow({ near: { upper: 90, upperOut: 60, fore: 90, foreOut: 60 }, far: { upper: 90, upperOut: -60, fore: 90, foreOut: -60 } }), twist: -55, headTurn: 45 },
     ],
   },
   "ouverture-hanche": {
@@ -147,18 +154,17 @@ export const defs = {
     still: [0, 1, 2],
     poids: [
       { near: { upper: 10, upperOut: 25 } },
-      { near: { thigh: 82, thighOut: 80, shin: 0, upper: 10, upperOut: 35 }, far: { upper: 10, upperOut: 35 } },
+      // Knee out to the side: the lower leg and the foot turn with the hip (one block).
+      { near: { thigh: 82, thighOut: 80, shin: 0, footOut: 80, upper: 10, upperOut: 35 }, far: { upper: 10, upperOut: 35 } },
       { near: { thigh: 82, thighOut: 0, shin: 0, upper: 10, upperOut: 35 }, far: { upper: 10, upperOut: 35 } },
       { near: { upper: 10, upperOut: 25 } },
     ],
   },
   "pont-fessier": { poids: [bridge(false), bridge(true)] },
   planche: { poids: [{ ...plankBody(80, { near: { upper: 0, fore: 90, hand: 90 } }), contact: "near.toe", solve: [{ vary: planks, a: "near.elbow", b: "near.toe", dy: -3 }] }] },
+  // Held still on one leg, arms relaxed.
   equilibre: {
-    poids: [
-      { near: { thigh: 4, shin: -6, upper: 20, fore: 20 }, far: { thigh: 22, shin: -55, foot: 30, upper: -20, fore: -20 } },
-      { near: { thigh: 4, shin: -6, upper: 90, fore: 90 }, far: { thigh: 22, shin: -55, foot: 30, upper: 160, fore: 160 } },
-    ],
+    poids: [{ near: { thigh: 4, shin: -6, upper: 6, fore: 12 }, far: { thigh: 22, shin: -55, foot: 30, upper: -4, fore: 4 } }],
   },
   "saut-reception": { loop: "restart", poids: [STAND, crouch(), air({ lift: 18 }), landing()] },
 
@@ -166,14 +172,20 @@ export const defs = {
   "gainage-lateral": { cam: SIDE_PLANK_CAM, poids: [{ ...sidePlank(78), solve: sidePlankSolve }] },
   nordic: {
     poids: [
-      { gear: ["anchor"], contact: "near.knee", near: { thigh: 0, shin: -90, foot: -100, upper: 15, fore: 110 } },
-      { gear: ["anchor"], contact: "near.knee", torso: 62, near: { thigh: -62, shin: -90, foot: -100, upper: 95, fore: 80 } },
+      // The knees stay where they are: only the body tips forward around them.
+      { gear: ["anchor"], contact: "near.knee", pin: ["near.knee", 0], near: { thigh: 0, shin: -90, foot: -100, upper: 15, fore: 110 } },
+      { gear: ["anchor"], contact: "near.knee", pin: ["near.knee", 0], torso: 62, near: { thigh: -62, shin: -90, foot: -100, upper: 95, fore: 80 } },
     ],
   },
+  // One arm and the opposite leg reach out, back to the start, then the other side.
   "dead-bug": {
+    loop: "restart",
     poids: [
       { ...onBack, ...legs({ thigh: 180, shin: 90, foot: 178 }, { upper: 180, fore: 180, hand: 180 }) },
       { ...onBack, near: { thigh: 180, shin: 90, foot: 178, upper: 262, fore: 262, hand: 262 }, far: { thigh: 98, shin: 98, foot: 178, upper: 180, fore: 180, hand: 180 } },
+      { ...onBack, ...legs({ thigh: 180, shin: 90, foot: 178 }, { upper: 180, fore: 180, hand: 180 }) },
+      { ...onBack, far: { thigh: 180, shin: 90, foot: 178, upper: 262, fore: 262, hand: 262 }, near: { thigh: 98, shin: 98, foot: 178, upper: 180, fore: 180, hand: 180 } },
+      { ...onBack, ...legs({ thigh: 180, shin: 90, foot: 178 }, { upper: 180, fore: 180, hand: 180 }) },
     ],
   },
   // Lying face down, seen from above: the arms draw the letters Y, T and W.
@@ -185,11 +197,17 @@ export const defs = {
       { ...prone, ...legs(proneLegs, { upper: 210, upperOut: 62, fore: 112, foreOut: 28 }) },
     ],
   },
+  // The ball leaves the hands, bounces off the wall and comes back to be caught.
   "equilibre-balle": {
     scene: { all: [{ wall: 105 }] },
+    loop: "restart",
+    pace: [0.5, 0.45, 0.45, 0.6],
     materiel: [
-      { gear: ["ball"], near: { thigh: 4, shin: -6, upper: 55, fore: 125 }, far: { thigh: 22, shin: -55, foot: 30, upper: 55, fore: 125 } },
-      { gear: ["ball"], near: { thigh: 4, shin: -6, upper: 100, fore: 100 }, far: { thigh: 22, shin: -55, foot: 30, upper: 100, fore: 100 } },
+      { gear: ["ball"], ball: [53, 140], near: { thigh: 4, shin: -6, upper: 55, fore: 125 }, far: { thigh: 22, shin: -55, foot: 30, upper: 55, fore: 125 } },
+      { gear: ["ball"], ball: [64, 151], near: { thigh: 4, shin: -6, upper: 100, fore: 100 }, far: { thigh: 22, shin: -55, foot: 30, upper: 100, fore: 100 } },
+      { gear: ["ball"], ball: [95, 158], near: { thigh: 4, shin: -6, upper: 100, fore: 100 }, far: { thigh: 22, shin: -55, foot: 30, upper: 100, fore: 100 } },
+      { gear: ["ball"], ball: [64, 151], near: { thigh: 4, shin: -6, upper: 100, fore: 100 }, far: { thigh: 22, shin: -55, foot: 30, upper: 100, fore: 100 } },
+      { gear: ["ball"], ball: [53, 140], near: { thigh: 4, shin: -6, upper: 55, fore: 125 }, far: { thigh: 22, shin: -55, foot: 30, upper: 55, fore: 125 } },
     ],
   },
   "pont-une-jambe": { poids: [bridge(false, (th) => ({ thigh: th, shin: th, foot: th + 80 })), bridge(true, (th) => ({ thigh: th, shin: th, foot: th + 80 }))] },
@@ -208,7 +226,7 @@ export const defs = {
   // Elbow against the side, bent at 90°: the forearm turns outwards, band anchored on the other side.
   // At home without a band: lying on the side, a bottle in the hand.
   "rotation-externe": {
-    cam: { materiel: { yaw: 70, pitch: 45 }, maison: { yaw: 180, pitch: 30 } },
+    cam: { materiel: { yaw: 70, pitch: 45 }, maison: { yaw: -120, pitch: 12 } },
     scene: { materiel: [{ post: [8, 104], z: -80 }] },
     maison: [sideLying(false), sideLying(true)],
     materiel: [
@@ -221,7 +239,7 @@ export const defs = {
   // At home: leaning forward, arm out to the side, a bottle in the hand; the forearm turns from
   // hanging down to pointing forward.
   "rotation-externe-haute": {
-    cam: { materiel: { yaw: 30, pitch: 35 }, maison: { yaw: 15, pitch: 12 } },
+    cam: { materiel: { yaw: 30, pitch: 35 }, maison: { yaw: 90, pitch: 15 } },
     scene: { materiel: [{ post: [75, 165], z: 47 }] },
     maison: [
       { gear: ["bottle"], torso: 70, head: -10, near: { ...hinge(), upper: 0, upperOut: 88, fore: 0 }, far: { ...hinge(), upper: 20, fore: 20 } },
@@ -244,20 +262,20 @@ export const defs = {
   pogos: {
     poids: [
       { ...legs({ thigh: 6, shin: -8, foot: 45 }, { upper: 25, fore: 110 }) },
-      { lift: 14, ...legs({ thigh: 0, shin: -1, foot: 22 }, { upper: 20, fore: 105 }) },
+      { lift: 14, ...legs({ thigh: 0, shin: -1, foot: ARMED }, { upper: 20, fore: 105 }) },
     ],
   },
   "squat-jump": {
     poids: [
       { torso: 38, near: { thigh: 70, shin: -30, upper: -40, fore: -30 } },
-      { torso: -2, lift: 26, near: { thigh: 0, shin: -3, foot: 22, upper: 156, fore: 164 } },
+      { torso: -2, lift: 26, near: { thigh: 0, shin: -3, foot: ARMED, upper: 156, fore: 164 } },
     ],
   },
   "skater-hop": {
     cam: { yaw: 80, pitch: 5 },
     poids: [
       { lean: 8, near: { thigh: 20, thighOut: 6, shin: -8, shinOut: 4, upper: 30, upperOut: 40, fore: 60, foreOut: 20 }, far: { thigh: -10, thighOut: -12, shin: -80, shinOut: -5, upper: 40, upperOut: -30, fore: 60, foreOut: -30 } },
-      { z: -55, lift: 22, ...legs({ thigh: 10, thighOut: 25, shin: 0, shinOut: 15 }, { upper: 30, upperOut: 60, fore: 40, foreOut: 70 }) },
+      { z: -55, lift: 22, ...legs({ thigh: 10, thighOut: 25, shin: 0, shinOut: 15, foot: ARMED }, { upper: 30, upperOut: 60, fore: 40, foreOut: 70 }) },
       { lean: -8, z: -110, far: { thigh: 20, thighOut: 6, shin: -8, shinOut: 4, upper: 30, upperOut: 40, fore: 60, foreOut: 20 }, near: { thigh: -10, thighOut: -12, shin: -80, shinOut: -5, upper: 40, upperOut: -30, fore: 60, foreOut: -30 } },
     ],
   },
@@ -289,7 +307,8 @@ export const defs = {
     loop: "restart",
     poids: [
       stride({ torso: 14, knee: 62, back: -26, arm: 50 }),
-      { torso: -4, x: 45, near: { thigh: 48, shin: 22, foot: 95, upper: 40, fore: 110 }, far: { thigh: -12, shin: -48, foot: 40, upper: -30, fore: 40 } },
+      // Braking step: front knee bent to absorb, never a straight leg.
+      { torso: 8, x: 45, near: { thigh: 62, shin: 4, foot: 82, upper: 40, fore: 110 }, far: { thigh: -12, shin: -52, foot: 40, upper: -30, fore: 40 } },
       { torso: 26, x: 62, near: { thigh: 62, shin: -30, upper: 45, fore: 150 }, far: { thigh: 48, shin: -26, upper: 45, fore: 150 } },
     ],
   },
@@ -308,10 +327,12 @@ export const defs = {
     poids: [
       { lift: 28, pin: ["near.toe", -34], ...STAND },
       // Stepping off the box: in the air in front of it, arms back.
-      { torso: 6, lift: 30, pin: ["near.toe", 2], ...legs({ thigh: 18, shin: -6, foot: 40 }, { upper: -30, fore: -20 }) },
-      { ...crouch(), pin: ["near.toe", 30] },
+      { torso: 6, lift: 30, pin: ["near.toe", 2], ...legs({ thigh: 18, shin: -6, foot: ARMED }, { upper: -30, fore: -20 }) },
+      // Very short contact: barely bent on landing, straight back up.
+      { torso: 16, pin: ["near.toe", 30], ...legs({ thigh: 34, shin: -20 }, { upper: -40, fore: -20 }) },
       { ...air({ lift: 32 }), pin: ["near.toe", 36] },
     ],
+    pace: [1, 0.7, 0.25],
   },
   "lancer-poitrine": {
     scene: { materiel: [{ wall: 115 }], elastique: [{ post: [-80, 118] }] },
@@ -353,24 +374,24 @@ export const defs = {
   "box-jump": {
     loop: "restart",
     scene: { all: [{ box: [70, 48, 40] }] },
-    poids: [crouch(), { ...air({ lift: 64 }), torso: 20, ...legs({ thigh: 75, shin: 0, foot: 80 }, { upper: 150, fore: 150 }), x: 36 }, { ...landing(), lift: 40, pin: ["near.toe", 112] }],
+    poids: [crouch(), { ...air({ lift: 64 }), torso: 20, ...legs({ thigh: 75, shin: 0, foot: ARMED }, { upper: 150, fore: 150 }), x: 36 }, { ...landing(), lift: 40, pin: ["near.toe", 112] }],
   },
   "squat-jump-leste": {
     // At home: a light backpack.
     maison: [
       { gear: ["backpack"], torso: 38, ...legs({ thigh: 70, shin: -30 }, { upper: -45, fore: -30 }) },
-      { gear: ["backpack"], torso: -2, lift: 22, ...legs({ thigh: 0, shin: -3, foot: 22 }, { upper: 150, fore: 160 }) },
+      { gear: ["backpack"], torso: -2, lift: 22, ...legs({ thigh: 0, shin: -3, foot: ARMED }, { upper: 150, fore: 160 }) },
     ],
     materiel: [
       { gear: ["dumbbells"], torso: 38, ...legs({ thigh: 70, shin: -30 }, { upper: -6, fore: -6 }) },
-      { gear: ["dumbbells"], torso: -2, lift: 22, ...legs({ thigh: 0, shin: -3, foot: 22 }, { upper: 2, fore: 2 }) },
+      { gear: ["dumbbells"], torso: -2, lift: 22, ...legs({ thigh: 0, shin: -3, foot: ARMED }, { upper: 2, fore: 2 }) },
     ],
   },
   "reception-unipodale": {
     loop: "restart",
     poids: [
       crouch({ torso: 32 }),
-      { lift: 16, x: 30, torso: 10, ...legs({ thigh: 20, shin: -10, foot: 40 }, { upper: 90, fore: 100 }) },
+      { lift: 16, x: 30, torso: 10, ...legs({ thigh: 20, shin: -10, foot: ARMED }, { upper: 90, fore: 100 }) },
       { x: 60, torso: 30, near: { thigh: 52, shin: -24, upper: 60, fore: 70 }, far: { thigh: 14, shin: -72, foot: 20, upper: 60, fore: 70 } },
     ],
   },
@@ -405,7 +426,8 @@ export const defs = {
     materiel: [{ gear: ["dumbbells"], ...legs({ thigh: 4, shin: -2 }, { upper: 0, fore: 0 }) }, { gear: ["dumbbells"], torso: 78, ...legs(hinge(), { upper: 0, fore: 0 }) }],
   },
   "hip-thrust": {
-    poids: [thrust(false, { upper: -95, fore: -95 }), thrust(true, { upper: -95, fore: -95 })],
+    // Arms along the body, hands towards the hips.
+    poids: [thrust(false, { upper: 42, fore: 60 }), thrust(true, { upper: 90, fore: 90 })],
     materiel: thrustBar,
   },
   pompes: {
@@ -422,16 +444,22 @@ export const defs = {
     materiel: [rowDb(false), rowDb(true)],
   },
   "developpe-militaire": {
-    cam: { materiel: { yaw: 75, pitch: 5 }, elastique: { yaw: 75, pitch: 5 } },
+    cam: { materiel: { yaw: 35, pitch: 8 }, elastique: { yaw: 75, pitch: 5 } },
+    // At the gym: seated on a bench, backrest inclined at 70°.
+    scene: { materiel: [{ box: [-24, 44, SEAT - 7] }, { slab: [[-22, SEAT - 7], [-22 - 62 * Math.cos((70 * Math.PI) / 180), SEAT - 7 + 62 * Math.sin((70 * Math.PI) / 180)]] }] },
     // Band under the feet, pressed above the head.
     elastique: [
       { gear: ["bandFeet"], near: { upperOut: 80, foreOut: 176 } },
       { gear: ["bandFeet"], near: { upperOut: 166, foreOut: 176 } },
     ],
-    poids: [pike({ upper: 42, fore: 42 }), pike({ upper: -20, fore: 30 })],
+    // Pike push-up: hands and feet stay in place, only the trunk goes down (elbows bend) and up.
+    poids: [
+      { torso: 110, head: 0, contact: "near.toe", lift: 2, pin: ["near.toe", 0], ...legs({ thigh: -45, shin: -45, foot: 20 }, { upper: -2, fore: -2, hand: 90 }) },
+      { torso: 137, head: -10, contact: "near.toe", lift: 2, pin: ["near.toe", 0], ...legs({ thigh: -50, shin: -50, foot: 20 }, { upper: -30, fore: 70, hand: 90 }) },
+    ],
     materiel: [
-      { gear: ["dumbbells"], near: { upperOut: 80, foreOut: 176 } },
-      { gear: ["dumbbells"], near: { upperOut: 166, foreOut: 176 } },
+      { gear: ["dumbbells"], ...seated, ...legs(seated.near, { upperOut: 80, foreOut: 176 }) },
+      { gear: ["dumbbells"], ...seated, ...legs(seated.near, { upperOut: 166, foreOut: 176 }) },
     ],
   },
   tractions: {

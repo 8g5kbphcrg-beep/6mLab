@@ -18,10 +18,12 @@
 //
 // A pose can also set: x / z (move along the floor), lift (height in the air), flip (face the
 // other way), contact (point placed on the floor), pin ([point, x, z?]: point placed there),
+// headTurn (head turned around the spine, towards the near side), ball ([x, height] of the ball
+// when it leaves the hands),
 // support (shoulders resting at that height: 0 on the floor, 42 on a bench), hang (hands at that
 // height, e.g. a pull-up bar) and solve (adjust angles until one point is dy below another).
-// Exercise options: cam ({ yaw, pitch }, or one per version), scene (box, bench, wall, bar, post,
-// cones), loop, still (positions shown in the PDF). contactReport() and framesBelow() check that nothing goes through the floor.
+// Exercise options: cam ({ yaw, pitch }, or one per version), scene (box, bench, slab, wall, bar,
+// post, cones), loop, pace (relative duration of each move), still (positions shown in the PDF). contactReport() and framesBelow() check that nothing goes through the floor.
 
 import { defs } from "./figures-poses.mjs";
 import { markSvg } from "../../lib/mark.mjs";
@@ -52,7 +54,7 @@ const dir = (a, b, s) => [Math.sin(rad(a)) * Math.cos(rad(b)), -Math.cos(rad(a))
 
 const norm = (p) => {
   const side = (s = {}) => ({ thigh: 0, shin: 0, foot: FLAT, upper: 0, fore: 0, thighOut: 0, shinOut: 0, footOut: 0, upperOut: 0, foreOut: 0, ...s, hand: s.hand ?? s.fore ?? 0, handOut: s.handOut ?? s.foreOut ?? 0 });
-  return { torso: 0, lean: 0, twist: 0, head: 0, roll: 0, lift: 0, x: 0, z: 0, ...p, near: side(p.near), far: side(p.far ?? p.near) };
+  return { torso: 0, lean: 0, twist: 0, head: 0, headTurn: 0, roll: 0, lift: 0, x: 0, z: 0, ...p, near: side(p.near), far: side(p.far ?? p.near) };
 };
 
 // Body axes: U along the trunk, F towards the chest, S towards the near side; Ssh = shoulder line.
@@ -66,11 +68,13 @@ function frame(p) {
 function joints(p) {
   const { U, F, S, Ssh } = frame(p);
   const hipC = [0, 0, 0], shC = mul(U, L.torso);
-  const hd = add(mul(U, Math.cos(rad(p.head))), mul(F, Math.sin(rad(p.head))));
+  // headTurn: the head turns around the spine, towards the near side (the gaze follows a hand).
+  const Fh = add(mul(F, Math.cos(rad(p.headTurn))), mul(S, Math.sin(rad(p.headTurn))));
+  const hd = add(mul(U, Math.cos(rad(p.head))), mul(Fh, Math.sin(rad(p.head))));
   const neck = add(shC, mul(hd, L.neck)), head = add(neck, mul(hd, L.head));
   // Where the face looks (edge of the head) and the front of the chest: they show which way the
   // figure faces.
-  const fd = add(mul(F, Math.cos(rad(p.head))), mul(U, -Math.sin(rad(p.head))));
+  const fd = add(mul(Fh, Math.cos(rad(p.head))), mul(U, -Math.sin(rad(p.head))));
   const face = add(head, mul(fd, L.head)), chest = add(mul(U, L.torso * 0.72), mul(F, BODY.chestOff)), seat = add(mul(U, L.torso * 0.08), mul(F, -6));
   const side = (q, s) => {
     const D = (k) => dir(q[k], q[k + "Out"], s);
@@ -279,7 +283,8 @@ const gear = {
   goblet: (j) => { const w = j.near.wrist; return `<g transform="translate(${f1(w[0] + 3)} ${f1(w[1] - 4)})"><rect x="-2.5" y="-12" width="5" height="24" rx="2" fill="${GEAR}"/><rect x="-8" y="-15" width="16" height="7" rx="2" fill="${JERSEY}"/><rect x="-8" y="8" width="16" height="7" rx="2" fill="${JERSEY}"/></g>`; },
   barBack: (j) => { const a = rad(angle(j.hip, j.sh) - 110); return plate([j.sh[0] + 6 * Math.sin(a), j.sh[1] + 6 * Math.cos(a)]); },
   barHip: (j) => plate([j.hip[0], j.hip[1] - 22]),
-  ball: (j) => { const c = mid(j.near.hand, j.far.hand); return `<circle cx="${f1(c[0])}" cy="${f1(c[1])}" r="9" fill="#FFC75F" stroke="${INK}" stroke-width="1.5"/>`; },
+  // The ball in the hands, or where the pose puts it (ball: [x, height], e.g. against the wall).
+  ball: (j, ctx) => { const c = ctx.ball ?? mid(j.near.hand, j.far.hand); return `<circle cx="${f1(c[0])}" cy="${f1(c[1])}" r="9" fill="#FFC75F" stroke="${INK}" stroke-width="1.5"/>`; },
   backpack: (j) => { const a = angle(j.hip, j.sh), m = mid(j.hip, j.sh), r = rad(a + 90); const c = [m[0] + 10 * Math.sin(r), m[1] + 10 * Math.cos(r)]; return `<rect x="${f1(c[0] - 7)}" y="${f1(c[1] - 12)}" width="14" height="24" rx="4" fill="${GEAR}" transform="rotate(${f1(a - 180)} ${f1(c[0])} ${f1(c[1])})"/>`; },
   band: (j, ctx) => (ctx.post ? `<path d="${d([ctx.post, j.near.wrist])}" ${stroke(2.5, BAND)}/>` : ""),
   // Band anchored to the post, held in both hands.
@@ -311,6 +316,9 @@ function sceneItems(sc, cam) {
     if (it.box) { const [x, w, h] = it.box; out.push(poly(cuboid([x, x + w], [0, h], it.z ?? [-22, 22], cam))); }
     // Bench seen as a top on two legs: the lower leg can pass underneath (Copenhagen plank).
     if (it.bench) { const [x, w, h] = it.bench, z = it.z ?? [-22, 22]; out.push(poly(cuboid([x, x + 5], [0, h - 7], z, cam)), poly(cuboid([x + w - 5, x + w], [0, h - 7], z, cam)), poly(cuboid([x, x + w], [h - 7, h], z, cam))); }
+    // Slab between two points of the side plane ([[x, height], [x, height]]), e.g. a backrest.
+    if (it.slab) { const [[xa, ya], [xb, yb]] = it.slab, n = [-(yb - ya), xb - xa], l = Math.hypot(...n) / 3, z = it.z ?? [-20, 20];
+      out.push(poly(hull([[xa, ya], [xb, yb]].flatMap(([x, y]) => [-1, 1].flatMap((k) => z.map((zz) => proj([x + (k * n[0]) / l, y + (k * n[1]) / l, zz], cam))))))); }
     if (it.wall !== undefined) out.push(poly(cuboid([it.wall, it.wall + 3], [0, 200], [-60, 60], cam), EDGE));
     if (it.wallZ !== undefined) out.push(poly(cuboid(it.x ?? [-50, 50], [0, 200], [it.wallZ - 3, it.wallZ], cam), EDGE));
     if (it.bar) { const [x, h] = it.bar; out.push(line([proj([x - 30, 0, 0], cam), proj([x - 30, h, 0], cam)], 3, EDGE), line([proj([x + 30, 0, 0], cam), proj([x + 30, h, 0], cam)], 3, EDGE), line([proj([x - 30, h, 0], cam), proj([x + 30, h, 0], cam)], 5, GEAR)); }
@@ -353,7 +361,7 @@ const posesOf = (id, variant) => {
   const e = defs[id], v = variant ?? variants(id)[0], poses = e?.[v];
   if (!poses) return null;
   const c = e.cam && ("yaw" in e.cam || "pitch" in e.cam) ? e.cam : e.cam?.[v];
-  return { poses, scene: e.scene?.[v] ?? e.scene?.all, loop: e.loop, still: e.still, cam: camera(c) };
+  return { poses, scene: e.scene?.[v] ?? e.scene?.all, loop: e.loop, still: e.still, pace: e.pace, cam: camera(c) };
 };
 
 // Static: positions side by side with arrows (PDF).
@@ -375,7 +383,7 @@ function drawFigure(id, variant) {
     ys.push(...ysOf(j, items));
     const post = scenePost(ex.scene, cam);
     const js = every(j, shift(sx));
-    svg += items.map((it) => it.svg(sx)).join("") + bodySvg(js, w, cam, lookOf(w, cam), p.gear, { post: post && shift(sx)(post) });
+    svg += items.map((it) => it.svg(sx)).join("") + bodySvg(js, w, cam, lookOf(w, cam), p.gear, { post: post && shift(sx)(post), ball: p.ball && shift(sx)(proj([p.ball[0], p.ball[1], 0], cam)) });
     x += x2 - x1;
     if (i < shown.length - 1) { svg += `<path d="M${f1(x + 8)} ${G - 90}h${gap - 16}m-7 -7l7 7l-7 7" ${stroke(3.5, JERSEY)}/>`; x += gap; }
   });
@@ -391,7 +399,8 @@ const lerp = (a, b, t) => {
   // that contacts hold during the move.
   const same = a.solve && b.solve && a.solve.length === b.solve.length && a.solve.every((s, i) => s.a === b.solve[i].a && s.b === b.solve[i].b && s.vary.join() === b.solve[i].vary.join());
   const out = { ...a, solve: same ? a.solve.map((s, i) => ({ ...s, dy: m(s.dy ?? 0, b.solve[i].dy ?? 0) })) : undefined, near: side(a.near, b.near), far: side(a.far, b.far) };
-  for (const k of ["torso", "lean", "twist", "head", "roll", "lift", "x", "z"]) out[k] = m(a[k], b[k]);
+  for (const k of ["torso", "lean", "twist", "head", "headTurn", "roll", "lift", "x", "z"]) out[k] = m(a[k], b[k]);
+  if (a.ball && b.ball) out.ball = [m(a.ball[0], b.ball[0]), m(a.ball[1], b.ball[1])];
   for (const k of ["support", "hang"]) if (a[k] !== undefined) out[k] = m(a[k], b[k] ?? a[k]);
   out.contact = t < 0.5 ? a.contact : b.contact;
   out.pin = a.pin && b.pin && a.pin[0] === b.pin[0] ? [a.pin[0], m(a.pin[1], b.pin[1]), a.pin[2] === undefined ? undefined : m(a.pin[2], b.pin[2])] : undefined;
@@ -408,9 +417,13 @@ function drawAnimated(id, variant, seconds, steps) {
   const solved = ex.poses.map((raw) => place(raw, cam).p);
   const restart = ex.loop === "restart";
   const seq = solved.length === 1 ? [solved[0], solved[0]] : restart ? solved : [...solved, ...solved.slice(0, -1).reverse()];
+  // pace: relative duration of each move (e.g. a very short ground contact), 1 by default.
+  const pace = (i) => ex.pace?.[i] ?? 1;
   const frames = [];
-  for (let i = 0; i < seq.length - 1; i++)
-    for (let k = 0; k < steps; k++) { const t = k / steps; frames.push(lerp(seq[i], seq[i + 1], t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2)); }
+  for (let i = 0; i < seq.length - 1; i++) {
+    const n = Math.max(2, Math.round(steps * pace(i)));
+    for (let k = 0; k < n; k++) { const t = k / n; frames.push(lerp(seq[i], seq[i + 1], t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2)); }
+  }
   frames.push(seq[seq.length - 1]);
   if (restart) { for (let k = 0; k < steps / 2; k++) frames.push(seq[seq.length - 1]); frames.push(seq[0]); }
   const placed = frames.map((p) => place(p, cam));
@@ -419,7 +432,7 @@ function drawAnimated(id, variant, seconds, steps) {
   const xs = [...placed.flatMap((q) => bboxX(q.j)), ...items.flatMap((it) => it.ps.map((q) => q[0]))];
   const pad = 26, x1 = Math.min(...xs), W = Math.max(...xs) - x1 + 2 * pad, sx = pad - x1;
   const F = placed.map((q) => every(q.j, shift(sx)));
-  const dur = `${seconds * (seq.length - 1) + (restart ? seconds / 2 : 0)}s`;
+  const dur = `${f1(seconds * seq.slice(1).reduce((s, _, i) => s + Math.max(2, Math.round(steps * pace(i))) / steps, 0) + (restart ? seconds / 2 : 0))}s`;
   const anim = (attr, vals) => `<animate attributeName="${attr}" dur="${dur}" repeatCount="indefinite" values="${vals.join(";")}"/>`;
   const lk = lookOf(w0, cam);
   const post = scenePost(ex.scene, cam), ctx = { post: post && shift(sx)(post) };
@@ -452,7 +465,8 @@ function drawAnimated(id, variant, seconds, steps) {
     const n = F.length;
     F.forEach((j, i) => {
       const vis = Array.from({ length: n }, (_, k) => (k === i ? "visible" : "hidden"));
-      svg += `<g visibility="${i === 0 ? "visible" : "hidden"}">${p0.gear.map((g) => gear[g](j, ctx)).join("")}<animate attributeName="visibility" dur="${dur}" repeatCount="indefinite" calcMode="discrete" values="${vis.join(";")}"/></g>`;
+      const b = placed[i].p.ball, c = { ...ctx, ball: b && shift(sx)(proj([b[0], b[1], 0], cam)) };
+      svg += `<g visibility="${i === 0 ? "visible" : "hidden"}">${p0.gear.map((g) => gear[g](j, c)).join("")}<animate attributeName="visibility" dur="${dur}" repeatCount="indefinite" calcMode="discrete" values="${vis.join(";")}"/></g>`;
     });
   }
   return svgWrap(W, svg, cam, [...placed.flatMap((q) => ysOf(q.j, [])), ...items.flatMap((it) => it.ps.map((q) => q[1]))]);

@@ -86,7 +86,7 @@ export const parLieu = {
   "developpe-militaire": {
     maison: { name: "Pompes piquées", how: "Mains au sol, fesses en l'air (corps en V) : plie les coudes pour amener le haut de la tête vers le sol, puis pousse.", easier: "Pieds plus proches des mains, amplitude plus courte.", figs: [["developpe-militaire", "poids"]],
       band: { how: "Debout sur l'élastique, pousse-le au-dessus de la tête, puis redescends aux épaules.", figs: [["developpe-militaire", "elastique"]] } },
-    salle: { how: "Debout ou assis, pousse les haltères au-dessus de la tête, puis redescends aux épaules.", figs: [["developpe-militaire", "materiel"]] },
+    salle: { how: "Assis sur un banc, dossier incliné à 70°, le dos bien appuyé : pousse les haltères au-dessus de la tête, puis redescends aux épaules.", figs: [["developpe-militaire", "materiel"]] },
   },
   rowing: {
     maison: { name: "Rowing inversé", how: "Allongé sous une table solide, mains sur le bord, corps droit : tire la poitrine vers la table, puis redescends. Autre option : rowing à un bras avec un sac à dos lesté.", figs: [["rowing", "poids"]], dose: more(1.25),
