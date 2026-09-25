@@ -16,8 +16,7 @@
 .bcards .bcard[aria-pressed=true]::before{border-color:var(--ink);background:var(--ink);box-shadow:inset 0 0 0 3px var(--card)}
 .bcard input{position:absolute;left:1rem;top:1rem;width:1.05rem;height:1.05rem;margin:0;accent-color:var(--ink)}
 .bcard:has(:focus-visible){outline:3px solid var(--cta);outline-offset:2px}
-.brun b,.bpack b{margin-left:auto;white-space:nowrap;font-size:1rem}
-.bpack{border-color:var(--B)}.bpack em{display:inline-block;font-style:normal;font-weight:700;color:var(--Bt);margin-top:.2rem}
+.brun b{margin-left:auto;white-space:nowrap;font-size:1rem}
 .bgoal > b{position:absolute;top:.8rem;right:1rem;font-size:.9rem}.bgoal span{padding-right:3.2rem}
 @media(hover:hover){.bcard:hover{border-color:var(--muted)}}
 .bchips{display:flex;flex-wrap:wrap;gap:.4rem}
@@ -40,3 +39,5 @@
 .bfield input:focus{outline:none;border-color:var(--ink)}
 .bgender{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}.bgender .lab{width:100%;margin:0 0 .1rem}
 .bgoal:has(:disabled){opacity:.45;cursor:not-allowed}
+.bprice s{color:var(--muted);font-size:1.1rem}
+.buy.p .bpay{background:var(--sky);color:#fff}

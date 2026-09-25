@@ -64,8 +64,9 @@ export async function sendConfirmation(o: Order) {
   const p = programs[o.lang][o.program];
   const files = await programFiles(o);
   const rows: [string, string][] = [
-    [fr ? "Programme" : "Program", `${p.name} (${p.duration})`],
-    ...(o.pack ? [[fr ? "Pack Saison complète" : "Full season pack", `${programs[o.lang]["maintien-saison"].name} (${programs[o.lang]["maintien-saison"].duration})`] as [string, string]] : []),
+    [fr ? "Programme" : "Program", o.pack
+      ? `${fr ? "Pack Saison complète" : "Full season pack"} : ${p.name} (${p.duration}) + ${programs[o.lang]["maintien-saison"].name} (${programs[o.lang]["maintien-saison"].duration})`
+      : `${p.name} (${p.duration})`],
     [fr ? "Objectifs" : "Goals", goalsTitle(o.goals, o.lang)],
     ...(o.running ? [[fr ? "Option" : "Option", fr ? "Programme course à pied" : "Running program"] as [string, string]] : []),
     [fr ? "Total payé" : "Total paid", fmtPrice(o.amount, o.lang)],

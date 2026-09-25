@@ -103,7 +103,7 @@ export default async function AdminAvis() {
           <tr key={o.id}>
             <td>{new Date(o.created * 1000).toLocaleDateString("fr-FR")}</td>
             <td>{o.firstName}<br /><span className="muted">{o.email}</span></td>
-            <td>{programs.fr[o.program]?.name}<br /><span className="muted">{o.goals.map((g) => goalName(g, "fr")).join(" + ")}</span></td>
+            <td>{o.meta.pack === "oui" ? "Pack Saison complète" : programs.fr[o.program]?.name}<br /><span className="muted">{o.goals.map((g) => goalName(g, "fr")).join(" + ")}</span></td>
             {(["mid", "end"] as const).map((st) => {
               const answered = o.meta[st === "mid" ? "m_at" : "f_at"], sent = o.meta[st === "mid" ? "s_mid" : "s_end"];
               const due = new Date((o.created + whenDays(st, o.program) * DAY) * 1000).toLocaleDateString("fr-FR");

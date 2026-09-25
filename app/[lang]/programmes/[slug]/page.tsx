@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Reviews from "@/components/Reviews";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { dict, type Lang } from "@/lib/dict";
 import { programs, programSlugs, type ProgramSlug } from "@/lib/programs";
 import BuyForm from "@/components/BuyForm";
@@ -31,6 +31,8 @@ export default async function Programme({ params, searchParams }: P) {
   const p = programs[lang as Lang][slug as ProgramSlug];
   const b = p.color === "b";
   const sp = await searchParams;
+  // Old links to the pack (the Pré-saison with ?pack=1) go to its own page.
+  if (slug === "pre-saison" && sp?.pack === "1") redirect(`/${lang}/programmes/saison-complete`);
   const pre = sp?.objectifs?.split(",") ?? [];
   const fr = lang === "fr";
   return (
@@ -45,7 +47,7 @@ export default async function Programme({ params, searchParams }: P) {
           <ul className={b ? "pinc b" : "pinc"}>{p.includes.map((i) => <li key={i}>{i}</li>)}</ul>
         </header>
         <aside className="pside">
-          <BuyForm lang={lang as Lang} slug={slug as ProgramSlug} goals={validGoals(pre) ? pre : []} pack={sp?.pack === "1"} test={testMode} error={sp?.paiement} />
+          <BuyForm lang={lang as Lang} slug={slug as ProgramSlug} goals={validGoals(pre) ? pre : []} test={testMode} error={sp?.paiement} />
           <p className="pquiz">{fr ? "Tu hésites sur tes objectifs ?" : "Not sure about your goals?"} <Link href={`/${lang}/questionnaire`}>{fr ? "Fais le questionnaire" : "Take the questionnaire"}</Link></p>
         </aside>
         <div className="pmain">
