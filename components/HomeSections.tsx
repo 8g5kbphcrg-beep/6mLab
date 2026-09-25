@@ -57,8 +57,8 @@ export function Founder({ lang }: { lang: Lang }) {
             ? "J'ai passé 5 ans en structures de haut niveau en handball : 5 entraînements par semaine, aux côtés de joueurs de centres de formation, dont certains jouent aujourd'hui en pro."
             : "I spent 5 years in elite-level handball programs: 5 training sessions a week, alongside academy players, some of whom now play professionally."}</p>
           <p>{fr
-            ? "Cet été, j'ai assuré la préparation physique de l'équipe que j'entraîne. 6M Lab, c'est cette exigence, rendue accessible à tous les handballeurs et handballeuses."
-            : "This summer, I ran the physical preparation of the team I coach. 6M Lab brings that standard to every handball player."}</p>
+            ? "Cet été, j'ai assuré la préparation physique de l'équipe que j'entraîne. 6M Lab, c'est cette exigence, rendue accessible à tous."
+            : "This summer, I ran the physical preparation of the team I coach. 6M Lab brings that standard to everyone."}</p>
           <ul className="founder-facts">
             <li>{fr ? "5 ans en structures de haut niveau" : "5 years at elite level"}</li>
             <li>{fr ? "Entraîneur et préparateur physique" : "Coach and strength coach"}</li>

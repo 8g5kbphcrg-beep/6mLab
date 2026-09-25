@@ -31,7 +31,7 @@ export default async function SeanceGratuite({ params, searchParams }: P) {
           <p>{erreur === "email"
             ? fr ? "Cette adresse email ne semble pas valide. Vérifie-la et réessaie." : "This email address doesn't look valid. Check it and try again."
             : fr ? "L'envoi n'a pas fonctionné. Réessaie dans quelques minutes, ou écris-nous." : "Sending failed. Try again in a few minutes, or contact us."}</p>
-          <p><Link className="btn" href={`/${lang}#seance-gratuite`}>{fr ? "Réessayer" : "Try again"}</Link></p>
+          <p><Link className="btn" href={`/${lang}/handball#seance-gratuite`}>{fr ? "Réessayer" : "Try again"}</Link></p>
         </>
       )}
       <p>{fr ? "En attendant, découvre les programmes complets :" : "In the meantime, have a look at the full programs:"}</p>
