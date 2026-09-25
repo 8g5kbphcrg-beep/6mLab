@@ -6,7 +6,8 @@ export const prices: Record<ProgramSlug, number> = { "pre-saison": 3999, "mainti
 export const RUNNING_PRICE = 900;
 export const SECOND_GOAL_PRICE = 500;
 // "Saison complète" pack: the Pré-saison plus the Maintien en saison with the same goals,
-// 59,99 € instead of 69,98 €. Sold as an option of the Pré-saison.
+// 59,99 € instead of 69,98 €. Its own page (/programmes/saison-complete); orders are stored as
+// Pré-saison with pack=oui.
 export const PACK_EXTRA = 2000;
 export const PACK_PRICE = prices["pre-saison"] + PACK_EXTRA;
 export const orderTotal = (slug: ProgramSlug, goals: readonly string[], running: boolean, pack = false) =>
@@ -34,7 +35,7 @@ export const buy = {
     reathQ: "Tu reviens de blessure ?",
     reathD: "Objectif unique, à suivre avec le feu vert de ton médecin.",
     runT: "Programme course à pied", runD: "Des séances de 30 à 45 min, en plus de ton programme.",
-    packT: "Pack Saison complète", packD: "Ajoute le Maintien en saison (12 semaines) avec les mêmes objectifs, pour enchaîner toute la saison.", packSave: (s: string) => `${s} d'économie`,
+    packT: "Pack Saison complète", packWeeks: "20 semaines",
     goalsLb: "Objectifs", none: "À choisir", total: "Total",
     consent: "J'accepte les conditions générales de vente. Je demande l'accès immédiat au programme et je reconnais perdre mon droit de rétractation une fois le programme envoyé.",
     cgv: "Lire les CGV",
@@ -56,7 +57,7 @@ export const buy = {
     reathQ: "Coming back from injury?",
     reathD: "A single goal, to follow with your doctor's clearance.",
     runT: "Running program", runD: "30 to 45 min sessions, on top of your program.",
-    packT: "Full season pack", packD: "Add the In-season maintenance program (12 weeks) with the same goals, to keep going all season.", packSave: (s: string) => `save ${s}`,
+    packT: "Full season pack", packWeeks: "20 weeks",
     goalsLb: "Goals", none: "To choose", total: "Total",
     consent: "I accept the terms of sale. I ask for immediate access to the program and acknowledge that I lose my right of withdrawal once the program has been sent.",
     cgv: "Read the terms",

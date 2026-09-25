@@ -33,7 +33,7 @@ export default function ProgramCards({ lang, shared = true }: { lang: Lang; shar
           );
         })}
       </div>
-      <a className="opack" data-go href={`/${lang}/programmes/pre-saison?pack=1#acheter`}>
+      <a className="opack" data-go href={`/${lang}/programmes/saison-complete`}>
         <span className="opack-t">{fr ? "Pack Saison complète" : "Full season pack"}</span>
         <span className="opack-d">{fr ? "Pré-saison + Maintien en saison, avec les mêmes objectifs : 20 semaines pour toute ta saison." : "Pre-season + In-season maintenance, same goals: 20 weeks for your whole season."}</span>
         <span className="opack-p"><strong>{fmtPrice(PACK_PRICE, lang)}</strong> <s>{fmtPrice(prices["pre-saison"] + prices["maintien-saison"], lang)}</s></span>

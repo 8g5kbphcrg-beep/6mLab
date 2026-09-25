@@ -2,37 +2,37 @@
 import { useState } from "react";
 import type { Lang } from "@/lib/dict";
 import { programs, type ProgramSlug } from "@/lib/programs";
-import { buy, fmtPrice, genders, orderTotal, PACK_EXTRA, prices, RUNNING_PRICE, SECOND_GOAL_PRICE } from "@/lib/checkout";
+import { buy, fmtPrice, genders, orderTotal, PACK_PRICE, prices, RUNNING_PRICE, SECOND_GOAL_PRICE } from "@/lib/checkout";
 import { goalIds, goals as goalInfo, goalName, goalsTitle, REATH, type GoalId } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
 import Suggestions from "@/components/Suggestions";
 import "@/app/buy.css";
 
 // Posts to /api/checkout. The goal checkboxes are real form fields, so the form still submits
-// without JavaScript; the server checks the count.
-export default function BuyForm({ lang, slug, goals = [], pack: packInit = false, test, error }: { lang: Lang; slug: ProgramSlug; goals?: GoalId[]; pack?: boolean; test: boolean; error?: string }) {
+// without JavaScript; the server checks the count. pack: the "Saison complète" page (Pré-saison
+// then Maintien, same goals, one price).
+export default function BuyForm({ lang, slug, goals = [], pack = false, test, error }: { lang: Lang; slug: ProgramSlug; goals?: GoalId[]; pack?: boolean; test: boolean; error?: string }) {
   const t = buy[lang];
   const p = programs[lang][slug];
   const [sel, setSel] = useState<GoalId[]>(goals);
   const [running, setRunning] = useState(false);
-  const canPack = slug === "pre-saison";
-  const [pack, setPack] = useState(canPack && packInit);
   const [err, setErr] = useState(error);
   const reath = sel.includes(REATH);
   const toggle = (g: GoalId) => setSel(sel.includes(g) ? sel.filter((x) => x !== g) : [...sel.filter((x) => x !== REATH), g]);
   const done = sel.length > 0;
   const total = orderTotal(slug, sel, running, pack);
-  const other = programs[lang]["maintien-saison"];
 
   return (
-    <form className={`buy ${slug === "maintien-saison" ? "b" : "a"}`} id="acheter" method="post" action="/api/checkout" data-go
+    <form className={`buy ${pack ? "p" : slug === "maintien-saison" ? "b" : "a"}`} id="acheter" method="post" action="/api/checkout" data-go
       onSubmit={(e) => { if (!done) { e.preventDefault(); setErr("invalide"); } }}>
       <input type="hidden" name="lang" value={lang} />
       <input type="hidden" name="program" value={slug} />
+      {pack && <input type="hidden" name="pack" value="on" />}
 
       <div className="bprice">
-        <strong>{fmtPrice(prices[slug], lang)}</strong>
-        <span>{p.name} · {p.duration}</span>
+        <strong>{fmtPrice(pack ? PACK_PRICE : prices[slug], lang)}</strong>
+        {pack && <s>{fmtPrice(prices["pre-saison"] + prices["maintien-saison"], lang)}</s>}
+        <span>{pack ? `${t.packT} · ${t.packWeeks}` : `${p.name} · ${p.duration}`}</span>
       </div>
 
       <fieldset className="bstep">
@@ -59,13 +59,6 @@ export default function BuyForm({ lang, slug, goals = [], pack: packInit = false
 
       <fieldset className="bstep">
         <legend><span className="bnum">2</span>{t.step2}</legend>
-        {canPack && (
-          <label className="bcard bpack">
-            <input type="checkbox" name="pack" checked={pack} onChange={() => setPack(!pack)} />
-            <span><strong>{t.packT}</strong> {t.packD} <em>{t.packSave(fmtPrice(prices["maintien-saison"] - PACK_EXTRA, lang))}</em></span>
-            <b>+{fmtPrice(PACK_EXTRA, lang)}</b>
-          </label>
-        )}
         <label className="bcard brun">
           <input type="checkbox" name="running" checked={running} onChange={() => setRunning(!running)} />
           <span><strong>{t.runT}</strong> {t.runD}</span>
@@ -92,10 +85,9 @@ export default function BuyForm({ lang, slug, goals = [], pack: packInit = false
       <div className="bstep">
         <p className="blegend"><span className="bnum">4</span>{t.step4}</p>
         <dl className="bsum">
-          <div><dt>{p.name}</dt><dd>{fmtPrice(prices[slug], lang)}</dd></div>
+          <div><dt>{pack ? t.packT : p.name}</dt><dd>{fmtPrice(pack ? PACK_PRICE : prices[slug], lang)}</dd></div>
           <div><dt>{t.goalsLb}</dt><dd>{sel.length ? goalsTitle(sel, lang) : t.none}</dd></div>
           {sel.length === 2 && <div><dt>{t.second}</dt><dd>{fmtPrice(SECOND_GOAL_PRICE, lang)}</dd></div>}
-          {pack && <div><dt>{t.packT} (+ {other.name})</dt><dd>{fmtPrice(PACK_EXTRA, lang)}</dd></div>}
           {running && <div><dt>{t.runT}</dt><dd>{fmtPrice(RUNNING_PRICE, lang)}</dd></div>}
           <div className="btotal"><dt>{t.total}</dt><dd>{fmtPrice(total, lang)}</dd></div>
         </dl>

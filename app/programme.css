@@ -21,3 +21,6 @@
   .pgrid{grid-template-columns:minmax(0,1fr) 420px;grid-template-areas:"head side" "main side";grid-template-rows:auto 1fr;column-gap:4rem;row-gap:3rem;align-items:start}
   .phead{grid-area:head}.pmain{grid-area:main}.pside{grid-area:side}
 }
+.ptag.p{background:var(--sky);color:#fff}
+.pprice2{display:flex;flex-wrap:wrap;align-items:baseline;gap:.4rem .8rem;margin:0 0 1rem}.pprice2>*{white-space:nowrap}.pprice2 strong{font:400 2.6rem/1 var(--font-display),sans-serif}.pprice2 s{color:var(--muted);font-size:1.1rem}.pprice2 span{background:#FFC75F;color:#100A24;font-weight:700;font-size:.85rem;border-radius:999px;padding:.2rem .7rem}
+.pinc.p li::before{color:#9E3456}

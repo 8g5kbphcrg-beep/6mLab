@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { locales, type Lang } from "@/lib/dict";
 import { programs, programSlugs, type ProgramSlug } from "@/lib/programs";
-import { genders, PACK_EXTRA, prices, RUNNING_PRICE, SECOND_GOAL_PRICE, type Gender } from "@/lib/checkout";
+import { genders, PACK_PRICE, prices, RUNNING_PRICE, SECOND_GOAL_PRICE, type Gender } from "@/lib/checkout";
 import { goalName, goalsTitle, hasSecondGoal, validGoals } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
 import { stripe as stripeClient } from "@/lib/feedback";
@@ -18,8 +18,8 @@ export async function POST(req: NextRequest) {
   const gender = String(form.get("gender")) as Gender;
   const profileOk = firstName.length > 0 && Number.isInteger(age) && age >= 10 && age <= 99 && genders.includes(gender);
   const origin = req.nextUrl.origin;
-  const back = (reason: string) =>
-    NextResponse.redirect(`${origin}/${lang}/programmes/${programSlugs.includes(slug) ? slug : ""}?paiement=${reason}#acheter`, 303);
+  const page = pack ? "saison-complete" : programSlugs.includes(slug) ? slug : "";
+  const back = (reason: string) => NextResponse.redirect(`${origin}/${lang}/programmes/${page}?paiement=${reason}#acheter`, 303);
 
   if (!programSlugs.includes(slug) || !validGoals(goals) || !profileOk || form.get("consent") !== "on") return back("invalide");
 
@@ -38,8 +38,10 @@ export async function POST(req: NextRequest) {
         quantity: 1,
         price_data: {
           currency: "eur",
-          unit_amount: prices[slug],
-          product_data: { name: `6M Lab · ${p.name}`, description: `${goalsTitle(goals, lang)} · ${p.duration}` },
+          unit_amount: pack ? PACK_PRICE : prices[slug],
+          product_data: pack
+            ? { name: lang === "fr" ? "6M Lab · Pack Saison complète" : "6M Lab · Full season pack", description: `${goalsTitle(goals, lang)} · ${p.name} (${p.duration}) + ${programs[lang]["maintien-saison"].name} (${programs[lang]["maintien-saison"].duration})` }
+            : { name: `6M Lab · ${p.name}`, description: `${goalsTitle(goals, lang)} · ${p.duration}` },
         },
       }, ...(hasSecondGoal(goals) ? [{
         quantity: 1,
@@ -47,13 +49,6 @@ export async function POST(req: NextRequest) {
           currency: "eur",
           unit_amount: SECOND_GOAL_PRICE,
           product_data: { name: lang === "fr" ? "Deuxième objectif" : "Second goal", description: goalName(goals[1], lang) },
-        },
-      }] : []), ...(pack ? [{
-        quantity: 1,
-        price_data: {
-          currency: "eur",
-          unit_amount: PACK_EXTRA,
-          product_data: { name: `6M Lab · ${programs[lang]["maintien-saison"].name}`, description: lang === "fr" ? `Pack Saison complète · ${goalsTitle(goals, lang)} · 12 semaines` : `Full season pack · ${goalsTitle(goals, lang)} · 12 weeks` },
         },
       }] : []), ...(running ? [{
         quantity: 1,
@@ -74,7 +69,7 @@ export async function POST(req: NextRequest) {
         },
       },
       success_url: `${origin}/${lang}/merci?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/${lang}/programmes/${slug}#acheter`,
+      cancel_url: `${origin}/${lang}/programmes/${page}#acheter`,
     });
     return NextResponse.redirect(session.url!, 303);
   } catch (e) {
