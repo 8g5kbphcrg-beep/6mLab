@@ -38,8 +38,8 @@ export default async function RootLayout({ children, params }: { children: React
   const other = lang === "fr" ? "en" : "fr";
   const fr = lang === "fr";
   const links: [string, string][] = [
-    [`/${lang}/handball`, "Handball"],
-    [`/${lang}#forme`, fr ? "Forme & bien-être" : "Fitness & well-being"],
+    // Home: the page where one chooses between sport-specific prep and fitness & well-being.
+    [`/${lang}`, fr ? "Accueil" : "Home"],
     ...(fr ? [["/fr/conseils", "Conseils"] as [string, string]] : []),
     [fr ? "/fr/a-propos" : "/en/about", fr ? "À propos" : "About"],
     [`/${lang}/contact`, "Contact"],
