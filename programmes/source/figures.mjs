@@ -27,14 +27,18 @@ import { defs } from "./figures-poses.mjs";
 const L = { torso: 49, neck: 9, head: 11, upper: 32, fore: 25, hand: 8, thigh: 42, shin: 42, toe: 21, heel: 7.7, hipW: 8, shW: 15 };
 // Body types, chosen by the customer: f (woman: narrower shoulders, wider hips, bust, ponytail),
 // h (man: broader shoulders, thicker trunk and limbs), n (not specified: neither).
+// leg / arm: thickness factors; chest: size and forward offset of the chest.
 const BODIES = {
-  n: { dims: { shW: 14, hipW: 9 }, trunk: 14.5, leg: 10, arm: 7 },
-  f: { dims: { shW: 13, hipW: 10 }, trunk: 14, leg: 10, arm: 6.5, bust: true, ponytail: true },
-  h: { dims: { shW: 18, hipW: 7.5 }, trunk: 19, leg: 11.5, arm: 8.5 },
+  n: { dims: { shW: 14, hipW: 9 }, trunk: 20, leg: 1, arm: 1, chest: 10, chestOff: 4 },
+  f: { dims: { shW: 13, hipW: 10 }, trunk: 18, leg: 0.97, arm: 0.88, chest: 15, chestOff: 6.5, ponytail: true },
+  h: { dims: { shW: 18, hipW: 7.5 }, trunk: 23, leg: 1.1, arm: 1.15, chest: 14, chestOff: 5 },
 };
 // Body of the figure being drawn: set by figure() / animatedFigure() for the time of the call.
 let BODY = BODIES.n, DIM = L;
-const withBody = (sex, fn) => { BODY = BODIES[sex] ?? BODIES.n; DIM = { ...L, ...BODY.dims }; try { return fn(); } finally { BODY = BODIES.n; DIM = L; } };
+let SEX = "n", UID = 0;
+// Ids of the hair clip paths: unique even when the same animation appears twice on a page.
+const uidOf = (id) => `hc-${id}-${SEX}-${(UID++).toString(36)}`;
+const withBody = (sex, fn) => { SEX = BODIES[sex] ? sex : "n"; BODY = BODIES[SEX]; DIM = { ...L, ...BODY.dims }; try { return fn(); } finally { BODY = BODIES.n; DIM = L; } };
 const FLAT = 72;
 const G = 190, TOP = 235;
 const rad = (d) => (d * Math.PI) / 180;
@@ -67,7 +71,7 @@ function joints(p) {
   // Where the face looks (edge of the head) and the front of the chest: they show which way the
   // figure faces.
   const fd = add(mul(F, Math.cos(rad(p.head))), mul(U, -Math.sin(rad(p.head))));
-  const face = add(head, mul(fd, L.head)), chest = add(mul(U, L.torso * 0.74), mul(F, 5));
+  const face = add(head, mul(fd, L.head)), chest = add(mul(U, L.torso * 0.72), mul(F, BODY.chestOff)), seat = add(mul(U, L.torso * 0.08), mul(F, -6));
   const side = (q, s) => {
     const D = (k) => dir(q[k], q[k + "Out"], s);
     const hip = mul(S, s * DIM.hipW), sh = add(shC, mul(Ssh, s * DIM.shW));
@@ -76,10 +80,10 @@ function joints(p) {
     const elbow = add(sh, mul(D("upper"), L.upper)), wrist = add(elbow, mul(D("fore"), L.fore)), hand = add(wrist, mul(D("hand"), L.hand));
     return { hip, sh, knee, ankle, toe, heel, elbow, wrist, hand };
   };
-  return { hip: hipC, sh: shC, neck, head, face, chest, near: side(p.near, 1), far: side(p.far, -1) };
+  return { hip: hipC, sh: shC, neck, head, face, chest, seat, near: side(p.near, 1), far: side(p.far, -1) };
 }
 
-const every = (j, fn) => ({ hip: fn(j.hip), sh: fn(j.sh), neck: fn(j.neck), head: fn(j.head), face: fn(j.face), chest: fn(j.chest), near: Object.fromEntries(Object.entries(j.near).map(([k, v]) => [k, fn(v)])), far: Object.fromEntries(Object.entries(j.far).map(([k, v]) => [k, fn(v)])) });
+const every = (j, fn) => ({ hip: fn(j.hip), sh: fn(j.sh), neck: fn(j.neck), head: fn(j.head), face: fn(j.face), chest: fn(j.chest), seat: fn(j.seat), near: Object.fromEntries(Object.entries(j.near).map(([k, v]) => [k, fn(v)])), far: Object.fromEntries(Object.entries(j.far).map(([k, v]) => [k, fn(v)])) });
 const get = (j, spec) => (spec.includes(".") ? j[spec.split(".")[0]][spec.split(".")[1]] : j[spec]);
 const allPts = (j) => [j.hip, j.sh, j.neck, [j.head[0], j.head[1] - L.head, j.head[2]], ...Object.values(j.near), ...Object.values(j.far)];
 
@@ -128,42 +132,85 @@ export function place(raw, cam = camera()) {
 }
 
 // ---- Drawing ------------------------------------------------------------------------------
-const FACE = "#FFD9CC", INK = "#100A24", FAR = "#A9A3C7", JERSEY = "#FF7A59", GEAR = "#3A3452", SCENE = "#ECE9F7", EDGE = "#C9C4DD";
+// The figure is drawn with volumes: skin-coloured limbs with muscle bellies (thigh, calf, arm,
+// forearm), shorts, a jersey, shoes and a head with hair and a nose, in the style of the
+// questionnaire silhouettes. The side further from the camera is drawn darker.
+const INK = "#100A24", JERSEY = "#FF7A59", GEAR = "#3A3452", SCENE = "#ECE9F7", EDGE = "#C9C4DD";
+const COL = {
+  front: { skin: "#E7B48F", shorts: "#17152B", jersey: JERSEY, shoe: "#3A3452" },
+  back: { skin: "#C48C69", shorts: "#2E2A48", jersey: "#D9603F", shoe: "#5A5474" },
+};
+const OUT = "#8A5234", HAIR = "#3B2418", OW = 2.4;
 const f1 = (v) => v.toFixed(1);
 const d = (ps) => "M" + ps.map((q) => `${f1(q[0])} ${f1(q[1])}`).join("L");
 const stroke = (w, c) => `fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"`;
 const shift = (sx) => (q) => [q[0] + sx, q[1]];
+const at = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
 
-// How to draw the two sides: the one further from the camera first, lighter when clearly behind.
-// Side view: far limbs light and 5 units behind.
+// How to draw the two sides: the one further from the camera first, darker when clearly behind.
+// Side view: far limbs darker and 5 units behind.
 function lookOf(w, cam) {
   const dn = depth(w.near.sh, cam), df = depth(w.far.sh, cam);
   const back = dn < df ? "near" : "far", front = back === "near" ? "far" : "near";
-  if (cam.side) return { back, front, backC: FAR, offset: true, trunkW: BODY.trunk };
-  return { back, front, backC: Math.abs(dn - df) / (2 * DIM.shW) > 0.5 ? FAR : INK, offset: false, trunkW: BODY.trunk * 0.6 };
+  if (cam.side) return { back, front, dark: true, offset: true, trunkW: BODY.trunk };
+  return { back, front, dark: Math.abs(dn - df) / (2 * DIM.shW) > 0.5, offset: false, trunkW: BODY.trunk * 0.62 };
 }
-// Ponytail, on screen: tied at the back of the head (head axis hd, face axis fd), then hanging
-// down with gravity (screen y goes down).
-const ponytail = (j) => {
-  const R = L.head, hd = [(j.head[0] - j.neck[0]) / R, (j.head[1] - j.neck[1]) / R], fd = [(j.face[0] - j.head[0]) / R, (j.face[1] - j.head[1]) / R];
-  const base = [j.head[0] + (-0.8 * fd[0] + 0.3 * hd[0]) * R, j.head[1] + (-0.8 * fd[1] + 0.3 * hd[1]) * R];
-  const fall = (a, dn) => [base[0] - a * fd[0] * R, base[1] - a * fd[1] * R + dn * R];
-  return [base, fall(0.45, 0.35), fall(0.4, 1.3)];
-};
-const parts = (j, lk) => {
-  const B = j[lk.back], F = j[lk.front], fb = lk.offset ? (q) => [q[0] - 5, q[1]] : (q) => q;
-  return [
-    [[B.heel, B.toe].map(fb), 6, lk.backC], [[B.hip, B.knee, B.ankle].map(fb), BODY.leg, lk.backC], [[B.sh, B.elbow, B.wrist, B.hand].map(fb), BODY.arm, lk.backC],
-    [[B.hip, B.sh, F.sh, F.hip, B.hip], lk.trunkW, JERSEY],
-    ...(BODY.bust ? [[[j.chest, j.chest], 11, JERSEY]] : []),
-    [[j.sh, j.neck], 7, INK],
-    ...(BODY.ponytail ? [[ponytail(j), 6, INK]] : []),
-    [[F.heel, F.toe], 6, INK], [[F.hip, F.knee, F.ankle], BODY.leg, INK], [[F.sh, F.elbow, F.wrist, F.hand], BODY.arm, INK],
-  ];
-};
-const TRUNK = 3;
-const partSvg = ([ps, w, c], i) => (i === TRUNK ? `<path d="${d(ps)}Z" fill="${c}" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>` : `<path d="${d(ps)}" ${stroke(w, c)}/>`);
 
+// Shapes of one frame, always in the same order and number so that they can be animated:
+// ["l", points, width, colour] open line, ["p", …] filled outline, ["c", centre, radius, colour],
+// ["hair", head centre, hair centre, hair radius] hair clipped to the head.
+function shapes(j, w, cam, lk) {
+  const out = [];
+  const line = (ps, wd, c) => out.push(["l", ps, wd, c]);
+  // A limb: its pieces outlined together, then filled.
+  const limb = (pieces, c) => { for (const [ps, wd] of pieces) line(ps, wd + OW, OUT); for (const [ps, wd] of pieces) line(ps, wd, c); };
+  const side = (S0, col, fb) => {
+    const S = Object.fromEntries(Object.entries(S0).map(([k, v]) => [k, fb(v)]));
+    const kl = BODY.leg, ka = BODY.arm;
+    limb([[[S.knee, S.ankle], 9 * kl], [[at(S.knee, S.ankle, 0.12), at(S.knee, S.ankle, 0.5)], 12.5 * kl], [[S.hip, S.knee], 12 * kl], [[at(S.hip, S.knee, 0.08), at(S.hip, S.knee, 0.6)], 17 * kl]], col.skin);
+    line([S.heel, S.toe], 7.5, col.shoe);
+    line([S.hip, at(S.hip, S.knee, 0.42)], 18.5 * kl + 1, col.shorts);
+    return () => {
+      limb([[[S.sh, S.elbow], 8.5 * ka], [[at(S.sh, S.elbow, 0.15), at(S.sh, S.elbow, 0.65)], 10.5 * ka], [[S.elbow, S.wrist], 7 * ka], [[at(S.elbow, S.wrist, 0.08), at(S.elbow, S.wrist, 0.45)], 9 * ka], [[S.wrist, S.hand], 6.5 * ka]], col.skin);
+      line([S.sh, at(S.sh, S.elbow, 0.38)], 12 * ka, col.jersey);
+    };
+  };
+  const B = j[lk.back], F = j[lk.front], cb = lk.dark ? COL.back : COL.front, fb = lk.offset ? (q) => [q[0] - 5, q[1]] : (q) => q;
+  const backArm = side(B, cb, fb);
+  backArm();
+  // Trunk: neck, shorts (pelvis and seat), jersey, chest.
+  limb([[[j.sh, j.neck], 8]], COL.front.skin);
+  line([j.seat, j.seat], 16 * BODY.leg, COL.front.shorts);
+  line([B.hip, F.hip], lk.trunkW + 3, COL.front.shorts);
+  const tr = [at(B.hip, B.sh, 0.2), B.sh, F.sh, at(F.hip, F.sh, 0.2)];
+  out.push(["p", tr, lk.trunkW + OW, OUT], ["p", tr, lk.trunkW, JERSEY]);
+  line([j.chest, j.chest], BODY.chest, JERSEY);
+  const frontArm = side(F, COL.front, (q) => q);
+  // Head: skin, then hair on the back and top of the head (all of it seen from behind), nose.
+  const R = L.head, h = [(j.head[0] - j.neck[0]) / R, (j.head[1] - j.neck[1]) / R], f = [(j.face[0] - j.head[0]) / R, (j.face[1] - j.head[1]) / R];
+  const dz = Math.max(-1, Math.min(1, (depth(w.face, cam) - depth(w.head, cam)) / R)), up = 0.42 * (1 + dz) / 2;
+  if (BODY.ponytail) {
+    const base = [j.head[0] + (-0.8 * f[0] + 0.3 * h[0]) * R, j.head[1] + (-0.8 * f[1] + 0.3 * h[1]) * R];
+    const fall = (a, dn) => [base[0] - a * f[0] * R, base[1] - a * f[1] * R + dn * R];
+    line([base, fall(0.45, 0.35), fall(0.4, 1.3)], 6.5, HAIR);
+  }
+  frontArm();
+  const fl = Math.hypot(f[0], f[1]), nose = 0.22 * R * Math.max(0, Math.min(1, (fl - 0.5) / 0.3));
+  out.push(["c", [j.head[0] + f[0] * 0.95 * R - h[0] * 0.12 * R, j.head[1] + f[1] * 0.95 * R - h[1] * 0.12 * R], nose + 0.01, COL.front.skin]);
+  out.push(["c", j.head, R + OW / 2, OUT], ["c", j.head, R, COL.front.skin]);
+  out.push(["hair", j.head, [j.head[0] + (-0.42 * f[0] + up * h[0]) * R, j.head[1] + (-0.42 * f[1] + up * h[1]) * R], R * (1.02 + 0.4 * Math.max(0, -dz))]);
+  return out;
+}
+
+// One shape as SVG. anim(i) returns the <animate> tags of shape i (animated figure) or "".
+const shapeSvg = (sh, uid, anims = {}) => {
+  const [k] = sh;
+  if (k === "l") return `<path d="${d(sh[1])}" ${stroke(f1(sh[2]), sh[3])}>${anims.d ?? ""}</path>`;
+  if (k === "p") return `<path d="${d(sh[1])}Z" fill="${sh[3]}" stroke="${sh[3]}" stroke-width="${f1(sh[2])}" stroke-linejoin="round">${anims.d ?? ""}</path>`;
+  if (k === "c") return `<circle cx="${f1(sh[1][0])}" cy="${f1(sh[1][1])}" r="${f1(sh[2])}" fill="${sh[3]}">${anims.c ?? ""}</circle>`;
+  return `<clipPath id="${uid}"><circle cx="${f1(sh[1][0])}" cy="${f1(sh[1][1])}" r="${L.head}">${anims.head ?? ""}</circle></clipPath>`
+    + `<circle clip-path="url(#${uid})" cx="${f1(sh[2][0])}" cy="${f1(sh[2][1])}" r="${f1(sh[3])}" fill="${HAIR}">${anims.hair ?? ""}</circle>`;
+};
 const plate = (c) => `<circle cx="${f1(c[0])}" cy="${f1(c[1])}" r="17" fill="none" stroke="${GEAR}" stroke-width="5"/><circle cx="${f1(c[0])}" cy="${f1(c[1])}" r="4" fill="${GEAR}"/>`;
 const dumbbell = (w) => `<g transform="translate(${f1(w[0])} ${f1(w[1])})"><rect x="-10" y="-2.5" width="20" height="5" rx="2" fill="${GEAR}"/><rect x="-12" y="-7" width="6" height="14" rx="2" fill="${JERSEY}"/><rect x="6" y="-7" width="6" height="14" rx="2" fill="${JERSEY}"/></g>`;
 const mid = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
@@ -225,11 +272,7 @@ const mat = (ws, cam) => {
   return [poly(cuboid([Math.min(...X) - 22, Math.max(...X) + 22], [0, 0], [Math.min(...Z) - 22, Math.max(...Z) + 22], cam))];
 };
 
-// Head: dark (hair), with the face as a light disc on the side it looks at. Hidden when the
-// figure turns its back to the camera: a fully dark head is seen from behind.
-const faceOf = (j, w, cam) => ({ c: [j.head[0] + (j.face[0] - j.head[0]) * 0.42, j.head[1] + (j.face[1] - j.head[1]) * 0.42], on: depth(w.face, cam) - depth(w.head, cam) > -0.3 * L.head });
-const headSvg = (j, fc) => `<circle cx="${f1(j.head[0])}" cy="${f1(j.head[1])}" r="${L.head}" fill="${INK}"/>` + (fc.on ? `<circle cx="${f1(fc.c[0])}" cy="${f1(fc.c[1])}" r="${L.head * 0.68}" fill="${FACE}"/>` : "");
-const bodySvg = (j, lk, g, ctx, fc) => parts(j, lk).map(partSvg).join("") + headSvg(j, fc) + (g ?? []).map((k) => gear[k](j, ctx)).join("");
+const bodySvg = (j, w, cam, lk, g, ctx, uid) => shapes(j, w, cam, lk).map((sh) => shapeSvg(sh, uid)).join("") + (g ?? []).map((k) => gear[k](j, ctx)).join("");
 
 // ---- Output -------------------------------------------------------------------------------
 const bboxX = (j) => { const q = allPts(j).concat([[j.head[0] - L.head, 0], [j.head[0] + L.head, 0]]); return [Math.min(...q.map((a) => a[0])), Math.max(...q.map((a) => a[0]))]; };
@@ -267,7 +310,7 @@ function drawFigure(id, variant) {
     ys.push(...ysOf(j, items));
     const post = scenePost(ex.scene, cam);
     const js = every(j, shift(sx));
-    svg += items.map((it) => it.svg(sx)).join("") + bodySvg(js, lookOf(w, cam), p.gear, { post: post && shift(sx)(post) }, faceOf(js, w, cam));
+    svg += items.map((it) => it.svg(sx)).join("") + bodySvg(js, w, cam, lookOf(w, cam), p.gear, { post: post && shift(sx)(post) }, uidOf(id));
     x += x2 - x1;
     if (i < shown.length - 1) { svg += `<path d="M${f1(x + 8)} ${G - 90}h${gap - 16}m-7 -7l7 7l-7 7" ${stroke(3.5, JERSEY)}/>`; x += gap; }
   });
@@ -316,14 +359,17 @@ function drawAnimated(id, variant, seconds, steps) {
   const lk = lookOf(w0, cam);
   const post = scenePost(ex.scene, cam), ctx = { post: post && shift(sx)(post) };
   let svg = items.map((it) => it.svg(sx)).join("");
-  parts(F[0], lk).forEach((part, i) => {
-    const vals = F.map((j) => d(parts(j, lk)[i][0]) + (i === TRUNK ? "Z" : ""));
-    svg += partSvg(part, i).replace("/>", `>${anim("d", vals)}</path>`);
+  const S = F.map((j, i) => shapes(j, placed[i].w, cam, lk)), uid = uidOf(id);
+  const pts = (q) => f1(q[0]) + " " + f1(q[1]);
+  const pick = (i, fn) => S.map((fr) => fn(fr[i]));
+  S[0].forEach((sh, i) => {
+    const [k] = sh;
+    const an = k === "l" ? { d: anim("d", pick(i, (x) => d(x[1]))) }
+      : k === "p" ? { d: anim("d", pick(i, (x) => d(x[1]) + "Z")) }
+      : k === "c" ? { c: anim("cx", pick(i, (x) => f1(x[1][0]))) + anim("cy", pick(i, (x) => f1(x[1][1]))) + (new Set(pick(i, (x) => f1(x[2]))).size > 1 ? anim("r", pick(i, (x) => f1(x[2]))) : "") }
+      : { head: anim("cx", pick(i, (x) => f1(x[1][0]))) + anim("cy", pick(i, (x) => f1(x[1][1]))), hair: anim("cx", pick(i, (x) => f1(x[2][0]))) + anim("cy", pick(i, (x) => f1(x[2][1]))) + anim("r", pick(i, (x) => f1(x[3]))) };
+    svg += shapeSvg(sh, uid, an);
   });
-  svg += `<circle r="${L.head}" fill="${INK}" cx="${f1(F[0].head[0])}" cy="${f1(F[0].head[1])}">${anim("cx", F.map((j) => f1(j.head[0])))}${anim("cy", F.map((j) => f1(j.head[1])))}</circle>`;
-  const fcs = F.map((j, i) => faceOf(j, placed[i].w, cam));
-  svg += `<circle r="${f1(L.head * 0.68)}" fill="${FACE}" cx="${f1(fcs[0].c[0])}" cy="${f1(fcs[0].c[1])}" opacity="${fcs[0].on ? 1 : 0}">${anim("cx", fcs.map((f) => f1(f.c[0])))}${anim("cy", fcs.map((f) => f1(f.c[1])))}`
-    + (fcs.some((f) => !f.on) ? anim("opacity", fcs.map((f) => (f.on ? 1 : 0))).replace("/>", ` calcMode="discrete"/>`) : "") + `</circle>`;
   if (p0.gear?.length) {
     const n = F.length;
     F.forEach((j, i) => {
