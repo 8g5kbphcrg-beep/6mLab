@@ -27,36 +27,36 @@ const R = (x: number, y: number): P => [C + x, y];
 
 export function bodyShapes(b: BodySpec) {
   const fem = b.sex === "f" ? 1 : b.sex === "n" ? 0.5 : 0;
-  const f = b.fat, m = b.muscle * (1 - fem * 0.35), d = Math.max(0, b.def - f * 1.2);
+  const f = b.fat, m = b.muscle * (1 - fem * 0.22), d = Math.max(0, b.def - f * 1.2);
 
   // Widths from the centre line, per height.
   const neck = 7 - fem * 1.2 + m * 2.2 + f * 3;
   const S = 30 - fem * 4 + m * 8 + f * 3;               // shoulder
   const delt = 1.5 + m * 6.5;                            // deltoid bulge
   const pit = S - 4 + f * 2;                              // armpit
-  const rib = 25 - fem * 3.5 + m * 6.5 + f * 9;
-  const waist = 21 - fem * 4 + m * 1.5 + f * 17;
+  const rib = 25 - fem * 3.5 + m * 5 + f * 9;
+  const waist = 21 - fem * 4 + m * 0.8 + f * 17;
   const belly = waist + f * 7 - fem * f * 2;
   const hip = 24 + fem * 5 + m * 1 + f * 12;
-  const thighO = hip - 1 + m * 5.5 + f * 2;
+  const thighO = hip - 1 + m * 7 + f * 2;
   const thighI = Math.max(0.4, 3.6 - f * 3.8 - m * 1.2);
-  const kneeO = 18.5 + f * 4 + m * 2.2, kneeI = 3.6 + f * 2;
-  const calfO = 20 + m * 5 + f * 3.5, calfI = 4.4 + m * 2.8 + f * 2.5;
+  const kneeO = 18.5 + f * 4 + m * 3.6, kneeI = 3.6 + f * 2 + m * 0.6;
+  const calfO = 20 + m * 6 + f * 3.5, calfI = 4.4 + m * 3.4 + f * 2.5;
 
   const torso: P[] = [
-    R(neck, 58), R(neck + (S - neck) * 0.55, 70 - m * 3), R(S - 1, 80), R(pit, 104), R(rib, 128), R(waist, 158), R(belly, 180), R(hip, 199),
-    R(thighO + f * 1.5, 222), R(thighO, 255), R(thighO * 0.62 + 7, 290), R(kneeO, 306), R(calfO, 340), R(14 + f * 1.5, 382), R(12.5, 404), R(16.5, 424), R(13.5, 432), R(3.4, 431), R(4, 404), R(4.4, 382),
-    R(calfI, 344), R(kneeI, 306), R(thighI + 1.5, 280), R(thighI, 240), R(0, 214),
+    R(neck, 58), R(neck + (S - neck) * 0.55, 70 - m * 4.5), R(S - 1, 80), R(pit, 104), R(pit - 1 + m * 4, 115), R(rib, 130), R(waist, 158), R(belly, 180), R(hip, 199),
+    R(thighO + f * 1.5, 222), R(thighO, 255), R(thighO * 0.62 + 7 + m * 1.5, 290), R(kneeO, 306), R(calfO, 340), R(14 + f * 1.5, 382), R(12.5, 404), R(16.5, 424), R(13.5, 432), R(3.4, 431), R(4, 404), R(4.4, 382),
+    R(calfI, 344), R(kneeI, 306), R(kneeI + 1.5 + m * 3.4, 285), R(thighI, 240), R(0, 214),
   ];
   const left = mirror(torso.slice(0, -1)).reverse();
   const body = smooth([...torso, ...left.slice(1)]);
 
   // Arms hang slightly away from the body, the hand beside the thigh.
-  const ua = (6 + m * 5.5 + f * 4.2) * (1 - fem * 0.12), fa = (5 + m * 3.2 + f * 2.6) * (1 - fem * 0.1);
+  const ua = (6 + m * 7 + f * 4.2) * (1 - fem * 0.12), fa = (5 + m * 4 + f * 2.6) * (1 - fem * 0.1);
   const wristX = Math.max(rib + 2, belly + 1.5, hip + 0.5) + ua * 0.55 + 3.5;
   const ax = (y: number) => S - 1 + (wristX - (S - 1)) * ((y - 92) / 144);
   const arm: P[] = [
-    R(S - 3, 78), R(S + delt, 92), R(ax(128) + ua, 128), R(ax(170) + ua * 0.72, 170), R(ax(192) + fa, 192), R(ax(236) + 3.4, 236),
+    R(S - 3, 78), R(S + delt, 92), R(ax(128) + ua, 128), R(ax(170) + ua * 0.68, 170), R(ax(188) + fa * 1.08, 188), R(ax(236) + 3.4, 236),
     R(ax(250) + 4.6, 250), R(ax(262) + 1.5, 268), R(ax(262) - 3, 264), R(ax(250) - 3.8, 250), R(ax(236) - 3.1, 236), R(ax(192) - fa * 0.85, 192),
     R(ax(170) - ua * 0.6, 170), R(ax(128) - ua * 0.85, 128), R(pit - 3, 106),
   ];
@@ -104,6 +104,15 @@ export function bodyShapes(b: BodySpec) {
   } else lines.push({ d: `M${C - 1} 170 a1 1.4 0 1 0 2 0 a1 1.4 0 1 0 -2 0`, o: 0.3 });
   if (f > 0.5) both([R(waist - 1, 150), R(waist + 1, 162)], f * 0.3);
 
+  // Sides of the torso (lats and obliques), quad separation, veins on very muscular arms.
+  if (d > 0.4 && m > 0.4) {
+    shades.push({ pts: [R(pit - 1 + m * 4, 112), R(rib, 130), R(waist + 0.5, 158), R(waist - 4, 152), R(rib - 6, 130), R(pit - 5, 114)], o: d * 0.22 * m });
+    shades.push({ pts: [R(thighO - 2, 232), R(thighO - 1, 262), R(kneeO - 1, 294), R(kneeO - 5, 290), R(thighO - 7, 262), R(thighO - 7, 236)], o: d * 0.16 * m });
+  }
+  if (m > 1.2 && d > 0.8) {
+    both([R(ax(150) + ua * 0.2, 142), R(ax(165) - ua * 0.1, 160), R(ax(185), 182), R(ax(205) - fa * 0.2, 210)], 0.35, 0.9);
+    both([R(ax(196) + fa * 0.3, 196), R(ax(215) + fa * 0.1, 222)], 0.3, 0.8);
+  }
   // Deltoid and biceps shadows.
   if (d > 0.3) shades.push({ pts: [R(ax(118) - ua * 0.8, 112), R(ax(140) - ua * 0.9, 140), R(ax(165) - ua * 0.5, 166), R(ax(140) - ua * 0.3, 142)], o: d * 0.3 });
   const shadePaths = shades.flatMap((x) => [{ d: smooth(x.pts), o: x.o }, { d: smooth(mirror(x.pts)), o: x.o }]);
@@ -118,7 +127,7 @@ export function bodySvg(b: BodySpec, id: string): string {
   const bra = s.fem >= 1
     ? `<g clip-path="url(#cl-${id})"><path d="M0 104 Q${C - 22} 98 ${C - 12} ${102 + b.fat * 2} Q${C} 110 ${C + 12} ${102 + b.fat * 2} Q${C + 22} 98 200 104 L200 ${128 + b.fat * 6} Q${C + 14} ${136 + b.fat * 8} ${C} ${130 + b.fat * 6} Q${C - 14} ${136 + b.fat * 8} 0 ${128 + b.fat * 6} Z" fill="#17152B"/><path d="M${C - 13} 72 L${C - 19} 102 M${C + 13} 72 L${C + 19} 102" stroke="#17152B" stroke-width="3.2"/><path d="M${C - 22} ${120 + b.fat * 4} Q${C - 11} ${127 + b.fat * 6} ${C - 1} ${120 + b.fat * 4} M${C + 22} ${120 + b.fat * 4} Q${C + 11} ${127 + b.fat * 6} ${C + 1} ${120 + b.fat * 4}" stroke="#34305A" stroke-width="1.5" fill="none"/></g>`
     : "";
-  const lines = s.lines.filter((l) => l.o > 0.02).map((l) => `<path d="${l.d}" stroke="#6B3A22" stroke-opacity="${r1(Math.min(0.85, l.o))}" stroke-width="${l.w ?? 1.1}"/>`).join("");
+  const lines = s.lines.filter((l) => l.o > 0.02).map((l) => `<path d="${l.d}" stroke="#6B3A22" stroke-opacity="${r1(Math.min(0.9, l.o * (0.8 + b.muscle * 0.35)))}" stroke-width="${r1((l.w ?? 1.1) * (1 + b.muscle * 0.45))}"/>`).join("");
   const hair0 = s.fem >= 1
     ? `<path d="M${C - 17} 34 Q${C - 18} 12 ${C} 12 Q${C + 18} 12 ${C + 17} 34 Q${C + 22} 50 ${C + 16} 64 Q${C + 12} 52 ${C + 13} 36 Q${C} 22 ${C - 13} 36 Q${C - 12} 52 ${C - 16} 64 Q${C - 22} 50 ${C - 17} 34 Z" fill="${hairColor}"/>`
     : s.fem > 0 ? `<path d="M${C - 16} 30 Q${C - 15} 13 ${C} 13 Q${C + 15} 13 ${C + 16} 30 Q${C + 9} 21 ${C} 22 Q${C - 9} 21 ${C - 16} 30 Z" fill="${hairColor}"/>`
@@ -132,7 +141,7 @@ export function bodySvg(b: BodySpec, id: string): string {
 </defs>
 <rect x="${C - s.neck}" y="46" width="${s.neck * 2}" height="20" fill="${skin}"/>
 <path d="${s.body}" fill="${skin}" stroke="#A8704E" stroke-width=".8"/>
-<g clip-path="url(#cl-${id})">${s.shadePaths.filter((x) => x.o > 0.02).map((x) => `<path d="${x.d}" fill="#8A5234" fill-opacity="${r1(x.o)}"/>`).join("")}</g>
+<g clip-path="url(#cl-${id})">${s.shadePaths.filter((x) => x.o > 0.02).map((x) => `<path d="${x.d}" fill="#8A5234" fill-opacity="${r1(Math.min(0.6, x.o * (0.7 + b.muscle * 0.6)))}"/>`).join("")}</g>
 ${s.arms.map((a) => `<path d="${a}" fill="${skin}" stroke="#A8704E" stroke-width=".8"/>`).join("")}
 <g clip-path="url(#cl-${id})"><rect x="0" y="193" width="200" height="${44 + b.fat * 8}" fill="#17152B"/></g>
 ${bra}
