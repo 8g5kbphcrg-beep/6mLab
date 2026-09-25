@@ -2,6 +2,7 @@
 //   guide-<formule>.pdf               how the program works (explanations only)
 //   seances-<formule>-<obj1>-<obj2>.pdf  every session written out in order + illustrated exercises
 //   seances-<formule>-<obj>.pdf       the same with a single goal
+//   seances-…-femme.pdf / -homme.pdf  the same with the silhouette chosen at checkout (gender)
 //   option-course.pdf                 the running option
 //   seance-decouverte.pdf             the free 15-minute prevention session (sent from the home page)
 // Usage: npm run programmes            (all)
@@ -21,9 +22,12 @@ const out = join(import.meta.dirname, "..", "programmes");
 // rebuilt if it changes (domain name).
 const SITE = (process.env.PROGRAMMES_SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || "https://6m-lab-seven.vercel.app").replace(/\/$/, "");
 const EYE = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.2" fill="currentColor"/></svg>`;
+// Silhouettes of the figures: neutral (n), woman (f) or man (h), from the gender given at
+// checkout. File name suffix and animation page of each.
+const SEXES = { n: { file: "", page: "" }, f: { file: "-femme", page: "/femme" }, h: { file: "-homme", page: "/homme" } };
 // Eye icon linking to the exercise's animation (only for exercises that have one).
 // Exercises without one get an empty slot of the same width, so the names stay aligned.
-const eye = (id) => (id && variants(id).length ? `<a class="eye" href="${SITE}/fr/exercices/${id}" title="Voir l'animation">${EYE}</a>` : `<span class="eye none"></span>`);
+const eye = (id, sex = "n") => (id && variants(id).length ? `<a class="eye" href="${SITE}/fr/exercices/${id}${SEXES[sex].page}" title="Voir l'animation">${EYE}</a>` : `<span class="eye none"></span>`);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
 const md = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
 
@@ -41,18 +45,18 @@ const block = (b) => {
   throw new Error("Bloc inconnu : " + JSON.stringify(b));
 };
 
-const exerciseCard = (n, e, id) => {
+const exerciseCard = (n, e, id, sex = "n") => {
   // One drawing per version (bodyweight, with equipment), labelled when there are two.
   const vs = id ? variants(id) : [];
   const label = { poids: "Au poids du corps", materiel: "Avec matériel" };
-  const fig = vs.length ? `<div class="figs">${vs.map((v) => `<div class="fig">${vs.length > 1 ? `<span class="flab">${label[v]}</span>` : ""}${figure(id, v)}</div>`).join("")}</div>` : "";
-  return `<div class="ex${fig ? " hasfig" : ""}">${fig}<div class="extext"><div class="exname">${n ? `<span class="num">${n}</span>` : ""}${eye(id)}${md(e.name)}</div><p>${md(e.how)}</p>${e.cues ? `<p class="cues"><strong>Points clés :</strong> ${md(e.cues)}</p>` : ""}${e.easier ? `<p class="lvl"><strong>Plus facile :</strong> ${md(e.easier)}</p>` : ""}</div></div>`;
+  const fig = vs.length ? `<div class="figs">${vs.map((v) => `<div class="fig">${vs.length > 1 ? `<span class="flab">${label[v]}</span>` : ""}${figure(id, v, sex)}</div>`).join("")}</div>` : "";
+  return `<div class="ex${fig ? " hasfig" : ""}">${fig}<div class="extext"><div class="exname">${n ? `<span class="num">${n}</span>` : ""}${eye(id, sex)}${md(e.name)}</div><p>${md(e.how)}</p>${e.cues ? `<p class="cues"><strong>Points clés :</strong> ${md(e.cues)}</p>` : ""}${e.easier ? `<p class="lvl"><strong>Plus facile :</strong> ${md(e.easier)}</p>` : ""}</div></div>`;
 };
 
 // A session: its steps, each a small table of exercises numbered from the library.
-const session = (title, steps, num) => `<section class="session"><div class="stitle">${md(title)}</div>${steps.map((st, i) => `
+const session = (title, steps, num, sex = "n") => `<section class="session"><div class="stitle">${md(title)}</div>${steps.map((st, i) => `
   <div class="step"><div class="sname"><span class="snum">${i + 1}</span>${md(st.name)}${st.duree ? `<span class="sdur">${esc(st.duree)}</span>` : ""}</div>
-  ${st.text ? `<p class="stext">${md(st.text)}</p>` : `<table><tbody>${st.rows.map(([id, dose, rest, prec]) => `<tr><td class="c1"><span class="ref">${num(id)}</span>${eye(id)}${md(exercices[id].name)}${prec ? ` <span class="prec">(${md(prec)})</span>` : ""}</td><td class="c2">${md(dose)}</td><td class="c3">${md(rest ?? "")}</td></tr>`).join("")}</tbody></table>`}</div>`).join("")}</section>`;
+  ${st.text ? `<p class="stext">${md(st.text)}</p>` : `<table><tbody>${st.rows.map(([id, dose, rest, prec]) => `<tr><td class="c1"><span class="ref">${num(id)}</span>${eye(id, sex)}${md(exercices[id].name)}${prec ? ` <span class="prec">(${md(prec)})</span>` : ""}</td><td class="c2">${md(dose)}</td><td class="c3">${md(rest ?? "")}</td></tr>`).join("")}</tbody></table>`}</div>`).join("")}</section>`;
 
 const css = (color) => `
 @page{size:A4;margin:16mm 15mm 18mm}@page cover{margin:0}
@@ -107,8 +111,8 @@ const guideDoc = (fid) => {
   return { file: `guide-${fid}`, d, body: f.guide.map(block).join("\n") };
 };
 
-// pair: two goals, or a single goal (its two blocks then come from solos).
-const seancesDoc = (fid, pair) => {
+// pair: two goals, or a single goal (its two blocks then come from solos). sex: silhouette.
+const seancesDoc = (fid, pair, sex = "n") => {
   const f = formules[fid];
   const gs = pair.map((g) => objectifs[g]);
   const solo = pair.length === 1 ? solos[pair[0]] : null;
@@ -131,16 +135,16 @@ const seancesDoc = (fid, pair) => {
     for (const ph of f.phases) {
       const notes = solo ? [solo.phaseNotes[ph.id]] : gs.map((g) => g.phaseNotes?.[ph.id]).filter(Boolean);
       sessions += `<div class="phase"><h2>${esc(ph.title)}</h2><p>${md(ph.texte)}</p>${notes.map((n) => `<div class="note">${md(n)}</div>`).join("")}`;
-      for (const k of ["A", "B", "C"]) sessions += session(`Séance ${k}`, steps(k, f.gainage[k], ph.id), num);
-      if (ph.id === "bases") sessions += `<p class="stext">Semaine après semaine, tu peux ajouter la séance bonus, facultative :</p>` + session(f.bonus.title, [{ name: "Échauffement", duree: "10 min", rows: f.echauffement.rows }, { name: "Prévention et mobilité", duree: "10 min", rows: f.bonus.rows }], num);
+      for (const k of ["A", "B", "C"]) sessions += session(`Séance ${k}`, steps(k, f.gainage[k], ph.id), num, sex);
+      if (ph.id === "bases") sessions += `<p class="stext">Semaine après semaine, tu peux ajouter la séance bonus, facultative :</p>` + session(f.bonus.title, [{ name: "Échauffement", duree: "10 min", rows: f.echauffement.rows }, { name: "Prévention et mobilité", duree: "10 min", rows: f.bonus.rows }], num, sex);
       sessions += `</div>`;
     }
     const aff = gs.map((g) => g.affutage && `**${g.name}** : ${g.affutage}`).filter(Boolean);
     sessions += `<h2>${esc(f.affutage.title)}</h2><p>${md(f.affutage.texte)}</p>${aff.length ? `<ul>${aff.map((a) => `<li>${md(a)}</li>`).join("")}</ul>` : ""}`;
   } else {
     sessions += `<h2>Tes deux séances</h2><p>${md(f.blocs)}</p><div class="note">**Placement** : la séance 1 au moins 3 jours avant le match, la séance 2 au plus tard 2 jours avant. Jamais la veille d'un match.</div>`.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-    sessions += session("Séance 1 · la plus exigeante, loin du match", steps("s1", f.gainage["1"], null), num);
-    sessions += session("Séance 2 · plus légère", steps("s2", f.gainage["2"], null), num);
+    sessions += session("Séance 1 · la plus exigeante, loin du match", steps("s1", f.gainage["1"], null), num, sex);
+    sessions += session("Séance 2 · plus légère", steps("s2", f.gainage["2"], null), num, sex);
   }
   const goals = `<h2>${solo ? "Ton objectif" : "Tes objectifs"}</h2>${solo ? `<p>Tu as choisi un seul objectif : chaque séance lui consacre deux blocs, et l'accent change au fil des semaines. Ce que tu as travaillé avant reste dans les séances, avec moins de séries, pour ne pas le perdre.</p>` : ""}${gs.map((g) => `<div class="goal" style="--gc:${g.color}"><h3>${esc(g.name)}</h3><p>${md(g.intro)}</p><ul>${g.qualites.map((q) => `<li>${md(q)}</li>`).join("")}</ul><p><strong>Les règles d'or</strong></p><ul>${g.regles.map((q) => `<li>${md(q)}</li>`).join("")}</ul>${(g.notes ?? []).map(block).join("")}</div>`).join("")}
   <h2>Comment lire tes séances</h2><ul>
@@ -148,9 +152,9 @@ const seancesDoc = (fid, pair) => {
   <li>« 2-4 × 8 » : 2 séries au niveau 1, 3 au niveau 2, 4 au niveau 3, de 8 répétitions. « 2-3 × 8 » : 2 séries aux niveaux 1 et 2, 3 au niveau 3.</li>
   <li>Le numéro devant chaque exercice renvoie à sa fiche illustrée, à la fin de ce document.</li>
   <li>Si tu ne connais pas ton niveau, relis le guide, page « Choisir ton niveau ».</li></ul>`;
-  const library = `<div class="pb"></div><h2>Les exercices</h2><p>Dans l'ordre des numéros utilisés dans tes séances. Touche l'œil à côté du numéro pour voir l'exercice en mouvement.</p>${[...nums].map(([id, n]) => exerciseCard(n, exercices[id], id)).join("")}`;
+  const library = `<div class="pb"></div><h2>Les exercices</h2><p>Dans l'ordre des numéros utilisés dans tes séances. Touche l'œil à côté du numéro pour voir l'exercice en mouvement.</p>${[...nums].map(([id, n]) => exerciseCard(n, exercices[id], id, sex)).join("")}`;
   const d = { title: "Tes séances", tag: f.name, color: f.color, subtitle: title, meta: [["Formule", f.name], ["Durée", f.duree], ["Séance", f.seance]] };
-  return { file: `seances-${fid}-${pair.join("-")}`, d, body: goals + sessions + library };
+  return { file: `seances-${fid}-${pair.join("-")}${SEXES[sex].file}`, d, body: goals + sessions + library };
 };
 
 const courseDoc = () => ({ file: "option-course", d: optionCourse, body: optionCourse.blocks.map(block).join("\n") });
@@ -185,7 +189,7 @@ const decouverteDoc = () => {
 const pairs = [...ordre.map((a) => [a]), ...ordre.flatMap((a, i) => ordre.slice(i + 1).map((b) => [a, b]))];
 const docs = [
   ...Object.keys(formules).map(guideDoc),
-  ...Object.keys(formules).flatMap((fid) => pairs.map((p) => seancesDoc(fid, p))),
+  ...Object.keys(formules).flatMap((fid) => pairs.flatMap((p) => Object.keys(SEXES).map((sex) => seancesDoc(fid, p, sex)))),
   courseDoc(),
   decouverteDoc(),
 ];
