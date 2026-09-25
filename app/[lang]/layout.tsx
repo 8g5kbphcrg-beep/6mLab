@@ -38,8 +38,8 @@ export default async function RootLayout({ children, params }: { children: React
   const other = lang === "fr" ? "en" : "fr";
   const fr = lang === "fr";
   const links: [string, string][] = [
-    [`/${lang}/programmes`, fr ? "Programmes" : "Programs"],
-    [`/${lang}/questionnaire`, d.nav.goal],
+    [`/${lang}/handball`, "Handball"],
+    [`/${lang}#forme`, fr ? "Forme & bien-être" : "Fitness & well-being"],
     ...(fr ? [["/fr/conseils", "Conseils"] as [string, string]] : []),
     [fr ? "/fr/a-propos" : "/en/about", fr ? "À propos" : "About"],
     [`/${lang}/contact`, "Contact"],
@@ -62,7 +62,7 @@ export default async function RootLayout({ children, params }: { children: React
           <nav className="navd" aria-label="Navigation">
             {links.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
             <Link className="lang" href={`/${other}`} hrefLang={other} lang={other}>{d.nav.other}</Link>
-            <a className="btn btn-s" href={`/${lang}/programmes`}>{fr ? "Voir les programmes" : "See the programs"}</a>
+            <a className="btn btn-s" href={`/${lang}#formules`}>{fr ? "Choisir mon programme" : "Choose my program"}</a>
           </nav>
           <ThemeToggle fr={fr} />
           <details className="menu">

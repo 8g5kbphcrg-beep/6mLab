@@ -12,22 +12,23 @@ const toLead = (c: Stripe.Customer): Lead => ({ id: c.id, email: c.email ?? "", 
 export const validEmail = (e: string) => e.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 
 // Finds the lead for this email, or creates it. A lead who had unsubscribed and asks again is
-// subscribed again.
-export async function addLead(s: Stripe, email: string, lang: Lang): Promise<Lead> {
+// subscribed again. kind: "seance" (free session, then 3 tips) or "forme" (waiting list of the
+// fitness program: one email on launch day, nothing before).
+export async function addLead(s: Stripe, email: string, lang: Lang, kind: "seance" | "forme" = "seance"): Promise<Lead> {
   // customers.list is up to date immediately (search can lag by a minute).
-  const c = (await s.customers.list({ email, limit: 20 })).data.find((x) => x.metadata?.lead === "seance");
+  const c = (await s.customers.list({ email, limit: 20 })).data.find((x) => x.metadata?.lead === kind);
   if (c) {
     return toLead(c.metadata?.unsub ? await s.customers.update(c.id, { metadata: { unsub: "" } }) : c);
   }
-  return toLead(await s.customers.create({ email, metadata: { lead: "seance", lang, lead_at: new Date().toISOString() } }));
+  return toLead(await s.customers.create({ email, metadata: { lead: kind, lang, lead_at: new Date().toISOString() } }));
 }
 
 // Leads created since `since` (Stripe search, newest first).
-export async function recentLeads(s: Stripe, since: number): Promise<Lead[]> {
+export async function recentLeads(s: Stripe, since: number, kind: "seance" | "forme" = "seance"): Promise<Lead[]> {
   const out: Lead[] = [];
   let page: string | undefined;
   do {
-    const res = await s.customers.search({ query: `metadata['lead']:'seance' AND created>${since}`, limit: 100, page });
+    const res = await s.customers.search({ query: `metadata['lead']:'${kind}' AND created>${since}`, limit: 100, page });
     out.push(...res.data.map(toLead));
     page = res.next_page ?? undefined;
   } while (page && out.length < 5000);

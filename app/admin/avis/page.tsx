@@ -38,6 +38,7 @@ export default async function AdminAvis() {
     return <main><h1>Avis clients</h1><p>Impossible de lire les commandes dans Stripe : {e instanceof Error ? e.message : String(e)}</p></main>;
   }
   const leads = await recentLeads(s, Math.floor(Date.now() / 1000) - 365 * DAY).catch(() => []);
+  const waiting = await recentLeads(s, Math.floor(Date.now() / 1000) - 365 * DAY, "forme").catch(() => []);
   const mid = orders.filter((o) => o.meta.m_at), end = orders.filter((o) => o.meta.f_at);
   const sentMid = orders.filter((o) => o.meta.s_mid).length, sentEnd = orders.filter((o) => o.meta.s_end).length;
   const stars = end.map((o) => Number(o.meta.f_stars)).filter(Boolean);
@@ -57,6 +58,7 @@ export default async function AdminAvis() {
         <div className="kpi"><b>{npsScore ?? "–"}</b><span>Score de recommandation (NPS, de -100 à 100)</span></div>
         <div className="kpi"><b>{mid.length} / {sentMid}</b><span>Questionnaire 1 : réponses / envois ({pct(mid.length, sentMid)} %)</span></div>
         <div className="kpi"><b>{leads.length}</b><span>Séances gratuites demandées (12 mois), dont {leads.filter((l) => l.meta.unsub).length} désinscrits</span></div>
+        <div className="kpi"><b>{waiting.filter((l) => !l.meta.unsub).length}</b><span>Inscrits à la liste d'attente Forme & bien-être</span></div>
         <div className="kpi"><b>{end.length} / {sentEnd}</b><span>Questionnaire 2 : réponses / envois ({pct(end.length, sentEnd)} %)</span></div>
       </div>
 
