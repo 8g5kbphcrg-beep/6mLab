@@ -12,3 +12,7 @@ declare module "@/lib/mark.mjs" {
   export function markFile(color?: string, ball?: string): string;
   export function iconSvg(radius?: number): string;
 }
+declare module "@/programmes/source/lieux.mjs" {
+  export const LIEUX: Record<"maison" | "salle", { name: string; short: string }>;
+  export function exoFor<T extends object>(base: T, id: string, lieu: string): T & { name: string; how: string; cues?: string; easier?: string; band?: string; figs: [string, string, string][] | null };
+}

@@ -19,6 +19,13 @@ const niveaux = [
   { warn: "Douleur vive, articulation qui lâche, vertige : arrête l'exercice. Une gêne qui dure plus de 48 heures ou qui revient à chaque séance doit être vue par un professionnel de santé." },
 ];
 
+// Equipment, depending on where the program is done (home or gym, chosen at checkout).
+const materiel = [
+  { h3: "Matériel" },
+  { lieu: "maison", p: "Ton programme est fait pour la maison : poids du corps et objets du quotidien (sac à dos lesté, chaise, canapé, table solide, bouteille d'eau). Un **élastique de résistance** (léger, moyen et fort) est conseillé : les fiches exercices indiquent la variante élastique quand elle existe." },
+  { lieu: "salle", p: "Ton programme est fait pour la salle de sport : haltères, barre, banc, poulies, caisse de pliométrie, médecine-ball. Pour la course, utilise un **tapis de course incurvé** (non motorisé, en forme de courbe : c'est toi qui fais tourner la bande) si ta salle en a un ; sinon, chaque fiche indique une alternative (vélo d'assaut, rameur)." },
+];
+
 const documents = (seances) => [
   { table: { head: ["Tu as reçu", "À quoi ça sert"], rows: [
     ["Ce guide", "Comprendre le programme : fonctionnement, planning, progression, règles"],
@@ -59,8 +66,7 @@ export const formules = {
       { h2: "Avant de commencer" },
       { p: "8 semaines pour reprendre sur des bases solides avant la reprise avec ton club. Ce guide t'explique comment fonctionne ton programme." },
       ...documents("l'échauffement, ton ou tes objectifs, le gainage et le retour au calme"),
-      { h3: "Matériel" },
-      { p: "Rien d'obligatoire : tout peut se faire au poids du corps. Si tu as accès à une salle ou à un peu de matériel (haltères, élastique, banc), les fiches exercices indiquent des variantes." },
+      ...materiel,
       ...niveaux,
       { h2: "Ta semaine type" },
       { p: "Chaque semaine compte **3 séances (A, B et C)**, plus une **séance D bonus** facultative, courte, centrée sur la prévention et la mobilité." },
@@ -119,8 +125,7 @@ export const formules = {
       { h2: "Avant de commencer" },
       { p: "Pendant la saison, ton club s'occupe déjà d'une grande partie de ta charge d'entraînement. Le but de ce programme n'est pas d'en rajouter, mais d'**entretenir** ce que tu as construit : sans travail complémentaire, la force et l'explosivité baissent au fil des semaines de compétition." },
       ...documents("l'échauffement, ton ou tes objectifs, le gainage et le retour au calme"),
-      { h3: "Matériel" },
-      { p: "Rien d'obligatoire : tout peut se faire au poids du corps. Les fiches exercices indiquent des variantes si tu as accès à une salle ou à un peu de matériel." },
+      ...materiel,
       ...niveaux,
       { h2: "Ta semaine autour du match" },
       { p: "Tes 2 séances se placent **loin du match** : la séance 1 (la plus exigeante) au moins 3 jours avant, la séance 2 (plus légère) au plus tard 2 jours avant. Jamais la veille d'un match." },

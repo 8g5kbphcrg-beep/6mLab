@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 import { locales, type Lang } from "@/lib/dict";
 import ExerciseCard, { animatedIds, exerciseList } from "@/components/ExerciseCard";
 
-// The animation of one exercise, neutral silhouette (tips pages, free session). The program PDFs
-// link to /femme or /homme when the customer chose one.
+// The animation of one exercise, every version with the neutral silhouette (tips pages). The
+// program PDFs link to the customer's place and silhouette: /exercices/<id>/maison-femme…
 export const dynamicParams = false;
 export const generateStaticParams = () => locales.flatMap((lang) => animatedIds.map((id) => ({ lang, id })));
 

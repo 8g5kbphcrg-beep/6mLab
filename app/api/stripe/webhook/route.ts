@@ -37,6 +37,8 @@ export async function POST(req: NextRequest) {
         program: m.program as ProgramSlug,
         goals: (m.goals ?? "").split("+") as GoalId[],
         running: m.running === "oui",
+        // Orders placed before the choice existed got the home version.
+        lieu: m.lieu === "salle" ? "salle" : "maison",
         pack: m.pack === "oui",
         firstName: m.firstName ?? "",
         age: m.age ?? "",
