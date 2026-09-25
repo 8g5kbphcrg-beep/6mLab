@@ -28,8 +28,8 @@ const text = {
       "En option : un programme de course à pied (+9 €)",
     ],
     phases: [
-      { t: "Semaines 1 à 8 : Pré-saison", d: "Bases, force, explosivité, puis une semaine d'affûtage : tu arrives prêt au premier entraînement collectif." },
-      { t: "Semaines 9 à 20 : Maintien en saison", d: "Deux séances courtes par semaine, placées loin des matchs, pour garder ta force et ta vivacité sans te fatiguer." },
+      { t: "Semaines 1 à 8 : Pré-saison", d: "Mise en route, montée en charge, intensité, puis une semaine d'affûtage : tu arrives prêt au premier entraînement collectif." },
+      { t: "Semaines 9 à 20 : Maintien en saison", d: "Deux séances courtes par semaine, placées loin des matchs, pour entretenir le travail sur tes objectifs sans te fatiguer." },
     ],
     faq: [
       { q: "Je reçois les deux programmes en même temps ?", a: "Oui, les deux arrivent ensemble par email. Tu commences par la Pré-saison et tu enchaînes avec le Maintien quand les matchs reprennent." },
@@ -50,8 +50,8 @@ const text = {
       "Optional: a running program (+€9)",
     ],
     phases: [
-      { t: "Weeks 1 to 8: Pre-season", d: "Base, strength, explosiveness, then a taper week: you arrive ready for the first team training." },
-      { t: "Weeks 9 to 20: In-season maintenance", d: "Two short sessions a week, placed away from games, to keep your strength and sharpness without getting tired." },
+      { t: "Weeks 1 to 8: Pre-season", d: "Getting started, building up, intensity, then a taper week: you arrive ready for the first team training." },
+      { t: "Weeks 9 to 20: In-season maintenance", d: "Two short sessions a week, placed away from games, to maintain the work on your goals without getting tired." },
     ],
     faq: [
       { q: "Do I get both programs at once?", a: "Yes, both arrive together by email. Start with the Pre-season and move on to the maintenance program when games start." },

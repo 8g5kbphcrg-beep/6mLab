@@ -41,3 +41,8 @@
 .bgoal:has(:disabled){opacity:.45;cursor:not-allowed}
 .bprice s{color:var(--muted);font-size:1.1rem}
 .buy.p .bpay{background:var(--sky);color:#fff}
+.bgoals{scroll-margin-top:84px}
+.bmissmsg{margin:0;background:#FDECEC;color:#B42318;border:1.5px solid #F4A7A0;border-radius:10px;padding:.7rem .9rem;font-weight:700;font-size:.95rem}
+.bmiss .bcards .bcard,.bmiss .breath{border-color:#F4A7A0}
+:root[data-theme="dark"] .bmissmsg{background:#3A1418;color:#FFB4AB;border-color:#8C2F2A}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .bmissmsg{background:#3A1418;color:#FFB4AB;border-color:#8C2F2A}}
