@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { Lang } from "@/lib/dict";
 import { programs, type ProgramSlug } from "@/lib/programs";
 import { buy, fmtPrice, genders, orderTotal, PACK_PRICE, prices, RUNNING_PRICE, SECOND_GOAL_PRICE } from "@/lib/checkout";
@@ -17,6 +17,9 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, test, er
   const [sel, setSel] = useState<GoalId[]>(goals);
   const [running, setRunning] = useState(false);
   const [err, setErr] = useState(error);
+  // Paying without a goal: the page scrolls back up to the goals, which show a red message.
+  const [noGoal, setNoGoal] = useState(false);
+  const goalsRef = useRef<HTMLFieldSetElement>(null);
   const reath = sel.includes(REATH);
   const toggle = (g: GoalId) => setSel(sel.includes(g) ? sel.filter((x) => x !== g) : [...sel.filter((x) => x !== REATH), g]);
   const done = sel.length > 0;
@@ -24,7 +27,7 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, test, er
 
   return (
     <form className={`buy ${pack ? "p" : slug === "maintien-saison" ? "b" : "a"}`} id="acheter" method="post" action="/api/checkout" data-go
-      onSubmit={(e) => { if (!done) { e.preventDefault(); setErr("invalide"); } }}>
+      onSubmit={(e) => { if (!done) { e.preventDefault(); setNoGoal(true); goalsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }); } }}>
       <input type="hidden" name="lang" value={lang} />
       <input type="hidden" name="program" value={slug} />
       {pack && <input type="hidden" name="pack" value="on" />}
@@ -35,8 +38,9 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, test, er
         <span>{pack ? `${t.packT} · ${t.packWeeks}` : `${p.name} · ${p.duration}`}</span>
       </div>
 
-      <fieldset className="bstep">
+      <fieldset className={noGoal && !done ? "bstep bgoals bmiss" : "bstep bgoals"} ref={goalsRef}>
         <legend><span className="bnum">1</span>{t.step1}{!reath && <span className={done ? "bbadge ok" : "bbadge"}>{t.count(sel.length)}</span>}</legend>
+        {noGoal && !done && <p className="bmissmsg" role="alert">{t.noGoal}</p>}
         <p className="bhint">{t.hint}</p>
         <Suggestions lang={lang} sel={sel} onPick={setSel} extra={`${lang === "fr" ? "2 objectifs" : "2 goals"} +${fmtPrice(SECOND_GOAL_PRICE, lang)}`} />
         <div className="bcards">
@@ -96,7 +100,7 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, test, er
           <span>{t.consent} <a href={legalPaths[lang].cgv} target="_blank">{t.cgv}</a></span>
         </label>
         {err && <p className="berr" role="alert">{err === "invalide" ? t.invalid : t.off}</p>}
-        <button type="submit" className="btn bpay">{t.btn(fmtPrice(total, lang))}</button>
+        <button type="submit" className="btn bpay" onClick={(e) => { if (!done) { e.preventDefault(); setNoGoal(true); goalsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }); } }}>{t.btn(fmtPrice(total, lang))}</button>
         <p className="note">{t.secure}</p>
         {test && <p className="note btest">{t.test}</p>}
       </div>
