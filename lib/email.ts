@@ -37,9 +37,10 @@ const transport = () =>
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
 // The PDFs an order needs, from the programmes/ folder: the guide of the formula, the sessions
-// for its pair of goals (in block order) and the running option. Returns null unless automatic
-// sending is switched on (PROGRAMMES_ENVOI_AUTO=1, once the programs are validated) and every
-// file exists, so a customer never gets a draft or half a program.
+// for its pair of goals (in block order, with the customer's silhouette) and the running option.
+// Returns null unless automatic sending is switched on (PROGRAMMES_ENVOI_AUTO=1, once the
+// programs are validated) and every file exists, so a customer never gets a draft or half a
+// program.
 // True when the PDFs go out automatically with the confirmation (every combination except
 // réathlétisation, whose program is not written yet).
 export const deliversNow = (goals: string[]) => process.env.PROGRAMMES_ENVOI_AUTO === "1" && !goals.includes("reathletisation");
@@ -50,7 +51,10 @@ export async function programFiles(o: Order) {
   // The "Saison complète" pack adds the Maintien en saison with the same goals.
   const formulas = o.pack ? [o.program, "maintien-saison"] : [o.program];
   const names = [...formulas.flatMap((f) => [`guide-${f}.pdf`, `seances-${f}-${goals.join("-")}.pdf`]), ...(o.running ? ["option-course.pdf"] : [])];
-  const paths = names.map((n) => join(process.cwd(), "programmes", n));
+  // The sessions exist with the silhouette matching the gender given at checkout (femme, homme);
+  // the file keeps its usual name for the customer.
+  const suffix = o.gender === "femme" || o.gender === "homme" ? `-${o.gender}` : "";
+  const paths = names.map((n) => join(process.cwd(), "programmes", n.startsWith("seances-") ? n.replace(/\.pdf$/, `${suffix}.pdf`) : n));
   try {
     await Promise.all(paths.map((p) => access(p)));
   } catch {

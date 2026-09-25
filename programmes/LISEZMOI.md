@@ -8,6 +8,11 @@ Chaque commande reçoit :
 | `seances-<formule>-<objectif1>-<objectif2>.pdf` | Toutes les séances écrites en entier, dans l'ordre, et la fiche illustrée de chaque exercice |
 | `option-course.pdf` | Si l'option course a été prise |
 
+Les séances existent en 3 versions de silhouettes pour les animations, selon le genre indiqué à
+l'achat : `seances-….pdf` (neutre, « je préfère ne pas le dire »), `seances-…-femme.pdf` et
+`seances-…-homme.pdf`. Le client reçoit toujours le fichier sous le nom sans suffixe, et l'œil
+de chaque exercice ouvre l'animation avec la même silhouette (`/fr/exercices/<id>/femme`).
+
 Avec le pack Saison complète (Pré-saison + Maintien), le client reçoit le guide et les séances des
 deux formules, avec les mêmes objectifs.
 

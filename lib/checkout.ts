@@ -25,7 +25,7 @@ export const fmtPrice = (cents: number, lang: Lang) => {
 export const buy = {
   fr: {
     step1: "Tes objectifs", step2: "Options", step3: "Ton profil", step4: "Récapitulatif",
-    profileHint: "Pour adapter ton programme et te l'envoyer à ton nom.",
+    profileHint: "Pour adapter ton programme et te l'envoyer à ton nom. Les silhouettes des animations suivent ton genre (neutres si tu préfères ne pas le dire).",
     firstName: "Prénom", age: "Âge", gender: "Genre",
     genders: { femme: "Femme", homme: "Homme", "non-precise": "Je préfère ne pas le dire" },
     minor: "Moins de 18 ans ? La commande doit être passée avec l'accord d'un parent.",
@@ -48,7 +48,7 @@ export const buy = {
   },
   en: {
     step1: "Your goals", step2: "Options", step3: "About you", step4: "Summary",
-    profileHint: "So we can adapt your program and send it in your name.",
+    profileHint: "So we can adapt your program and send it in your name. The figures in the animations match your gender (neutral if you'd rather not say).",
     firstName: "First name", age: "Age", gender: "Gender",
     genders: { femme: "Woman", homme: "Man", "non-precise": "I'd rather not say" },
     minor: "Under 18? The order must be placed with a parent's consent.",
