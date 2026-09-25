@@ -12,7 +12,7 @@ export const dict = {
       title: "Compare les deux formules", sub: "Les mêmes objectifs au choix, deux moments de la saison.",
       heads: [["Pré-saison", "Avant la saison"], ["Maintien en saison", "Pendant la saison"]],
       rows: [
-        ["Objectif de la formule", "Reprendre fort : base physique, force, explosivité, affûtage", "Garder ton niveau sans nuire aux entraînements du club"],
+        ["Objectif de la formule", "Arriver prêt à la reprise : 8 semaines de progression, jusqu'à l'affûtage", "Garder ton niveau sans nuire aux entraînements du club"],
         ["Durée", "8 semaines", "12 semaines"],
         ["Fréquence", "3 à 4 séances par semaine", "2 séances de 30 à 40 min par semaine"],
       ],
@@ -42,7 +42,7 @@ export const dict = {
       title: "Compare the two programs", sub: "Same goals to choose from, two moments in the season.",
       heads: [["Pre-season", "Before the season"], ["In-season maintenance", "During the season"]],
       rows: [
-        ["Focus", "Come back strong: base fitness, strength, explosiveness, tapering", "Stay sharp without hurting your club training"],
+        ["Focus", "Be ready for the restart: 8 weeks of progression, up to the taper", "Stay sharp without hurting your club training"],
         ["Duration", "8 weeks", "12 weeks"],
         ["Frequency", "3 to 4 sessions per week", "2 sessions of 30 to 40 min per week"],
       ],
