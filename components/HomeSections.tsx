@@ -73,9 +73,10 @@ export function Founder({ lang }: { lang: Lang }) {
 export function FreeSession({ lang }: { lang: Lang }) {
   const fr = lang === "fr";
   return (
-    <section className="sec wrap">
+    <section className="sec wrap" id="seance-gratuite">
       <form className="free" method="post" action="/api/seance-gratuite">
         <input type="hidden" name="lang" value={lang} />
+        <input className="sr" name="site" tabIndex={-1} autoComplete="off" aria-hidden="true" />
         <div>
           <p className="free-k">{fr ? "Gratuit" : "Free"}</p>
           <h2>{fr ? "Teste une séance avant d'acheter" : "Try a session before you buy"}</h2>

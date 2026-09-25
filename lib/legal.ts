@@ -10,7 +10,7 @@ export const owner = {
   mediator: "[Nom et site web du médiateur de la consommation]",
 };
 
-export const updated = { fr: "23 septembre 2026", en: "23 September 2026" };
+export const updated = { fr: "25 septembre 2026", en: "25 September 2026" };
 
 export type LegalDoc = "notice" | "privacy" | "cgv";
 
@@ -58,6 +58,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           "Lors d'un achat : ton nom, ton adresse email, ton pays, le programme, les objectifs et les options choisis, ainsi que ton prénom, ton âge et ton genre (tu peux choisir de ne pas le préciser). Ces données servent à traiter ta commande, adapter et t'envoyer ton programme, et tenir la comptabilité (base légale : exécution du contrat et obligations comptables). Les données de carte bancaire sont saisies directement chez Stripe : 6M Lab n'y a jamais accès.",
           "Quand tu nous écris par email : ton adresse et le contenu de ton message, pour te répondre (base légale : intérêt légitime).",
           "Après un achat, nous t'envoyons deux questionnaires facultatifs (2 semaines après l'achat et à la fin du programme). Tes réponses servent à améliorer les programmes (base légale : intérêt légitime). Ton témoignage et ta note ne sont publiés sur le site qu'avec ton accord, avec ton seul prénom (base légale : consentement, que tu peux retirer à tout moment en nous écrivant).",
+          "Séance gratuite : ton adresse email et ta langue, pour t'envoyer la séance puis 3 emails de conseils de préparation, espacés sur une dizaine de jours (base légale : consentement, en demandant la séance). Chaque email contient un lien de désinscription en un clic.",
           "Le questionnaire : tes réponses restent dans ton navigateur. Elles ne sont ni envoyées ni enregistrées.",
           "Données techniques : l'hébergeur enregistre des journaux (adresse IP, pages consultées) nécessaires au fonctionnement et à la sécurité du site (base légale : intérêt légitime).",
         ]] },
@@ -73,6 +74,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           "Commandes et factures : 10 ans, durée imposée par les obligations comptables.",
           "Échanges par email : 3 ans après notre dernier échange.",
           "Réponses aux questionnaires : 3 ans. Avis publiés : jusqu'à ce que tu demandes leur retrait.",
+          "Séance gratuite : ton adresse email est conservée 3 ans après ta demande, ou jusqu'à ta désinscription si tu veux qu'elle soit effacée plus tôt (écris-nous).",
           "Journaux techniques : durée limitée fixée par l'hébergeur.",
         ]] },
         { h: "Tes droits", body: [
@@ -165,6 +167,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           "When you buy: your name, email address, country, the program, goals and options you chose, and your first name, age and gender (you can choose not to say). This data is used to process your order, adapt and send your program, and keep the accounts (legal basis: performance of the contract and accounting obligations). Card details are entered directly with Stripe: 6M Lab never has access to them.",
           "When you email us: your address and your message, to reply to you (legal basis: legitimate interest).",
           "After a purchase, we send you two optional questionnaires (2 weeks after the purchase and at the end of the program). Your answers are used to improve the programs (legal basis: legitimate interest). Your review and rating are only published on the website with your consent, with your first name only (legal basis: consent, which you can withdraw at any time by emailing us).",
+          "Free session: your email address and language, to send you the session and then 3 training tips emails over about ten days (legal basis: consent, given by asking for the session). Every email has a one-click unsubscribe link.",
           "The questionnaire: your answers stay in your browser. They are neither sent nor saved.",
           "Technical data: the host keeps logs (IP address, pages viewed) needed to run and secure the website (legal basis: legitimate interest).",
         ]] },
@@ -180,6 +183,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           "Orders and invoices: 10 years, as required by accounting rules.",
           "Email exchanges: 3 years after our last exchange.",
           "Questionnaire answers: 3 years. Published reviews: until you ask for their removal.",
+          "Free session: your email address is kept for 3 years after your request, or less if you ask us to erase it.",
           "Technical logs: a limited period set by the host.",
         ]] },
         { h: "Your rights", body: [

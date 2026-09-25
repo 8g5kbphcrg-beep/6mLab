@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
 import { locales, type Lang } from "@/lib/dict";
 import { programs, programSlugs, type ProgramSlug } from "@/lib/programs";
 import { genders, PACK_EXTRA, prices, RUNNING_PRICE, SECOND_GOAL_PRICE, type Gender } from "@/lib/checkout";
 import { goalName, goalsTitle, hasSecondGoal, validGoals } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
+import { stripe as stripeClient } from "@/lib/feedback";
 
 export async function POST(req: NextRequest) {
   const form = await req.formData();
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 
   const p = programs[lang][slug];
   const meta = { program: slug, goals: goals.join("+"), running: running ? "oui" : "non", ...(pack ? { pack: "oui" } : {}), firstName, age: String(age), gender, lang };
-  const stripe = new Stripe(key);
+  const stripe = stripeClient()!;
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",

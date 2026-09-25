@@ -170,3 +170,48 @@ export async function sendPromoCode(o: { email: string; lang: Lang; firstName: s
   const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: o.email, replyTo: owner.email, subject: fr ? `Ton code de -${promoPercent} %` : `Your ${promoPercent}% discount code`, html, text: [hello, "", l1, l2, code].join("\n") });
   if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
 }
+
+// ---- Free session (home page) -------------------------------------------------------------
+
+const unsubFooter = (lang: Lang, unsub: string) =>
+  `<p style="font-size:12px;color:#5B5673;margin-top:24px">${lang === "fr" ? "Tu reçois cet email parce que tu as demandé la séance gratuite 6M Lab." : "You get this email because you asked for the free 6M Lab session."} <a href="${unsub}" style="color:#5B5673">${lang === "fr" ? "Se désinscrire" : "Unsubscribe"}</a></p>`;
+const leadMail = async (to: string, lang: Lang, unsub: string, subject: string, paras: string[], cta: [string, string] | null, attachments?: { filename: string; content: Buffer }[]) => {
+  const html = frame(`${paras.map((l) => `<p>${l}</p>`).join("")}${cta ? button(cta[1], cta[0]) : ""}${unsubFooter(lang, unsub)}`);
+  const text = [...paras.map((l) => l.replace(/<[^>]+>/g, "")), "", ...(cta ? [`${cta[0]} : ${cta[1]}`] : []), "", `${lang === "fr" ? "Se désinscrire" : "Unsubscribe"} : ${unsub}`].join("\n\n");
+  const info = await transport().sendMail({
+    from: `6M Lab <${MAIL_FROM()}>`, to, replyTo: owner.email, subject, html, text, attachments,
+    headers: { "List-Unsubscribe": `<${unsub}>` },
+  });
+  if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
+};
+
+// The session PDF, right after the request.
+export async function sendFreeSession(to: string, lang: Lang, unsub: string) {
+  const fr = lang === "fr";
+  const content = await readFile(join(process.cwd(), "programmes", "seance-decouverte.pdf"));
+  await leadMail(to, lang, unsub, fr ? "Ta séance gratuite 6M Lab" : "Your free 6M Lab session",
+    fr
+      ? ["Salut,", "Voici ta séance découverte en pièce jointe : 15 minutes de prévention des blessures pour le handball, sans matériel. Touche l'œil à côté de chaque exercice pour le voir en mouvement.", "Fais-la 2 fois par semaine, en fin d'échauffement ou un jour sans handball. Dans les prochains jours, je t'envoie 3 conseils pour mieux te préparer.", "Raphaël, 6M Lab"]
+      : ["Hi,", "Here is your free session, attached: 15 minutes of injury prevention for handball, no equipment. Tap the eye next to each exercise to see it in motion.", "Do it twice a week, at the end of your warm-up or on a day without handball. Over the next few days, I'll send you 3 tips to prepare better.", "Raphaël, 6M Lab"],
+    [fr ? "Voir les programmes complets" : "See the full programs", `${SITE}/${lang}/programmes`],
+    [{ filename: fr ? "6M-Lab-seance-decouverte.pdf" : "6M-Lab-free-session.pdf", content }]);
+}
+
+// The 3 tips, 2, 5 and 9 days after the request.
+export const TIP_DAYS = [2, 5, 9];
+export async function sendTip(to: string, lang: Lang, n: 1 | 2 | 3, unsub: string) {
+  const fr = lang === "fr";
+  const anim = (id: string) => `${SITE}/fr/exercices/${id}`;
+  const tips = {
+    1: fr
+      ? { s: "Le geste qui protège tes genoux", p: ["Salut,", "Au handball, beaucoup de blessures au genou arrivent à la <strong>réception d'un saut</strong> ou lors d'un <strong>changement de direction</strong>, souvent sans aucun contact.", "La règle d'or : à chaque réception, <strong>genoux dans l'axe des orteils</strong>, jamais vers l'intérieur, et une réception silencieuse, en amortissant avec les hanches.", "C'est exactement ce que travaille le « Petit saut, réception stabilisée » de ta séance. Revois-le en animation :"], c: ["Voir l'exercice", anim("saut-reception")] }
+      : { s: "The move that protects your knees", p: ["Hi,", "In handball, many knee injuries happen when <strong>landing from a jump</strong> or <strong>changing direction</strong>, often with no contact at all.", "The golden rule: every time you land, <strong>knees in line with your toes</strong>, never caving in, and a quiet landing, absorbing with your hips.", "That's exactly what the “small jump, stable landing” in your session trains. See it in motion:"], c: ["See the exercise", anim("saut-reception")] },
+    2: fr
+      ? { s: "L'exercice n°1 pour tes ischios", p: ["Salut,", "Les ischios (l'arrière de la cuisse) font partie des muscles qui se blessent le plus dans les sports de sprint, et le handball en est un.", "Le <strong>Nordic ischios</strong> est l'exercice de prévention le mieux étudié : dans les études, les sportifs qui le pratiquent régulièrement ont jusqu'à 2 fois moins de blessures aux ischios.", "Le secret : descendre <strong>le plus lentement possible</strong>, corps droit. Si tu débutes, descends seulement à mi-chemin."], c: ["Voir le Nordic en animation", anim("nordic")] }
+      : { s: "The #1 exercise for your hamstrings", p: ["Hi,", "Hamstrings (the back of the thigh) are among the most injured muscles in sprint sports, and handball is one of them.", "The <strong>Nordic hamstring curl</strong> is the best-studied prevention exercise: in studies, athletes who do it regularly get up to half as many hamstring injuries.", "The secret: lower yourself <strong>as slowly as possible</strong>, body straight. If you're a beginner, only go halfway down."], c: ["See the Nordic in motion", anim("nordic")] },
+    3: fr
+      ? { s: "Où placer ta prépa dans ta semaine", p: ["Salut,", "Une bonne séance mal placée peut te coûter un match. Trois règles simples :", "1. La séance la plus dure <strong>au moins 3 jours avant le match</strong>.<br>2. Une séance plus légère <strong>au plus tard 2 jours avant</strong>.<br>3. <strong>Jamais la veille</strong> d'un match.", "C'est la logique de tous les programmes 6M Lab : chaque séance est écrite en entier et placée pour que tu arrives frais le jour du match. Avant la saison, la <strong>Pré-saison</strong> (8 semaines) ; pendant la saison, le <strong>Maintien</strong> (2 séances courtes par semaine).", "Merci d'avoir suivi ces 3 conseils. Si tu as une question, réponds simplement à cet email.", "Raphaël, 6M Lab"], c: ["Voir les programmes", `${SITE}/fr/programmes`] }
+      : { s: "Where to put your training in your week", p: ["Hi,", "A good session at the wrong time can cost you a game. Three simple rules:", "1. Your hardest session <strong>at least 3 days before the game</strong>.<br>2. A lighter session <strong>no later than 2 days before</strong>.<br>3. <strong>Never the day before</strong> a game.", "That's how every 6M Lab program works: each session is written out in full and placed so you arrive fresh on game day. Before the season, the <strong>Pre-season</strong> (8 weeks); during the season, the <strong>In-season maintenance</strong> (2 short sessions a week).", "Thanks for following these 3 tips. Any question? Just reply to this email.", "Raphaël, 6M Lab"], c: ["See the programs", `${SITE}/en/programmes`] },
+  }[n];
+  await leadMail(to, lang, unsub, tips.s, tips.p, tips.c as [string, string]);
+}
