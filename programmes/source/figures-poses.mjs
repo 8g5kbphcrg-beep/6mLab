@@ -39,7 +39,8 @@ const pushBottom = { ...plankBody(84, { near: { upper: -118, fore: -4, hand: 90 
 
 // Bench press (lying on a bench, feet on the floor).
 // Bottom: elbows about 45° from the trunk (upper arm towards the floor, out and towards the feet).
-const benchPress = (low) => ({ support: BENCH, flatBench: true, torso: -90, head: 0, contact: "near.heel", near: { thigh: 70, shin: -5, upper: low ? 45 : 180, upperOut: low ? 45 : 0, fore: 180, hand: 180 }, gear: ["dumbbells"],
+// Legs apart on each side of the bench, feet flat on the floor.
+const benchPress = (low) => ({ support: BENCH, flatBench: true, torso: -90, head: 0, contact: "near.heel", near: { thigh: 70, thighOut: 24, shin: -5, shinOut: 18, upper: low ? 45 : 180, upperOut: low ? 45 : 0, fore: 180, hand: 180 }, gear: ["dumbbells"],
   solve: [{ vary: ["near.shin", "far.shin"], a: "near.heel", b: "sh", dy: BENCH + 5 }] });
 
 const BENCH_CAM = { yaw: 30, pitch: 18 };
@@ -185,14 +186,14 @@ export const defs = {
   "pont-une-jambe": { poids: [bridge(false, (th) => ({ thigh: th, shin: th, foot: th + 80 })), bridge(true, (th) => ({ thigh: th, shin: th, foot: th + 80 }))] },
   copenhague: {
     cam: SIDE_PLANK_CAM,
-    scene: { all: [{ box: [-18, 36, 34], z: [-128, -92] }] },
+    scene: { all: [{ bench: [-18, 36, 34], z: [-128, -92] }] },
     poids: [
       { lean: 62, head: 0, contact: "near.elbow", lift: 3, pin: ["far.ankle", 0, -108],
         near: { thighOut: -84, shinOut: -84, foot: 90, upper: 0, fore: 90 }, far: { thighOut: 80, shinOut: 80, foot: 90, upper: 180, fore: 180 },
-        solve: [{ vary: ["far.thighOut", "far.shinOut"], a: "far.ankle", b: "near.elbow", dy: -34 }] },
+        solve: [{ vary: ["far.thighOut", "far.shinOut"], a: "far.ankle", b: "near.elbow", dy: -39 }] },
       { lean: 78, head: 0, contact: "near.elbow", lift: 3, pin: ["far.ankle", 0, -108],
         near: { thighOut: -77, shinOut: -77, foot: 90, upper: 0, fore: 90 }, far: { thighOut: 80, shinOut: 80, foot: 90, upper: 180, fore: 180 },
-        solve: [{ vary: ["far.thighOut", "far.shinOut"], a: "far.ankle", b: "near.elbow", dy: -34 }] },
+        solve: [{ vary: ["far.thighOut", "far.shinOut"], a: "far.ankle", b: "near.elbow", dy: -39 }] },
     ],
   },
   // Elbow against the side, bent at 90°: the forearm turns outwards, band anchored on the other side.
@@ -289,6 +290,8 @@ export const defs = {
     scene: { all: [{ box: [-75, 46, 28] }] },
     poids: [
       { lift: 28, pin: ["near.toe", -34], ...STAND },
+      // Stepping off the box: in the air in front of it, arms back.
+      { torso: 6, lift: 30, pin: ["near.toe", 2], ...legs({ thigh: 18, shin: -6, foot: 40 }, { upper: -30, fore: -20 }) },
       { ...crouch(), pin: ["near.toe", 30] },
       { ...air({ lift: 32 }), pin: ["near.toe", 36] },
     ],
@@ -323,7 +326,7 @@ export const defs = {
   "box-jump": {
     loop: "restart",
     scene: { all: [{ box: [70, 48, 40] }] },
-    poids: [crouch(), { ...air({ lift: 52 }), torso: 20, ...legs({ thigh: 75, shin: 0, foot: 80 }, { upper: 150, fore: 150 }), x: 48 }, { ...landing(), lift: 40, pin: ["near.toe", 112] }],
+    poids: [crouch(), { ...air({ lift: 64 }), torso: 20, ...legs({ thigh: 75, shin: 0, foot: 80 }, { upper: 150, fore: 150 }), x: 36 }, { ...landing(), lift: 40, pin: ["near.toe", 112] }],
   },
   "squat-jump-leste": {
     materiel: [
