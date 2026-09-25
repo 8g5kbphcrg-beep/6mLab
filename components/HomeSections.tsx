@@ -54,15 +54,15 @@ export function Founder({ lang }: { lang: Lang }) {
           <p className="founder-k">{fr ? "Qui est derrière 6M Lab" : "Who is behind 6M Lab"}</p>
           <h2>{fr ? "Moi, c'est Raphaël" : "I'm Raphaël"}</h2>
           <p>{fr
-            ? "J'ai passé 5 ans en sport-études handball, dans des structures de haut niveau : 5 entraînements par semaine, aux côtés de joueurs de centres de formation, dont certains jouent aujourd'hui en pro."
-            : "I spent 5 years in an elite handball academy: 5 training sessions a week, alongside academy players, some of whom now play professionally."}</p>
+            ? "J'ai passé 5 ans en structures de haut niveau en handball : 5 entraînements par semaine, aux côtés de joueurs de centres de formation, dont certains jouent aujourd'hui en pro."
+            : "I spent 5 years in elite-level handball programs: 5 training sessions a week, alongside academy players, some of whom now play professionally."}</p>
           <p>{fr
             ? "Cet été, j'ai assuré la préparation physique de l'équipe que j'entraîne. 6M Lab, c'est cette exigence, rendue accessible à tous les handballeurs et handballeuses."
             : "This summer, I ran the physical preparation of the team I coach. 6M Lab brings that standard to every handball player."}</p>
           <ul className="founder-facts">
-            <li>{fr ? "5 ans en sport-études" : "5 years in an elite academy"}</li>
-            <li>{fr ? "Entraîneur et préparateur physique d'une équipe" : "Coach and strength coach of a team"}</li>
-            <li>{fr ? "Étudiant en STAPS, entraînement sportif" : "Sport science student (coaching)"}</li>
+            <li>{fr ? "5 ans en structures de haut niveau" : "5 years at elite level"}</li>
+            <li>{fr ? "Entraîneur et préparateur physique" : "Coach and strength coach"}</li>
+            <li>{fr ? "Formation STAPS, entraînement sportif" : "Sport science training (coaching)"}</li>
           </ul>
         </div>
       </div>
