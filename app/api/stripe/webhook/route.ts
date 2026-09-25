@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
         program: m.program as ProgramSlug,
         goals: (m.goals ?? "").split("+") as GoalId[],
         running: m.running === "oui",
+        pack: m.pack === "oui",
         firstName: m.firstName ?? "",
         age: m.age ?? "",
         gender: m.gender ?? "",

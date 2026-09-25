@@ -3,6 +3,7 @@
 //   seances-<formule>-<obj1>-<obj2>.pdf  every session written out in order + illustrated exercises
 //   seances-<formule>-<obj>.pdf       the same with a single goal
 //   option-course.pdf                 the running option
+//   seance-decouverte.pdf             the free 15-minute prevention session (sent from the home page)
 // Usage: npm run programmes            (all)
 //        npm run programmes -- seances-pre-saison-explosivite-muscle   (one, by file name)
 import { writeFile } from "node:fs/promises";
@@ -93,7 +94,7 @@ const cover = (d) => `<section class="cover">
   <div class="brand"><svg viewBox="${MARK_VIEWBOX}">${markSvg()}</svg><b>${SLOGAN}</b></div>
   <span class="tag">${esc(d.tag)}</span><h1>${esc(d.title)}</h1><p class="sub">${esc(d.subtitle)}</p>
   <div class="meta">${d.meta.map(([k, v]) => `<div>${esc(k)}<strong>${esc(v)}</strong></div>`).join("")}</div>
-  <p class="disc">Document réservé à un usage personnel, ne pas diffuser. Programme destiné aux personnes en bonne santé : en cas de douleur, de blessure ou de doute, arrête et demande l'avis d'un professionnel de santé.</p>
+  <p class="disc">${d.disc ?? "Document réservé à un usage personnel, ne pas diffuser."} Programme destiné aux personnes en bonne santé : en cas de douleur, de blessure ou de doute, arrête et demande l'avis d'un professionnel de santé.</p>
 </section>`;
 
 const page = (d, fontCss, body) => `<!doctype html><html lang="fr"><head><meta charset="utf-8"><style>${fontCss}${css(d.color)}</style></head><body>${cover(d)}${body}</body></html>`;
@@ -154,11 +155,39 @@ const seancesDoc = (fid, pair) => {
 
 const courseDoc = () => ({ file: "option-course", d: optionCourse, body: optionCourse.blocks.map(block).join("\n") });
 
+// The free session offered on the home page: 15 minutes of injury prevention, bodyweight only.
+const decouverteDoc = () => {
+  const nums = new Map();
+  const num = (id) => { if (!exercices[id]) throw new Error("Exercice inconnu : " + id); if (!nums.has(id)) nums.set(id, nums.size + 1); return nums.get(id); };
+  const steps = [
+    { name: "Mise en route", duree: "3 min", rows: [["cheville-mur", "10 par côté", ""], ["ouverture-hanche", "8 par côté", ""]] },
+    { name: "Genoux et chevilles", duree: "5 min", rows: [["equilibre", "2 × 20 s par jambe", "15 s"], ["saut-reception", "2 × 5", "20 s"]] },
+    { name: "Ischios et hanches", duree: "4 min", rows: [["pont-fessier", "2 × 10", "15 s"], ["nordic", "2 × 3", "60 s", "descente courte si tu débutes"]] },
+    { name: "Tronc et épaules", duree: "3 min", rows: [["gainage-lateral", "2 × 20 s par côté", "15 s"], ["ytw", "6 de chaque lettre", ""]] },
+  ];
+  const intro = `<h2>Ta séance découverte</h2>
+  <p>15 minutes, sans matériel, pour protéger les zones qui lâchent le plus souvent au handball : genoux, chevilles, ischios et épaules. C'est un extrait du travail de prévention présent dans chaque séance des programmes 6M Lab.</p>
+  <ul><li><strong>Quand ?</strong> 2 fois par semaine : en fin d'échauffement avant l'entraînement, ou un jour sans handball.</li>
+  <li><strong>Comment ?</strong> Fais les étapes de haut en bas. « 2 × 10 » : 2 séries de 10 répétitions. La dernière colonne indique le repos entre les séries.</li>
+  <li><strong>L'animation ?</strong> Touche l'œil à côté d'un exercice pour le voir en mouvement.</li></ul>
+  <div class="note">La qualité avant tout : un geste propre et contrôlé protège, un geste bâclé ne sert à rien. En cas de douleur, arrête l'exercice.</div>`;
+  const after = `<h2>Et après ?</h2>
+  <p>Cette séance entretient tes articulations. Pour progresser vraiment (explosivité, puissance, condition physique), il faut un programme construit semaine après semaine : c'est ce que proposent les programmes 6M Lab, avec une séance écrite en entier pour chaque jour et une animation pour chaque exercice.</p>
+  <ul><li><strong>Pré-saison</strong> : 8 semaines pour reprendre fort, avant la reprise avec ton club.</li>
+  <li><strong>Maintien en saison</strong> : 2 séances de 30 à 40 min par semaine pour garder ton niveau toute la saison.</li></ul>
+  <p>Découvre-les sur <a href="${SITE}/fr/programmes">${esc(SITE.replace(/^https?:\/\//, ""))}</a>.</p>`;
+  const body = intro + session("Séance prévention · 15 min", steps, num) + after
+    + `<div class="pb"></div><h2>Les exercices</h2><p>Dans l'ordre des numéros de la séance.</p>${[...nums].map(([id, n]) => exerciseCard(n, exercices[id], id)).join("")}`;
+  const d = { disc: "Séance offerte par 6M Lab : tu peux la partager avec tes coéquipiers.", title: "Séance découverte", tag: "Offerte", color: "#2EC4B6", subtitle: "15 minutes de prévention des blessures pour le handball, sans matériel.", meta: [["Durée", "15 min"], ["Matériel", "Aucun"], ["Fréquence", "2 fois par semaine"]] };
+  return { file: "seance-decouverte", d, body };
+};
+
 const pairs = [...ordre.map((a) => [a]), ...ordre.flatMap((a, i) => ordre.slice(i + 1).map((b) => [a, b]))];
 const docs = [
   ...Object.keys(formules).map(guideDoc),
   ...Object.keys(formules).flatMap((fid) => pairs.map((p) => seancesDoc(fid, p))),
   courseDoc(),
+  decouverteDoc(),
 ];
 
 // Anton and Inter, fetched once and embedded so the PDF never depends on a web font loading.

@@ -1,6 +1,7 @@
 import { goalName, type GoalId } from "@/lib/goals";
 import { programs } from "@/lib/programs";
 import { formUrl, paidOrders, questions, stripe, whenDays, DAY, type FeedbackOrder } from "@/lib/feedback";
+import { recentLeads } from "@/lib/leads";
 
 // Customer feedback dashboard: response rates, ratings, answers to every question, reviews to
 // publish, and each order's questionnaires (send now, open, export).
@@ -36,6 +37,7 @@ export default async function AdminAvis() {
     console.error("[admin/avis]", e);
     return <main><h1>Avis clients</h1><p>Impossible de lire les commandes dans Stripe : {e instanceof Error ? e.message : String(e)}</p></main>;
   }
+  const leads = await recentLeads(s, Math.floor(Date.now() / 1000) - 365 * DAY).catch(() => []);
   const mid = orders.filter((o) => o.meta.m_at), end = orders.filter((o) => o.meta.f_at);
   const sentMid = orders.filter((o) => o.meta.s_mid).length, sentEnd = orders.filter((o) => o.meta.s_end).length;
   const stars = end.map((o) => Number(o.meta.f_stars)).filter(Boolean);
@@ -54,6 +56,7 @@ export default async function AdminAvis() {
         <div className="kpi"><b>{avg}{stars.length ? " / 5" : ""}</b><span>Note moyenne ({stars.length} avis)</span></div>
         <div className="kpi"><b>{npsScore ?? "–"}</b><span>Score de recommandation (NPS, de -100 à 100)</span></div>
         <div className="kpi"><b>{mid.length} / {sentMid}</b><span>Questionnaire 1 : réponses / envois ({pct(mid.length, sentMid)} %)</span></div>
+        <div className="kpi"><b>{leads.length}</b><span>Séances gratuites demandées (12 mois), dont {leads.filter((l) => l.meta.unsub).length} désinscrits</span></div>
         <div className="kpi"><b>{end.length} / {sentEnd}</b><span>Questionnaire 2 : réponses / envois ({pct(end.length, sentEnd)} %)</span></div>
       </div>
 

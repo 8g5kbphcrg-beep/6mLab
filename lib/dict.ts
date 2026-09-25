@@ -5,9 +5,9 @@ export const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://6mlab.com";
 export const dict = {
   fr: {
     title: "6M Lab | Préparation physique handball",
-    desc: "Programmes de préparation physique pour les joueurs et joueuses de handball : pré-saison et maintien en saison, conçus par un joueur étudiant en STAPS.",
-    nav: { cmp: "Comparer", goal: "Ton objectif", other: "EN", skip: "Aller au contenu" },
-    hero: { h1: "Prépare ta saison de handball comme au haut niveau", sub: "Des programmes de préparation physique conçus par un joueur, étudiant en STAPS.", cta: "Comparer les deux formules", trust: "Conçu par un joueur de handball, étudiant en STAPS (entraînement sportif)." },
+    desc: "Programmes de préparation physique pour les joueurs et joueuses de handball : pré-saison et maintien en saison, conçus par Raphaël, 5 ans en sport-études handball.",
+    nav: { cmp: "Comparer", goal: "Trouver mon programme", other: "EN", skip: "Aller au contenu" },
+    hero: { h1: "La prépa physique du haut niveau, pour ta saison de handball", sub: "Des programmes conçus par Raphaël, 5 ans en sport-études handball. Chaque exercice est animé, chaque semaine est planifiée.", cta: "Voir les programmes", trust: "5 ans en sport-études handball", foot: "La préparation physique du haut niveau, pour tous les handballeurs. Par Raphaël, 5 ans en sport-études handball." },
     cmp: {
       title: "Compare les deux formules", sub: "Les mêmes objectifs au choix, deux moments de la saison.",
       heads: [["Pré-saison", "Avant la saison"], ["Maintien en saison", "Pendant la saison"]],
@@ -35,9 +35,9 @@ export const dict = {
   },
   en: {
     title: "6M Lab | Handball Performance & Physical Training",
-    desc: "Physical training programs for handball players: pre-season and in-season plans, designed by a sport-science student who plays.",
-    nav: { cmp: "Compare", goal: "Your goal", other: "FR", skip: "Skip to content" },
-    hero: { h1: "Train for your handball season like the elite", sub: "Physical training programs built by a player who studies sport science.", cta: "Compare the two programs", trust: "Built by a handball player studying sport science (training and coaching)." },
+    desc: "Physical training programs for handball players: pre-season and in-season plans, designed by Raphaël, 5 years in an elite handball academy.",
+    nav: { cmp: "Compare", goal: "Find my program", other: "FR", skip: "Skip to content" },
+    hero: { h1: "Elite-level physical prep for your handball season", sub: "Programs built by Raphaël, 5 years in an elite handball academy. Every exercise animated, every week planned.", cta: "See the programs", trust: "5 years in an elite handball academy", foot: "Elite-level physical preparation for every handball player. By Raphaël, 5 years in an elite handball academy." },
     cmp: {
       title: "Compare the two programs", sub: "Same goals to choose from, two moments in the season.",
       heads: [["Pre-season", "Before the season"], ["In-season maintenance", "During the season"]],

@@ -39,7 +39,7 @@ export default async function RootLayout({ children, params }: { children: React
   const fr = lang === "fr";
   const links: [string, string][] = [
     [`/${lang}/programmes`, fr ? "Programmes" : "Programs"],
-    [`/${lang}#objectif`, d.nav.goal],
+    [`/${lang}/questionnaire`, d.nav.goal],
     ...(fr ? [["/fr/conseils", "Conseils"] as [string, string]] : []),
     [fr ? "/fr/a-propos" : "/en/about", fr ? "À propos" : "About"],
     [`/${lang}/contact`, "Contact"],
@@ -78,7 +78,7 @@ export default async function RootLayout({ children, params }: { children: React
           <div className="fwrap">
             <div>
               <Link href={`/${lang}`} className="logo" aria-label="6M Lab"><Lockup size={54} /></Link>
-              <p>{d.hero.trust}</p>
+              <p>{d.hero.foot}</p>
             </div>
             <nav aria-label={fr ? "Site" : "Site"}>
               <p className="flab">{fr ? "Site" : "Site"}</p>

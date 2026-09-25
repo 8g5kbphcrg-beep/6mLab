@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
 import { locales, type Lang } from "@/lib/dict";
 import { programs, programSlugs, type ProgramSlug } from "@/lib/programs";
-import { genders, prices, RUNNING_PRICE, SECOND_GOAL_PRICE, type Gender } from "@/lib/checkout";
+import { genders, PACK_EXTRA, prices, RUNNING_PRICE, SECOND_GOAL_PRICE, type Gender } from "@/lib/checkout";
 import { goalName, goalsTitle, hasSecondGoal, validGoals } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
+import { stripe as stripeClient } from "@/lib/feedback";
 
 export async function POST(req: NextRequest) {
   const form = await req.formData();
@@ -12,6 +12,7 @@ export async function POST(req: NextRequest) {
   const slug = form.get("program") as ProgramSlug;
   const goals = form.getAll("goal").map(String);
   const running = form.get("running") === "on";
+  const pack = form.get("pack") === "on" && slug === "pre-saison";
   const firstName = String(form.get("firstName") ?? "").trim().slice(0, 50);
   const age = Number(form.get("age"));
   const gender = String(form.get("gender")) as Gender;
@@ -27,8 +28,8 @@ export async function POST(req: NextRequest) {
   if (!key || (key.startsWith("sk_live_") && process.env.STRIPE_ALLOW_LIVE !== "1")) return back("indisponible");
 
   const p = programs[lang][slug];
-  const meta = { program: slug, goals: goals.join("+"), running: running ? "oui" : "non", firstName, age: String(age), gender, lang };
-  const stripe = new Stripe(key);
+  const meta = { program: slug, goals: goals.join("+"), running: running ? "oui" : "non", ...(pack ? { pack: "oui" } : {}), firstName, age: String(age), gender, lang };
+  const stripe = stripeClient()!;
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
@@ -46,6 +47,13 @@ export async function POST(req: NextRequest) {
           currency: "eur",
           unit_amount: SECOND_GOAL_PRICE,
           product_data: { name: lang === "fr" ? "Deuxième objectif" : "Second goal", description: goalName(goals[1], lang) },
+        },
+      }] : []), ...(pack ? [{
+        quantity: 1,
+        price_data: {
+          currency: "eur",
+          unit_amount: PACK_EXTRA,
+          product_data: { name: `6M Lab · ${programs[lang]["maintien-saison"].name}`, description: lang === "fr" ? `Pack Saison complète · ${goalsTitle(goals, lang)} · 12 semaines` : `Full season pack · ${goalsTitle(goals, lang)} · 12 weeks` },
         },
       }] : []), ...(running ? [{
         quantity: 1,

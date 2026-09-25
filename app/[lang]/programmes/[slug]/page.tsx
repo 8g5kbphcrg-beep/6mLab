@@ -9,7 +9,7 @@ import { testMode } from "@/lib/checkout";
 import { validGoals } from "@/lib/goals";
 import "@/app/programme.css";
 
-type P = { params: Promise<{ lang: string; slug: string }>; searchParams?: Promise<{ paiement?: string; objectifs?: string }> };
+type P = { params: Promise<{ lang: string; slug: string }>; searchParams?: Promise<{ paiement?: string; objectifs?: string; pack?: string }> };
 
 // Rebuilt every hour at most, to show newly published reviews.
 export const revalidate = 3600;
@@ -45,7 +45,7 @@ export default async function Programme({ params, searchParams }: P) {
           <ul className={b ? "pinc b" : "pinc"}>{p.includes.map((i) => <li key={i}>{i}</li>)}</ul>
         </header>
         <aside className="pside">
-          <BuyForm lang={lang as Lang} slug={slug as ProgramSlug} goals={validGoals(pre) ? pre : []} test={testMode} error={sp?.paiement} />
+          <BuyForm lang={lang as Lang} slug={slug as ProgramSlug} goals={validGoals(pre) ? pre : []} pack={sp?.pack === "1"} test={testMode} error={sp?.paiement} />
           <p className="pquiz">{fr ? "Tu hésites sur tes objectifs ?" : "Not sure about your goals?"} <Link href={`/${lang}/questionnaire`}>{fr ? "Fais le questionnaire" : "Take the questionnaire"}</Link></p>
         </aside>
         <div className="pmain">
