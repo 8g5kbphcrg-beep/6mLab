@@ -14,13 +14,14 @@ export const validEmail = (e: string) => e.length <= 254 && /^[^\s@]+@[^\s@]+\.[
 // Finds the lead for this email, or creates it. A lead who had unsubscribed and asks again is
 // subscribed again. kind: "seance" (free session, then 3 tips) or "forme" (waiting list of the
 // fitness program: one email on launch day, nothing before).
-export async function addLead(s: Stripe, email: string, lang: Lang, kind: "seance" | "forme" = "seance"): Promise<Lead> {
+// extra: more metadata to save (the questionnaire answers), replacing earlier ones.
+export async function addLead(s: Stripe, email: string, lang: Lang, kind: "seance" | "forme" = "seance", extra: Record<string, string> = {}): Promise<Lead> {
   // customers.list is up to date immediately (search can lag by a minute).
   const c = (await s.customers.list({ email, limit: 20 })).data.find((x) => x.metadata?.lead === kind);
   if (c) {
-    return toLead(c.metadata?.unsub ? await s.customers.update(c.id, { metadata: { unsub: "" } }) : c);
+    return toLead(c.metadata?.unsub || Object.keys(extra).length ? await s.customers.update(c.id, { metadata: { unsub: "", ...extra } }) : c);
   }
-  return toLead(await s.customers.create({ email, metadata: { lead: kind, lang, lead_at: new Date().toISOString() } }));
+  return toLead(await s.customers.create({ email, metadata: { lead: kind, lang, lead_at: new Date().toISOString(), ...extra } }));
 }
 
 // Leads created since `since` (Stripe search, newest first).

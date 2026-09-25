@@ -2,6 +2,7 @@ import { goalName, type GoalId } from "@/lib/goals";
 import { programs } from "@/lib/programs";
 import { formUrl, paidOrders, questions, stripe, whenDays, DAY, type FeedbackOrder } from "@/lib/feedback";
 import { recentLeads } from "@/lib/leads";
+import { goals as fitGoals, type FitGoal } from "@/lib/forme";
 
 // Customer feedback dashboard: response rates, ratings, answers to every question, reviews to
 // publish, and each order's questionnaires (send now, open, export).
@@ -58,7 +59,7 @@ export default async function AdminAvis() {
         <div className="kpi"><b>{npsScore ?? "–"}</b><span>Score de recommandation (NPS, de -100 à 100)</span></div>
         <div className="kpi"><b>{mid.length} / {sentMid}</b><span>Questionnaire 1 : réponses / envois ({pct(mid.length, sentMid)} %)</span></div>
         <div className="kpi"><b>{leads.length}</b><span>Séances gratuites demandées (12 mois), dont {leads.filter((l) => l.meta.unsub).length} désinscrits</span></div>
-        <div className="kpi"><b>{waiting.filter((l) => !l.meta.unsub).length}</b><span>Inscrits à la liste d'attente Forme & bien-être</span></div>
+        <div className="kpi"><b>{waiting.filter((l) => !l.meta.unsub).length}</b><span>Inscrits à la liste d'attente Forme & bien-être{waiting.some((l) => l.meta.q_goal) ? ` · objectifs : ${Object.entries(waiting.reduce<Record<string, number>>((m, l) => (l.meta.q_goal ? { ...m, [l.meta.q_goal]: (m[l.meta.q_goal] ?? 0) + 1 } : m), {})).sort((x, y) => y[1] - x[1]).map(([g, c]) => `${fitGoals[g as FitGoal]?.name.fr ?? g} ${c}`).join(", ")}` : ""}</span></div>
         <div className="kpi"><b>{end.length} / {sentEnd}</b><span>Questionnaire 2 : réponses / envois ({pct(end.length, sentEnd)} %)</span></div>
       </div>
 
