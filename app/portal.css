@@ -9,26 +9,26 @@
 .uni-c h3{font-size:clamp(1.8rem,5vw,2.4rem);margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .8rem}
 .uni-k{margin:0;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em}
 .uni-p{margin:0}
-.spec{background:var(--sky);color:#F3F1FB}.spec .uni-k{color:#FFC75F}.spec .uni-p{color:#CFC8EE}
-.fit{background:var(--card);border:2px solid var(--B)}.fit .uni-k{color:var(--Bt)}.fit .uni-p{color:var(--muted)}
+.spec{background:color-mix(in srgb,var(--A) 9%,var(--card));border:2px solid var(--A)}.spec .uni-k{color:var(--At)}.spec .uni-p{color:var(--muted)}
+.fit{background:color-mix(in srgb,var(--B) 9%,var(--card));border:2px solid var(--B)}.fit .uni-k{color:var(--Bt)}.fit .uni-p{color:var(--muted)}
 .uni-st{font:700 .8rem var(--font-text),sans-serif;background:var(--band);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:.25rem .7rem;letter-spacing:0}
-.sport{display:grid;grid-template-columns:76px 1fr;gap:.4rem 1rem;align-items:center;background:#fff;color:#100A24;border-radius:18px;padding:1rem;text-decoration:none;margin-top:.4rem;transition:transform .2s}
+.sport{display:grid;grid-template-columns:76px 1fr;gap:.4rem 1rem;align-items:center;background:#fff;color:#100A24;border:1px solid var(--line);border-radius:18px;padding:1rem;text-decoration:none;margin-top:.4rem;transition:transform .2s;box-shadow:var(--shadow)}
 @media(hover:hover){.sport:hover{transform:translateY(-3px)}}
 .sport-fig{height:84px;display:flex;align-items:center;justify-content:center;border-bottom:4px solid var(--A)}.sport-fig svg{height:100%;width:auto;max-width:100%}
 .sport-t strong{display:block;font:400 1.9rem/1 var(--font-display),sans-serif}.sport-t span{color:#5B5673;font-size:.9rem}
 .sport .btn{grid-column:1/-1;justify-self:stretch;text-align:center;padding:.7rem 1rem;font-size:.95rem;margin-top:.3rem}
 .soon{list-style:none;padding:0;margin:.2rem 0 0;display:grid;gap:.5rem}
-.soon li{display:flex;align-items:center;gap:.7rem;background:rgba(255,255,255,.08);border:1px dashed rgba(255,255,255,.28);border-radius:14px;padding:.7rem .9rem;color:#CFC8EE;font-weight:600;cursor:not-allowed}
+.soon li{display:flex;align-items:center;gap:.7rem;background:color-mix(in srgb,var(--card) 60%,transparent);border:1.5px dashed var(--line);border-radius:14px;padding:.7rem .9rem;color:var(--muted);font-weight:600;cursor:not-allowed}
 .soon-e{font-size:1.3rem;filter:grayscale(1);opacity:.7}
-.soon b{margin-left:auto;font-size:.75rem;background:rgba(255,255,255,.14);color:#F3F1FB;border-radius:999px;padding:.2rem .6rem;white-space:nowrap}
+.soon b{margin-left:auto;font-size:.75rem;background:var(--band);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:.2rem .6rem;white-space:nowrap}
 .fit-goals{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:.4rem}
-.fit-goals li{background:var(--band);border:1px solid var(--line);border-radius:999px;padding:.35rem .8rem;font-size:.9rem;font-weight:600}
+.fit-goals li{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:.35rem .8rem;font-size:.9rem;font-weight:600}
 .fit-where{margin:.3rem 0 0;font-weight:700}
 .place{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
-.place span{display:grid;justify-items:center;text-align:center;gap:.2rem;border:1.5px solid var(--line);border-radius:14px;padding:.8rem .5rem;background:var(--bg)}
+.place span{display:grid;justify-items:center;text-align:center;gap:.2rem;border:1.5px solid var(--line);border-radius:14px;padding:.8rem .5rem;background:var(--card)}
 .place svg{width:30px;height:30px;color:var(--Bt)}.place strong{font-size:1rem}.place small{color:var(--muted);font-size:.8rem;line-height:1.3}
 .notify{display:grid;gap:.6rem;margin-top:.4rem}
-.notify input[type=email]{font:inherit;padding:.85rem 1rem;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink)}
+.notify input[type=email]{font:inherit;padding:.85rem 1rem;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink)}
 .notify .btn{background:var(--B)}.notify .note{margin:0;font-size:.8rem}
 @media(min-width:900px){
   .uni{grid-template-columns:1fr 1fr;align-items:stretch}
