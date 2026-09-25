@@ -11,7 +11,7 @@ Chaque commande reçoit :
 `<lieu>` : `maison` ou `salle`, choisi à l'achat. Les exercices, leurs dessins, les dosages et les
 consignes suivent le tableau des correspondances validé (`source/lieux.mjs`) : poids du corps,
 objets du quotidien et variante élastique à la maison ; haltères, barre, poulies et tapis de course
-manuel (ou une alternative) en salle.
+incurvé (ou une alternative) en salle.
 
 Les séances existent aussi en 3 silhouettes pour les animations, selon le genre indiqué à l'achat :
 `seances-…-<lieu>.pdf` (neutre, « je préfère ne pas le dire »), `seances-…-<lieu>-femme.pdf` et

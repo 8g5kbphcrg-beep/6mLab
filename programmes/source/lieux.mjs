@@ -22,9 +22,9 @@ const more = (k, note = "") => (dose) => {
 };
 const slow = " · descente en 3 s";
 
-// Running exercises at the gym: a manual (curved, non-motorised) treadmill if the gym has one,
+// Running exercises at the gym: a curved (non-motorised) treadmill if the gym has one,
 // otherwise the alternative.
-const tapis = (onTreadmill, otherwise) => ({ how: `Sur un **tapis de course manuel** (non motorisé : c'est toi qui fais tourner la bande), si ta salle en a un : ${onTreadmill} Sinon : ${otherwise}` });
+const tapis = (onTreadmill, otherwise) => ({ how: `Sur un **tapis de course incurvé** (non motorisé, en forme de courbe : c'est toi qui fais tourner la bande), si ta salle en a un : ${onTreadmill} Sinon : ${otherwise}` });
 
 export const parLieu = {
   // ---- Bas du corps --------------------------------------------------------------------------

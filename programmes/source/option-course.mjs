@@ -10,10 +10,10 @@ export default {
     { h2: "À quoi sert cette option" },
     { p: "La course construit le « moteur » : un cœur et des muscles qui récupèrent plus vite entre deux actions. Ces séances complètent ton programme principal sans le remplacer." },
     { lieu: "salle", h3: "À la salle de sport" },
-    { lieu: "salle", p: "Le mieux est un **tapis de course manuel** (non motorisé : c'est toi qui fais tourner la bande, sans vitesse imposée). Il se règle avec les mêmes repères d'allure que dehors, et les accélérations se font naturellement." },
+    { lieu: "salle", p: "Le mieux est un **tapis de course incurvé** (non motorisé, en forme de courbe : c'est toi qui fais tourner la bande, sans vitesse imposée). Il se règle avec les mêmes repères d'allure que dehors, et les accélérations se font naturellement." },
     { lieu: "salle", ul: [
-      "**Pas de tapis manuel** : tapis motorisé pour les footings et le tempo (1 % de pente), vélo d'assaut (air bike) ou rameur pour les intervalles, avec les mêmes temps d'effort et de récupération.",
-      "**Côtes** : sur le tapis manuel, 15 à 20 secondes de poussée à fond ; sinon, sprints de 15 secondes sur le vélo d'assaut.",
+      "**Pas de tapis incurvé** : tapis motorisé pour les footings et le tempo (1 % de pente), vélo d'assaut (air bike) ou rameur pour les intervalles, avec les mêmes temps d'effort et de récupération.",
+      "**Côtes** : sur le tapis incurvé, 15 à 20 secondes de poussée à fond ; sinon, sprints de 15 secondes sur le vélo d'assaut.",
       "Les zones d'allure restent les mêmes : facile, soutenue, intense.",
     ] },
     { h3: "Où les placer dans ta semaine" },

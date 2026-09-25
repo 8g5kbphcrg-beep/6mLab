@@ -29,7 +29,7 @@ export const buy = {
   fr: {
     step1: "Tes objectifs", stepPlace: "Où t'entraînes-tu ?", step2: "Options", step3: "Ton profil", step4: "Récapitulatif",
     placeHint: "Les exercices, leurs animations et les dosages de ton programme sont adaptés à ton lieu d'entraînement.",
-    places: { maison: ["Maison", "Poids du corps et objets du quotidien, avec des variantes à l'élastique."], salle: ["Salle de sport", "Haltères, barre, poulies. La course sur tapis manuel, ou une alternative."] },
+    places: { maison: ["Maison", "Poids du corps et objets du quotidien, avec des variantes à l'élastique."], salle: ["Salle de sport", "Haltères, barre, poulies. La course sur tapis de course incurvé, ou une alternative."] },
     placeLb: "Lieu",
     profileHint: "Pour adapter ton programme et te l'envoyer à ton nom. Les silhouettes des animations suivent ton genre (neutres si tu préfères ne pas le dire).",
     firstName: "Prénom", age: "Âge", gender: "Genre",
@@ -55,7 +55,7 @@ export const buy = {
   en: {
     step1: "Your goals", stepPlace: "Where do you train?", step2: "Options", step3: "About you", step4: "Summary",
     placeHint: "The exercises, their animations and the dosages of your program are adapted to where you train.",
-    places: { maison: ["Home", "Bodyweight and everyday objects, with resistance band variations."], salle: ["Gym", "Dumbbells, barbell, cables. Running on a manual treadmill, or an alternative."] },
+    places: { maison: ["Home", "Bodyweight and everyday objects, with resistance band variations."], salle: ["Gym", "Dumbbells, barbell, cables. Running on a curved treadmill, or an alternative."] },
     placeLb: "Place",
     profileHint: "So we can adapt your program and send it in your name. The figures in the animations match your gender (neutral if you'd rather not say).",
     firstName: "First name", age: "Age", gender: "Gender",

@@ -23,7 +23,7 @@ const niveaux = [
 const materiel = [
   { h3: "Matériel" },
   { lieu: "maison", p: "Ton programme est fait pour la maison : poids du corps et objets du quotidien (sac à dos lesté, chaise, canapé, table solide, bouteille d'eau). Un **élastique de résistance** (léger, moyen et fort) est conseillé : les fiches exercices indiquent la variante élastique quand elle existe." },
-  { lieu: "salle", p: "Ton programme est fait pour la salle de sport : haltères, barre, banc, poulies, caisse de pliométrie, médecine-ball. Pour la course, utilise un **tapis de course manuel** (non motorisé : c'est toi qui fais tourner la bande) si ta salle en a un ; sinon, chaque fiche indique une alternative (vélo d'assaut, rameur)." },
+  { lieu: "salle", p: "Ton programme est fait pour la salle de sport : haltères, barre, banc, poulies, caisse de pliométrie, médecine-ball. Pour la course, utilise un **tapis de course incurvé** (non motorisé, en forme de courbe : c'est toi qui fais tourner la bande) si ta salle en a un ; sinon, chaque fiche indique une alternative (vélo d'assaut, rameur)." },
 ];
 
 const documents = (seances) => [
