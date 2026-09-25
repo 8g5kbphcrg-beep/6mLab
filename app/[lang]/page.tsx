@@ -15,13 +15,13 @@ export const revalidate = 3600;
 
 const t = {
   fr: {
-    h1: "La préparation physique du haut niveau, pour tous",
-    lead: "Des programmes planifiés semaine par semaine, avec chaque exercice animé : pour préparer ta saison, ou simplement te sentir mieux dans ton corps.",
+    h1: "Ton corps, ton rythme, ton programme",
+    lead: "Que tu prépares une saison ou que tu veuilles simplement te sentir mieux : des séances planifiées, adaptées à ton niveau et à ton temps, avec chaque exercice animé.",
     cta: "Choisis ton programme",
-    trust: ["5 ans en structures de haut niveau", "Chaque exercice animé", "Paiement sécurisé"],
+    trust: ["Adapté à ton niveau", "Chaque exercice animé", "Paiement sécurisé"],
     choose: "Choisis le programme qui te correspond",
     chooseSub: "Deux façons de t'entraîner avec 6M Lab.",
-    spec: { k: "Préparation spécifique", h: "Prépare-toi pour ton sport", p: "Des programmes construits pour les exigences de ton sport : sauts, appuis, duels, prévention des blessures, avant et pendant la saison." },
+    spec: { k: "Préparation spécifique", h: "La prépa physique du haut niveau, pour ton sport", p: "Des programmes construits pour les exigences de ton sport : sauts, appuis, duels, prévention des blessures, avant et pendant la saison." },
     hb: { name: "Handball", meta: (p: string) => `Pré-saison, Maintien en saison, Pack Saison complète · dès ${p}`, go: "Découvrir le handball" },
     soon: "Bientôt disponible",
     sports: [["⚽", "Football"], ["🏀", "Basketball"], ["🥊", "Sports de combat"]],
@@ -32,16 +32,16 @@ const t = {
       status: "En préparation", quiz: "Réponds au questionnaire pour trouver ton programme", quizNote: "10 questions · 2 minutes · objectif, niveau, lieu et temps disponible",
     },
     why: "Pourquoi 6M Lab",
-    whys: [["Planifié", "Chaque semaine est construite pour progresser sans t'épuiser : pas de séances au hasard."], ["Animé", "Chaque exercice a son animation : tu sais exactement quoi faire, même seul."], ["Exigeant", "Les méthodes des structures de haut niveau, expliquées simplement."]],
+    whys: [["Planifié", "Chaque semaine est construite pour progresser sans t'épuiser : pas de séances au hasard."], ["Animé", "Chaque exercice a son animation : tu sais exactement quoi faire, même seul."], ["Adapté", "À ton niveau, à ton lieu d'entraînement et au temps que tu as : c'est le programme qui s'adapte à toi."]],
   },
   en: {
-    h1: "Elite-level physical preparation, for everyone",
-    lead: "Programs planned week by week, with every exercise animated: to prepare your season, or simply to feel better in your body.",
+    h1: "Your body, your pace, your program",
+    lead: "Whether you are preparing a season or simply want to feel better: planned sessions, adapted to your level and your time, with every exercise animated.",
     cta: "Choose your program",
-    trust: ["5 years at elite level", "Every exercise animated", "Secure payment"],
+    trust: ["Adapted to your level", "Every exercise animated", "Secure payment"],
     choose: "Choose the program that fits you",
     chooseSub: "Two ways to train with 6M Lab.",
-    spec: { k: "Sport-specific preparation", h: "Get ready for your sport", p: "Programs built for the demands of your sport: jumps, footwork, duels, injury prevention, before and during the season." },
+    spec: { k: "Sport-specific preparation", h: "Elite-level physical prep, for your sport", p: "Programs built for the demands of your sport: jumps, footwork, duels, injury prevention, before and during the season." },
     hb: { name: "Handball", meta: (p: string) => `Pre-season, In-season, Full season pack · from ${p}`, go: "Explore handball" },
     soon: "Coming soon",
     sports: [["⚽", "Football"], ["🏀", "Basketball"], ["🥊", "Combat sports"]],
@@ -52,7 +52,7 @@ const t = {
       status: "In preparation", quiz: "Take the questionnaire to find your program", quizNote: "10 questions · 2 minutes · goal, level, place and available time",
     },
     why: "Why 6M Lab",
-    whys: [["Planned", "Every week is built to make you progress without wearing you out: no random workouts."], ["Animated", "Every exercise has its animation: you know exactly what to do, even alone."], ["Demanding", "Methods from elite-level programs, explained simply."]],
+    whys: [["Planned", "Every week is built to make you progress without wearing you out: no random workouts."], ["Animated", "Every exercise has its animation: you know exactly what to do, even alone."], ["Adapted", "To your level, where you train and the time you have: the program adapts to you."]],
   },
 };
 
