@@ -37,3 +37,4 @@
   .sport{grid-template-columns:110px 1fr}.sport-fig{grid-row:span 2;height:110px}
   .sport .btn{grid-column:2;justify-self:start;margin-top:0}
 }
+.fit-go{background:var(--B);text-align:center;margin-top:.6rem}.fit-note{margin:0;font-size:.82rem;text-align:center}

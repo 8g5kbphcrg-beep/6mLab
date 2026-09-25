@@ -27,9 +27,9 @@ const t = {
     sports: [["⚽", "Football"], ["🏀", "Basketball"], ["🥊", "Sports de combat"]],
     fit: {
       k: "Accessible à tous", h: "Forme & bien-être", p: "Pas besoin d'être sportif : un programme pour te remettre en forme, à ton rythme, sans objectif de performance.",
-      goals: ["Perte de poids", "Prise de muscle", "Remise en forme", "Renforcement & posture"],
+      goals: ["Perdre du poids", "Prendre du muscle", "Me remettre en forme", "Tonifier", "Dos & posture", "Équilibre & autonomie"],
       where: "Chez toi ou à la salle, au choix", home: "Maison", homeD: "Poids du corps, variantes élastique", gym: "Salle", gymD: "Haltères et machines",
-      status: "En préparation", notify: "Préviens-moi du lancement", email: "Ton adresse email", note: "Un seul email, le jour du lancement. Désinscription en un clic.",
+      status: "En préparation", quiz: "Réponds au questionnaire pour trouver ton programme", quizNote: "10 questions · 2 minutes · objectif, niveau, lieu et temps disponible",
     },
     why: "Pourquoi 6M Lab",
     whys: [["Planifié", "Chaque semaine est construite pour progresser sans t'épuiser : pas de séances au hasard."], ["Animé", "Chaque exercice a son animation : tu sais exactement quoi faire, même seul."], ["Exigeant", "Les méthodes des structures de haut niveau, expliquées simplement."]],
@@ -47,9 +47,9 @@ const t = {
     sports: [["⚽", "Football"], ["🏀", "Basketball"], ["🥊", "Combat sports"]],
     fit: {
       k: "For everyone", h: "Fitness & well-being", p: "No need to be an athlete: a program to get back in shape at your own pace, with no performance goal.",
-      goals: ["Weight loss", "Muscle gain", "Getting back in shape", "Strength & posture"],
+      goals: ["Lose weight", "Build muscle", "Get back in shape", "Tone up", "Back & posture", "Balance & independence"],
       where: "At home or at the gym, your choice", home: "Home", homeD: "Bodyweight, band variations", gym: "Gym", gymD: "Dumbbells and machines",
-      status: "In preparation", notify: "Tell me when it launches", email: "Your email address", note: "One email, on launch day. Unsubscribe in one click.",
+      status: "In preparation", quiz: "Take the questionnaire to find your program", quizNote: "10 questions · 2 minutes · goal, level, place and available time",
     },
     why: "Why 6M Lab",
     whys: [["Planned", "Every week is built to make you progress without wearing you out: no random workouts."], ["Animated", "Every exercise has its animation: you know exactly what to do, even alone."], ["Demanding", "Methods from elite-level programs, explained simply."]],
@@ -112,15 +112,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
               <span><House /><strong>{x.fit.home}</strong><small>{x.fit.homeD}</small></span>
               <span><Dumbbell /><strong>{x.fit.gym}</strong><small>{x.fit.gymD}</small></span>
             </div>
-            <form className="notify" method="post" action="/api/liste-attente">
-              <input type="hidden" name="lang" value={l} />
-              <input type="hidden" name="liste" value="forme" />
-              <input className="sr" name="site" tabIndex={-1} autoComplete="off" aria-hidden="true" />
-              <label className="sr" htmlFor="notify-email">Email</label>
-              <input id="notify-email" name="email" type="email" required autoComplete="email" placeholder={x.fit.email} />
-              <button className="btn" type="submit">{x.fit.notify}</button>
-              <p className="note">{x.fit.note}</p>
-            </form>
+            <Link href={`/${l}/forme/questionnaire`} className="btn fit-go">{x.fit.quiz}</Link>
+            <p className="note fit-note">{x.fit.quizNote}</p>
           </article>
         </div>
       </section>
