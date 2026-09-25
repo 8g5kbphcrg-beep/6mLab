@@ -62,36 +62,3 @@ export const ageAdaptations = (age: number, lang: Lang): string[] => {
   if (age > 0 && age < 18) out.push(fr ? "Programme adapté aux moins de 18 ans, avec l'accord d'un parent" : "Program adapted to under-18s, with a parent's consent");
   return out;
 };
-
-// Silhouette drawing (front view, viewBox 0 0 100 200): torso, arms and legs from a few widths.
-type Body = { s: number; w: number; h: number; t: number; a: number; b?: number };
-const F: Body[] = [{ s: 14, w: 9.5, h: 16, t: 7.5, a: 3 }, { s: 15, w: 12, h: 18.5, t: 9, a: 3.6 }, { s: 16.5, w: 15.5, h: 21.5, t: 10.5, a: 4.4, b: 2 }, { s: 18, w: 19, h: 24.5, t: 12.5, a: 5.3, b: 4 }, { s: 19.5, w: 23, h: 27.5, t: 14.5, a: 6.3, b: 6 }];
-const M: Body[] = [{ s: 16.5, w: 10.5, h: 13.5, t: 7.5, a: 3.4 }, { s: 18, w: 13.5, h: 15.5, t: 9, a: 4 }, { s: 19, w: 17.5, h: 18, t: 10.5, a: 4.8, b: 3 }, { s: 20.5, w: 21.5, h: 20.5, t: 12, a: 5.6, b: 5 }, { s: 22, w: 25.5, h: 23.5, t: 13.5, a: 6.6, b: 7 }];
-const FT: Body[] = [{ s: 14, w: 9.5, h: 16, t: 7.5, a: 3 }, { s: 15, w: 10.5, h: 17, t: 8.5, a: 3.6 }, { s: 16.5, w: 11, h: 17.5, t: 9.5, a: 4.2 }, { s: 18, w: 11.5, h: 18.5, t: 10.5, a: 5 }, { s: 19.5, w: 12, h: 19, t: 12, a: 6 }];
-const MT: Body[] = [{ s: 16.5, w: 10.5, h: 13.5, t: 7.5, a: 3.4 }, { s: 18.5, w: 11.5, h: 14, t: 8.8, a: 4.3 }, { s: 20.5, w: 12, h: 14.5, t: 10, a: 5.2 }, { s: 22.5, w: 12.5, h: 15, t: 11.5, a: 6.3 }, { s: 24.5, w: 13, h: 15.5, t: 13, a: 7.5 }];
-const mix = (a: Body, b: Body): Body => ({ s: (a.s + b.s) / 2, w: (a.w + b.w) / 2, h: (a.h + b.h) / 2, t: (a.t + b.t) / 2, a: (a.a + b.a) / 2, b: ((a.b ?? 0) + (b.b ?? 0)) / 2 });
-export const bodyFor = (sex: Sex, kind: "cur" | "target", i: number): Body => {
-  const [f, m] = kind === "cur" ? [F, M] : [FT, MT];
-  return sex === "f" ? f[i] : sex === "h" ? m[i] : mix(f[i], m[i]);
-};
-
-const n = (x: number) => Math.round(x * 10) / 10;
-export function silhouettePaths(b: Body) {
-  const c = 50, bl = b.b ?? 0;
-  const R = (x: number) => n(c + x), Lf = (x: number) => n(c - x);
-  // Torso: neck, shoulders, armpits, waist (with belly), hips, crotch.
-  const torso = `M${Lf(4)} 34 L${R(4)} 34 Q${R(6)} 40 ${R(b.s)} 43 Q${R(b.s + 1)} 50 ${R(b.s - 1.5)} 58 Q${R(b.w + bl)} ${80} ${R(b.w)} 94 Q${R(b.h + 1)} 104 ${R(b.h)} 114 L${Lf(b.h)} 114 Q${Lf(b.h + 1)} 104 ${Lf(b.w)} 94 Q${Lf(b.w + bl)} 80 ${Lf(b.s - 1.5)} 58 Q${Lf(b.s + 1)} 50 ${Lf(b.s)} 43 Q${Lf(6)} 40 ${Lf(4)} 34 Z`;
-  // Legs from the hips: outer thigh, knee, calf, ankle, then back up the inside.
-  const leg = (sgn: 1 | -1) => {
-    const X = (x: number) => n(c + sgn * x);
-    const g = Math.max(0.6, 2.2 - bl * 0.25);
-    return `M${X(b.h)} 110 Q${X(b.h + 0.4)} 128 ${X(g + b.t * 0.95)} 150 Q${X(g + b.t * 0.9)} 168 ${X(g + 4.2)} 190 L${X(g + 0.7)} 190 Q${X(g + 0.2)} 170 ${X(g + 0.8)} 150 Q${X(g)} 132 ${X(g)} 118 L${X(0)} 114 Z`;
-  };
-  // Arms: from the shoulder down to a hand that clears the waist and the hips.
-  const arm = (sgn: 1 | -1) => {
-    const X = (x: number) => n(c + sgn * x);
-    const hx = Math.max(b.s + 1.5, b.h + b.a / 2 + 2, b.w + bl + b.a / 2 + 2.5);
-    return `M${X(b.s - b.a * 0.5)} 42 Q${X(b.s + b.a * 0.6)} 42 ${X(b.s + b.a * 0.55)} 52 Q${X(hx + b.a / 2 + 0.6)} 80 ${X(hx + b.a / 2)} 108 Q${X(hx)} 115 ${X(hx - b.a / 2)} 108 Q${X(hx - b.a / 2 - 0.4)} 82 ${X(b.s - b.a * 0.7)} 60 Z`;
-  };
-  return { torso, legs: [leg(1), leg(-1)], arms: [arm(1), arm(-1)] };
-}

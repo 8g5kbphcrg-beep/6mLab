@@ -61,6 +61,8 @@ export default function FormeQuiz({ lang }: { lang: Lang }) {
       q: fr ? "Ta silhouette aujourd'hui" : "Your body today", hint: fr ? "Celle qui s'en rapproche le plus. Pas de jugement, c'est juste un point de départ." : "The closest one. No judgement, it's just a starting point.",
       ok: a.cur >= 0,
       body: (
+        <>
+        <p className="fq-swipe">{fr ? "Fais défiler pour tout voir →" : "Swipe to see them all →"}</p>
         <div className="fq-sils">
           {current.map((l, i) => (
             <button key={i} type="button" className="fq-sil" aria-pressed={a.cur === i} onClick={() => set("cur", i)}>
@@ -68,6 +70,7 @@ export default function FormeQuiz({ lang }: { lang: Lang }) {
             </button>
           ))}
         </div>
+        </>
       ),
     },
     {
@@ -75,6 +78,7 @@ export default function FormeQuiz({ lang }: { lang: Lang }) {
       ok: a.target >= 0,
       body: (
         <>
+          <p className="fq-swipe">{fr ? "Fais défiler pour tout voir →" : "Swipe to see them all →"}</p>
           <div className="fq-sils">
             {targets.map((l, i) => (
               <button key={i} type="button" className="fq-sil" aria-pressed={a.target === i} onClick={() => set("target", i)}>
