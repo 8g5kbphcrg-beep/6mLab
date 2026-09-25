@@ -4,14 +4,20 @@ Chaque commande reçoit :
 
 | Fichier | Contenu |
 |---|---|
-| `guide-<formule>.pdf` | Le guide : fonctionnement, planning, progression, règles |
-| `seances-<formule>-<objectif1>-<objectif2>.pdf` | Toutes les séances écrites en entier, dans l'ordre, et la fiche illustrée de chaque exercice |
-| `option-course.pdf` | Si l'option course a été prise |
+| `guide-<formule>-<lieu>.pdf` | Le guide : fonctionnement, planning, progression, règles, matériel |
+| `seances-<formule>-<objectif1>-<objectif2>-<lieu>.pdf` | Toutes les séances écrites en entier, dans l'ordre, et la fiche illustrée de chaque exercice |
+| `option-course-<lieu>.pdf` | Si l'option course a été prise |
 
-Les séances existent en 3 versions de silhouettes pour les animations, selon le genre indiqué à
-l'achat : `seances-….pdf` (neutre, « je préfère ne pas le dire »), `seances-…-femme.pdf` et
-`seances-…-homme.pdf`. Le client reçoit toujours le fichier sous le nom sans suffixe, et l'œil
-de chaque exercice ouvre l'animation avec la même silhouette (`/fr/exercices/<id>/femme`).
+`<lieu>` : `maison` ou `salle`, choisi à l'achat. Les exercices, leurs dessins, les dosages et les
+consignes suivent le tableau des correspondances validé (`source/lieux.mjs`) : poids du corps,
+objets du quotidien et variante élastique à la maison ; haltères, barre, poulies et tapis de course
+manuel (ou une alternative) en salle.
+
+Les séances existent aussi en 3 silhouettes pour les animations, selon le genre indiqué à l'achat :
+`seances-…-<lieu>.pdf` (neutre, « je préfère ne pas le dire »), `seances-…-<lieu>-femme.pdf` et
+`seances-…-<lieu>-homme.pdf`. Le client reçoit toujours les fichiers sous leur nom sans lieu ni
+suffixe, et l'œil de chaque exercice ouvre l'animation dans le même lieu et la même silhouette
+(`/fr/exercices/<id>/maison-femme`).
 
 Avec le pack Saison complète (Pré-saison + Maintien), le client reçoit le guide et les séances des
 deux formules, avec les mêmes objectifs.
@@ -41,7 +47,7 @@ Après une modification, regénère les PDF :
 
 ```bash
 npm run programmes                                          # tous
-npm run programmes -- seances-pre-saison-explosivite-muscle  # un seul
+npm run programmes -- seances-pre-saison-explosivite-muscle-maison  # un seul
 ```
 
 La première fois sur un nouvel ordinateur : `npx playwright install chromium`.

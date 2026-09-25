@@ -2,7 +2,8 @@
 import { useRef, useState } from "react";
 import type { Lang } from "@/lib/dict";
 import { programs, type ProgramSlug } from "@/lib/programs";
-import { buy, fmtPrice, genders, orderTotal, PACK_PRICE, prices, RUNNING_PRICE, SECOND_GOAL_PRICE } from "@/lib/checkout";
+import { buy, fmtPrice, genders, orderTotal, PACK_PRICE, places, prices, RUNNING_PRICE, SECOND_GOAL_PRICE, type Place } from "@/lib/checkout";
+import { Dumbbell, House } from "@/components/PlaceIcons";
 import { goalIds, goals as goalInfo, goalName, goalsTitle, REATH, type GoalId } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
 import Suggestions from "@/components/Suggestions";
@@ -16,6 +17,7 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, test, er
   const p = programs[lang][slug];
   const [sel, setSel] = useState<GoalId[]>(goals);
   const [running, setRunning] = useState(false);
+  const [place, setPlace] = useState<Place | null>(null);
   const [err, setErr] = useState(error);
   // Paying without a goal: the page scrolls back up to the goals, which show a red message.
   const [noGoal, setNoGoal] = useState(false);
@@ -62,7 +64,21 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, test, er
       </fieldset>
 
       <fieldset className="bstep">
-        <legend><span className="bnum">2</span>{t.step2}</legend>
+        <legend><span className="bnum">2</span>{t.stepPlace}</legend>
+        <p className="bhint">{t.placeHint}</p>
+        <div className="bplaces">
+          {places.map((pl) => (
+            <label key={pl} className="bcard bplace">
+              <input type="radio" name="lieu" value={pl} required checked={place === pl} onChange={() => setPlace(pl)} />
+              {pl === "maison" ? <House /> : <Dumbbell />}
+              <span><strong>{t.places[pl][0]}</strong> {t.places[pl][1]}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset className="bstep">
+        <legend><span className="bnum">3</span>{t.step2}</legend>
         <label className="bcard brun">
           <input type="checkbox" name="running" checked={running} onChange={() => setRunning(!running)} />
           <span><strong>{t.runT}</strong> {t.runD}</span>
@@ -71,7 +87,7 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, test, er
       </fieldset>
 
       <fieldset className="bstep">
-        <legend><span className="bnum">3</span>{t.step3}</legend>
+        <legend><span className="bnum">4</span>{t.step3}</legend>
         <p className="bhint">{t.profileHint}</p>
         <div className="bfields">
           <label className="bfield">{t.firstName}<input name="firstName" required maxLength={50} autoComplete="given-name" /></label>
@@ -87,10 +103,11 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, test, er
       </fieldset>
 
       <div className="bstep">
-        <p className="blegend"><span className="bnum">4</span>{t.step4}</p>
+        <p className="blegend"><span className="bnum">5</span>{t.step4}</p>
         <dl className="bsum">
           <div><dt>{pack ? t.packT : p.name}</dt><dd>{fmtPrice(pack ? PACK_PRICE : prices[slug], lang)}</dd></div>
           <div><dt>{t.goalsLb}</dt><dd>{sel.length ? goalsTitle(sel, lang) : t.none}</dd></div>
+          <div><dt>{t.placeLb}</dt><dd>{place ? t.places[place][0] : t.none}</dd></div>
           {sel.length === 2 && <div><dt>{t.second}</dt><dd>{fmtPrice(SECOND_GOAL_PRICE, lang)}</dd></div>}
           {running && <div><dt>{t.runT}</dt><dd>{fmtPrice(RUNNING_PRICE, lang)}</dd></div>}
           <div className="btotal"><dt>{t.total}</dt><dd>{fmtPrice(total, lang)}</dd></div>

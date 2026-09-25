@@ -46,3 +46,8 @@
 .bmiss .bcards .bcard,.bmiss .breath{border-color:#F4A7A0}
 :root[data-theme="dark"] .bmissmsg{background:#3A1418;color:#FFB4AB;border-color:#8C2F2A}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .bmissmsg{background:#3A1418;color:#FFB4AB;border-color:#8C2F2A}}
+/* Home or gym: two cards side by side, each with its icon. */
+.bplaces{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.bplace{flex-direction:column;align-items:flex-start;gap:.35rem}
+.bplace svg{width:28px;height:28px;color:var(--ink)}
+@media(max-width:420px){.bplaces{grid-template-columns:1fr}}

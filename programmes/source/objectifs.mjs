@@ -1,6 +1,7 @@
 // The 5 goals. Session rows are [exercise id, dosage, rest, precision?]; "precision" is shown
 // after the exercise name. Pré-saison: sessions A, B, C per phase (the taper week reuses the
-// explosivity phase with half the sets). Maintien: sessions 1 and 2.
+// explosivity phase with half the sets). Maintien: sessions 1 and 2. Dosages are those of the
+// gym; lieux.mjs adapts them for home. Notes with a lieu only appear in that place's documents.
 export const ordre = ["explosivite", "puissance", "muscle", "condition", "prevention"]; // block order in a session
 
 export const objectifs = {
@@ -27,7 +28,7 @@ export const objectifs = {
     intro: "La puissance, c'est la force multipliée par la vitesse. Un tir en suspension, un duel au poste de pivot ou un démarrage demandent de produire beaucoup de force en une fraction de seconde.",
     qualites: ["**Pousser lourd** : augmenter la force maximale avec des charges lourdes et peu de répétitions.", "**Aller vite** : transformer cette force en gestes rapides (lancers, sauts, poussées).", "**Relier les deux** : enchaîner un exercice lourd et un geste rapide qui lui ressemble (méthode de contraste)."],
     regles: ["**Peu de répétitions, beaucoup de repos** : 3 à 5 répétitions, 2 à 3 minutes de récupération.", "**Chaque répétition à vitesse maximale**, même avec une charge lourde : c'est l'intention qui compte.", "Charges lourdes seulement si la technique est parfaite."],
-    notes: [{ warn: "Pour les charges lourdes, fais-toi assister par une autre personne ou utilise une cage de sécurité. Sans matériel adapté, reste sur les versions au poids du corps." }, { note: "**Sans salle** : utilise un sac à dos lesté (livres, bouteilles), un ballon lesté ou un ballon de handball, et privilégie les variantes sur une jambe." }],
+    notes: [{ lieu: "salle", warn: "Pour les charges lourdes, fais-toi assister par une autre personne ou utilise une cage de sécurité (rack) avec les barres de sécurité réglées." }, { lieu: "maison", note: "**À la maison** : la charge vient d'un sac à dos lesté (livres, bouteilles d'eau), d'un ballon de handball ou d'un élastique, et des variantes sur une jambe." }],
     phaseNotes: { bases: "Puissance : charges modérées pour apprendre les gestes, lancers légers.", force: "Puissance : c'est la phase où l'on pousse lourd, monte les charges chaque semaine.", explo: "Puissance : chaque série lourde est suivie tout de suite d'un geste explosif (contraste)." },
     pre: {
       bases: { A: [["squat", "2-3 × 6", "2 min", "charge modérée"], ["lancer-poitrine", "2-3 × 5", "60 s"]], B: [["hip-thrust", "2-3 × 8", "90 s"], ["lancer-rotation", "2 × 5 par côté", "60 s"]], C: [["developpe-couche", "2-3 × 6", "2 min"], ["box-jump", "2-3 × 4", "75 s"]] },
@@ -44,7 +45,7 @@ export const objectifs = {
     intro: "Au handball, on encaisse des contacts à chaque attaque et à chaque défense. Des muscles plus forts protègent les articulations et rendent plus difficile à déséquilibrer.",
     qualites: ["**Force** : pousser, tirer et soulever plus lourd.", "**Prise de masse** : développer le volume musculaire.", "**Gainage et stabilité** : transmettre la force des jambes au bras et rester stable dans les contacts."],
     regles: ["**La technique d'abord** : une charge n'augmente que si le mouvement reste propre.", "**Progresser un peu chaque semaine** : une répétition de plus, ou une charge un peu plus lourde.", "**Contrôler la descente** : 2 à 3 secondes pour descendre, puis remonter avec énergie.", "Garde 2 à 3 répétitions en réserve : pas d'échec musculaire."],
-    notes: [{ note: "**Prise de masse** : l'entraînement donne le signal, mais les muscles se construisent avec l'alimentation et le sommeil. Mange suffisamment, avec des protéines à chaque repas, et dors 8 heures. Pour un suivi alimentaire, adresse-toi à un ou une diététicienne." }, { note: "**Sans matériel** : rends l'exercice plus dur en ralentissant la descente, en ajoutant un sac à dos lesté ou en passant à la variante sur une jambe." }],
+    notes: [{ note: "**Prise de masse** : l'entraînement donne le signal, mais les muscles se construisent avec l'alimentation et le sommeil. Mange suffisamment, avec des protéines à chaque repas, et dors 8 heures. Pour un suivi alimentaire, adresse-toi à un ou une diététicienne." }, { lieu: "maison", note: "**À la maison** : sans charge lourde, l'exercice devient plus dur quand tu ralentis la descente, que tu ajoutes un sac à dos lesté ou que tu passes sur une jambe. C'est pour cela que les répétitions sont plus nombreuses." }],
     phaseNotes: { bases: "Développement musculaire : charges légères, apprentissage des gestes.", force: "Développement musculaire : c'est la phase clé, monte les charges chaque semaine. Si ton objectif est la prise de masse, fais 8 à 12 répétitions avec 60 à 90 s de repos.", explo: "Développement musculaire : moins de séries, charges toujours lourdes." },
     pre: {
       bases: { A: [["squat", "2-3 × 10", "75 s"], ["pompes", "2-3 × 10", "60 s"]], B: [["sdt-roumain", "2-3 × 10", "75 s"], ["rowing", "2-3 × 10", "60 s"], ["pallof", "2 × 10 par côté", "30 s"]], C: [["fente-arriere", "2-3 × 8 par jambe", "60 s"], ["developpe-militaire", "2-3 × 10", "60 s"]] },

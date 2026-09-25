@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { locales, type Lang } from "@/lib/dict";
 import { programs, programSlugs, type ProgramSlug } from "@/lib/programs";
-import { genders, PACK_PRICE, prices, RUNNING_PRICE, SECOND_GOAL_PRICE, type Gender } from "@/lib/checkout";
+import { buy, genders, PACK_PRICE, places, prices, RUNNING_PRICE, SECOND_GOAL_PRICE, type Gender, type Place } from "@/lib/checkout";
 import { goalName, goalsTitle, hasSecondGoal, validGoals } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
 import { stripe as stripeClient } from "@/lib/feedback";
@@ -16,19 +16,20 @@ export async function POST(req: NextRequest) {
   const firstName = String(form.get("firstName") ?? "").trim().slice(0, 50);
   const age = Number(form.get("age"));
   const gender = String(form.get("gender")) as Gender;
+  const lieu = String(form.get("lieu")) as Place;
   const profileOk = firstName.length > 0 && Number.isInteger(age) && age >= 10 && age <= 99 && genders.includes(gender);
   const origin = req.nextUrl.origin;
   const page = pack ? "saison-complete" : programSlugs.includes(slug) ? slug : "";
   const back = (reason: string) => NextResponse.redirect(`${origin}/${lang}/programmes/${page}?paiement=${reason}#acheter`, 303);
 
-  if (!programSlugs.includes(slug) || !validGoals(goals) || !profileOk || form.get("consent") !== "on") return back("invalide");
+  if (!programSlugs.includes(slug) || !validGoals(goals) || !places.includes(lieu) || !profileOk || form.get("consent") !== "on") return back("invalide");
 
   const key = process.env.STRIPE_SECRET_KEY;
   // Live payments stay off until the legal pages are filled in (SIRET, address, mediator).
   if (!key || (key.startsWith("sk_live_") && process.env.STRIPE_ALLOW_LIVE !== "1")) return back("indisponible");
 
   const p = programs[lang][slug];
-  const meta = { program: slug, goals: goals.join("+"), running: running ? "oui" : "non", ...(pack ? { pack: "oui" } : {}), firstName, age: String(age), gender, lang };
+  const meta = { program: slug, goals: goals.join("+"), running: running ? "oui" : "non", lieu, ...(pack ? { pack: "oui" } : {}), firstName, age: String(age), gender, lang };
   const stripe = stripeClient()!;
   try {
     const session = await stripe.checkout.sessions.create({
@@ -40,8 +41,8 @@ export async function POST(req: NextRequest) {
           currency: "eur",
           unit_amount: pack ? PACK_PRICE : prices[slug],
           product_data: pack
-            ? { name: lang === "fr" ? "6M Lab · Pack Saison complète" : "6M Lab · Full season pack", description: `${goalsTitle(goals, lang)} · ${p.name} (${p.duration}) + ${programs[lang]["maintien-saison"].name} (${programs[lang]["maintien-saison"].duration})` }
-            : { name: `6M Lab · ${p.name}`, description: `${goalsTitle(goals, lang)} · ${p.duration}` },
+            ? { name: lang === "fr" ? "6M Lab · Pack Saison complète" : "6M Lab · Full season pack", description: `${goalsTitle(goals, lang)} · ${p.name} (${p.duration}) + ${programs[lang]["maintien-saison"].name} (${programs[lang]["maintien-saison"].duration}) · ${buy[lang].places[lieu][0]}` }
+            : { name: `6M Lab · ${p.name}`, description: `${goalsTitle(goals, lang)} · ${p.duration} · ${buy[lang].places[lieu][0]}` },
         },
       }, ...(hasSecondGoal(goals) ? [{
         quantity: 1,

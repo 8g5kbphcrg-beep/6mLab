@@ -4,7 +4,7 @@ import nodemailer from "nodemailer";
 import type { Lang } from "@/lib/dict";
 import { programs, type ProgramSlug } from "@/lib/programs";
 import { goalOrder, goalsTitle, type GoalId } from "@/lib/goals";
-import { fmtPrice } from "@/lib/checkout";
+import { buy, fmtPrice, type Place } from "@/lib/checkout";
 import { legalPaths, owner } from "@/lib/legal";
 import { SITE } from "@/lib/dict";
 
@@ -15,6 +15,7 @@ export type Order = {
   program: ProgramSlug;
   goals: GoalId[];
   running: boolean;
+  lieu: Place;
   pack?: boolean;
   firstName: string;
   age: string;
@@ -51,10 +52,11 @@ export async function programFiles(o: Order) {
   // The "Saison complète" pack adds the Maintien en saison with the same goals.
   const formulas = o.pack ? [o.program, "maintien-saison"] : [o.program];
   const names = [...formulas.flatMap((f) => [`guide-${f}.pdf`, `seances-${f}-${goals.join("-")}.pdf`]), ...(o.running ? ["option-course.pdf"] : [])];
-  // The sessions exist with the silhouette matching the gender given at checkout (femme, homme);
-  // the file keeps its usual name for the customer.
-  const suffix = o.gender === "femme" || o.gender === "homme" ? `-${o.gender}` : "";
-  const paths = names.map((n) => join(process.cwd(), "programmes", n.startsWith("seances-") ? n.replace(/\.pdf$/, `${suffix}.pdf`) : n));
+  // Each file exists for the place chosen at checkout (maison, salle), and the sessions also with
+  // the silhouette matching the gender (femme, homme). The customer gets them under the names
+  // above.
+  const sil = o.gender === "femme" || o.gender === "homme" ? `-${o.gender}` : "";
+  const paths = names.map((n) => join(process.cwd(), "programmes", n.replace(/\.pdf$/, `-${o.lieu}${n.startsWith("seances-") ? sil : ""}.pdf`)));
   try {
     await Promise.all(paths.map((p) => access(p)));
   } catch {
@@ -72,6 +74,7 @@ export async function sendConfirmation(o: Order) {
       ? `${fr ? "Pack Saison complète" : "Full season pack"} : ${p.name} (${p.duration}) + ${programs[o.lang]["maintien-saison"].name} (${programs[o.lang]["maintien-saison"].duration})`
       : `${p.name} (${p.duration})`],
     [fr ? "Objectifs" : "Goals", goalsTitle(o.goals, o.lang)],
+    [fr ? "Lieu" : "Place", buy[o.lang].places[o.lieu][0]],
     ...(o.running ? [[fr ? "Option" : "Option", fr ? "Programme course à pied" : "Running program"] as [string, string]] : []),
     [fr ? "Total payé" : "Total paid", fmtPrice(o.amount, o.lang)],
     [fr ? "Référence" : "Reference", o.id.slice(-12)],
@@ -118,6 +121,7 @@ export async function notifyOwner(o: Order, delivered: boolean) {
   const lines = [
     `Programme : ${programs.fr[o.program].name}`,
     `Objectifs : ${goalsTitle(o.goals, "fr")}`,
+    `Lieu : ${buy.fr.places[o.lieu][0]}`,
     `Pack Saison complète (+ Maintien) : ${o.pack ? "oui" : "non"}`,
     `Option course : ${o.running ? "oui" : "non"}`,
     `Prénom : ${o.firstName}`,

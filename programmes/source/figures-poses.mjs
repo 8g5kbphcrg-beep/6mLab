@@ -1,6 +1,7 @@
 // Positions of every exercise, for figures.mjs (angle conventions are described there).
-// Each exercise has a bodyweight version (poids) and/or an equipment version (materiel), each a
-// list of positions played in order. scene: fixed objects (box, wall, bar, post, cones), for
+// Each exercise has versions, each a list of positions played in order: poids (bodyweight),
+// maison (at home with something else than bodyweight), elastique (with a band) and/or materiel
+// (with equipment). scene: fixed objects (box, wall, bar, post, cones), for
 // both versions (all) or one of them. loop: "restart" for moves that travel or jump.
 
 const BENCH = 42;
@@ -120,6 +121,14 @@ const ROW_BENCH = { box: [30, 46, 43], z: [-34, 4] };
 // Pull-up.
 const pullUp = (top) => ({ hang: BAR, pin: ["near.hand", 0], torso: top ? 6 : 0, head: 0, ...legs({ thigh: top ? 18 : 10, shin: top ? -45 : -55, foot: 40 }, top ? { upper: 35, fore: 176, hand: 180 } : { upper: 180, fore: 180, hand: 180 }) });
 
+// Kneeling upright, shins on the floor behind.
+const KNEEL = { thigh: 0, shin: -90, foot: -100 };
+
+// Lying on the side (on the back, then roll), knees bent, bottom arm under the head: the top
+// forearm turns up from the belly, a bottle in the hand.
+const sideLying = (up) => ({ torso: -90, roll: -90, head: 0, gear: ["bottle"],
+  near: { thigh: 130, shin: 60, foot: 150, upper: 90, fore: 90, foreOut: up ? 55 : -80 }, far: { thigh: 130, shin: 60, foot: 150, upper: -90, fore: -150 } });
+
 // Burpee squat, hands on the floor in front of the feet.
 const squatHands = { torso: 70, near: { thigh: 108, shin: -42, upper: 0, fore: 0, hand: 90 }, far: { thigh: 108, shin: -42, upper: 0, fore: 0, hand: 90 }, solve: [{ vary: ["torso"], a: "near.wrist", b: "near.heel", dy: -3 }] };
 
@@ -197,9 +206,11 @@ export const defs = {
     ],
   },
   // Elbow against the side, bent at 90°: the forearm turns outwards, band anchored on the other side.
+  // At home without a band: lying on the side, a bottle in the hand.
   "rotation-externe": {
-    cam: { yaw: 70, pitch: 45 },
-    scene: { all: [{ post: [8, 104], z: -80 }] },
+    cam: { materiel: { yaw: 70, pitch: 45 }, maison: { yaw: 180, pitch: 30 } },
+    scene: { materiel: [{ post: [8, 104], z: -80 }] },
+    maison: [sideLying(false), sideLying(true)],
     materiel: [
       { gear: ["band"], near: { upper: 0, fore: 90, foreOut: -45 }, far: { upper: 4, fore: 4 } },
       { gear: ["band"], near: { upper: 0, fore: 90, foreOut: 75 }, far: { upper: 4, fore: 4 } },
@@ -207,9 +218,15 @@ export const defs = {
   },
   // Arm out to the side at shoulder height, elbow at 90°: the forearm turns from forward to up.
   // The band is anchored in front, at the height of the hand in the top position.
+  // At home: leaning forward, arm out to the side, a bottle in the hand; the forearm turns from
+  // hanging down to pointing forward.
   "rotation-externe-haute": {
-    cam: { yaw: 30, pitch: 35 },
-    scene: { all: [{ post: [75, 165], z: 47 }] },
+    cam: { materiel: { yaw: 30, pitch: 35 }, maison: { yaw: 15, pitch: 12 } },
+    scene: { materiel: [{ post: [75, 165], z: 47 }] },
+    maison: [
+      { gear: ["bottle"], torso: 70, head: -10, near: { ...hinge(), upper: 0, upperOut: 88, fore: 0 }, far: { ...hinge(), upper: 20, fore: 20 } },
+      { gear: ["bottle"], torso: 70, head: -10, near: { ...hinge(), upper: 0, upperOut: 88, fore: 85, foreOut: 20 }, far: { ...hinge(), upper: 20, fore: 20 } },
+    ],
     materiel: [
       { gear: ["band"], near: { upper: 90, upperOut: 90, fore: 90 }, far: { upper: 4, fore: 4 } },
       { gear: ["band"], near: { upper: 90, upperOut: 90, fore: 180 }, far: { upper: 4, fore: 4 } },
@@ -297,7 +314,12 @@ export const defs = {
     ],
   },
   "lancer-poitrine": {
-    scene: { all: [{ wall: 115 }] },
+    scene: { materiel: [{ wall: 115 }], elastique: [{ post: [-80, 118] }] },
+    // Band anchored behind at chest height: explosive push forward.
+    elastique: [
+      { gear: ["bands"], torso: 8, ...legs({ thigh: 24, shin: -18 }, { upper: -25, fore: 140 }) },
+      { gear: ["bands"], torso: 14, x: 8, near: { thigh: 30, shin: 5, upper: 92, fore: 92, hand: 92 }, far: { thigh: -18, shin: -30, foot: 45, upper: 92, fore: 92, hand: 92 } },
+    ],
     materiel: [
       { gear: ["ball"], torso: 8, ...legs({ thigh: 24, shin: -18 }, { upper: -25, fore: 140 }) },
       { gear: ["ball"], torso: 14, x: 8, near: { thigh: 30, shin: 5, upper: 92, fore: 92, hand: 92 }, far: { thigh: -18, shin: -30, foot: 45, upper: 92, fore: 92, hand: 92 } },
@@ -305,7 +327,12 @@ export const defs = {
   },
   "lancer-rotation": {
     cam: { yaw: 60, pitch: 10 },
-    scene: { all: [{ wallZ: -140, x: [-50, 50] }] },
+    scene: { materiel: [{ wallZ: -140, x: [-50, 50] }], elastique: [{ post: [0, 105], z: 110 }] },
+    // Band anchored on the side at hip height: fast rotation away from the anchor.
+    elastique: [
+      { gear: ["bands"], twist: 40, near: { ...STANCE, upper: 30, upperOut: 60, fore: 40, foreOut: 60 }, far: { ...STANCE, upper: 40, upperOut: -20, fore: 40, foreOut: 40 } },
+      { gear: ["bands"], twist: -35, near: { ...STANCE, upper: 60, upperOut: -40, fore: 60, foreOut: -50 }, far: { ...STANCE, upper: 60, upperOut: 50, fore: 60, foreOut: 40 } },
+    ],
     materiel: [
       { gear: ["ball"], twist: -40, near: { ...STANCE, upper: 10, upperOut: 30, fore: 40, foreOut: 10 }, far: { ...STANCE, upper: 40, upperOut: -40, fore: 40, foreOut: -30 } },
       { gear: ["ball"], twist: 30, near: { ...STANCE, upper: 90, upperOut: -70, fore: 90, foreOut: -75 }, far: { ...STANCE, upper: 90, upperOut: 70, fore: 90, foreOut: 75 } },
@@ -329,6 +356,11 @@ export const defs = {
     poids: [crouch(), { ...air({ lift: 64 }), torso: 20, ...legs({ thigh: 75, shin: 0, foot: 80 }, { upper: 150, fore: 150 }), x: 36 }, { ...landing(), lift: 40, pin: ["near.toe", 112] }],
   },
   "squat-jump-leste": {
+    // At home: a light backpack.
+    maison: [
+      { gear: ["backpack"], torso: 38, ...legs({ thigh: 70, shin: -30 }, { upper: -45, fore: -30 }) },
+      { gear: ["backpack"], torso: -2, lift: 22, ...legs({ thigh: 0, shin: -3, foot: 22 }, { upper: 150, fore: 160 }) },
+    ],
     materiel: [
       { gear: ["dumbbells"], torso: 38, ...legs({ thigh: 70, shin: -30 }, { upper: -6, fore: -6 }) },
       { gear: ["dumbbells"], torso: -2, lift: 22, ...legs({ thigh: 0, shin: -3, foot: 22 }, { upper: 2, fore: 2 }) },
@@ -348,6 +380,11 @@ export const defs = {
     poids: [
       { near: { upper: 8, fore: 8 } },
       { torso: 42, near: { thigh: 92, shin: -32, upper: 88, fore: 88 } },
+    ],
+    // Band under the feet, hands at the shoulders.
+    elastique: [
+      { gear: ["bandFeet"], near: { upper: 15, fore: 165 } },
+      { gear: ["bandFeet"], torso: 26, near: { thigh: 95, shin: -36, upper: 45, fore: 175 } },
     ],
     materiel: [
       { gear: ["goblet"], near: { upper: 15, fore: 160 } },
@@ -375,19 +412,37 @@ export const defs = {
     cam: { materiel: BENCH_CAM },
     poids: [pushTop, pushBottom], materiel: [benchPress(false), benchPress(true)] },
   rowing: {
-    scene: { poids: [{ bar: [0, TABLE - 3] }], materiel: [ROW_BENCH] },
+    scene: { poids: [{ bar: [0, TABLE - 3] }], materiel: [ROW_BENCH], elastique: [{ post: [95, 108] }] },
     poids: [invRow({ upper: 180, fore: 180 }), invRow({ upper: 38, fore: 176 })],
+    // Band anchored to a door at chest height: pull the elbows back.
+    elastique: [
+      { gear: ["bands"], torso: 12, ...legs({ thigh: 18, shin: -10 }, { upper: 82, fore: 82 }) },
+      { gear: ["bands"], torso: 6, ...legs({ thigh: 18, shin: -10 }, { upper: -38, fore: 78 }) },
+    ],
     materiel: [rowDb(false), rowDb(true)],
   },
   "developpe-militaire": {
-    cam: { materiel: { yaw: 75, pitch: 5 } },
+    cam: { materiel: { yaw: 75, pitch: 5 }, elastique: { yaw: 75, pitch: 5 } },
+    // Band under the feet, pressed above the head.
+    elastique: [
+      { gear: ["bandFeet"], near: { upperOut: 80, foreOut: 176 } },
+      { gear: ["bandFeet"], near: { upperOut: 166, foreOut: 176 } },
+    ],
     poids: [pike({ upper: 42, fore: 42 }), pike({ upper: -20, fore: 30 })],
     materiel: [
       { gear: ["dumbbells"], near: { upperOut: 80, foreOut: 176 } },
       { gear: ["dumbbells"], near: { upperOut: 166, foreOut: 176 } },
     ],
   },
-  tractions: { scene: { all: [{ bar: [0, BAR - 3] }] }, poids: [pullUp(false), pullUp(true)] },
+  tractions: {
+    scene: { poids: [{ bar: [0, BAR - 3] }], elastique: [{ post: [22, 190] }] },
+    poids: [pullUp(false), pullUp(true)],
+    // Kneeling, band anchored high: pull the elbows down to the sides.
+    elastique: [
+      { gear: ["bands"], contact: "near.knee", ...legs(KNEEL, { upper: 168, fore: 172 }) },
+      { gear: ["bands"], contact: "near.knee", ...legs(KNEEL, { upper: 22, fore: 150 }) },
+    ],
+  },
   // Band anchored on the side at chest height: the arms press forward without the trunk turning.
   pallof: {
     cam: { yaw: 55, pitch: 15 },

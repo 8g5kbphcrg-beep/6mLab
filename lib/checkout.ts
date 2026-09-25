@@ -14,6 +14,9 @@ export const orderTotal = (slug: ProgramSlug, goals: readonly string[], running:
   prices[slug] + (goals.length === 2 ? SECOND_GOAL_PRICE : 0) + (running ? RUNNING_PRICE : 0) + (pack && slug === "pre-saison" ? PACK_EXTRA : 0);
 
 export const genders = ["femme", "homme", "non-precise"] as const;
+// Where the customer trains: the exercises, drawings and dosages of the program follow it.
+export const places = ["maison", "salle"] as const;
+export type Place = (typeof places)[number];
 export type Gender = (typeof genders)[number];
 
 // 39,99 € / €39.99 (no decimals for whole euros: 9 €).
@@ -24,7 +27,10 @@ export const fmtPrice = (cents: number, lang: Lang) => {
 
 export const buy = {
   fr: {
-    step1: "Tes objectifs", step2: "Options", step3: "Ton profil", step4: "Récapitulatif",
+    step1: "Tes objectifs", stepPlace: "Où t'entraînes-tu ?", step2: "Options", step3: "Ton profil", step4: "Récapitulatif",
+    placeHint: "Les exercices, leurs animations et les dosages de ton programme sont adaptés à ton lieu d'entraînement.",
+    places: { maison: ["Maison", "Poids du corps et objets du quotidien, avec des variantes à l'élastique."], salle: ["Salle de sport", "Haltères, barre, poulies. La course sur tapis manuel, ou une alternative."] },
+    placeLb: "Lieu",
     profileHint: "Pour adapter ton programme et te l'envoyer à ton nom. Les silhouettes des animations suivent ton genre (neutres si tu préfères ne pas le dire).",
     firstName: "Prénom", age: "Âge", gender: "Genre",
     genders: { femme: "Femme", homme: "Homme", "non-precise": "Je préfère ne pas le dire" },
@@ -44,10 +50,13 @@ export const buy = {
     secure: "Paiement sécurisé par Stripe. Programme envoyé par email.",
     test: "Mode test : aucun paiement réel. Carte 4242 4242 4242 4242, date future, code au choix.",
     off: "Le paiement est momentanément indisponible. Réessaie plus tard ou écris-nous.",
-    invalid: "Choisis au moins 1 objectif (ou la réathlétisation seule), remplis ton profil et accepte les CGV.",
+    invalid: "Choisis au moins 1 objectif (ou la réathlétisation seule), ton lieu d'entraînement, remplis ton profil et accepte les CGV.",
   },
   en: {
-    step1: "Your goals", step2: "Options", step3: "About you", step4: "Summary",
+    step1: "Your goals", stepPlace: "Where do you train?", step2: "Options", step3: "About you", step4: "Summary",
+    placeHint: "The exercises, their animations and the dosages of your program are adapted to where you train.",
+    places: { maison: ["Home", "Bodyweight and everyday objects, with resistance band variations."], salle: ["Gym", "Dumbbells, barbell, cables. Running on a manual treadmill, or an alternative."] },
+    placeLb: "Place",
     profileHint: "So we can adapt your program and send it in your name. The figures in the animations match your gender (neutral if you'd rather not say).",
     firstName: "First name", age: "Age", gender: "Gender",
     genders: { femme: "Woman", homme: "Man", "non-precise": "I'd rather not say" },
@@ -67,7 +76,7 @@ export const buy = {
     secure: "Secure payment by Stripe. Program sent by email.",
     test: "Test mode: no real payment. Card 4242 4242 4242 4242, any future date, any code.",
     off: "Payment is temporarily unavailable. Please try again later or contact us.",
-    invalid: "Pick at least 1 goal (or return to play alone), fill in your details and accept the terms.",
+    invalid: "Pick at least 1 goal (or return to play alone) and where you train, fill in your details and accept the terms.",
   },
 };
 

@@ -13,14 +13,15 @@
 //   negative = across the body).
 // foot = heel → toes direction: 72 is a flat foot, lower values raise the heel.
 // Trunk: torso = forward lean (hip → shoulder), lean = sideways lean towards the near side,
-// twist = rotation of the shoulders (positive: near shoulder forward), head = head bend.
+// twist = rotation of the shoulders (positive: near shoulder forward), head = head bend,
+// roll = the whole body turned around the forward axis (on the back then roll -90: on the side).
 //
 // A pose can also set: x / z (move along the floor), lift (height in the air), flip (face the
 // other way), contact (point placed on the floor), pin ([point, x, z?]: point placed there),
 // support (shoulders resting at that height: 0 on the floor, 42 on a bench), hang (hands at that
 // height, e.g. a pull-up bar) and solve (adjust angles until one point is dy below another).
-// Exercise options: cam ({ yaw, pitch }, or one per version), scene (box, bench, wall, bar, post, cones), loop, still (positions shown
-// in the PDF). contactReport() and framesBelow() check that nothing goes through the floor.
+// Exercise options: cam ({ yaw, pitch }, or one per version), scene (box, bench, wall, bar, post,
+// cones), loop, still (positions shown in the PDF). contactReport() and framesBelow() check that nothing goes through the floor.
 
 import { defs } from "./figures-poses.mjs";
 import { markSvg } from "../../lib/mark.mjs";
@@ -51,7 +52,7 @@ const dir = (a, b, s) => [Math.sin(rad(a)) * Math.cos(rad(b)), -Math.cos(rad(a))
 
 const norm = (p) => {
   const side = (s = {}) => ({ thigh: 0, shin: 0, foot: FLAT, upper: 0, fore: 0, thighOut: 0, shinOut: 0, footOut: 0, upperOut: 0, foreOut: 0, ...s, hand: s.hand ?? s.fore ?? 0, handOut: s.handOut ?? s.foreOut ?? 0 });
-  return { torso: 0, lean: 0, twist: 0, head: 0, lift: 0, x: 0, z: 0, ...p, near: side(p.near), far: side(p.far ?? p.near) };
+  return { torso: 0, lean: 0, twist: 0, head: 0, roll: 0, lift: 0, x: 0, z: 0, ...p, near: side(p.near), far: side(p.far ?? p.near) };
 };
 
 // Body axes: U along the trunk, F towards the chest, S towards the near side; Ssh = shoulder line.
@@ -117,6 +118,8 @@ export function place(raw, cam = camera()) {
   let p = norm(raw);
   for (const s of p.solve ?? []) p = solve(p, s);
   let j = joints(p);
+  // roll: the whole body turned around the forward axis (lying on the side: on the back, roll -90).
+  if (p.roll) { const c = Math.cos(rad(p.roll)), sn = Math.sin(rad(p.roll)); j = every(j, (q) => [q[0], q[1] * c - q[2] * sn, q[1] * sn + q[2] * c]); }
   if (p.flip) j = every(j, (q) => [-q[0], q[1], q[2]]);
   let dy;
   if (p.support !== undefined) dy = p.support + 5 - j.sh[1];
@@ -134,7 +137,7 @@ export function place(raw, cam = camera()) {
 // The figure is drawn with volumes: skin-coloured limbs with muscle bellies (thigh, calf, arm,
 // forearm), shorts, a jersey, shoes and a head with hair and a nose, in the style of the
 // questionnaire silhouettes. The side further from the camera is drawn darker.
-const INK = "#100A24", JERSEY = "#FF7A59", GEAR = "#3A3452", SCENE = "#ECE9F7", EDGE = "#C9C4DD";
+const INK = "#100A24", BAND = "#2EC4B6", JERSEY = "#FF7A59", GEAR = "#3A3452", SCENE = "#ECE9F7", EDGE = "#C9C4DD";
 const COL = {
   front: { skin: "#E7B48F", shorts: "#17152B", jersey: JERSEY, shoe: "#3A3452" },
   back: { skin: "#C48C69", shorts: "#2E2A48", jersey: "#D9603F", shoe: "#5A5474" },
@@ -278,7 +281,13 @@ const gear = {
   barHip: (j) => plate([j.hip[0], j.hip[1] - 22]),
   ball: (j) => { const c = mid(j.near.hand, j.far.hand); return `<circle cx="${f1(c[0])}" cy="${f1(c[1])}" r="9" fill="#FFC75F" stroke="${INK}" stroke-width="1.5"/>`; },
   backpack: (j) => { const a = angle(j.hip, j.sh), m = mid(j.hip, j.sh), r = rad(a + 90); const c = [m[0] + 10 * Math.sin(r), m[1] + 10 * Math.cos(r)]; return `<rect x="${f1(c[0] - 7)}" y="${f1(c[1] - 12)}" width="14" height="24" rx="4" fill="${GEAR}" transform="rotate(${f1(a - 180)} ${f1(c[0])} ${f1(c[1])})"/>`; },
-  band: (j, ctx) => (ctx.post ? `<path d="${d([ctx.post, j.near.wrist])}" ${stroke(2.5, JERSEY)}/>` : ""),
+  band: (j, ctx) => (ctx.post ? `<path d="${d([ctx.post, j.near.wrist])}" ${stroke(2.5, BAND)}/>` : ""),
+  // Band anchored to the post, held in both hands.
+  bands: (j, ctx) => (ctx.post ? `<path d="${d([j.far.wrist, ctx.post, j.near.wrist])}" ${stroke(2.5, BAND)}/>` : ""),
+  // Band under the feet, held in both hands.
+  bandFeet: (j) => ["far", "near"].map((s) => `<path d="${d([mid(j[s].heel, j[s].toe), j[s].wrist])}" ${stroke(2.5, BAND)}/>`).join(""),
+  // Water bottle in the hand.
+  bottle: (j) => { const w = j.near.hand; return `<rect x="${f1(w[0] - 3.5)}" y="${f1(w[1] - 7)}" width="7" height="14" rx="2.5" fill="#6FC3E8" stroke="${GEAR}" stroke-width="1.2"/>`; },
   // Feet held under a padded bar (Nordic curl).
   anchor: (j) => { const a = j.near.ankle; return `<path d="M${f1(a[0] - 18)} ${G}L${f1(a[0] - 2)} ${f1(a[1] - 11)}" ${stroke(5, GEAR)}/><circle cx="${f1(a[0] - 2)}" cy="${f1(a[1] - 11)}" r="7" fill="${GEAR}"/>`; },
 };
@@ -336,7 +345,10 @@ const svgWrap = (W, inner, cam, ys = []) => {
 };
 const ysOf = (j, items) => [...allPts(j).map((q) => q[1]), j.head[1] - L.head, ...items.flatMap((it) => it.ps.map((q) => q[1]))];
 
-export const variants = (id) => Object.keys(defs[id] ?? {}).filter((k) => k === "poids" || k === "materiel");
+// Versions of an exercise: poids (bodyweight), maison (at home, other than bodyweight), elastique
+// (with a band), materiel (with equipment, at the gym).
+export const VARIANTS = ["poids", "maison", "elastique", "materiel"];
+export const variants = (id) => VARIANTS.filter((k) => defs[id]?.[k]);
 const posesOf = (id, variant) => {
   const e = defs[id], v = variant ?? variants(id)[0], poses = e?.[v];
   if (!poses) return null;
@@ -379,7 +391,7 @@ const lerp = (a, b, t) => {
   // that contacts hold during the move.
   const same = a.solve && b.solve && a.solve.length === b.solve.length && a.solve.every((s, i) => s.a === b.solve[i].a && s.b === b.solve[i].b && s.vary.join() === b.solve[i].vary.join());
   const out = { ...a, solve: same ? a.solve.map((s, i) => ({ ...s, dy: m(s.dy ?? 0, b.solve[i].dy ?? 0) })) : undefined, near: side(a.near, b.near), far: side(a.far, b.far) };
-  for (const k of ["torso", "lean", "twist", "head", "lift", "x", "z"]) out[k] = m(a[k], b[k]);
+  for (const k of ["torso", "lean", "twist", "head", "roll", "lift", "x", "z"]) out[k] = m(a[k], b[k]);
   for (const k of ["support", "hang"]) if (a[k] !== undefined) out[k] = m(a[k], b[k] ?? a[k]);
   out.contact = t < 0.5 ? a.contact : b.contact;
   out.pin = a.pin && b.pin && a.pin[0] === b.pin[0] ? [a.pin[0], m(a.pin[1], b.pin[1]), a.pin[2] === undefined ? undefined : m(a.pin[2], b.pin[2])] : undefined;

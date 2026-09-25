@@ -1,4 +1,5 @@
 // Option course à pied: complementary running sessions of 30 to 45 min, for both formulas.
+// Blocks with a lieu only appear in that version (the gym one explains the treadmill).
 export default {
   title: "Option course à pied",
   tag: "Option",
@@ -8,6 +9,13 @@ export default {
   blocks: [
     { h2: "À quoi sert cette option" },
     { p: "La course construit le « moteur » : un cœur et des muscles qui récupèrent plus vite entre deux actions. Ces séances complètent ton programme principal sans le remplacer." },
+    { lieu: "salle", h3: "À la salle de sport" },
+    { lieu: "salle", p: "Le mieux est un **tapis de course manuel** (non motorisé : c'est toi qui fais tourner la bande, sans vitesse imposée). Il se règle avec les mêmes repères d'allure que dehors, et les accélérations se font naturellement." },
+    { lieu: "salle", ul: [
+      "**Pas de tapis manuel** : tapis motorisé pour les footings et le tempo (1 % de pente), vélo d'assaut (air bike) ou rameur pour les intervalles, avec les mêmes temps d'effort et de récupération.",
+      "**Côtes** : sur le tapis manuel, 15 à 20 secondes de poussée à fond ; sinon, sprints de 15 secondes sur le vélo d'assaut.",
+      "Les zones d'allure restent les mêmes : facile, soutenue, intense.",
+    ] },
     { h3: "Où les placer dans ta semaine" },
     { ul: [
       "**Pré-saison** : 1 séance par semaine au niveau 1, 2 séances aux niveaux 2 et 3. Un jour sans séance A, B ou C, ou le même jour au moins 6 heures après.",
