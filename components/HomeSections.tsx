@@ -70,27 +70,34 @@ export function Founder({ lang }: { lang: Lang }) {
   );
 }
 
-export function FreeSession({ lang }: { lang: Lang }) {
+// The free session form (home page, tips pages).
+export function FreeSessionForm({ lang, title }: { lang: Lang; title?: string }) {
   const fr = lang === "fr";
   return (
+    <form className="free" method="post" action="/api/seance-gratuite">
+      <input type="hidden" name="lang" value={lang} />
+      <input className="sr" name="site" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+      <div>
+        <p className="free-k">{fr ? "Gratuit" : "Free"}</p>
+        <h2>{title ?? (fr ? "Teste une séance avant d'acheter" : "Try a session before you buy")}</h2>
+        <p>{fr
+          ? "Reçois par email une séance de 15 minutes de prévention des blessures pour le handball, avec les animations de chaque exercice."
+          : "Get a 15-minute injury prevention session for handball by email, with an animation for every exercise."}</p>
+      </div>
+      <div className="free-f">
+        <label className="sr" htmlFor={`free-email-${title ? "b" : "a"}`}>Email</label>
+        <input id={`free-email-${title ? "b" : "a"}`} name="email" type="email" required autoComplete="email" placeholder={fr ? "Ton adresse email" : "Your email address"} />
+        <button className="btn" type="submit">{fr ? "Recevoir ma séance" : "Send me the session"}</button>
+        <p className="note">{fr ? "Pas de spam : la séance, puis 3 conseils de préparation. Désinscription en un clic." : "No spam: the session, then 3 training tips. Unsubscribe in one click."}</p>
+      </div>
+    </form>
+  );
+}
+
+export function FreeSession({ lang }: { lang: Lang }) {
+  return (
     <section className="sec wrap" id="seance-gratuite">
-      <form className="free" method="post" action="/api/seance-gratuite">
-        <input type="hidden" name="lang" value={lang} />
-        <input className="sr" name="site" tabIndex={-1} autoComplete="off" aria-hidden="true" />
-        <div>
-          <p className="free-k">{fr ? "Gratuit" : "Free"}</p>
-          <h2>{fr ? "Teste une séance avant d'acheter" : "Try a session before you buy"}</h2>
-          <p>{fr
-            ? "Reçois par email une séance de 15 minutes de prévention des blessures pour le handball, avec les animations de chaque exercice."
-            : "Get a 15-minute injury prevention session for handball by email, with an animation for every exercise."}</p>
-        </div>
-        <div className="free-f">
-          <label className="sr" htmlFor="free-email">Email</label>
-          <input id="free-email" name="email" type="email" required autoComplete="email" placeholder={fr ? "Ton adresse email" : "Your email address"} />
-          <button className="btn" type="submit">{fr ? "Recevoir ma séance" : "Send me the session"}</button>
-          <p className="note">{fr ? "Pas de spam : la séance, puis 3 conseils de préparation. Désinscription en un clic." : "No spam: the session, then 3 training tips. Unsubscribe in one click."}</p>
-        </div>
-      </form>
+      <FreeSessionForm lang={lang} />
     </section>
   );
 }

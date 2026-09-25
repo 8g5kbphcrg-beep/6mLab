@@ -1,11 +1,17 @@
 export type Block = { h: string } | { p: string } | { ul: string[] };
 // A study post summarises one published paper in our own words and links to the original.
 export type Source = { cite: string; url: string; access: string };
-export type Post = { slug: string; title: string; desc: string; date: string; body: Block[]; source?: Source };
+// theme: used for the filters and the colour; exos: exercises shown as animations in the article
+// (the first one also illustrates the card).
+export type Theme = "prevention" | "reprise" | "saison" | "performance";
+export const themes: Record<Theme, string> = { prevention: "Prévention", reprise: "Reprise", saison: "En saison", performance: "Performance" };
+export type Post = { slug: string; title: string; desc: string; date: string; body: Block[]; source?: Source; theme: Theme; exos: string[] };
 
 export const posts: Post[] = [
   {
     slug: "etude-echauffement-blessures-genou-cheville",
+    theme: "prevention",
+    exos: ["saut-reception", "equilibre", "freinage"],
     title: "Étude : un échauffement structuré divise par deux les blessures du genou et de la cheville",
     desc: "Une étude menée dans 120 clubs de handball norvégiens montre qu'un échauffement ciblé réduit fortement les blessures aux membres inférieurs.",
     date: "2026-09-23",
@@ -28,6 +34,8 @@ export const posts: Post[] = [
   },
   {
     slug: "etude-prevention-epaule-handball",
+    theme: "prevention",
+    exos: ["rotation-externe-haute", "rotation-externe", "ytw", "rotation-thoracique"],
     title: "Étude : 3 séances d'exercices par semaine pour protéger l'épaule des handballeurs et handballeuses",
     desc: "Un programme de prévention testé sur 660 joueurs et joueuses de haut niveau réduit les problèmes d'épaule de 28 %.",
     date: "2026-09-23",
@@ -50,6 +58,8 @@ export const posts: Post[] = [
   },
   {
     slug: "etude-exigences-physiques-handball",
+    theme: "performance",
+    exos: ["squat-jump", "navette-5105", "departs-10"],
     title: "Étude : ce que le handball demande vraiment au corps",
     desc: "Une revue scientifique fait le point sur les qualités physiques et mentales qui font la performance au handball.",
     date: "2026-09-23",
@@ -71,6 +81,8 @@ export const posts: Post[] = [
   },
   {
     slug: "reprise-preparation-physique-handball",
+    theme: "reprise",
+    exos: ["fente-arriere", "squat", "planche"],
     title: "Bien reprendre la préparation physique au handball après l'été",
     desc: "Comment reprendre progressivement après la coupure estivale et arriver en forme au premier entraînement collectif.",
     date: "2026-09-21",
@@ -87,6 +99,8 @@ export const posts: Post[] = [
   },
   {
     slug: "epaules-handball-4-exercices-prevention",
+    theme: "prevention",
+    exos: ["rotation-externe", "pompes-scapulaires", "gainage-lateral"],
     title: "Handball : 4 exercices simples pour protéger tes épaules",
     desc: "Quatre exercices avec élastique et poids du corps à intégrer à ton échauffement pour préparer les épaules aux tirs répétés.",
     date: "2026-09-21",
@@ -107,6 +121,8 @@ export const posts: Post[] = [
   },
   {
     slug: "garder-la-forme-en-saison-handball",
+    theme: "saison",
+    exos: ["pogos", "squat"],
     title: "Comment garder la forme en pleine saison de handball",
     desc: "Deux séances courtes par semaine pour conserver ta force et ta vivacité sans te fatiguer avant les matchs.",
     date: "2026-09-21",
