@@ -14,10 +14,10 @@
 .fq-opt[aria-pressed=true],.fq-goal[aria-pressed=true],.fq-pl[aria-pressed=true],.fq-sil[aria-pressed=true],.fq-chip[aria-pressed=true]{border-color:var(--B);background:color-mix(in srgb,var(--B) 12%,var(--card))}
 @media(hover:hover){.fq-opt:hover,.fq-goal:hover:not(:disabled),.fq-pl:hover,.fq-sil:hover,.fq-chip:hover{border-color:var(--muted)}}
 .fq-wide{width:100%;text-align:center}
-.fq-sils{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.35rem}
-.fq-sil{display:grid;justify-items:center;align-content:space-between;gap:.3rem;padding:.5rem .15rem .6rem;min-width:0}.fq-sil span{font-size:.7rem;font-weight:700;line-height:1.2;text-align:center;letter-spacing:-.01em;overflow-wrap:anywhere}
-.sil{height:118px;width:auto;max-width:100%;fill:var(--ink)}.sil .hair{fill:#9E3456}
-.fq-sil[aria-pressed=true] .sil{fill:var(--Bt)}
+.fq-sils{display:flex;gap:.6rem;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -1.25rem;padding:.2rem 1.25rem .8rem;scrollbar-width:none}.fq-sils::-webkit-scrollbar{display:none}
+.fq-swipe{margin:0;color:var(--muted);font-size:.85rem}
+.fq-sil{flex:0 0 42%;scroll-snap-align:start;display:grid;justify-items:center;align-content:space-between;gap:.4rem;padding:.7rem .4rem .8rem;min-width:0}.fq-sil > span:last-child{font-size:.95rem;font-weight:700;line-height:1.2;text-align:center}
+.sil{display:block;width:100%}.sil svg{display:block;width:100%;height:auto;max-height:300px}
 .fq-goals,.fq-list{display:grid;gap:.6rem}
 .fq-goal{display:grid;gap:.2rem;text-align:left;padding:.9rem 1rem}.fq-goal strong{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;font-size:1.05rem}.fq-goal span{color:var(--muted);font-size:.9rem}
 .fq-goal:disabled{opacity:.45;cursor:not-allowed}
@@ -46,4 +46,4 @@
 .fq-wait .notify{display:grid;gap:.6rem;margin-top:.4rem}
 .fq-wait .notify input[type=email]{font:inherit;padding:.85rem 1rem;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink)}
 .fq-wait .notify .btn{background:var(--B)}.fq-wait .note{font-size:.8rem}
-@media(max-width:380px){.fq-sil span{font-size:.64rem}}@media(min-width:600px){.fq-sil span{font-size:.8rem}}
+@media(min-width:640px){.fq{max-width:760px}.fq-sils{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));overflow:visible;margin:0;padding:0}.fq-sil{flex:none}.fq-swipe{display:none}}

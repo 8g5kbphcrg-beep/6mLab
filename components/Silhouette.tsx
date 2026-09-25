@@ -1,15 +1,12 @@
-import { bodyFor, silhouettePaths, type Sex } from "@/lib/forme";
+import { bodySvg } from "@/lib/body";
+import type { Sex } from "@/lib/forme";
+
+// Fat, muscle and muscle definition of each silhouette of the questionnaire.
+const CUR = [[0, 0.1, 0.15], [0.3, 0.2, 0.05], [0.55, 0.2, 0], [0.8, 0.2, 0], [1, 0.2, 0]];
+const TARGET = [[0.05, 0.15, 0.3], [0.12, 0.35, 0.5], [0.1, 0.6, 0.75], [0.1, 0.85, 0.9], [0.08, 1.1, 1]];
 
 // A body silhouette for the fitness questionnaire (current or target body type).
 export default function Silhouette({ sex, kind, i }: { sex: Sex; kind: "cur" | "target"; i: number }) {
-  const p = silhouettePaths(bodyFor(sex, kind, i));
-  return (
-    <svg viewBox="0 0 100 200" className="sil" aria-hidden="true">
-      <circle cx="50" cy="20" r="11" />
-      {sex === "f" && <path d="M39 18 Q40 6 50 7 Q61 6 62 19 Q63 30 58 34 L56 26 Q50 12 44 26 L42 34 Q37 30 39 18 Z" className="hair" />}
-      <path d={p.torso} />
-      {p.arms.map((d, k) => <path key={`a${k}`} d={d} />)}
-      {p.legs.map((d, k) => <path key={`l${k}`} d={d} />)}
-    </svg>
-  );
+  const [fat, muscle, def] = (kind === "cur" ? CUR : TARGET)[i];
+  return <span className="sil" aria-hidden="true" dangerouslySetInnerHTML={{ __html: bodySvg({ sex, fat, muscle, def }, `${sex}${kind}${i}`) }} />;
 }
