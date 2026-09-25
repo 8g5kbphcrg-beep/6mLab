@@ -2,6 +2,7 @@ import { dict, type Lang } from "@/lib/dict";
 import { programs, programSlugs } from "@/lib/programs";
 import { fmtPrice, PACK_PRICE, prices } from "@/lib/checkout";
 import { recommended } from "@/lib/season";
+import "@/app/offers.css";
 
 // The two offers side by side, used on the home page and on /programmes. The one that fits the
 // handball calendar comes first with a badge; the "Saison complète" pack sits under them.
