@@ -339,6 +339,7 @@ const gear = {
   backpack: (j) => { const a = angle(j.hip, j.sh), m = mid(j.hip, j.sh), r = rad(a + 90); const c = [m[0] + 10 * Math.sin(r), m[1] + 10 * Math.cos(r)]; return `<rect x="${f1(c[0] - 7)}" y="${f1(c[1] - 12)}" width="14" height="24" rx="4" fill="${GEAR}" transform="rotate(${f1(a - 180)} ${f1(c[0])} ${f1(c[1])})"/>`; },
   band: (j, ctx) => (ctx.post ? `<path d="${d([ctx.post, j.near.wrist])}" ${stroke(2.5, BAND)}/>` : ""),
   // Ball held in the near hand (a shot).
+  basketHand: (j) => { const w = j.near.wrist, h = j.near.hand, c = [h[0] + (h[0] - w[0]) * 0.6, h[1] + (h[1] - w[1]) * 0.6]; return `<circle cx="${f1(c[0])}" cy="${f1(c[1])}" r="11" fill="#F28C38" stroke="${INK}" stroke-width="1.5"/><path d="M${f1(c[0] - 11)} ${f1(c[1])}h22M${f1(c[0])} ${f1(c[1] - 11)}v22M${f1(c[0] - 7)} ${f1(c[1] - 8.5)}q5 8.5 0 17M${f1(c[0] + 7)} ${f1(c[1] - 8.5)}q-5 8.5 0 17" stroke="${INK}" stroke-width="1" fill="none" opacity=".7"/>`; },
   ballHand: (j) => { const w = j.near.wrist, h = j.near.hand, c = [h[0] + (h[0] - w[0]) * 0.6, h[1] + (h[1] - w[1]) * 0.6]; return `<circle cx="${f1(c[0])}" cy="${f1(c[1])}" r="10" fill="#FFC75F" stroke="${INK}" stroke-width="1.5"/><path d="M${f1(c[0] - 10)} ${f1(c[1])}h20M${f1(c[0])} ${f1(c[1] - 10)}v20" stroke="${INK}" stroke-width="1" opacity=".5"/>`; },
   // Band anchored to the post, held in both hands.
   bands: (j, ctx) => (ctx.post ? `<path d="${d([j.far.wrist, ctx.post, j.near.wrist])}" ${stroke(2.5, BAND)}/>` : ""),
@@ -381,6 +382,23 @@ function sceneItems(sc, cam) {
       const ps = it.arrow.map((q) => proj(q, cam)), [a, b] = ps.slice(-2), an = Math.atan2(b[1] - a[1], b[0] - a[0]);
       const head = [-0.5, 0.5].map((k) => [b[0] - 9 * Math.cos(an + k), b[1] - 9 * Math.sin(an + k)]);
       out.push({ ps, svg: (sx) => `<path d="${d(ps.map(shift(sx)))}" ${stroke(3, BAND)} stroke-dasharray="1 6"/><path d="${d([head[0], b, head[1]].map(shift(sx)))}" ${stroke(3, BAND)}/>` });
+    }
+    // Basketball hoop: rim centred at x and height h, board behind it, pole to the floor.
+    if (it.hoop) {
+      const [x, h] = it.hoop, rim = Array.from({ length: 24 }, (_, i) => proj([x + 22 * Math.cos((i * Math.PI) / 12), h, 22 * Math.sin((i * Math.PI) / 12)], cam));
+      const net = [0, 3, 6, 9, 12, 15, 18, 21].map((i) => { const a = (i * Math.PI) / 12; return [proj([x + 22 * Math.cos(a), h, 22 * Math.sin(a)], cam), proj([x + 12 * Math.cos(a), h - 38, 12 * Math.sin(a)], cam)]; });
+      out.push(line([proj([x + 70, 0, 0], cam), proj([x + 70, h + 20, 0], cam), proj([x + 26, h + 20, 0], cam)], 6, EDGE));
+      out.push(poly(cuboid([x + 24, x + 28], [h - 10, h + 62], [-55, 55], cam)));
+      out.push(poly(cuboid([x + 23, x + 24], [h + 2, h + 45], [-25, 25], cam), "none"));
+      for (const [a, b] of net) out.push(line([a, b], 1.5, EDGE));
+      out.push({ ps: rim, svg: (sx) => `<path d="${d(rim.map(shift(sx)))}Z" fill="none" stroke="${JERSEY}" stroke-width="4"/>` });
+    }
+    // Football on the floor at [x, z]: white with dark patches.
+    if (it.football) {
+      const [x, z] = it.football, c = proj([x, 11, z], cam);
+      out.push({ ps: [[c[0] - 11, c[1] - 11], [c[0] + 11, c[1] + 11]], svg: (sx) => { const X = c[0] + sx, Y = c[1];
+        const pent = (cx, cy, r) => `M${[0, 1, 2, 3, 4].map((k) => { const a = -Math.PI / 2 + (k * 2 * Math.PI) / 5; return `${f1(cx + r * Math.cos(a))} ${f1(cy + r * Math.sin(a))}`; }).join("L")}Z`;
+        return `<circle cx="${f1(X)}" cy="${f1(Y)}" r="11" fill="#fff" stroke="${INK}" stroke-width="1.5"/><path d="${pent(X, Y, 4)}${pent(X - 8, Y - 5, 2.6)}${pent(X + 8, Y - 5, 2.6)}${pent(X - 5, Y + 8, 2.6)}${pent(X + 5, Y + 8, 2.6)}" fill="${INK}"/>`; } });
     }
     if (it.cones) for (const x of it.cones) { const c = proj([x, 0, 0], cam); out.push({ ps: [[c[0] - 7, c[1]], [c[0] + 7, c[1]]], svg: (sx) => `<path d="M${f1(c[0] + sx - 7)} ${f1(c[1])}l7 -16l7 16Z" fill="${JERSEY}"/>` }); }
   }

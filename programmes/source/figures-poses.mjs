@@ -459,6 +459,21 @@ export const defs = {
       near: { thigh: 32, shin: -58, foot: -5, upper: -112 - 6 * k, upperOut: 12, fore: -128 - 6 * k, foreOut: 6, hand: -128 },
       far: { thigh: -6, shin: -98, foot: -20, upper: 98, upperOut: -8, fore: 165, foreOut: -4, hand: 178 } })),
   },
+  // Home page cards of the sports coming soon: a free kick stance with the ball in front, and a dunk.
+  "coup-franc": {
+    cam: { yaw: 58, pitch: 4 },
+    scene: { all: [{ football: [70, -38] }] },
+    poids: [0, 1].map((k) => ({ torso: 5 + 2 * k, head: -6,
+      near: { thigh: 6, thighOut: 23, shin: -12 - 3 * k, shinOut: 5, upper: 4, upperOut: 18, fore: 12, foreOut: 12, hand: 10 },
+      far: { thigh: 6, thighOut: 23, shin: -12 - 3 * k, shinOut: 5, upper: 4, upperOut: 18, fore: 12, foreOut: 12, hand: 10 } })),
+  },
+  dunk: {
+    cam: { yaw: 14, pitch: 0 },
+    scene: { all: [{ hoop: [34, 236] }] },
+    poids: [0, 1].map((k) => ({ gear: ["basketHand"], lift: 62 + 5 * k, torso: 6, head: -6,
+      near: { thigh: 42, shin: -72, foot: -35, upper: 168 + 4 * k, upperOut: 4, fore: 172 + 4 * k, hand: 176 },
+      far: { thigh: -22, shin: -88, foot: -30, upper: -22, upperOut: 22, fore: -8, foreOut: 12, hand: -8 } })),
+  },
   "pompes-explosives": {
     poids: [
       pushBottom,

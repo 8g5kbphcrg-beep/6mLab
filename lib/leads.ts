@@ -12,10 +12,12 @@ const toLead = (c: Stripe.Customer): Lead => ({ id: c.id, email: c.email ?? "", 
 export const validEmail = (e: string) => e.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 
 // Finds the lead for this email, or creates it. A lead who had unsubscribed and asks again is
-// subscribed again. kind: "seance" (free session, then 3 tips) or "forme" (waiting list of the
-// fitness program: one email on launch day, nothing before).
+// subscribed again. kind: "seance" (free session, then 3 tips), "forme", "foot" or "basket"
+// (waiting lists: one email on launch day, nothing before), "sport" (a sport proposed on the home
+// page, metadata sport; the email is optional there).
 // extra: more metadata to save (the questionnaire answers), replacing earlier ones.
-export async function addLead(s: Stripe, email: string, lang: Lang, kind: "seance" | "forme" = "seance", extra: Record<string, string> = {}): Promise<Lead> {
+export type LeadKind = "seance" | "forme" | "foot" | "basket" | "sport";
+export async function addLead(s: Stripe, email: string, lang: Lang, kind: LeadKind = "seance", extra: Record<string, string> = {}): Promise<Lead> {
   // customers.list is up to date immediately (search can lag by a minute).
   const c = (await s.customers.list({ email, limit: 20 })).data.find((x) => x.metadata?.lead === kind);
   if (c) {
@@ -25,7 +27,7 @@ export async function addLead(s: Stripe, email: string, lang: Lang, kind: "seanc
 }
 
 // Leads created since `since` (Stripe search, newest first).
-export async function recentLeads(s: Stripe, since: number, kind: "seance" | "forme" = "seance"): Promise<Lead[]> {
+export async function recentLeads(s: Stripe, since: number, kind: LeadKind = "seance"): Promise<Lead[]> {
   const out: Lead[] = [];
   let page: string | undefined;
   do {
