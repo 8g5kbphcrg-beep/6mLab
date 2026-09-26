@@ -10,7 +10,7 @@ export const dict = {
     nav: { cmp: "Comparer", goal: "Trouver mon programme", other: "EN", skip: "Aller au contenu" },
     hero: { h1: "La prépa physique du haut niveau, pour ta saison de handball", sub: "Des programmes conçus par Raphaël, entraîneur et préparateur physique. Chaque exercice est animé, chaque semaine est planifiée.", cta: "Voir les programmes", trust: "5 ans en structures de haut niveau", foot: "La préparation physique du haut niveau, pour tous. Par Raphaël, 5 ans en structures de haut niveau." },
     cmp: {
-      title: "Compare les deux formules", sub: "Les mêmes objectifs au choix, deux moments de la saison.",
+      title: "Choisis ta formule", sub: "Toute la saison avec le pack, ou un seul programme : les mêmes objectifs au choix.",
       heads: [["Pré-saison", "Avant la saison"], ["Maintien en saison", "Pendant la saison"]],
       rows: [
         ["Objectif de la formule", "Arriver prêt à la reprise : 8 semaines de progression, jusqu'à l'affûtage", "Garder ton niveau sans nuire aux entraînements du club"],
@@ -41,7 +41,7 @@ export const dict = {
     nav: { cmp: "Compare", goal: "Find my program", other: "FR", skip: "Skip to content" },
     hero: { h1: "Elite-level physical prep for your handball season", sub: "Programs built by Raphaël, coach and strength coach. Every exercise animated, every week planned.", cta: "See the programs", trust: "5 years in elite-level handball", foot: "Elite-level physical preparation, for everyone. By Raphaël, 5 years in elite-level handball programs." },
     cmp: {
-      title: "Compare the two programs", sub: "Same goals to choose from, two moments in the season.",
+      title: "Choose your program", sub: "The whole season with the pack, or a single program: same goals to choose from.",
       heads: [["Pre-season", "Before the season"], ["In-season maintenance", "During the season"]],
       rows: [
         ["Focus", "Be ready for the restart: 8 weeks of progression, up to the taper", "Stay sharp without hurting your club training"],
