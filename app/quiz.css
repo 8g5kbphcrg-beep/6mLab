@@ -6,7 +6,7 @@
 .qopt{font:600 1.05rem var(--font-text),sans-serif;text-align:left;background:var(--card);color:inherit;border:2px solid var(--line);border-radius:var(--r);padding:1rem 1.2rem;min-height:56px;cursor:pointer;transition:border-color .2s,transform .2s}
 .qopt:hover{border-color:var(--cta);transform:translateX(4px)}
 .qlink{background:none;border:0;color:var(--muted);font:inherit;text-decoration:underline;cursor:pointer;margin-top:1.5rem;padding:.5rem 0;min-height:44px}
-.qres{border:1px solid var(--line);border-left:8px solid var(--A);border-radius:var(--r);background:var(--card);padding:1.4rem;margin-top:1.2rem}.qres.b{border-left-color:var(--B)}
+.qres{border:1px solid var(--line);border-left:8px solid var(--A);border-radius:var(--r);background:var(--card);padding:1.4rem;margin-top:1.2rem}.qres.b{border-left-color:var(--B)}.qres.p{border-left-color:#FFC75F}.qprice s{font-size:1.1rem;color:var(--muted);margin-left:.4rem}
 .qres p{color:var(--muted)}.qprice{font:400 2.2rem var(--font-display),sans-serif;color:var(--ink)}
 .qsum{list-style:none;padding:0;margin:1rem 0;display:grid;gap:.3rem;color:var(--muted)}.qsum b{color:var(--ink)}
 .quiz .btn[disabled]{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
