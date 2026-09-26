@@ -18,7 +18,9 @@
 //
 // A pose can also set: x / z (move along the floor), lift (height in the air), flip (face the
 // other way), contact (point placed on the floor), pin ([point, x, z?]: point placed there),
-// headTurn (head turned around the spine, towards the near side), scap (shoulder blades: positive
+// plant ([x, height]: heels fixed there, the legs adjust; plantSides: only these legs),
+// plantHands ([dx from the near toe, height]: wrists fixed there, the arms adjust), headTurn (head turned around the spine,
+// towards the near side), scap (shoulder blades: positive
 // squeezed, the chest sinks between the arms), ball ([x, height, z?] of the ball when it leaves
 // the hands),
 // support (shoulders resting at that height: 0 on the floor, 42 on a bench), hang (hands at that
@@ -136,7 +138,40 @@ export function place(raw, cam = camera()) {
   let dx = p.x, dz = p.z;
   if (p.pin) { const q = get(j, p.pin[0]); dx = p.pin[1] - q[0]; if (p.pin[2] !== undefined) dz = p.pin[2] - q[2]; }
   p = { ...p, x: dx, z: dz };
-  const w = every(j, (q) => [q[0] + dx, q[1] + dy, q[2] + dz]);
+  let w = every(j, (q) => [q[0] + dx, q[1] + dy, q[2] + dz]);
+  // plant: [x, height] where both heels stay (feet that never slide); the thighs and shins are
+  // set so that the ankles reach it, knees bent upwards.
+  if (p.plant) {
+    for (const sd of p.plantSides ?? ["near", "far"]) {
+      const q = p[sd], off = dir(q.foot - 103, 0, 1), hip = w[sd].hip;
+      const tx = p.plant[0] - off[0] * L.heel - hip[0], ty = p.plant[1] - off[1] * L.heel - hip[1];
+      const dd = Math.min(Math.hypot(tx, ty), L.thigh + L.shin - 0.01), base = Math.atan2(tx, -ty), bend = Math.acos(dd / (2 * L.thigh));
+      const k1 = base + bend, k2 = base - bend, up = (a) => -Math.cos(a);
+      const th = up(k1) > up(k2) ? k1 : k2, knee = [Math.sin(th) * L.thigh, -Math.cos(th) * L.thigh];
+      p = { ...p, [sd]: { ...q, thigh: (th * 180) / Math.PI, thighOut: 0, shin: (Math.atan2(tx - knee[0], -(ty - knee[1])) * 180) / Math.PI, shinOut: 0 } };
+    }
+    w = every(joints(p), (q) => [q[0] + dx, q[1] + dy, q[2] + dz]);
+  }
+  // plantHands: [dx, height] where both wrists stay, dx measured from the near toe (hands that
+  // never slide during a push-up). Each elbow goes to the highest point it can reach, a little
+  // out to the side (forearms off the floor, elbows at about 45° from the body).
+  if (p.plantHands) {
+    const toe = w.near.toe;
+    for (const [sd, sg] of [["near", 1], ["far", -1]]) {
+      const sh = w[sd].sh, wr = [toe[0] + p.plantHands[0], p.plantHands[1], w[sd].wrist[2]];
+      const v = add(wr, mul(sh, -1)), dist = Math.min(Math.hypot(...v), L.upper + L.fore - 0.01), n = mul(v, 1 / Math.hypot(...v));
+      const a = (L.upper ** 2 - L.fore ** 2 + dist ** 2) / (2 * dist), r = Math.sqrt(Math.max(0, L.upper ** 2 - a ** 2)), c = add(sh, mul(n, a));
+      // Two directions perpendicular to the arm line, then the best point of the elbow circle.
+      const e1 = (() => { const t = Math.abs(n[1]) < 0.9 ? [0, 1, 0] : [1, 0, 0], u = add(t, mul(n, -dot(t, n))); return mul(u, 1 / Math.hypot(...u)); })();
+      const e2 = cross(n, e1);
+      let best = null;
+      for (let k = 0; k < 72; k++) { const th = (k / 72) * 2 * Math.PI, el = add(c, add(mul(e1, r * Math.cos(th)), mul(e2, r * Math.sin(th)))); const sc = el[1] + 0.35 * sg * (el[2] - sh[2]); if (!best || sc > best[0]) best = [sc, el]; }
+      const el = best[1], ang = (d3) => { const q = mul(d3, 1 / Math.hypot(...d3)); return [(Math.atan2(q[0], -q[1]) * 180) / Math.PI, (Math.asin(Math.max(-1, Math.min(1, sg * q[2]))) * 180) / Math.PI]; };
+      const [ua, ub] = ang(add(el, mul(sh, -1))), [fa, fb] = ang(add(wr, mul(el, -1)));
+      p = { ...p, [sd]: { ...p[sd], upper: ua, upperOut: ub, fore: fa, foreOut: fb } };
+    }
+    w = every(joints(p), (q) => [q[0] + dx, q[1] + dy, q[2] + dz]);
+  }
   return { p, w, j: every(w, (q) => proj(q, cam)) };
 }
 
@@ -165,9 +200,14 @@ const at = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
 function lookOf(w, cam, ws = [w]) {
   const dn = depth(w.near.sh, cam), df = depth(w.far.sh, cam);
   const back = dn < df ? "near" : "far", front = back === "near" ? "far" : "near";
-  const armFront = ws.filter((q) => depth(q[back].hand, cam) > depth(q.chest, cam) + 3).length > ws.length / 2;
-  if (cam.side) return { back, front, armFront, dark: true, offset: true, trunkW: BODY.trunk };
-  return { back, front, armFront, dark: Math.abs(dn - df) / (2 * DIM.shW) > 0.5, offset: false, trunkW: BODY.trunk * 0.62 };
+  const most = (fn) => ws.filter(fn).length > ws.length / 2;
+  const armFront = most((q) => depth(q[back].hand, cam) > depth(q.chest, cam) + 3);
+  // An arm whose hand passes in front of the face is drawn over the head.
+  const near = (q, sd) => Math.min(...["elbow", "wrist", "hand"].map((k) => Math.hypot(q[sd][k][0] - q.head[0], q[sd][k][1] - q.head[1])));
+  const overHead = (sd) => ws.some((q) => depth(q[sd].hand, cam) > depth(q.head, cam) + 4 && depth(q[sd].elbow, cam) > depth(q.head, cam) - 2 && near(q, sd) < 30);
+  const heads = { front: overHead(front), back: armFront && overHead(back) };
+  if (cam.side) return { back, front, armFront, heads, dark: true, offset: true, trunkW: BODY.trunk };
+  return { back, front, armFront, heads, dark: Math.abs(dn - df) / (2 * DIM.shW) > 0.5, offset: false, trunkW: BODY.trunk * 0.62 };
 }
 
 // Hair, Playmobil style: a helmet a little larger than the head. It covers the top of the head
@@ -236,7 +276,7 @@ function shapes(j, w, cam, lk) {
   line([j.chest, j.chest], BODY.chest, JERSEY);
   // Brand mark on the jersey, upright along the trunk.
   out.push(["logo", at(j.hip, j.sh, 0.6), (Math.atan2(j.sh[0] - j.hip[0], j.hip[1] - j.sh[1]) * 180) / Math.PI]);
-  if (lk.armFront) backArm();
+  if (lk.armFront && !lk.heads.back) backArm();
   const frontArm = side(F, COL.front, (q) => q);
   // Head: skin, then hair on the back and top of the head (all of it seen from behind), nose.
   const R = L.head, h = [(j.head[0] - j.neck[0]) / R, (j.head[1] - j.neck[1]) / R], f = [(j.face[0] - j.head[0]) / R, (j.face[1] - j.head[1]) / R];
@@ -245,7 +285,7 @@ function shapes(j, w, cam, lk) {
     const fall = (a, dn) => [base[0] - a * f[0] * R, base[1] - a * f[1] * R + dn * R];
     line([base, fall(0.45, 0.35), fall(0.4, 1.3)], 6.5, HAIR);
   }
-  frontArm();
+  if (!lk.heads.front) frontArm();
   const fl = Math.hypot(f[0], f[1]), nose = 0.22 * R * Math.max(0, Math.min(1, (fl - 0.5) / 0.3));
   out.push(["c", [j.head[0] + f[0] * 0.95 * R - h[0] * 0.12 * R, j.head[1] + f[1] * 0.95 * R - h[1] * 0.12 * R], nose + 0.01, COL.front.skin]);
   out.push(["c", j.head, R + OW / 2, OUT], ["c", j.head, R, COL.front.skin]);
@@ -266,6 +306,8 @@ function shapes(j, w, cam, lk) {
     return outline(pts, j.head);
   });
   out.push(["b", pieces, 2.4, HAIR_OUT], ["b", pieces, 0, HAIR]);
+  if (lk.heads.back) backArm();
+  if (lk.heads.front) frontArm();
   return out;
 }
 
@@ -296,6 +338,8 @@ const gear = {
   ball: (j, ctx) => { const c = ctx.ball ?? mid(j.near.hand, j.far.hand); return `<circle cx="${f1(c[0])}" cy="${f1(c[1])}" r="9" fill="#FFC75F" stroke="${INK}" stroke-width="1.5"/>`; },
   backpack: (j) => { const a = angle(j.hip, j.sh), m = mid(j.hip, j.sh), r = rad(a + 90); const c = [m[0] + 10 * Math.sin(r), m[1] + 10 * Math.cos(r)]; return `<rect x="${f1(c[0] - 7)}" y="${f1(c[1] - 12)}" width="14" height="24" rx="4" fill="${GEAR}" transform="rotate(${f1(a - 180)} ${f1(c[0])} ${f1(c[1])})"/>`; },
   band: (j, ctx) => (ctx.post ? `<path d="${d([ctx.post, j.near.wrist])}" ${stroke(2.5, BAND)}/>` : ""),
+  // Ball held in the near hand (a shot).
+  ballHand: (j) => { const w = j.near.wrist, h = j.near.hand, c = [h[0] + (h[0] - w[0]) * 0.6, h[1] + (h[1] - w[1]) * 0.6]; return `<circle cx="${f1(c[0])}" cy="${f1(c[1])}" r="10" fill="#FFC75F" stroke="${INK}" stroke-width="1.5"/><path d="M${f1(c[0] - 10)} ${f1(c[1])}h20M${f1(c[0])} ${f1(c[1] - 10)}v20" stroke="${INK}" stroke-width="1" opacity=".5"/>`; },
   // Band anchored to the post, held in both hands.
   bands: (j, ctx) => (ctx.post ? `<path d="${d([j.far.wrist, ctx.post, j.near.wrist])}" ${stroke(2.5, BAND)}/>` : ""),
   // Band under the feet, held in both hands.
