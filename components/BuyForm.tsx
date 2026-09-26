@@ -12,12 +12,13 @@ import "@/app/buy.css";
 // Posts to /api/checkout. The goal checkboxes are real form fields, so the form still submits
 // without JavaScript; the server checks the count. pack: the "Saison complète" page (Pré-saison
 // then Maintien, same goals, one price).
-export default function BuyForm({ lang, slug, goals = [], pack = false, test, error }: { lang: Lang; slug: ProgramSlug; goals?: GoalId[]; pack?: boolean; test: boolean; error?: string }) {
+// place: already chosen in the questionnaire (home or gym), then pre-selected.
+export default function BuyForm({ lang, slug, goals = [], pack = false, place: chosen, test, error }: { lang: Lang; slug: ProgramSlug; goals?: GoalId[]; pack?: boolean; place?: Place; test: boolean; error?: string }) {
   const t = buy[lang];
   const p = programs[lang][slug];
   const [sel, setSel] = useState<GoalId[]>(goals);
   const [running, setRunning] = useState(false);
-  const [place, setPlace] = useState<Place | null>(null);
+  const [place, setPlace] = useState<Place | null>(chosen ?? null);
   const [err, setErr] = useState(error);
   // Paying without a goal: the page scrolls back up to the goals, which show a red message.
   const [noGoal, setNoGoal] = useState(false);
