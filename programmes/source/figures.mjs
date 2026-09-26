@@ -18,12 +18,13 @@
 //
 // A pose can also set: x / z (move along the floor), lift (height in the air), flip (face the
 // other way), contact (point placed on the floor), pin ([point, x, z?]: point placed there),
-// headTurn (head turned around the spine, towards the near side), ball ([x, height] of the ball
-// when it leaves the hands),
+// headTurn (head turned around the spine, towards the near side), scap (shoulder blades: positive
+// squeezed, the chest sinks between the arms), ball ([x, height, z?] of the ball when it leaves
+// the hands),
 // support (shoulders resting at that height: 0 on the floor, 42 on a bench), hang (hands at that
 // height, e.g. a pull-up bar) and solve (adjust angles until one point is dy below another).
 // Exercise options: cam ({ yaw, pitch }, or one per version), scene (box, bench, slab, wall, bar,
-// post, cones), loop, pace (relative duration of each move), still (positions shown in the PDF). contactReport() and framesBelow() check that nothing goes through the floor.
+// post, cones, arrow: world points showing a movement's direction), loop, pace (relative duration of each move), still (positions shown in the PDF). contactReport() and framesBelow() check that nothing goes through the floor.
 
 import { defs } from "./figures-poses.mjs";
 import { markSvg } from "../../lib/mark.mjs";
@@ -54,7 +55,7 @@ const dir = (a, b, s) => [Math.sin(rad(a)) * Math.cos(rad(b)), -Math.cos(rad(a))
 
 const norm = (p) => {
   const side = (s = {}) => ({ thigh: 0, shin: 0, foot: FLAT, upper: 0, fore: 0, thighOut: 0, shinOut: 0, footOut: 0, upperOut: 0, foreOut: 0, ...s, hand: s.hand ?? s.fore ?? 0, handOut: s.handOut ?? s.foreOut ?? 0 });
-  return { torso: 0, lean: 0, twist: 0, head: 0, headTurn: 0, roll: 0, lift: 0, x: 0, z: 0, ...p, near: side(p.near), far: side(p.far ?? p.near) };
+  return { torso: 0, lean: 0, twist: 0, head: 0, headTurn: 0, roll: 0, scap: 0, lift: 0, x: 0, z: 0, ...p, near: side(p.near), far: side(p.far ?? p.near) };
 };
 
 // Body axes: U along the trunk, F towards the chest, S towards the near side; Ssh = shoulder line.
@@ -78,11 +79,13 @@ function joints(p) {
   const face = add(head, mul(fd, L.head)), chest = add(mul(U, L.torso * 0.72), mul(F, BODY.chestOff)), seat = add(mul(U, L.torso * 0.08), mul(F, -6));
   const side = (q, s) => {
     const D = (k) => dir(q[k], q[k + "Out"], s);
-    const hip = mul(S, s * DIM.hipW), sh = add(shC, mul(Ssh, s * DIM.shW));
+    // shT: shoulder on the trunk outline; sh: where the arm starts, moved by scap (shoulder blades
+    // squeezed: the chest sinks between the arms; negative: spread, the upper back rises).
+    const hip = mul(S, s * DIM.hipW), shT = add(shC, mul(Ssh, s * DIM.shW)), sh = add(shT, mul(F, -p.scap));
     const knee = add(hip, mul(D("thigh"), L.thigh)), ankle = add(knee, mul(D("shin"), L.shin));
     const toe = add(ankle, mul(D("foot"), L.toe)), heel = add(ankle, mul(dir(q.foot - 103, q.footOut, s), L.heel));
     const elbow = add(sh, mul(D("upper"), L.upper)), wrist = add(elbow, mul(D("fore"), L.fore)), hand = add(wrist, mul(D("hand"), L.hand));
-    return { hip, sh, knee, ankle, toe, heel, elbow, wrist, hand };
+    return { hip, sh, shT, knee, ankle, toe, heel, elbow, wrist, hand };
   };
   return { hip: hipC, sh: shC, neck, head, face, chest, seat, near: side(p.near, 1), far: side(p.far, -1) };
 }
@@ -157,11 +160,14 @@ const at = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
 
 // How to draw the two sides: the one further from the camera first, darker when clearly behind.
 // Side view: far limbs darker and 5 units behind.
-function lookOf(w, cam) {
+// ws: every frame of the animation (the far arm is drawn in front of the trunk when its hand is
+// in front of the chest in most of them).
+function lookOf(w, cam, ws = [w]) {
   const dn = depth(w.near.sh, cam), df = depth(w.far.sh, cam);
   const back = dn < df ? "near" : "far", front = back === "near" ? "far" : "near";
-  if (cam.side) return { back, front, dark: true, offset: true, trunkW: BODY.trunk };
-  return { back, front, dark: Math.abs(dn - df) / (2 * DIM.shW) > 0.5, offset: false, trunkW: BODY.trunk * 0.62 };
+  const armFront = ws.filter((q) => depth(q[back].hand, cam) > depth(q.chest, cam) + 3).length > ws.length / 2;
+  if (cam.side) return { back, front, armFront, dark: true, offset: true, trunkW: BODY.trunk };
+  return { back, front, armFront, dark: Math.abs(dn - df) / (2 * DIM.shW) > 0.5, offset: false, trunkW: BODY.trunk * 0.62 };
 }
 
 // Hair, Playmobil style: a helmet a little larger than the head. It covers the top of the head
@@ -217,17 +223,20 @@ function shapes(j, w, cam, lk) {
     };
   };
   const B = j[lk.back], F = j[lk.front], cb = lk.dark ? COL.back : COL.front, fb = lk.offset ? (q) => [q[0] - 5, q[1]] : (q) => q;
+  // The far arm is drawn behind the trunk, unless its hand is in front of the chest (arms held
+  // across the body, throws): then over it.
   const backArm = side(B, cb, fb);
-  backArm();
+  if (!lk.armFront) backArm();
   // Trunk: neck, shorts (pelvis and seat), jersey, chest.
   limb([[[j.sh, j.neck], 8]], COL.front.skin);
   line([j.seat, j.seat], 16 * BODY.leg, COL.front.shorts);
   line([B.hip, F.hip], lk.trunkW + 3, COL.front.shorts);
-  const tr = [at(B.hip, B.sh, 0.2), B.sh, F.sh, at(F.hip, F.sh, 0.2)];
+  const tr = [at(B.hip, B.shT, 0.2), B.shT, F.shT, at(F.hip, F.shT, 0.2)];
   out.push(["p", tr, lk.trunkW + OW, OUT], ["p", tr, lk.trunkW, JERSEY]);
   line([j.chest, j.chest], BODY.chest, JERSEY);
   // Brand mark on the jersey, upright along the trunk.
   out.push(["logo", at(j.hip, j.sh, 0.6), (Math.atan2(j.sh[0] - j.hip[0], j.hip[1] - j.sh[1]) * 180) / Math.PI]);
+  if (lk.armFront) backArm();
   const frontArm = side(F, COL.front, (q) => q);
   // Head: skin, then hair on the back and top of the head (all of it seen from behind), nose.
   const R = L.head, h = [(j.head[0] - j.neck[0]) / R, (j.head[1] - j.neck[1]) / R], f = [(j.face[0] - j.head[0]) / R, (j.face[1] - j.head[1]) / R];
@@ -323,6 +332,12 @@ function sceneItems(sc, cam) {
     if (it.wallZ !== undefined) out.push(poly(cuboid(it.x ?? [-50, 50], [0, 200], [it.wallZ - 3, it.wallZ], cam), EDGE));
     if (it.bar) { const [x, h] = it.bar; out.push(line([proj([x - 30, 0, 0], cam), proj([x - 30, h, 0], cam)], 3, EDGE), line([proj([x + 30, 0, 0], cam), proj([x + 30, h, 0], cam)], 3, EDGE), line([proj([x - 30, h, 0], cam), proj([x + 30, h, 0], cam)], 5, GEAR)); }
     if (it.post) { const [x, h] = it.post, z = it.z ?? 0; out.push(line([proj([x, 0, z], cam), proj([x, h + 12, z], cam)], 6, EDGE)); }
+    // Arrow showing the direction of a movement: a line through world points, head at the end.
+    if (it.arrow) {
+      const ps = it.arrow.map((q) => proj(q, cam)), [a, b] = ps.slice(-2), an = Math.atan2(b[1] - a[1], b[0] - a[0]);
+      const head = [-0.5, 0.5].map((k) => [b[0] - 9 * Math.cos(an + k), b[1] - 9 * Math.sin(an + k)]);
+      out.push({ ps, svg: (sx) => `<path d="${d(ps.map(shift(sx)))}" ${stroke(3, BAND)} stroke-dasharray="1 6"/><path d="${d([head[0], b, head[1]].map(shift(sx)))}" ${stroke(3, BAND)}/>` });
+    }
     if (it.cones) for (const x of it.cones) { const c = proj([x, 0, 0], cam); out.push({ ps: [[c[0] - 7, c[1]], [c[0] + 7, c[1]]], svg: (sx) => `<path d="M${f1(c[0] + sx - 7)} ${f1(c[1])}l7 -16l7 16Z" fill="${JERSEY}"/>` }); }
   }
   return out;
@@ -383,7 +398,7 @@ function drawFigure(id, variant) {
     ys.push(...ysOf(j, items));
     const post = scenePost(ex.scene, cam);
     const js = every(j, shift(sx));
-    svg += items.map((it) => it.svg(sx)).join("") + bodySvg(js, w, cam, lookOf(w, cam), p.gear, { post: post && shift(sx)(post), ball: p.ball && shift(sx)(proj([p.ball[0], p.ball[1], 0], cam)) });
+    svg += items.map((it) => it.svg(sx)).join("") + bodySvg(js, w, cam, lookOf(w, cam), p.gear, { post: post && shift(sx)(post), ball: p.ball && shift(sx)(proj([p.ball[0], p.ball[1], p.ball[2] ?? 0], cam)) });
     x += x2 - x1;
     if (i < shown.length - 1) { svg += `<path d="M${f1(x + 8)} ${G - 90}h${gap - 16}m-7 -7l7 7l-7 7" ${stroke(3.5, JERSEY)}/>`; x += gap; }
   });
@@ -399,8 +414,8 @@ const lerp = (a, b, t) => {
   // that contacts hold during the move.
   const same = a.solve && b.solve && a.solve.length === b.solve.length && a.solve.every((s, i) => s.a === b.solve[i].a && s.b === b.solve[i].b && s.vary.join() === b.solve[i].vary.join());
   const out = { ...a, solve: same ? a.solve.map((s, i) => ({ ...s, dy: m(s.dy ?? 0, b.solve[i].dy ?? 0) })) : undefined, near: side(a.near, b.near), far: side(a.far, b.far) };
-  for (const k of ["torso", "lean", "twist", "head", "headTurn", "roll", "lift", "x", "z"]) out[k] = m(a[k], b[k]);
-  if (a.ball && b.ball) out.ball = [m(a.ball[0], b.ball[0]), m(a.ball[1], b.ball[1])];
+  for (const k of ["torso", "lean", "twist", "head", "headTurn", "roll", "scap", "lift", "x", "z"]) out[k] = m(a[k], b[k]);
+  if (a.ball && b.ball) out.ball = a.ball.map((v, i) => m(v, b.ball[i] ?? 0));
   for (const k of ["support", "hang"]) if (a[k] !== undefined) out[k] = m(a[k], b[k] ?? a[k]);
   out.contact = t < 0.5 ? a.contact : b.contact;
   out.pin = a.pin && b.pin && a.pin[0] === b.pin[0] ? [a.pin[0], m(a.pin[1], b.pin[1]), a.pin[2] === undefined ? undefined : m(a.pin[2], b.pin[2])] : undefined;
@@ -434,7 +449,7 @@ function drawAnimated(id, variant, seconds, steps) {
   const F = placed.map((q) => every(q.j, shift(sx)));
   const dur = `${f1(seconds * seq.slice(1).reduce((s, _, i) => s + Math.max(2, Math.round(steps * pace(i))) / steps, 0) + (restart ? seconds / 2 : 0))}s`;
   const anim = (attr, vals) => `<animate attributeName="${attr}" dur="${dur}" repeatCount="indefinite" values="${vals.join(";")}"/>`;
-  const lk = lookOf(w0, cam);
+  const lk = lookOf(w0, cam, placed.map((q) => q.w));
   const post = scenePost(ex.scene, cam), ctx = { post: post && shift(sx)(post) };
   let svg = items.map((it) => it.svg(sx)).join("");
   const S = F.map((j, i) => shapes(j, placed[i].w, cam, lk));
@@ -465,7 +480,7 @@ function drawAnimated(id, variant, seconds, steps) {
     const n = F.length;
     F.forEach((j, i) => {
       const vis = Array.from({ length: n }, (_, k) => (k === i ? "visible" : "hidden"));
-      const b = placed[i].p.ball, c = { ...ctx, ball: b && shift(sx)(proj([b[0], b[1], 0], cam)) };
+      const b = placed[i].p.ball, c = { ...ctx, ball: b && shift(sx)(proj([b[0], b[1], b[2] ?? 0], cam)) };
       svg += `<g visibility="${i === 0 ? "visible" : "hidden"}">${p0.gear.map((g) => gear[g](j, c)).join("")}<animate attributeName="visibility" dur="${dur}" repeatCount="indefinite" calcMode="discrete" values="${vis.join(";")}"/></g>`;
     });
   }

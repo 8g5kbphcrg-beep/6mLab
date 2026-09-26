@@ -104,12 +104,12 @@ export const parLieu = {
     salle: { how: "En suspension à une barre, tire jusqu'à passer le menton au-dessus, puis redescends. Autre option : tirage vertical à la poulie.", easier: "Avec un élastique ou la machine d'assistance.", figs: [["tractions", "poids"]] },
   },
   "rotation-externe": {
-    maison: { how: "Allongé sur le côté, coude du dessus collé au corps et plié à 90°, une bouteille d'eau en main : lève l'avant-bras vers le plafond, puis redescends lentement.", figs: [["rotation-externe", "maison"]],
+    maison: { how: "Allongé sur le côté, coude du dessus collé à la taille et plié à 90°, une bouteille d'eau en main, avant-bras posé devant le ventre : lève l'avant-bras vers le plafond en pivotant autour du coude (la main s'éloigne du ventre), puis redescends lentement.", figs: [["rotation-externe", "maison"]],
       band: { how: "Debout, élastique attaché sur le côté : coude collé, écarte l'avant-bras vers l'extérieur.", figs: [["rotation-externe", "materiel"]] } },
     salle: { how: "À la poulie réglée à hauteur du coude (ou avec un élastique) : coude collé au corps et plié à 90°, écarte l'avant-bras vers l'extérieur, puis reviens lentement.", figs: [["rotation-externe", "materiel"]] },
   },
   "rotation-externe-haute": {
-    maison: { how: "Buste penché vers l'avant, bras écarté sur le côté, coude à 90°, une bouteille d'eau en main : fais pivoter l'avant-bras vers l'avant, jusqu'à l'horizontale, puis redescends lentement.", figs: [["rotation-externe-haute", "maison"]],
+    maison: { how: "Debout, bien droit, bras écarté sur le côté à hauteur d'épaule, coude à 90°, une bouteille d'eau en main, avant-bras vers l'avant : fais pivoter l'avant-bras vers le haut (la main monte vers le plafond, le coude ne bouge pas), puis redescends lentement.", figs: [["rotation-externe-haute", "maison"]],
       band: { how: "Élastique attaché devant toi : bras à l'horizontale, coude à 90°, fais pivoter l'avant-bras vers le haut.", figs: [["rotation-externe-haute", "materiel"]] } },
     salle: { how: "À la poulie réglée à hauteur d'épaule (ou avec un élastique) : bras à l'horizontale, coude à 90°, fais pivoter l'avant-bras vers le haut.", figs: [["rotation-externe-haute", "materiel"]] },
   },
@@ -143,6 +143,11 @@ export const parLieu = {
     salle: { how: "Sur une jambe, sur un bosu ou un plateau instable, lance une balle contre un mur et rattrape-la.", figs: [["equilibre-balle", "materiel"]] },
   },
 
+  // ---- Circuit : chaque exercice dans sa propre animation --------------------------------------
+  circuit: {
+    all: { figs: [["squat", "poids", "Squats"], ["pompes", "poids", "Pompes"], ["fente-arriere", "poids", "Fentes alternées"], ["mountain-climber", "poids", "Mountain climbers"], ["burpee", "poids", "Burpees"], ["planche", "poids", "Planche"]] },
+  },
+
   // ---- Mêmes exercices, consigne adaptée -----------------------------------------------------
   nordic: {
     maison: { how: "À genoux sur un coussin, pieds bloqués sous le canapé ou tenus par une autre personne, laisse-toi tomber vers l'avant le plus lentement possible, corps droit. Rattrape-toi avec les mains, puis remonte en t'aidant des mains." },
@@ -173,13 +178,15 @@ export const parLieu = {
 };
 
 // The exercise as it is done in this place: text, drawings ([id, version, label]) and band variant.
+// all: the same in both places (and on the pages without a place). A drawing can carry its own
+// label ([id, version, label]).
 export function exoFor(base, id, lieu) {
-  const l = parLieu[id]?.[lieu];
+  const l = parLieu[id]?.[lieu] ?? parLieu[id]?.all;
   if (!l) return { ...base, figs: null };
   const label = lieu === "maison" ? "À la maison" : "En salle";
   // Drawings of this place, then of the band variant; null keeps the exercise's usual drawings.
-  const figs = l.figs ? [...l.figs.map(([fid, v]) => [fid, v, label]), ...(l.band?.figs ?? []).map(([fid, v]) => [fid, v, "Avec un élastique"])] : null;
-  return { ...base, name: l.name ?? base.name, how: l.how, cues: l.cues ?? base.cues, easier: l.easier ?? (l.name ? undefined : base.easier), band: l.band?.how, figs };
+  const figs = l.figs ? [...l.figs.map(([fid, v, lab]) => [fid, v, lab ?? label]), ...(l.band?.figs ?? []).map(([fid, v]) => [fid, v, "Avec un élastique"])] : null;
+  return { ...base, name: l.name ?? base.name, how: l.how ?? base.how, cues: l.cues ?? base.cues, easier: l.easier ?? (l.name ? undefined : base.easier), band: l.band?.how, figs };
 }
 export const doseFor = (id, dose, lieu) => parLieu[id]?.[lieu]?.dose?.(dose) ?? dose;
 export const precFor = (id, prec, lieu) => { const p = parLieu[id]?.[lieu]?.prec; return p === undefined ? prec : p || undefined; };
