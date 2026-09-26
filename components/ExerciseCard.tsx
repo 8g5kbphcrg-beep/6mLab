@@ -26,7 +26,8 @@ const LABELS: Record<string, [string, string]> = { poids: ["Au poids du corps", 
 export default function ExerciseCard({ lang, id, option }: { lang: Lang; id: string; option?: string }) {
   const fr = lang === "fr";
   const { lieu, sex } = parse(option);
-  const ex = lieu ? exoFor(exerciseList[id], id, lieu) : { ...exerciseList[id], band: undefined, figs: null };
+  // Without a place: the drawings shared by both places when there are some (circuit), else every version.
+  const ex = exoFor(exerciseList[id], id, lieu ?? "all");
   const figs = ex.figs ?? variants(id).map((v) => [id, v, LABELS[v]?.[fr ? 0 : 1] ?? v] as [string, string, string]);
   return (
     <div className="exo-back">

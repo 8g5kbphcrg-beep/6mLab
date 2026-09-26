@@ -8,6 +8,8 @@ body:has(.exo-back){overflow:hidden}
 .exo-x:hover{background:#E3E0F0}.exo-x:focus-visible{outline:3px solid #FF7A59;outline-offset:2px}
 .exo-anims{display:grid;gap:12px;margin-bottom:1rem}
 @media (min-width:700px){.exo-anims.n2{grid-template-columns:1fr 1fr}}
+.exo-anims.n3,.exo-anims.n4,.exo-anims.n5,.exo-anims.n6{grid-template-columns:1fr 1fr}
+@media (min-width:700px){.exo-anims.n3,.exo-anims.n5,.exo-anims.n6{grid-template-columns:repeat(3,1fr)}}
 .exo-anims figure{margin:0;background:#F6F5FB;border-radius:14px;padding:10px 12px}
 .exo-anims figcaption{display:inline-block;font-size:.8rem;font-weight:700;background:#100A24;color:#fff;border-radius:99px;padding:.15rem .7rem}
 .exo-svg svg{display:block;width:100%;height:auto;max-height:min(55vh,420px)}
