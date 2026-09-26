@@ -463,19 +463,20 @@ export const defs = {
   // Free kick stance: facing the goal, feet very wide, legs almost straight, chest up, arms hanging
   // slightly away from the body, ball on the ground in front.
   "coup-franc": {
-    cam: { yaw: 78, pitch: 6 },
+    cam: { yaw: 78, pitch: 6, front: true },
     scene: { all: [{ football: [70, -62] }] },
     poids: [0, 1].map((k) => ({ torso: -2, head: -4 - 2 * k,
       near: { thigh: 2, thighOut: 17 + k, shin: -3, shinOut: 17 + k, upper: 4, upperOut: 20 + 2 * k, fore: 10, foreOut: 18, hand: 8 },
       far: { thigh: 2, thighOut: 17 + k, shin: -3, shinOut: 17 + k, upper: 4, upperOut: 20 + 2 * k, fore: 10, foreOut: 18, hand: 8 } })),
   },
-  // Dunk: in the air, ball held high above the rim, legs split wide (front knee up, back leg behind).
+  // Dunk, "Jumpman" silhouette: mid-flight on the way to the hoop, ball held high in one hand,
+  // legs split wide (front leg reaching forward, back leg stretched behind), other arm out low.
   dunk: {
-    cam: { yaw: 14, pitch: 0 },
-    scene: { all: [{ hoop: [34, 236] }] },
-    poids: [0, 1].map((k) => ({ gear: ["basketHand"], lift: 64 + 5 * k, torso: 6, head: -6,
-      near: { thigh: 72, thighOut: 14, shin: -58, foot: -35, upper: 168 + 4 * k, upperOut: 4, fore: 172 + 4 * k, hand: 176 },
-      far: { thigh: -46, thighOut: 14, shin: -62, foot: -30, upper: -22, upperOut: 22, fore: -8, foreOut: 12, hand: -8 } })),
+    cam: { yaw: 12, pitch: 0 },
+    scene: { all: [{ hoop: [150, 250] }] },
+    poids: [0, 1].map((k) => ({ gear: ["basketHand"], lift: 70 + 6 * k, torso: 4, head: -4,
+      near: { thigh: 62 + 2 * k, thighOut: 6, shin: 38 + 2 * k, foot: 20, upper: 158 + 3 * k, upperOut: 4, fore: 164 + 3 * k, hand: 170 },
+      far: { thigh: -48 - 2 * k, thighOut: 6, shin: -88, foot: -140, upper: -62, upperOut: 18, fore: -48, foreOut: 10, hand: -40 } })),
   },
   "pompes-explosives": {
     poids: [

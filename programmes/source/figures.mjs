@@ -117,7 +117,7 @@ function solve(p, { vary, a, b, dy = 0 }) {
 // Camera: yaw turns around the athlete (0 = side view, 90 = facing the athlete), pitch looks down.
 const camera = (c = {}) => {
   const y = rad(c.yaw ?? 0), ph = rad(c.pitch ?? 0);
-  return { r: [Math.cos(y), 0, -Math.sin(y)], c: [Math.sin(y), 0, Math.cos(y)], cp: Math.cos(ph), sp: Math.sin(ph), side: !c.yaw && !c.pitch };
+  return { r: [Math.cos(y), 0, -Math.sin(y)], c: [Math.sin(y), 0, Math.cos(y)], cp: Math.cos(ph), sp: Math.sin(ph), side: !c.yaw && !c.pitch, front: !!c.front };
 };
 const proj = (P, cam) => { const zc = dot(P, cam.c); return [dot(P, cam.r), G - (P[1] * cam.cp - zc * cam.sp)]; };
 const depth = (P, cam) => dot(P, cam.c) * cam.cp + P[1] * cam.sp;
@@ -207,7 +207,8 @@ function lookOf(w, cam, ws = [w]) {
   const overHead = (sd) => ws.some((q) => depth(q[sd].hand, cam) > depth(q.head, cam) + 4 && depth(q[sd].elbow, cam) > depth(q.head, cam) - 2 && near(q, sd) < 30);
   const heads = { front: overHead(front), back: armFront && overHead(back) };
   if (cam.side) return { back, front, armFront, heads, dark: true, offset: true, trunkW: BODY.trunk };
-  return { back, front, armFront, heads, dark: Math.abs(dn - df) / (2 * DIM.shW) > 0.5, offset: false, trunkW: BODY.trunk * 0.62 };
+  const turn = Math.abs(dn - df) / (2 * DIM.shW);
+  return { back, front, armFront, heads, dark: turn > 0.5, frontal: cam.front && turn < 0.25, offset: false, trunkW: BODY.trunk * 0.62 };
 }
 
 // Hair, Playmobil style: a helmet a little larger than the head. It covers the top of the head
@@ -266,7 +267,9 @@ function shapes(j, w, cam, lk) {
   // The far arm is drawn behind the trunk, unless its hand is in front of the chest (arms held
   // across the body, throws): then over it.
   const backArm = side(B, cb, fb);
-  if (!lk.armFront) backArm();
+  // Seen from the front: both legs under the trunk (the jersey over the thighs), both arms over it.
+  const frontLegsFirst = lk.frontal ? side(F, COL.front, (q) => q) : null;
+  if (!lk.armFront && !lk.frontal) backArm();
   // Trunk: neck, shorts (pelvis and seat), jersey, chest.
   limb([[[j.sh, j.neck], 8]], COL.front.skin);
   line([j.seat, j.seat], 16 * BODY.leg, COL.front.shorts);
@@ -276,8 +279,8 @@ function shapes(j, w, cam, lk) {
   line([j.chest, j.chest], BODY.chest, JERSEY);
   // Brand mark on the jersey, upright along the trunk.
   out.push(["logo", at(j.hip, j.sh, 0.6), (Math.atan2(j.sh[0] - j.hip[0], j.hip[1] - j.sh[1]) * 180) / Math.PI]);
-  if (lk.armFront && !lk.heads.back) backArm();
-  const frontArm = side(F, COL.front, (q) => q);
+  if ((lk.armFront || lk.frontal) && !lk.heads.back) backArm();
+  const frontArm = frontLegsFirst ?? side(F, COL.front, (q) => q);
   // Head: skin, then hair on the back and top of the head (all of it seen from behind), nose.
   const R = L.head, h = [(j.head[0] - j.neck[0]) / R, (j.head[1] - j.neck[1]) / R], f = [(j.face[0] - j.head[0]) / R, (j.face[1] - j.head[1]) / R];
   if (BODY.ponytail) {
