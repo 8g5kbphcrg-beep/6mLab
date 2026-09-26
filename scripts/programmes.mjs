@@ -33,6 +33,9 @@ const NEUTRAL = { lieu: "maison", sex: "n" };
 // place and silhouette: /fr/exercices/<id>/<lieu>[-femme|-homme]. Exercises without one get an
 // empty slot of the same width, so the names stay aligned.
 const eye = (id, ctx = NEUTRAL) => (id && variants(id).length ? `<a class="eye" href="${SITE}/fr/exercices/${id}/${ctx.lieu}${SEXES[ctx.sex]}" title="Voir l'animation">${EYE}</a>` : `<span class="eye none"></span>`);
+// Shown at the start of the sessions and of the exercise sheets: the animations carry what the
+// text cannot (placement, direction of the movement, rhythm), so they must be watched.
+const EYE_NOTE = `<div class="eyenote"><span class="eye">${EYE}</span><div><strong>Important : regarde l'animation de chaque exercice avant de le faire.</strong> Touche l'œil à côté de son nom. L'animation montre ce que le texte ne peut pas dire : le placement exact, le sens du mouvement, le rythme et les appuis. Ne te contente pas de lire le programme, surtout pour un exercice que tu ne connais pas : c'est ce qui rend chaque séance efficace et sans risque.</div></div>`;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
 const md = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
 
@@ -84,6 +87,7 @@ p{margin:0 0 3mm}ul{margin:0 0 3mm;padding-left:6mm}li{margin-bottom:1mm}
 table{width:100%;border-collapse:collapse;margin:1mm 0 3mm;font-size:9.5pt;page-break-inside:avoid}
 th{background:#100A24;color:#fff;text-align:left;padding:2mm 3mm;font-weight:600}td{padding:1.6mm 3mm;border-bottom:1px solid #E3E0F0;vertical-align:top}
 tr:nth-child(even) td{background:#F6F5FB}
+.eyenote{display:flex;gap:4mm;align-items:flex-start;background:#FFF1EC;border:2px solid var(--c);border-radius:3mm;padding:4mm 5mm;margin:0 0 5mm;page-break-inside:avoid;font-size:10.5pt}.eyenote .eye{width:12mm;height:8mm;flex:none;margin:0;border-radius:2mm}.eyenote .eye svg{width:6mm;height:6mm}
 .note{background:#F6F5FB;border-left:4px solid var(--c);padding:3mm 4mm;margin:3mm 0 4mm;page-break-inside:avoid}.note.warn{border-left-color:#E32B2B;background:#FDF1F1}
 .pb{page-break-after:always}
 .goal{border:1px solid #E3E0F0;border-top:5px solid var(--gc);border-radius:3mm;padding:4mm 5mm;margin:0 0 5mm;page-break-inside:avoid}.goal h3{margin-top:0}
@@ -158,12 +162,13 @@ const seancesDoc = (fid, pair, ctx) => {
     sessions += session("Séance 2 · plus légère", steps("s2", f.gainage["2"], null), num, ctx);
   }
   const goals = `<h2>${solo ? "Ton objectif" : "Tes objectifs"}</h2>${solo ? `<p>Tu as choisi un seul objectif : chaque séance lui consacre deux blocs, et l'accent change au fil des semaines. Ce que tu as travaillé avant reste dans les séances, avec moins de séries, pour ne pas le perdre.</p>` : ""}${gs.map((g) => `<div class="goal" style="--gc:${g.color}"><h3>${esc(g.name)}</h3><p>${md(g.intro)}</p><ul>${g.qualites.map((q) => `<li>${md(q)}</li>`).join("")}</ul><p><strong>Les règles d'or</strong></p><ul>${g.regles.map((q) => `<li>${md(q)}</li>`).join("")}</ul>${(g.notes ?? []).map((b) => block(b, ctx.lieu)).join("")}</div>`).join("")}
+  ${EYE_NOTE}
   <h2>Comment lire tes séances</h2><ul>
   <li>Chaque séance est écrite en entier, dans l'ordre : fais les étapes de haut en bas.</li>
   <li>« 2-4 × 8 » : 2 séries au niveau 1, 3 au niveau 2, 4 au niveau 3, de 8 répétitions. « 2-3 × 8 » : 2 séries aux niveaux 1 et 2, 3 au niveau 3.</li>
   <li>Le numéro devant chaque exercice renvoie à sa fiche illustrée, à la fin de ce document.</li>
   <li>Si tu ne connais pas ton niveau, relis le guide, page « Choisir ton niveau ».</li></ul>`;
-  const library = `<div class="pb"></div><h2>Les exercices</h2><p>Dans l'ordre des numéros utilisés dans tes séances. Touche l'œil à côté du numéro pour voir l'exercice en mouvement.</p>${[...nums].map(([id, n]) => exerciseCard(n, exercices[id], id, ctx)).join("")}`;
+  const library = `<div class="pb"></div><h2>Les exercices</h2><p>Dans l'ordre des numéros utilisés dans tes séances.</p>${EYE_NOTE}${[...nums].map(([id, n]) => exerciseCard(n, exercices[id], id, ctx)).join("")}`;
   const d = { title: "Tes séances", tag: f.name, color: f.color, subtitle: title, meta: [["Formule", f.name], ["Durée", f.duree], ["Séance", f.seance], ["Lieu", LIEUX[ctx.lieu].short]] };
   return { file: `seances-${fid}-${pair.join("-")}-${ctx.lieu}${SEXES[ctx.sex]}`, d, body: goals + sessions + library };
 };

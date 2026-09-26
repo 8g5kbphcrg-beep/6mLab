@@ -91,7 +91,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             <h3>{x.spec.h}</h3>
             <p className="uni-p">{x.spec.p}</p>
             <Link href={`/${l}/handball`} className="sport on" data-go>
-              <Anim id="lancer-haut" className="sport-fig" />
+              <Anim id="tir-suspension" className="sport-fig" />
               <span className="sport-t"><strong>{x.hb.name}</strong><span>{x.hb.meta(from)}</span></span>
               <span className="btn">{x.hb.go} →</span>
             </Link>

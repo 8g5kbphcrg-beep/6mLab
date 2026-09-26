@@ -39,9 +39,9 @@ export const parLieu = {
     salle: { how: "Squat avec une barre sur le haut du dos (ou des haltères lourds), 3 à 5 répétitions.", figs: [["squat-lourd", "materiel"]] },
   },
   "fente-arriere": {
-    maison: { how: "Recule une jambe et descends jusqu'à ce que le genou arrière frôle le sol. Reviens en poussant sur la jambe avant. Quand c'est facile : un sac à dos lesté.", figs: [["fente-arriere", "poids"]], dose: more(1.5, slow),
+    maison: { how: "Recule une jambe et descends jusqu'à ce que le genou arrière frôle le sol. Reviens en poussant sur la jambe avant, puis change de jambe (le pied avant reste fixe). Quand c'est facile : un sac à dos lesté.", figs: [["fente-arriere", "poids"]], dose: more(1.5, slow),
       band: { how: "Élastique sous le pied avant, tenu aux épaules." } },
-    salle: { how: "Un haltère dans chaque main, recule une jambe et descends jusqu'à ce que le genou arrière frôle le sol, puis reviens en poussant sur la jambe avant.", figs: [["fente-arriere", "materiel"]] },
+    salle: { how: "Un haltère dans chaque main, recule une jambe et descends jusqu'à ce que le genou arrière frôle le sol, puis reviens en poussant sur la jambe avant et change de jambe (le pied avant reste fixe).", figs: [["fente-arriere", "materiel"]] },
   },
   "squat-bulgare": {
     maison: { how: "Pied arrière posé sur le canapé ou une chaise, descends sur la jambe avant puis remonte. Quand c'est facile : un sac à dos lesté.", figs: [["squat-bulgare", "poids"]], dose: more(1.25, slow), prec: "avec sac à dos",
