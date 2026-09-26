@@ -39,7 +39,8 @@ const armsFloor = { upper: 87, fore: 87, hand: 87 };
 // Push-up positions.
 // Hands and toes stay in place between the top and the bottom (same distance, feet planted).
 const pushTop = { ...plankBody(72.5, { near: { upper: 0, fore: 0, hand: 90 } }), contact: "near.toe", pin: ["near.toe", 0], plantHands: [128.5, 3] };
-const pushBottom = { ...plankBody(93, { near: { upper: -106, fore: 40, hand: 90 } }), contact: "near.toe", pin: ["near.toe", 0], plantHands: [128.5, 3] };
+// Bottom: the chest goes down between the hands, forearms stay upright (never on the floor).
+const pushBottom = { ...plankBody(83, { near: { upper: -106, fore: 40, hand: 90 } }), contact: "near.toe", pin: ["near.toe", 0], plantHands: [128.5, 3] };
 
 // Bench press (lying on a bench, feet on the floor).
 // Bottom: elbows about 45° from the trunk (upper arm towards the floor, out and towards the feet).
@@ -67,20 +68,33 @@ const lungeLow = (arms = { near: { upper: 3, fore: 3 }, far: { upper: -4, fore: 
   near: { thigh: 90, shin: 2, ...arms.near }, far: { thigh: -8, shin: -70, foot: 40, ...arms.far }, solve: [{ vary: ["far.shin"], a: "far.toe", b: "near.heel", dy: -2 }] });
 // Lunge with the front foot planted at x = 0 (it never slides; only the back leg moves). front:
 // the side of the front leg, so that both sides can alternate.
-const lunge = (front, arms = { near: { upper: 3, fore: 3 }, far: { upper: -4, fore: -4 } }, gear, extra = {}) => {
+// forward: forward lunge, the back foot is the one that stays planted at x = 0.
+const lunge = (front, arms = { near: { upper: 3, fore: 3 }, far: { upper: -4, fore: -4 } }, gear, extra = {}, forward = false) => {
   const back = front === "near" ? "far" : "near";
-  return { gear, torso: 3, contact: `${front}.heel`, pin: [`${front}.toe`, 0], ...extra,
+  // Placed by the planted foot (forward: the back toe, 2 above the floor as in the solved pose).
+  return { gear, torso: 3, contact: forward ? `${back}.toe` : `${front}.heel`, lift: forward ? 2 : 0, pin: [forward ? `${back}.toe` : `${front}.toe`, 0], ...extra,
     [front]: { thigh: 90, shin: 2, ...arms[front] }, [back]: { thigh: -8, shin: -70, foot: 40, ...arms[back] },
     solve: [{ vary: [`${back}.shin`], a: `${back}.toe`, b: `${front}.heel`, dy: -2 }] };
 };
 // Arms held straight in front.
 const ARMS_FWD = { near: { upper: 90, fore: 90 }, far: { upper: 88, fore: 88 } };
+// Stepping back: the back foot is lifted on its way (it never slides on the floor).
+const stepBack = (front, arms = { near: { upper: 3, fore: 3 }, far: { upper: -4, fore: -4 } }, gear) => {
+  const back = front === "near" ? "far" : "near";
+  return { gear, torso: 2, contact: `${front}.heel`, pin: [`${front}.toe`, 0], [front]: { thigh: 20, shin: 0, ...arms[front] }, [back]: { thigh: -22, shin: -80, foot: 5, ...arms[back] } };
+};
+// Stepping forward: the front knee comes up on its way, the back foot stays planted.
+const stepFwd = (front, arms) => {
+  const back = front === "near" ? "far" : "near";
+  return { torso: 2, contact: `${back}.toe`, pin: [`${back}.toe`, 0], [front]: { thigh: 55, shin: -5, foot: 80, ...arms[front] }, [back]: { thigh: -6, shin: -8, foot: 60, ...arms[back] } };
+};
 // Standing, feet together at x = 0 (between two lunges).
 const standPinned = (arms = { near: { upper: 3, fore: 3 }, far: { upper: -4, fore: -4 } }, gear) => ({ gear, pin: ["near.toe", 0], near: arms.near, far: arms.far });
 
 // Bulgarian split squat: back foot (laces down) on a bench behind.
 const BULG_X = -62;
-const bulgarian = (low, arms = { upper: 4, fore: 4 }, gear) => ({ gear, torso: low ? 16 : 6, pin: ["far.toe", BULG_X],
+// The front foot stays planted (heel at x = 22), the back foot on the bench.
+const bulgarian = (low, arms = { upper: 4, fore: 4 }, gear) => ({ gear, torso: low ? 16 : 6, pin: ["far.toe", BULG_X], plant: [22, 0], plantSides: ["near"],
   near: { thigh: low ? 80 : 10, shin: low ? -10 : -3, ...arms }, far: { thigh: low ? -6 : -24, shin: -80, foot: -62, ...arms },
   solve: [{ vary: ["far.shin", "far.foot"], a: "far.toe", b: "near.heel", dy: -(BENCH + 2) }] });
 
@@ -156,7 +170,8 @@ const walkStep = (front) => {
 // Mountain climber: high plank (hips a little raised), hands in place. Like high knees: one knee
 // comes up to a little over 90° at the hip, the other leg stays straight behind, then the knee goes
 // back and the other one comes up.
-const CLIMB = { straight: { thigh: -69.5, shin: -69.5, foot: 20.5 }, lift: { thigh: -40, shin: -120, foot: -100 }, drive: { thigh: 22, shin: -110, foot: -40 } };
+// Ankle always armed (toes pulled up towards the shin): foot = shin + 90.
+const CLIMB = { straight: { thigh: -69.5, shin: -69.5, foot: 20.5 }, lift: { thigh: -40, shin: -120, foot: -30 }, drive: { thigh: 22, shin: -110, foot: -20 } };
 const climber = (near, far) => {
   const arm = { upper: 0, fore: 0, hand: 90 };
   return { torso: 82, head: -8, contact: "near.hand", pin: ["near.hand", 0], near: { ...CLIMB[near], ...arm }, far: { ...CLIMB[far], ...arm } };
@@ -183,16 +198,21 @@ export const defs = {
   "fente-rotation": {
     cam: { yaw: 40, pitch: 12 },
     loop: "restart",
-    // One leg forward and the trunk turns towards it, back to standing, then the other side.
+    // A step forward, the trunk turns towards the front leg, back to standing, then the other side.
+    // The back foot stays planted; the front foot is lifted to step, never slid.
     poids: [
       standPinned(ARMS_FWD),
-      lunge("near", ARMS_FWD),
-      lunge("near", { near: { upper: 90, upperOut: 60, fore: 90, foreOut: 60 }, far: { upper: 90, upperOut: -60, fore: 90, foreOut: -60 } }, undefined, { twist: -55, headTurn: 45 }),
-      lunge("near", ARMS_FWD),
+      stepFwd("near", ARMS_FWD),
+      lunge("near", ARMS_FWD, undefined, {}, true),
+      lunge("near", { near: { upper: 90, upperOut: 60, fore: 90, foreOut: 60 }, far: { upper: 90, upperOut: -60, fore: 90, foreOut: -60 } }, undefined, { twist: -55, headTurn: 45 }, true),
+      lunge("near", ARMS_FWD, undefined, {}, true),
+      stepFwd("near", ARMS_FWD),
       standPinned(ARMS_FWD),
-      lunge("far", ARMS_FWD),
-      lunge("far", { near: { upper: 90, upperOut: -60, fore: 90, foreOut: -60 }, far: { upper: 90, upperOut: 60, fore: 90, foreOut: 60 } }, undefined, { twist: 55, headTurn: -45 }),
-      lunge("far", ARMS_FWD),
+      stepFwd("far", ARMS_FWD),
+      lunge("far", ARMS_FWD, undefined, {}, true),
+      lunge("far", { near: { upper: 90, upperOut: -60, fore: 90, foreOut: -60 }, far: { upper: 90, upperOut: 60, fore: 90, foreOut: 60 } }, undefined, { twist: 55, headTurn: -45 }, true),
+      lunge("far", ARMS_FWD, undefined, {}, true),
+      stepFwd("far", ARMS_FWD),
       standPinned(ARMS_FWD),
     ],
   },
@@ -489,8 +509,9 @@ export const defs = {
   // One leg back, then the other; the front foot stays planted.
   "fente-arriere": {
     loop: "restart",
-    poids: [standPinned(), lunge("near"), standPinned(), lunge("far"), standPinned()],
-    materiel: [standPinned(undefined, ["dumbbells"]), lunge("near", undefined, ["dumbbells"]), standPinned(undefined, ["dumbbells"]), lunge("far", undefined, ["dumbbells"]), standPinned(undefined, ["dumbbells"])],
+    poids: [standPinned(), stepBack("near"), lunge("near"), stepBack("near"), standPinned(), stepBack("far"), lunge("far"), stepBack("far"), standPinned()],
+    materiel: [standPinned(undefined, ["dumbbells"]), stepBack("near", undefined, ["dumbbells"]), lunge("near", undefined, ["dumbbells"]), stepBack("near", undefined, ["dumbbells"]), standPinned(undefined, ["dumbbells"]),
+      stepBack("far", undefined, ["dumbbells"]), lunge("far", undefined, ["dumbbells"]), stepBack("far", undefined, ["dumbbells"]), standPinned(undefined, ["dumbbells"])],
   },
   "squat-bulgare": {
     scene: { all: [{ box: [BULG_X - 20, 42, BENCH] }] },
@@ -579,7 +600,7 @@ export const defs = {
   circuit: { loop: "restart", poids: burpee },
   burpee: { loop: "restart", poids: burpee },
   // High plank, hands and feet in place: one knee comes to the chest, then the other.
-  "mountain-climber": { loop: "restart", still: [2, 6], pace: [0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4],
+  "mountain-climber": { loop: "restart", still: [2, 6], pace: [0.22, 0.22, 0.22, 0.22, 0.22, 0.22, 0.22, 0.22],
     poids: ["straight", "lift", "drive", "lift", "straight"].map((k) => climber(k, "straight")).concat(["lift", "drive", "lift", "straight"].map((k) => climber("straight", k))) },
   "montees-genoux": {
     poids: [

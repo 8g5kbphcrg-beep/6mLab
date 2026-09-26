@@ -153,15 +153,22 @@ export function place(raw, cam = camera()) {
     w = every(joints(p), (q) => [q[0] + dx, q[1] + dy, q[2] + dz]);
   }
   // plantHands: [dx, height] where both wrists stay, dx measured from the near toe (hands that
-  // never slide during a push-up); the arms are set to reach it, elbows bent towards the back.
+  // never slide during a push-up). Each elbow goes to the highest point it can reach, a little
+  // out to the side (forearms off the floor, elbows at about 45° from the body).
   if (p.plantHands) {
     const toe = w.near.toe;
-    for (const sd of ["near", "far"]) {
-      const sh = w[sd].sh, tx = toe[0] + p.plantHands[0] - sh[0], ty = p.plantHands[1] - sh[1];
-      const dd = Math.min(Math.hypot(tx, ty), L.upper + L.fore - 0.01), base = Math.atan2(tx, -ty);
-      const bend = Math.acos(Math.max(-1, Math.min(1, (L.upper ** 2 + dd ** 2 - L.fore ** 2) / (2 * L.upper * dd))));
-      const u = base - bend, el = [Math.sin(u) * L.upper, -Math.cos(u) * L.upper];
-      p = { ...p, [sd]: { ...p[sd], upper: (u * 180) / Math.PI, upperOut: 0, fore: (Math.atan2(tx - el[0], -(ty - el[1])) * 180) / Math.PI, foreOut: 0 } };
+    for (const [sd, sg] of [["near", 1], ["far", -1]]) {
+      const sh = w[sd].sh, wr = [toe[0] + p.plantHands[0], p.plantHands[1], w[sd].wrist[2]];
+      const v = add(wr, mul(sh, -1)), dist = Math.min(Math.hypot(...v), L.upper + L.fore - 0.01), n = mul(v, 1 / Math.hypot(...v));
+      const a = (L.upper ** 2 - L.fore ** 2 + dist ** 2) / (2 * dist), r = Math.sqrt(Math.max(0, L.upper ** 2 - a ** 2)), c = add(sh, mul(n, a));
+      // Two directions perpendicular to the arm line, then the best point of the elbow circle.
+      const e1 = (() => { const t = Math.abs(n[1]) < 0.9 ? [0, 1, 0] : [1, 0, 0], u = add(t, mul(n, -dot(t, n))); return mul(u, 1 / Math.hypot(...u)); })();
+      const e2 = cross(n, e1);
+      let best = null;
+      for (let k = 0; k < 72; k++) { const th = (k / 72) * 2 * Math.PI, el = add(c, add(mul(e1, r * Math.cos(th)), mul(e2, r * Math.sin(th)))); const sc = el[1] + 0.35 * sg * (el[2] - sh[2]); if (!best || sc > best[0]) best = [sc, el]; }
+      const el = best[1], ang = (d3) => { const q = mul(d3, 1 / Math.hypot(...d3)); return [(Math.atan2(q[0], -q[1]) * 180) / Math.PI, (Math.asin(Math.max(-1, Math.min(1, sg * q[2]))) * 180) / Math.PI]; };
+      const [ua, ub] = ang(add(el, mul(sh, -1))), [fa, fb] = ang(add(wr, mul(el, -1)));
+      p = { ...p, [sd]: { ...p[sd], upper: ua, upperOut: ub, fore: fa, foreOut: fb } };
     }
     w = every(joints(p), (q) => [q[0] + dx, q[1] + dy, q[2] + dz]);
   }
