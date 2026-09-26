@@ -4,9 +4,9 @@ import { fmtPrice, PACK_PRICE, prices } from "@/lib/checkout";
 import { recommended } from "@/lib/season";
 import "@/app/offers.css";
 
-// Used on the handball page and on /programmes. The "Saison complète" pack comes first, as the
-// featured offer (best value); then the two programs side by side, the one that fits the handball
-// calendar first with a badge.
+// Used on the handball page and on /programmes: the questionnaire first, then the "Saison
+// complète" pack as the featured offer (best value), then the two programs side by side, the one
+// that fits the handball calendar first with a badge.
 export default function ProgramCards({ lang, shared = true }: { lang: Lang; shared?: boolean }) {
   const d = dict[lang];
   const fr = lang === "fr";
@@ -15,6 +15,10 @@ export default function ProgramCards({ lang, shared = true }: { lang: Lang; shar
   const full = prices["pre-saison"] + prices["maintien-saison"], save = full - PACK_PRICE;
   return (
     <>
+      <a className="oquiz" data-go href={`/${lang}/questionnaire`}>
+        <span className="oquiz-t"><strong>{fr ? "Pas sûr de ta formule ?" : "Not sure which program?"}</strong>{fr ? "Réponds au questionnaire : 6 questions, 1 minute. On te recommande ton programme et tes objectifs." : "Take the questionnaire: 6 questions, 1 minute. We recommend your program and your goals."}</span>
+        <span className="btn">{fr ? "Faire le questionnaire" : "Take the questionnaire"} →</span>
+      </a>
       <article className="opack">
         <span className="opack-b">{fr ? "Meilleure offre · la saison entière" : "Best value · the whole season"}</span>
         <div className="opack-main">
