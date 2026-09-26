@@ -40,6 +40,13 @@ export default async function AdminAvis() {
   }
   const leads = await recentLeads(s, Math.floor(Date.now() / 1000) - 365 * DAY).catch(() => []);
   const waiting = await recentLeads(s, Math.floor(Date.now() / 1000) - 365 * DAY, "forme").catch(() => []);
+  const [foot, basket, proposed] = await Promise.all((["foot", "basket", "sport"] as const).map((k) => recentLeads(s, Math.floor(Date.now() / 1000) - 365 * DAY, k).catch(() => [])));
+  // Proposed sports, grouped whatever the case or accents ("Volley", "volley" and "vollèy" together).
+  const sportKey = (x: string) => x.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const sports = [...proposed.reduce((m, l) => {
+    const n = l.meta.sport?.trim(); if (!n) return m;
+    const k = sportKey(n), e = m.get(k); m.set(k, { name: e?.name ?? n.charAt(0).toUpperCase() + n.slice(1), n: (e?.n ?? 0) + 1 }); return m;
+  }, new Map<string, { name: string; n: number }>()).values()].sort((a, b) => b.n - a.n);
   const mid = orders.filter((o) => o.meta.m_at), end = orders.filter((o) => o.meta.f_at);
   const sentMid = orders.filter((o) => o.meta.s_mid).length, sentEnd = orders.filter((o) => o.meta.s_end).length;
   const stars = end.map((o) => Number(o.meta.f_stars)).filter(Boolean);
@@ -61,6 +68,16 @@ export default async function AdminAvis() {
         <div className="kpi"><b>{leads.length}</b><span>Séances gratuites demandées (12 mois), dont {leads.filter((l) => l.meta.unsub).length} désinscrits</span></div>
         <div className="kpi"><b>{waiting.filter((l) => !l.meta.unsub).length}</b><span>Inscrits à la liste d'attente Forme & bien-être{waiting.some((l) => l.meta.q_goal) ? ` · objectifs : ${Object.entries(waiting.reduce<Record<string, number>>((m, l) => (l.meta.q_goal ? { ...m, [l.meta.q_goal]: (m[l.meta.q_goal] ?? 0) + 1 } : m), {})).sort((x, y) => y[1] - x[1]).map(([g, c]) => `${fitGoals[g as FitGoal]?.name.fr ?? g} ${c}`).join(", ")}` : ""}</span></div>
         <div className="kpi"><b>{end.length} / {sentEnd}</b><span>Questionnaire 2 : réponses / envois ({pct(end.length, sentEnd)} %)</span></div>
+      </div>
+
+      <h2>Sports à venir</h2>
+      <div className="kpis">
+        <div className="kpi"><b>{foot.filter((l) => !l.meta.unsub).length}</b><span>Demandes « me prévenir » Football</span></div>
+        <div className="kpi"><b>{basket.filter((l) => !l.meta.unsub).length}</b><span>Demandes « me prévenir » Basketball</span></div>
+        <div className="kpi"><b>{proposed.length}</b><span>Sports proposés (« Propose ton sport »)</span></div>
+      </div>
+      <div className="grid" style={{ marginTop: 10 }}>
+        {sports.length ? <Bars title="Sports proposés" items={sports.map((x) => [`${x.name} (${x.n})`, x.n] as [string, number])} /> : <p className="muted">Aucun sport proposé pour l'instant.</p>}
       </div>
 
       <h2>Après 2 semaines</h2>

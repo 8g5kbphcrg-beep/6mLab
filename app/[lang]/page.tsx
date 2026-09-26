@@ -7,11 +7,12 @@ import Reviews from "@/components/Reviews";
 import { Founder } from "@/components/HomeSections";
 import { Anim } from "@/components/BlogBits";
 import { Dumbbell, House } from "@/components/PlaceIcons";
+import SportSlider from "@/components/SportSlider";
 import "@/app/home.css";
 import "@/app/portal.css";
 
 // Home page: what 6M Lab is, then the two families of programs. Sport-specific preparation
-// (handball now, other sports soon) and fitness & well-being for everyone (in preparation).
+// (handball now; football and basketball soon, with a waiting list; other sports proposed by visitors) and fitness & well-being for everyone (in preparation).
 export const revalidate = 3600;
 
 const t = {
@@ -24,8 +25,10 @@ const t = {
     chooseSub: "Deux façons de t'entraîner avec 6M Lab.",
     spec: { k: "Préparation spécifique", h: "La prépa physique du haut niveau, pour ton sport", p: "Des programmes construits pour les exigences de ton sport : sauts, appuis, duels, prévention des blessures, avant et pendant la saison." },
     hb: { name: "Handball", meta: (p: string) => `Pré-saison, Maintien en saison, Pack Saison complète · dès ${p}`, go: "Découvrir le handball" },
-    soon: "Bientôt disponible",
-    sports: [["⚽", "Football"], ["🏀", "Basketball"], ["🥊", "Sports de combat"]],
+    soon: "Bientôt disponible", swipe: "Glisse pour voir les autres sports",
+    sports: [["foot", "coup-franc", "Football"], ["basket", "dunk", "Basketball"]],
+    notify: "Me prévenir dès que c'est disponible", email: "Ton adresse email", send: "Me prévenir", note: "Un seul email, le jour du lancement.",
+    propose: { h: "Ton sport n'est pas là ? Propose-le", p: "Les plus demandés seront préparés en priorité.", sport: "Ex. : volley", email: "Ton email (facultatif)", send: "Proposer" },
     fit: {
       k: "Accessible à tous", h: "Forme & bien-être", p: "Pas besoin d'être sportif : un programme pour te remettre en forme, à ton rythme, sans objectif de performance.",
       goals: ["Perdre du poids", "Prendre du muscle", "Me remettre en forme", "Tonifier", "Dos & posture", "Équilibre & autonomie"],
@@ -44,8 +47,10 @@ const t = {
     chooseSub: "Two ways to train with 6M Lab.",
     spec: { k: "Sport-specific preparation", h: "Elite-level physical prep, for your sport", p: "Programs built for the demands of your sport: jumps, footwork, duels, injury prevention, before and during the season." },
     hb: { name: "Handball", meta: (p: string) => `Pre-season, In-season, Full season pack · from ${p}`, go: "Explore handball" },
-    soon: "Coming soon",
-    sports: [["⚽", "Football"], ["🏀", "Basketball"], ["🥊", "Combat sports"]],
+    soon: "Coming soon", swipe: "Swipe to see the other sports",
+    sports: [["foot", "coup-franc", "Football"], ["basket", "dunk", "Basketball"]],
+    notify: "Tell me when it's available", email: "Your email address", send: "Notify me", note: "One email, on launch day.",
+    propose: { h: "Your sport isn't here? Suggest it", p: "The most requested will be prepared first.", sport: "E.g. volleyball", email: "Your email (optional)", send: "Suggest" },
     fit: {
       k: "For everyone", h: "Fitness & well-being", p: "No need to be an athlete: a program to get back in shape at your own pace, with no performance goal.",
       goals: ["Lose weight", "Build muscle", "Get back in shape", "Tone up", "Back & posture", "Balance & independence"],
@@ -90,14 +95,43 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             <p className="uni-k">{x.spec.k}</p>
             <h3>{x.spec.h}</h3>
             <p className="uni-p">{x.spec.p}</p>
-            <Link href={`/${l}/handball`} className="sport on" data-go>
-              <Anim id="tir-suspension" className="sport-fig" />
-              <span className="sport-t"><strong>{x.hb.name}</strong><span>{x.hb.meta(from)}</span></span>
-              <span className="btn">{x.hb.go} →</span>
-            </Link>
-            <ul className="soon">
-              {x.sports.map(([e, n]) => <li key={n} aria-disabled="true"><span className="soon-e" aria-hidden="true">{e}</span>{n}<b>{x.soon}</b></li>)}
-            </ul>
+            <SportSlider labels={[x.hb.name, ...x.sports.map((q) => q[2]), x.propose.h]} hint={x.swipe}>
+              <Link href={`/${l}/handball`} className="sport on" data-go>
+                <Anim id="tir-suspension" className="sport-fig" />
+                <span className="sport-t"><strong>{x.hb.name}</strong><span>{x.hb.meta(from)}</span></span>
+                <span className="btn">{x.hb.go} →</span>
+              </Link>
+              {x.sports.map(([kind, fig, name]) => (
+                <div key={kind} className="sport off">
+                  <Anim id={fig} className="sport-fig" />
+                  <span className="sport-t"><strong>{name}</strong><b className="soon-b">{x.soon}</b></span>
+                  <details className="soon-d">
+                    <summary className="btn">{x.notify}</summary>
+                    <form method="post" action="/api/liste-attente" className="notify">
+                      <input type="hidden" name="lang" value={l} />
+                      <input type="hidden" name="kind" value={kind} />
+                      <input className="sr" name="site" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+                      <label className="sr" htmlFor={`n-${kind}`}>Email</label>
+                      <input id={`n-${kind}`} name="email" type="email" required autoComplete="email" placeholder={x.email} />
+                      <button className="btn" type="submit">{x.send}</button>
+                      <p className="note">{x.note}</p>
+                    </form>
+                  </details>
+                </div>
+              ))}
+              <form method="post" action="/api/liste-attente" className="propose">
+                <input type="hidden" name="lang" value={l} />
+                <input type="hidden" name="kind" value="sport" />
+                <input className="sr" name="site" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+                <strong>{x.propose.h}</strong>
+                <p>{x.propose.p}</p>
+                <label className="sr" htmlFor="p-sport">{x.propose.sport}</label>
+                <input id="p-sport" name="sport" required maxLength={40} placeholder={x.propose.sport} />
+                <button className="btn" type="submit">{x.propose.send}</button>
+                <label className="sr" htmlFor="p-email">{x.propose.email}</label>
+                <input id="p-email" name="email" type="email" autoComplete="email" placeholder={x.propose.email} />
+              </form>
+            </SportSlider>
           </article>
 
           <article className="uni-c fit" id="forme">
