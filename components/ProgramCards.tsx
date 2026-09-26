@@ -4,15 +4,37 @@ import { fmtPrice, PACK_PRICE, prices } from "@/lib/checkout";
 import { recommended } from "@/lib/season";
 import "@/app/offers.css";
 
-// The two offers side by side, used on the home page and on /programmes. The one that fits the
-// handball calendar comes first with a badge; the "Saison complète" pack sits under them.
+// Used on the handball page and on /programmes. The "Saison complète" pack comes first, as the
+// featured offer (best value); then the two programs side by side, the one that fits the handball
+// calendar first with a badge.
 export default function ProgramCards({ lang, shared = true }: { lang: Lang; shared?: boolean }) {
   const d = dict[lang];
   const fr = lang === "fr";
   const now = recommended();
   const order = [now, ...programSlugs.filter((s) => s !== now)];
+  const full = prices["pre-saison"] + prices["maintien-saison"], save = full - PACK_PRICE;
   return (
     <>
+      <article className="opack">
+        <span className="opack-b">{fr ? "Meilleure offre · la saison entière" : "Best value · the whole season"}</span>
+        <div className="opack-main">
+          <div>
+            <h3 className="opack-t">{fr ? "Pack Saison complète" : "Full season pack"}</h3>
+            <p className="opack-d">{fr ? "Pré-saison + Maintien en saison, avec les mêmes objectifs : tu es prêt dès la reprise et tu le restes jusqu'à la fin de la saison." : "Pre-season + In-season maintenance, same goals: ready from day one and all the way to the end of the season."}</p>
+            <ul className="opack-l">
+              <li>{fr ? "Pré-saison : 8 semaines pour préparer la reprise" : "Pre-season: 8 weeks to get ready"}</li>
+              <li>{fr ? "Maintien en saison : 12 semaines pour tenir jusqu'au bout" : "In-season: 12 weeks to keep your level"}</li>
+              <li>{fr ? "20 semaines planifiées, les mêmes objectifs du début à la fin" : "20 planned weeks, the same goals from start to finish"}</li>
+            </ul>
+          </div>
+          <div className="opack-buy">
+            <span className="opack-save">{fr ? `Tu économises ${fmtPrice(save, lang)}` : `You save ${fmtPrice(save, lang)}`}</span>
+            <p className="opack-p"><strong>{fmtPrice(PACK_PRICE, lang)}</strong> <s>{fmtPrice(full, lang)}</s></p>
+            <a className="btn" data-go href={`/${lang}/programmes/saison-complete`}>{fr ? "Choisir le pack" : "Choose the pack"} →</a>
+          </div>
+        </div>
+      </article>
+      <p className="oor">{fr ? "Ou un seul programme" : "Or a single program"}</p>
       <div className="offers">
         {order.map((s) => {
           const p = programs[lang][s];
@@ -33,13 +55,8 @@ export default function ProgramCards({ lang, shared = true }: { lang: Lang; shar
           );
         })}
       </div>
-      <a className="opack" data-go href={`/${lang}/programmes/saison-complete`}>
-        <span className="opack-t">{fr ? "Pack Saison complète" : "Full season pack"}</span>
-        <span className="opack-d">{fr ? "Pré-saison + Maintien en saison, avec les mêmes objectifs : 20 semaines pour toute ta saison." : "Pre-season + In-season maintenance, same goals: 20 weeks for your whole season."}</span>
-        <span className="opack-p"><strong>{fmtPrice(PACK_PRICE, lang)}</strong> <s>{fmtPrice(prices["pre-saison"] + prices["maintien-saison"], lang)}</s></span>
-      </a>
       {shared && <div className="shared">
-        <p className="lab">{fr ? "Inclus dans les deux formules" : "Included in both programs"}</p>
+        <p className="lab">{fr ? "Inclus dans toutes les formules" : "Included in every program"}</p>
         <ul>
           <li>{fr ? "Le planning complet en PDF, semaine par semaine" : "The full week-by-week plan as a PDF"}</li>
           <li>{fr ? "Une animation pour chaque exercice" : "An animation for every exercise"}</li>
