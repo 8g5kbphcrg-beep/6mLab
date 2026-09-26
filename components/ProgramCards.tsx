@@ -17,7 +17,7 @@ export default function ProgramCards({ lang, shared = true }: { lang: Lang; shar
     <>
       <div className="oquiz">
         <a className="btn" data-go href={`/${lang}/questionnaire`}>{fr ? "Trouve ton programme adapté" : "Find the right program for you"} →</a>
-        <span>{fr ? "Questionnaire : 6 questions · 1 minute" : "Questionnaire: 6 questions · 1 minute"}</span>
+        <span>{fr ? "Questionnaire : 7 questions · 1 minute" : "Questionnaire: 7 questions · 1 minute"}</span>
       </div>
       <article className="opack">
         <span className="opack-b">{fr ? "Meilleure offre · la saison entière" : "Best value · the whole season"}</span>
