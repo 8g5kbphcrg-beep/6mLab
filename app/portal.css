@@ -4,7 +4,7 @@
 .phome-fig{background:#fff;border-radius:16px;height:130px;display:flex;align-items:center;justify-content:center;padding:.5rem;box-shadow:0 12px 32px rgba(0,0,0,.25)}
 .phome-fig svg{height:100%;width:auto;max-width:100%}
 .phome-fig:nth-child(2){transform:translateY(14px)}
-.uni{display:grid;gap:1.25rem}
+.uni{display:grid;grid-template-columns:minmax(0,1fr);gap:1.25rem}.uni-c{min-width:0}
 .uni-c{border-radius:24px;padding:1.6rem 1.4rem;display:flex;flex-direction:column;gap:.8rem;box-shadow:var(--shadow)}
 .uni-c h3{font-size:clamp(1.8rem,5vw,2.4rem);margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .8rem}
 .uni-k{margin:0;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em}
@@ -38,7 +38,7 @@
 .notify input[type=email]{font:inherit;padding:.85rem 1rem;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink)}
 .notify .btn{background:var(--B)}.notify .note{margin:0;font-size:.8rem}
 @media(min-width:900px){
-  .uni{grid-template-columns:1fr 1fr;align-items:stretch}
+  .uni{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:stretch}
   .uni-c{padding:2.2rem}
   .phome-fig{height:170px}
   .sport{grid-template-columns:110px 1fr}.sport-fig{grid-row:span 2;height:110px}
@@ -47,7 +47,7 @@
 }
 .fit-go{background:var(--B);text-align:center;margin-top:.6rem}.fit-note{margin:0;font-size:.82rem;text-align:center}
 .slider{display:grid;gap:.5rem;margin-top:.4rem;min-width:0}
-.slider-track{display:grid;grid-auto-flow:column;grid-auto-columns:100%;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none;padding:.2rem .1rem .6rem}
+.slider-track{position:relative;display:grid;grid-auto-flow:column;grid-auto-columns:100%;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none;padding:.2rem .1rem .6rem}
 .slider-track::-webkit-scrollbar{display:none}
 .slider-item{scroll-snap-align:start;display:grid;align-items:start;min-width:0}
 .slider-item>.sport,.slider-item>.propose{margin-top:0}
