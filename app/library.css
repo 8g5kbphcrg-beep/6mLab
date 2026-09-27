@@ -25,3 +25,6 @@
 .free-name{font-weight:700;font-size:.95rem}.free-name b{display:inline-grid;place-items:center;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--B);color:#100A24;font-size:.8rem;margin-right:.3rem}
 @media(hover:hover){.free-grid a:hover{border-color:var(--B)}}
 .free-more{margin-top:2rem;display:grid;gap:.6rem}.free-more p{margin:0;color:var(--muted)}.free-more strong{color:var(--ink)}.free-more a{color:var(--At);font-weight:700}
+.lib-sugg{grid-column:1/-1;list-style:none;margin:-.2rem 0 0;padding:.3rem;background:var(--card);border:1.5px solid var(--line);border-radius:12px;box-shadow:var(--shadow);display:grid;gap:2px}
+.lib-sugg button{width:100%;text-align:left;font:inherit;font-weight:600;color:var(--ink);background:none;border:0;border-radius:8px;padding:.6rem .8rem;cursor:pointer}
+.lib-sugg button:hover,.lib-sugg button:focus-visible{background:color-mix(in srgb,var(--A) 14%,var(--card))}
