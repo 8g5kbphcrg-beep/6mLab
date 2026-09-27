@@ -1,5 +1,5 @@
 import type { Lang } from "@/lib/dict";
-import { animatedFigure } from "@/programmes/source/figures.mjs";
+import { animatedFigure, variants } from "@/programmes/source/figures.mjs";
 import { exercices } from "@/programmes/source/exercices.mjs";
 import { MARK_VIEWBOX, markSvg } from "@/lib/mark.mjs";
 
@@ -94,10 +94,26 @@ export function FreeSessionForm({ lang, title }: { lang: Lang; title?: string })
   );
 }
 
+// A taste of the free session: 3 of its 8 exercises, the most striking in motion. The other
+// animations are for customers (lib/access.ts).
+const TEASER = ["saut-reception", "nordic", "gainage-lateral"];
 export function FreeSession({ lang }: { lang: Lang }) {
+  const fr = lang === "fr";
   return (
     <section className="sec wrap" id="seance-gratuite">
       <FreeSessionForm lang={lang} />
+      <div className="teaser">
+        <p className="teaser-t">{fr ? "Un aperçu de ce qui t'attend dans la séance gratuite" : "A preview of what's in the free session"}</p>
+        <div className="teaser-g">
+          {TEASER.map((id) => (
+            <figure key={id}>
+              <div className="teaser-fig" aria-hidden="true" dangerouslySetInnerHTML={{ __html: animatedFigure(id, variants(id)[0]) ?? "" }} />
+              <figcaption>{names[id]?.name}</figcaption>
+            </figure>
+          ))}
+        </div>
+        <p className="note">{fr ? "Et 5 autres exercices pour tes genoux, tes chevilles, tes hanches et tes épaules. Les +60 animations complètes sont réservées aux clients des programmes." : "And 5 more exercises for your knees, ankles, hips and shoulders. The full library of 60+ animations is for program customers."}</p>
+      </div>
     </section>
   );
 }

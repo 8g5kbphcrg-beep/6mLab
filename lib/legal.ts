@@ -96,6 +96,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
         ] },
         { h: "2. Les programmes", body: [
           "Les programmes sont des contenus numériques : un document PDF présentant le planning complet semaine par semaine, et des animations montrant chaque exercice, accessibles en ligne. Lors de la commande, l'acheteur choisit un objectif parmi ceux proposés, ou le programme Réathlétisation seul. Il peut ajouter un deuxième objectif, vendu 5 € en plus du programme. Il peut ajouter l'option course à pied, un programme complémentaire de séances de course de 30 à 45 minutes, vendue 9 € en plus du programme. Le contenu et la durée de chaque programme sont décrits sur sa page.",
+          "Accès aux animations : l'acheteur les ouvre sur le site avec la référence de sa commande, indiquée dans l'email de confirmation. L'accès démarre à la première ouverture, après confirmation de l'acheteur, et dure la durée du programme augmentée de 2 semaines : 10 semaines pour la Pré-saison, 14 semaines pour le Maintien en saison, 22 semaines pour le Pack Saison complète. Il doit être ouvert dans les 12 mois suivant l'achat, ne peut pas être suspendu et est limité à 3 appareils. Le document PDF reste acquis à l'acheteur sans limite de durée. Les exercices de la séance gratuite restent accessibles à tous.",
           "Les programmes portent sur l'entraînement uniquement. Ils ne comprennent ni plan alimentaire ni suivi individuel.",
           "Ils sont destinés à des personnes en bonne santé. En cas de blessure, de douleur ou de doute sur ton état de santé, demande l'avis d'un médecin avant de commencer. L'acheteur reste responsable de l'adaptation de l'effort à sa condition physique et du respect des consignes.",
         ] },
@@ -121,7 +122,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           "Le vendeur répond des défauts de conformité du contenu numérique dans les conditions des articles L224-25-12 et suivants du Code de la consommation. En cas de problème (fichier illisible, animation inaccessible), écris-nous : le programme sera mis en conformité, ou à défaut le prix sera réduit ou remboursé.",
         ] },
         { h: "9. Utilisation des programmes", body: [
-          "L'achat donne droit à un usage personnel et non transférable du programme. Il est interdit de le revendre, de le partager ou de le diffuser, en tout ou en partie, sans autorisation écrite.",
+          "L'achat donne droit à un usage personnel et non transférable du programme. Il est interdit de le revendre, de le partager ou de le diffuser, en tout ou en partie, sans autorisation écrite. Le document porte le prénom de l'acheteur et la référence de sa commande. La référence de commande est personnelle et ne doit pas être communiquée à des tiers.",
         ] },
         { h: "10. Responsabilité", body: [
           "6M Lab ne saurait être tenu responsable d'un dommage résultant d'une mauvaise exécution des exercices, du non-respect des consignes ou de la pratique malgré une contre-indication médicale.",
@@ -209,6 +210,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
         ] },
         { h: "2. The programs", body: [
           "The programs are digital content: a PDF with the full week-by-week plan, and animations showing every exercise, available online. When ordering, the buyer chooses one of the goals offered, or the return-to-play program on its own. The buyer can add a second goal, sold for €5 on top of the program. The buyer can add the running option, an additional program of 30 to 45 minute running sessions, sold for €9 on top of the program. Each program's content and length are described on its page.",
+          "Access to the animations: the buyer opens them on the website with the order reference given in the confirmation email. Access starts the first time it is opened, after the buyer confirms, and lasts the length of the program plus 2 weeks: 10 weeks for the Pre-season, 14 weeks for the In-season maintenance, 22 weeks for the Full season pack. It must be opened within 12 months of the purchase, cannot be paused and is limited to 3 devices. The PDF document remains the buyer's with no time limit. The exercises of the free session remain open to everyone.",
           "The programs cover training only. They include no meal plan and no individual coaching.",
           "They are intended for healthy people. If you have an injury, pain or any doubt about your health, see a doctor before starting. The buyer remains responsible for adapting the effort to their fitness and for following the instructions.",
         ] },
@@ -234,7 +236,7 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           "The seller is liable for any lack of conformity of the digital content under articles L224-25-12 and following of the French Consumer Code. If there is a problem (unreadable file, animation not accessible), contact us: the program will be brought into conformity or, failing that, the price will be reduced or refunded.",
         ] },
         { h: "9. Use of the programs", body: [
-          "Buying a program grants a personal, non-transferable right to use it. Reselling, sharing or distributing it, in whole or in part, without written permission is prohibited.",
+          "Buying a program grants a personal, non-transferable right to use it. Reselling, sharing or distributing it, in whole or in part, without written permission is prohibited. The document bears the buyer's first name and order reference. The order reference is personal and must not be shared with others.",
         ] },
         { h: "10. Liability", body: [
           "6M Lab cannot be held liable for any harm resulting from exercises performed incorrectly, failure to follow the instructions, or training despite a medical contraindication.",

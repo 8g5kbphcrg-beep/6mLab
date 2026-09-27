@@ -1,0 +1,11 @@
+/* Exercise library (customer area). */
+.lib{display:block;padding:2.5rem 1.25rem 4rem}
+.lib h1{font-size:clamp(2rem,6vw,3rem);margin:.2rem 0 .6rem}
+.lib-k{margin:0;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--At)}
+.lib-acc{margin:0 0 1.5rem;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.8rem 1rem;color:var(--muted)}
+.lib-acc strong{color:var(--ink)}
+.lib h2{font-size:1.4rem;margin:2rem 0 .7rem}
+.lib-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,15rem),1fr));gap:.5rem}
+.lib-grid a{display:flex;justify-content:space-between;align-items:center;gap:.6rem;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.8rem 1rem;color:var(--ink);text-decoration:none;font-weight:600}
+.lib-grid a span{color:var(--At)}
+@media(hover:hover){.lib-grid a:hover{border-color:var(--A)}}

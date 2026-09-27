@@ -19,3 +19,16 @@ body:has(.exo-back){overflow:hidden}
 .exo-back.closed .exo-card{display:none}.exo-back.closed .exo-back-msg{display:block}
 .exo-back-msg p{margin:0 0 .8rem;line-height:1.5}.exo-back-t{font:400 1.7rem/1.1 var(--font-display),sans-serif;color:#FFC75F}
 .exo-again{margin-top:.6rem;border:0;border-radius:99px;background:#FF7A59;color:#100A24;font-weight:700;font-size:1rem;padding:.7rem 1.4rem;cursor:pointer}
+/* Customer area: reference form and confirmation (components/AccessGate.tsx). */
+.exo-card.acc{width:min(100%,560px)}
+.acc-k{margin:0 0 .3rem!important;font-size:.8rem!important;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#C2410C}
+.acc-err{background:#FDECEA;border-radius:10px;padding:.7rem .9rem;color:#8A1C1C!important}
+.acc-form{display:grid;gap:.6rem;margin:1rem 0}
+.acc-form input{font:inherit;font-size:1.05rem;letter-spacing:.05em;padding:.85rem 1rem;border:1.5px solid #D9D5EA;border-radius:12px;background:#fff;color:#100A24}
+.acc-go{display:grid;gap:.8rem;margin-top:1.2rem;justify-items:start}
+.acc-card .btn,.acc-form .btn,.acc-go .btn{border:0;border-radius:99px;background:#FF7A59;color:#100A24;font-weight:700;font-size:1rem;padding:.85rem 1.4rem;cursor:pointer}
+.acc-later{color:#3A3452;font-size:.95rem}
+.acc-dates{background:#F6F5FB;border-radius:12px;padding:.8rem 1rem}
+.acc-rules{margin:.4rem 0 1rem;padding-left:1.1rem;color:#3A3452;font-size:.92rem;line-height:1.5;display:grid;gap:.3rem}
+.acc-cta{font-size:.95rem!important}.acc-cta a{color:#C2410C;font-weight:700}
+.acc .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}

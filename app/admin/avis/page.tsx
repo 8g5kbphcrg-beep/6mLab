@@ -4,6 +4,7 @@ import { formUrl, paidOrders, questions, stripe, whenDays, DAY, type FeedbackOrd
 import { recentLeads } from "@/lib/leads";
 import { goals as fitGoals, type FitGoal } from "@/lib/forme";
 import Nav from "../Nav";
+import { endOf, MAX_DEVICES, offerOf } from "@/lib/access";
 
 // Customer feedback dashboard: response rates, ratings, answers to every question, reviews to
 // publish, and each order's questionnaires (send now, open, export).
@@ -120,12 +121,23 @@ export default async function AdminAvis() {
 
       <h2>Commandes</h2>
       <div className="tbl"><table>
-        <thead><tr><th>Date</th><th>Client</th><th>Programme</th><th>Questionnaire 1</th><th>Questionnaire 2</th></tr></thead>
+        <thead><tr><th>Date</th><th>Client</th><th>Programme</th><th>Animations</th><th>Questionnaire 1</th><th>Questionnaire 2</th></tr></thead>
         <tbody>{orders.map((o) => (
           <tr key={o.id}>
             <td>{new Date(o.created * 1000).toLocaleDateString("fr-FR")}</td>
             <td>{o.firstName}<br /><span className="muted">{o.email}</span></td>
             <td>{o.meta.pack === "oui" ? "Pack Saison complète" : programs.fr[o.program]?.name}<br /><span className="muted">{o.goals.map((g) => goalName(g, "fr")).join(" + ")}{o.meta.lieu ? ` · ${o.meta.lieu === "salle" ? "Salle" : "Maison"}` : ""}</span></td>
+            <td>
+              {o.meta.acc_start ? (() => {
+                const end = endOf({ offer: offerOf(o.meta), start: Date.parse(o.meta.acc_start) }), n = (o.meta.acc_dev ?? "").split(",").filter(Boolean).length;
+                return <>
+                  <span className={`tag${end > Date.now() ? " ok" : ""}`}>{end > Date.now() ? "Jusqu'au" : "Terminé le"} {new Date(end).toLocaleDateString("fr-FR")}</span>
+                  <br /><span className="muted">{n} / {MAX_DEVICES} appareils</span>{" "}
+                  {n > 0 && <form method="post" action="/admin/avis/action"><input type="hidden" name="pi" value={o.id} /><input type="hidden" name="action" value="reset-dev" /><button className="ghost">Libérer</button></form>}
+                </>;
+              })() : <span className="muted">Pas encore ouvert</span>}
+              <br /><span className="muted">Réf. {o.meta.ref ?? "–"}</span>
+            </td>
             {(["mid", "end"] as const).map((st) => {
               const answered = o.meta[st === "mid" ? "m_at" : "f_at"], sent = o.meta[st === "mid" ? "s_mid" : "s_end"];
               const due = new Date((o.created + whenDays(st, o.program) * DAY) * 1000).toLocaleDateString("fr-FR");

@@ -4,6 +4,7 @@ import type { Lang } from "@/lib/dict";
 import type { ProgramSlug } from "@/lib/programs";
 import type { GoalId } from "@/lib/goals";
 import { mailReady, notifyOwner, sendConfirmation, type Order } from "@/lib/email";
+import { refOf } from "@/lib/access";
 
 // Receives Stripe events. On a paid checkout it emails the customer (confirmation, plus the
 // program PDFs once they exist in programmes/) and sends 6M Lab an order summary.
@@ -25,6 +26,12 @@ export async function POST(req: NextRequest) {
     const s = event.data.object;
     const m = s.metadata ?? {};
     console.log("[order]", JSON.stringify({ id: s.id, email: s.customer_details?.email, amount: s.amount_total, paid: s.payment_status, ...m }));
+
+    // The order reference (end of the session id, shown in the confirmation email) opens the
+    // customer area: saved on the PaymentIntent so it can be looked up (lib/access.ts).
+    if (s.payment_status === "paid" && typeof s.payment_intent === "string") {
+      await stripe.paymentIntents.update(s.payment_intent, { metadata: { ref: refOf(s.id).toLowerCase() } }).catch((e) => console.error("[ref]", e));
+    }
 
     // Stripe retries a webhook until it gets a 2xx (and the event keeps its original metadata),
     // so the live session is checked and flagged once emailed.
