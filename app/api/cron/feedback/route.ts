@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { DAY, formUrl, paidOrders, PROMO_PERCENT, stripe, whenDays, type Stage } from "@/lib/feedback";
-import { mailReady, sendFeedbackRequest, sendTip, TIP_DAYS } from "@/lib/email";
+import { mailReady, sendAccessEnding, sendFeedbackRequest, sendTip, TIP_DAYS } from "@/lib/email";
+import { endOf, offerOf } from "@/lib/access";
 import { recentLeads, unsubUrl } from "@/lib/leads";
 import { SITE } from "@/lib/dict";
 
@@ -8,7 +9,8 @@ import { SITE } from "@/lib/dict";
 // purchase and at the end of the program. Each email goes out once (s_mid / s_end in the order's
 // metadata). Emails that are more than 10 days late are skipped, so switching this on does not
 // flood past customers. Also sends the 3 tips to people who asked for the free session (t1, t2,
-// t3 in the lead's metadata), at most one per person and per day.
+// t3 in the lead's metadata), at most one per person and per day. And warns customers 7 days
+// before their access to the animations ends (s_acc).
 export async function GET(req: NextRequest) {
   if (!process.env.CRON_SECRET || req.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`) return new NextResponse("Unauthorized", { status: 401 });
   const s = stripe();
@@ -27,6 +29,17 @@ export async function GET(req: NextRequest) {
         sent.push(`${o.id}:${stage}`);
       } catch (e) { console.error("[feedback cron]", o.id, e); }
     }
+  }
+  for (const o of await paidOrders(s, now - 560 * DAY)) {
+    if (!o.email || !o.meta.acc_start || o.meta.s_acc) continue;
+    const offer = offerOf(o.meta), end = endOf({ offer, start: Date.parse(o.meta.acc_start) });
+    const left = (end - now * 1000) / (DAY * 1000);
+    if (left <= 0 || left > 7) continue;
+    try {
+      await sendAccessEnding({ email: o.email, lang: o.lang, firstName: o.firstName, offer }, end);
+      await s.paymentIntents.update(o.id, { metadata: { s_acc: new Date().toISOString().slice(0, 10) } });
+      sent.push(`${o.id}:acc`);
+    } catch (e) { console.error("[access cron]", o.id, e); }
   }
   for (const l of await recentLeads(s, now - 20 * DAY)) {
     if (!l.email || l.meta.unsub) continue;

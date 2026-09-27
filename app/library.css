@@ -1,0 +1,30 @@
+/* Exercise library (customer area). */
+.lib{display:block;padding:2.5rem 1.25rem 4rem}
+.lib h1{font-size:clamp(2rem,6vw,3rem);margin:.2rem 0 .6rem}
+.lib-k{margin:0;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--At)}
+.lib-acc{margin:0 0 1.5rem;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.8rem 1rem;color:var(--muted)}
+.lib-acc strong{color:var(--ink)}
+.lib h2{font-size:1.4rem;margin:2rem 0 .7rem}
+.lib-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,15rem),1fr));gap:.5rem}
+.lib-grid a{display:flex;justify-content:space-between;align-items:center;gap:.6rem;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.8rem 1rem;color:var(--ink);text-decoration:none;font-weight:600}
+.lib-grid a span{color:var(--At)}
+@media(hover:hover){.lib-grid a:hover{border-color:var(--A)}}
+.lib-search{position:sticky;top:calc(env(safe-area-inset-top,0px) + 4.2rem);z-index:5;display:grid;grid-template-columns:1fr auto;gap:.5rem;background:var(--bg);padding:.6rem 0;margin-bottom:.4rem}
+.lib-search input{font:inherit;padding:.8rem 1rem;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);min-width:0}
+.lib-search .btn{padding:.7rem 1.2rem}
+.lib-miss{grid-column:1/-1;margin:0;font-size:.9rem;color:var(--At)}
+.lib .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.lib-grid li{scroll-margin-top:9rem;border-radius:12px}
+.lib-grid li.hit a{border-color:var(--A);background:color-mix(in srgb,var(--A) 16%,var(--card));animation:libhit .8s ease-in-out 3}
+@keyframes libhit{0%,100%{transform:scale(1)}50%{transform:scale(1.06);box-shadow:0 8px 24px rgba(255,122,89,.35)}}
+@media(prefers-reduced-motion:reduce){.lib-grid li.hit a{animation:none}}
+/* Free session animations (public page). */
+.free-grid{list-style:none;margin:1rem 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,13rem),1fr));gap:.7rem}
+.free-grid a{display:grid;gap:.4rem;background:#fff;border:1px solid var(--line);border-radius:14px;padding:.6rem;text-decoration:none;color:#100A24}
+.free-fig svg{display:block;width:100%;height:auto;max-height:190px}
+.free-name{font-weight:700;font-size:.95rem}.free-name b{display:inline-grid;place-items:center;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--B);color:#100A24;font-size:.8rem;margin-right:.3rem}
+@media(hover:hover){.free-grid a:hover{border-color:var(--B)}}
+.free-more{margin-top:2rem;display:grid;gap:.6rem}.free-more p{margin:0;color:var(--muted)}.free-more strong{color:var(--ink)}.free-more a{color:var(--At);font-weight:700}
+.lib-sugg{grid-column:1/-1;list-style:none;margin:-.2rem 0 0;padding:.3rem;background:var(--card);border:1.5px solid var(--line);border-radius:12px;box-shadow:var(--shadow);display:grid;gap:2px}
+.lib-sugg button{width:100%;text-align:left;font:inherit;font-weight:600;color:var(--ink);background:none;border:0;border-radius:8px;padding:.6rem .8rem;cursor:pointer}
+.lib-sugg button:hover,.lib-sugg button:focus-visible{background:color-mix(in srgb,var(--A) 14%,var(--card))}

@@ -24,7 +24,7 @@ const text = {
       `La Pré-saison : ${pre}`,
       `Le Maintien en saison : ${main}`,
       "Les mêmes objectifs sur les deux programmes : 1 au choix, +5 € pour un 2e",
-      "Une animation pour chaque exercice",
+      "Une animation pour chaque exercice, en ligne pendant 22 semaines (à lancer quand tu commences)",
       "En option : un programme de course à pied (+9 €)",
     ],
     phases: [
@@ -46,7 +46,7 @@ const text = {
       `Pre-season: ${pre}`,
       `In-season maintenance: ${main}`,
       "The same goals in both programs: pick 1, +€5 for a 2nd",
-      "An animation for every exercise",
+      "An animation for every exercise, online for 22 weeks (start it when you begin)",
       "Optional: a running program (+€9)",
     ],
     phases: [

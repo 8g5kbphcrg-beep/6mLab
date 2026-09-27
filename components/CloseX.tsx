@@ -1,14 +1,14 @@
 "use client";
 
-// Exercise card (opened from the eye icon in the program PDFs). A web page cannot switch back to
-// another app (Mail, Files, Drive), and going back or closing the tab would land on an unrelated
-// page, so the cross hides the card and explains how to return to the program. Only when the
-// card was opened from the 6M Lab site itself does it go back.
-export default function CloseX({ label }: { label: string }) {
+// Exercise card. Opened from a page of the site (library, free session, tips), the link says so
+// with ?retour=<page>: the cross goes back there (in the library, on the exercise). Opened from the
+// eye icon of a program PDF, a web page cannot switch back to another app (Mail, Files, Drive), so
+// the cross hides the card and explains how to return to the program.
+export default function CloseX({ label, back }: { label: string; back?: string }) {
   const close = () => {
-    let fromSite = false;
-    try { fromSite = !!document.referrer && new URL(document.referrer).origin === window.location.origin; } catch {}
-    if (fromSite && window.history.length > 1) return window.history.back();
+    // Always that page, never the previous one of the history (which may be the home page), in
+    // place of the card so the phone's back button does not reopen it.
+    if (back) return window.location.replace(back);
     document.querySelector(".exo-back")?.classList.add("closed");
   };
   return (

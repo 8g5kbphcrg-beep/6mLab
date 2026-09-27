@@ -1,6 +1,8 @@
 import { access, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import nodemailer from "nodemailer";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { accessWeeks, MAX_DEVICES, offerOf } from "@/lib/access";
 import type { Lang } from "@/lib/dict";
 import { programs, type ProgramSlug } from "@/lib/programs";
 import { goalOrder, goalsTitle, type GoalId } from "@/lib/goals";
@@ -62,7 +64,28 @@ export async function programFiles(o: Order) {
   } catch {
     return null;
   }
-  return Promise.all(names.map(async (filename, i) => ({ filename, content: await readFile(paths[i]) })));
+  const ref = o.id.slice(-12);
+  return Promise.all(names.map(async (filename, i) => ({ filename, content: await personal(await readFile(paths[i]), o.firstName, ref) })));
+}
+
+// Each PDF carries the customer's first name and order reference at the foot of every page:
+// people think twice before passing on a document with someone's name on it. Falls back to the
+// plain file if the stamp fails.
+export async function personal(pdf: Buffer, firstName: string, ref: string): Promise<Buffer> {
+  try {
+    const doc = await PDFDocument.load(pdf);
+    const font = await doc.embedFont(StandardFonts.Helvetica);
+    // The standard font only covers Latin-1: other characters are dropped.
+    const text = `Programme personnel de ${firstName || "client"} · Réf. ${ref} · Usage personnel, merci de ne pas le diffuser.`.replace(/[^\x20-\xFF·]/g, "").replace(/·/g, "-");
+    for (const page of doc.getPages()) {
+      const { width } = page.getSize(), size = 6.5, w = font.widthOfTextAtSize(text, size);
+      page.drawText(text, { x: (width - w) / 2, y: 7, size, font, color: rgb(0.55, 0.53, 0.62) });
+    }
+    return Buffer.from(await doc.save());
+  } catch (e) {
+    console.error("[pdf stamp]", e);
+    return pdf;
+  }
 }
 
 export async function sendConfirmation(o: Order) {
@@ -87,6 +110,14 @@ export async function sendConfirmation(o: Order) {
     : `You accepted the terms of sale (${SITE}${legalPaths.en.cgv}), asked for immediate access to the program and acknowledged losing your right of withdrawal once the program has been sent. Seller: ${owner.name}, sole trader, ${owner.address}, SIRET ${owner.siret}. VAT not applicable, art. 293 B of the French General Tax Code.`;
   const hello = fr ? `Bonjour ${o.firstName},` : `Hi ${o.firstName},`;
   const intro = fr ? "Merci pour ta commande, elle est bien confirmée." : "Thank you for your order, it is confirmed.";
+  // The animations (customer area, lib/access.ts): opened with the reference, from the first time.
+  const weeks = accessWeeks(offerOf({ program: o.program, pack: o.pack ? "oui" : "" }));
+  const anims = fr
+    ? [`Tes animations : touche l'œil à côté de chaque exercice de ton programme, ou ouvre la bibliothèque d'exercices. Il te suffit de ta référence de commande : ${o.id.slice(-12)}.`,
+      `Ton accès démarre la première fois que tu l'ouvres (on te demandera de confirmer) et dure ${weeks} semaines (la durée de ton programme + 2 semaines). Ouvre-le le jour où tu commences, dans les 12 mois, sur ${MAX_DEVICES} appareils au plus. Ton PDF, lui, reste à toi.`]
+    : [`Your animations: tap the eye next to each exercise in your program, or open the exercise library. All you need is your order reference: ${o.id.slice(-12)}.`,
+      `Your access starts the first time you open it (you will be asked to confirm) and lasts ${weeks} weeks (your program + 2 weeks). Open it on the day you start, within 12 months, on ${MAX_DEVICES} devices at most. Your PDF is yours to keep.`];
+  const lib = `${SITE}/${o.lang}/exercices`;
   const health = fr
     ? "Nos programmes sont destinés aux personnes en bonne santé. En cas de doute ou de blessure, demande l'avis d'un professionnel de santé."
     : "Our programs are for healthy people. If you have doubts or an injury, ask a health professional first.";
@@ -97,11 +128,12 @@ export async function sendConfirmation(o: Order) {
     <p>${esc(hello)}</p><p>${intro}</p>
     <table style="width:100%;border-collapse:collapse;margin:16px 0">${rows.map(([k, v]) => `<tr><td style="padding:8px 0;color:#5B5673;border-bottom:1px solid #E3E0F0">${k}</td><td style="padding:8px 0;text-align:right;font-weight:700;border-bottom:1px solid #E3E0F0">${esc(v)}</td></tr>`).join("")}</table>
     <p style="font-weight:700">${delivery}</p>
+    <div style="background:#F5F3FB;border-radius:10px;padding:14px 16px;margin:16px 0">${anims.map((l) => `<p style="margin:0 0 8px">${esc(l)}</p>`).join("")}<p style="margin:0"><a href="${lib}" style="color:#C4452A;font-weight:700">${fr ? "Ouvrir la bibliothèque d'exercices" : "Open the exercise library"}</a></p></div>
     <p>${fr ? "Une question ? Réponds simplement à cet email." : "Any question? Just reply to this email."}</p>
     <p style="font-size:12px;color:#5B5673;margin-top:24px">${esc(health)}</p>
     <p style="font-size:12px;color:#5B5673">${esc(legal)}</p>
   </div></div>`;
-  const text = [hello, "", intro, "", ...rows.map(([k, v]) => `${k} : ${v}`), "", delivery, "", health, "", legal].join("\n");
+  const text = [hello, "", intro, "", ...rows.map(([k, v]) => `${k} : ${v}`), "", delivery, "", ...anims, lib, "", health, "", legal].join("\n");
 
   const info = await transport().sendMail({
     from: `6M Lab <${MAIL_FROM()}>`,
@@ -169,6 +201,23 @@ export async function sendFeedbackRequest(o: { email: string; lang: Lang; firstN
   if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
 }
 
+// A week before the access to the animations ends (lib/access.ts): the date, and what to do next.
+export async function sendAccessEnding(o: { email: string; lang: Lang; firstName: string; offer: "pre-saison" | "maintien-saison" | "pack" }, end: number) {
+  const fr = o.lang === "fr";
+  const date = new Date(end).toLocaleDateString(fr ? "fr-FR" : "en-GB", { day: "numeric", month: "long", timeZone: "Europe/Paris" });
+  const hello = fr ? `Bonjour ${o.firstName},` : `Hi ${o.firstName},`;
+  const next = o.offer === "pre-saison"
+    ? fr ? "La saison commence : pour garder ton niveau jusqu'au bout, le Maintien en saison te propose 2 séances courtes par semaine, placées pour arriver frais le jour du match." : "The season is starting: to keep your level all the way, the In-season maintenance gives you 2 short sessions a week, placed so you arrive fresh on game day."
+    : fr ? "Pour ta prochaine saison, la Pré-saison (ou le Pack Saison complète, pré-saison + saison) t'attend." : "For your next season, the Pre-season (or the Full season pack, pre-season + in-season) is ready for you.";
+  const lines = fr
+    ? [`Ton accès aux animations se termine le ${date}. Ton PDF, lui, reste à toi : tu peux continuer à t'en servir.`, next, "Si tu as répondu au questionnaire de fin de programme, pense à ton code de réduction."]
+    : [`Your access to the animations ends on ${date}. Your PDF is yours to keep: you can go on using it.`, next, "If you answered the end-of-program questionnaire, remember your discount code."];
+  const link = `${SITE}/${o.lang}/programmes`;
+  const html = frame(`<p>${esc(hello)}</p>${lines.map((l) => `<p>${esc(l)}</p>`).join("")}${button(link, fr ? "Voir les programmes" : "See the programs")}`);
+  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: o.email, replyTo: owner.email, subject: fr ? "Ton accès aux animations se termine dans 7 jours" : "Your access to the animations ends in 7 days", html, text: [hello, "", ...lines, "", link].join("\n") });
+  if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
+}
+
 // The discount code, sent after the final questionnaire so the customer keeps it.
 export async function sendPromoCode(o: { email: string; lang: Lang; firstName: string }, code: string, promoPercent: number) {
   const fr = o.lang === "fr";
@@ -200,8 +249,8 @@ export async function sendFreeSession(to: string, lang: Lang, unsub: string) {
   const content = await readFile(join(process.cwd(), "programmes", "seance-decouverte.pdf"));
   await leadMail(to, lang, unsub, fr ? "Ta séance gratuite 6M Lab" : "Your free 6M Lab session",
     fr
-      ? ["Salut,", "Voici ta séance découverte en pièce jointe : 15 minutes de prévention des blessures pour le handball, sans matériel. Touche l'œil à côté de chaque exercice pour le voir en mouvement.", "Fais-la 2 fois par semaine, en fin d'échauffement ou un jour sans handball. Dans les prochains jours, je t'envoie 3 conseils pour mieux te préparer.", "Raphaël, 6M Lab"]
-      : ["Hi,", "Here is your free session, attached: 15 minutes of injury prevention for handball, no equipment. Tap the eye next to each exercise to see it in motion.", "Do it twice a week, at the end of your warm-up or on a day without handball. Over the next few days, I'll send you 3 tips to prepare better.", "Raphaël, 6M Lab"],
+      ? ["Salut,", `Voici ta séance découverte en pièce jointe : 15 minutes de prévention des blessures pour le handball, sans matériel. Touche l'œil à côté de chaque exercice pour le voir en mouvement, ou retrouve les 8 animations sur <a href="${SITE}/fr/exercices/seance-gratuite">cette page</a>.`, "Fais-la 2 fois par semaine, en fin d'échauffement ou un jour sans handball. Dans les prochains jours, je t'envoie 3 conseils pour mieux te préparer.", "Raphaël, 6M Lab"]
+      : ["Hi,", `Here is your free session, attached: 15 minutes of injury prevention for handball, no equipment. Tap the eye next to each exercise to see it in motion, or find all 8 animations on <a href="${SITE}/en/exercices/seance-gratuite">this page</a>.`, "Do it twice a week, at the end of your warm-up or on a day without handball. Over the next few days, I'll send you 3 tips to prepare better.", "Raphaël, 6M Lab"],
     [fr ? "Voir les programmes complets" : "See the full programs", `${SITE}/${lang}/programmes`],
     [{ filename: fr ? "6M-Lab-seance-decouverte.pdf" : "6M-Lab-free-session.pdf", content }]);
 }

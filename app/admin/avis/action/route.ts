@@ -5,7 +5,7 @@ import { mailReady, sendFeedbackRequest } from "@/lib/email";
 import { SITE } from "@/lib/dict";
 
 // Admin actions (behind the password in middleware.ts): publish or hide a review, send a
-// questionnaire now.
+// questionnaire now, free the devices of a customer's access.
 export async function POST(req: NextRequest) {
   const form = await req.formData();
   const pi = String(form.get("pi") ?? ""), action = String(form.get("action") ?? "");
@@ -14,6 +14,9 @@ export async function POST(req: NextRequest) {
   if (action === "show" || action === "hide") {
     await s.paymentIntents.update(pi, { metadata: { f_show: action === "show" ? "1" : "" } });
     revalidateTag("reviews");
+  } else if (action === "reset-dev") {
+    // Frees the devices of a customer's access (new phone…): the next ones can open it again.
+    await s.paymentIntents.update(pi, { metadata: { acc_dev: "" } });
   } else if (action === "send-mid" || action === "send-end") {
     const stage: Stage = action === "send-mid" ? "mid" : "end";
     const o = toOrder(await s.paymentIntents.retrieve(pi, { expand: ["latest_charge"] }));
