@@ -339,6 +339,8 @@ const gear = {
   barHip: (j) => plate([j.hip[0], j.hip[1] - 22]),
   // The ball in the hands, or where the pose puts it (ball: [x, height], e.g. against the wall).
   ball: (j, ctx) => { const c = ctx.ball ?? mid(j.near.hand, j.far.hand); return `<circle cx="${f1(c[0])}" cy="${f1(c[1])}" r="9" fill="#FFC75F" stroke="${INK}" stroke-width="1.5"/>`; },
+  // Ball squeezed between the knees (adductors).
+  ballKnees: (j) => { const c = mid(j.near.knee, j.far.knee); return `<circle cx="${f1(c[0])}" cy="${f1(c[1])}" r="8" fill="#FFC75F" stroke="${INK}" stroke-width="1.5"/>`; },
   backpack: (j) => { const a = angle(j.hip, j.sh), m = mid(j.hip, j.sh), r = rad(a + 90); const c = [m[0] + 10 * Math.sin(r), m[1] + 10 * Math.cos(r)]; return `<rect x="${f1(c[0] - 7)}" y="${f1(c[1] - 12)}" width="14" height="24" rx="4" fill="${GEAR}" transform="rotate(${f1(a - 180)} ${f1(c[0])} ${f1(c[1])})"/>`; },
   band: (j, ctx) => (ctx.post ? `<path d="${d([ctx.post, j.near.wrist])}" ${stroke(2.5, BAND)}/>` : ""),
   // Ball held in the near hand (a shot).

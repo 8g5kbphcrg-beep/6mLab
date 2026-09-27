@@ -46,7 +46,7 @@ const text = {
     },
     how: ["Tu remplis le formulaire (2 minutes), avec ton matériel et tes installations.", "On échange sur ton groupe, ton niveau, ton calendrier et ton matériel.", "Tu reçois un devis sous 48 heures.", "Une fois validé, tu reçois tout le programme par email, sur une seule adresse."],
     howT: "Comment ça se passe", formT: "Demander un devis",
-    f: { name: "Ton prénom et ton nom", role: "Tu es", roles: ["Entraîneur ou entraîneuse", "Préparateur ou préparatrice physique", "Dirigeant ou dirigeante", "Autre"], club: "Club", email: "Ton email", size: "Nombre de joueurs", sizes: ["Moins de 10", "10 à 15", "16 à 25", "Plus de 25"], period: "Quand ?", periods: ["Avant la saison", "Pendant la saison", "Toute la saison"], msg: "Ton message (facultatif)", send: "Envoyer ma demande", privacy: "Ces informations servent uniquement à te répondre et à préparer ton devis." },
+    f: { name: "Ton prénom et ton nom", role: "Tu es", roles: ["Entraîneur ou entraîneuse", "Préparateur ou préparatrice physique", "Dirigeant ou dirigeante", "Autre"], club: "Club", email: "Ton email", field: "Joueurs de champ", fieldHint: "Arrières, ailiers, demi-centres et pivots", gk: "Gardiens", period: "Quand ?", periods: ["Avant la saison", "Pendant la saison", "Toute la saison"], msg: "Ton message (facultatif)", send: "Envoyer ma demande", privacy: "Ces informations servent uniquement à te répondre et à préparer ton devis." },
     ok: "Merci, ta demande est bien partie ! Je te réponds sous 48 heures par email.", err: "La demande n'a pas pu partir. Vérifie ton email, ou écris-moi directement :",
   },
   en: {
@@ -82,7 +82,7 @@ const text = {
     },
     how: ["Fill in the form (2 minutes), with your equipment and facilities.", "We talk about your group, level, calendar and equipment.", "You get a quote within 48 hours.", "Once approved, you get the whole program by email, to a single address."],
     howT: "How it works", formT: "Ask for a quote",
-    f: { name: "Your name", role: "You are", roles: ["Coach", "Strength and conditioning coach", "Club official", "Other"], club: "Club", email: "Your email", size: "Number of players", sizes: ["Fewer than 10", "10 to 15", "16 to 25", "More than 25"], period: "When?", periods: ["Before the season", "During the season", "The whole season"], msg: "Your message (optional)", send: "Send my request", privacy: "This information is only used to reply to you and prepare your quote." },
+    f: { name: "Your name", role: "You are", roles: ["Coach", "Strength and conditioning coach", "Club official", "Other"], club: "Club", email: "Your email", field: "Court players", fieldHint: "Backs, wings, centre backs and pivots", gk: "Goalkeepers", period: "When?", periods: ["Before the season", "During the season", "The whole season"], msg: "Your message (optional)", send: "Send my request", privacy: "This information is only used to reply to you and prepare your quote." },
     ok: "Thank you, your request has been sent! I'll reply within 48 hours by email.", err: "The request could not be sent. Check your email, or write to me directly:",
   },
 };
@@ -152,8 +152,13 @@ export default async function Clubs({ params, searchParams }: P) {
             <label className="cf-field">{f.email}<input name="email" type="email" required maxLength={254} autoComplete="email" /></label>
           </div>
           <ClubTeam lang={lang as Lang} />
+          {/* The quote and the documents sent (a follow-up sheet with one line per player, a
+              goalkeepers' version) depend on both numbers. */}
           <div className="cf-row">
-            {select("size", f.size, f.sizes)}
+            <label className="cf-field">{f.field}<span className="cf-hint">{f.fieldHint}</span><input name="field" type="number" inputMode="numeric" min={1} max={60} required /></label>
+            <label className="cf-field">{f.gk}<span className="cf-hint">&nbsp;</span><input name="gk" type="number" inputMode="numeric" min={0} max={10} required /></label>
+          </div>
+          <div className="cf-row">
             {select("period", f.period, f.periods)}
           </div>
           <ClubEquipment lang={lang as Lang} />

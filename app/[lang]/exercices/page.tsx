@@ -21,6 +21,7 @@ const FAMILIES: [string, string, string[]][] = [
   ["Lancers", "Throws", ["lancer-poitrine", "lancer-rotation", "lancer-haut"]],
   ["Gainage", "Core", ["planche", "gainage-lateral", "dead-bug", "pallof", "copenhague"]],
   ["Prévention des blessures", "Injury prevention", ["pont-fessier", "pont-une-jambe", "equilibre", "equilibre-balle", "nordic", "mollets-excentrique", "ytw", "rotation-externe", "rotation-externe-haute", "pompes-scapulaires"]],
+  ["Gardiens de but", "Goalkeepers", ["fente-laterale", "cosaque", "adduction"]],
   ["Condition physique", "Conditioning", ["footing", "intervalles-1515", "intervalles-3030", "sprints-repetes", "navettes-hand", "circuit"]],
 ];
 

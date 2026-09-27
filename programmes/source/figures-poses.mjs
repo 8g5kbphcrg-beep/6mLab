@@ -53,6 +53,8 @@ const BENCH_CAM = { yaw: 30, pitch: 18 };
 // Hip thrust: shoulders resting on a bench, they stay in place; the feet are planted under the
 // knees at the top (knees at 90°) and never slide.
 const thrust = (top, arms, gear) => ({ support: BENCH, pin: ["sh", 0], plant: [87, 0], gear, torso: top ? -90 : -42, head: top ? 35 : 20, near: { thigh: top ? 90 : 122, shin: 0, ...arms }, far: { thigh: top ? 90 : 122, shin: 0, ...arms } });
+// Single-leg hip thrust: the far leg stays straight, in line with its thigh.
+const thrustOne = (top, arms) => { const t = thrust(top, arms); const a = top ? 90 : 122; return { ...t, plantSides: ["near"], far: { ...t.far, thigh: a, shin: a, foot: a + 80 } }; };
 const thrustBar = [thrust(false, { upper: 108, fore: 8 }, ["barHip"]), thrust(true, { upper: 105, fore: 125 }, ["barHip"])];
 
 // Glute bridge on the floor: shoulders in place, heels planted where the knees are at 90° at the
@@ -516,7 +518,7 @@ export const defs = {
     poids: [
       crouch({ torso: 32 }),
       { lift: 16, x: 30, torso: 10, ...legs({ thigh: 20, shin: -10, foot: ARMED }, { upper: 90, fore: 100 }) },
-      { x: 60, torso: 30, near: { thigh: 52, shin: -24, upper: 60, fore: 70 }, far: { thigh: 14, shin: -72, foot: 20, upper: 60, fore: 70 } },
+      { x: 60, torso: 30, near: { thigh: 52, shin: -24, upper: 60, fore: 70 }, far: { thigh: 20, shin: -105, foot: -20, upper: 60, fore: 70 } },
     ],
   },
 
@@ -617,7 +619,7 @@ export const defs = {
       { gear: ["barBack"], torso: 40, near: { thigh: 92, shin: -32, upper: 5, fore: 190 } },
     ],
   },
-  "hip-thrust-lourd": { materiel: thrustBar },
+  "hip-thrust-lourd": { maison: [thrustOne(false, { upper: 42, fore: 60 }), thrustOne(true, { upper: 90, fore: 90 })], materiel: thrustBar },
   "developpe-couche": {
     cam: { materiel: BENCH_CAM },
     poids: [{ ...pushTop, gear: ["backpack"] }, { ...pushBottom, gear: ["backpack"] }],
@@ -669,6 +671,35 @@ export const defs = {
   "hanches-9090": {
     cam: { yaw: 55, pitch: 20 },
     poids: [hips9090("near"), hips9090Mid, hips9090("far")],
+  },
+  // Goalkeepers. Lateral lunge, seen from the front: feet together, big step to the side onto
+  // the bent leg (hips back, heel down), the other leg straight; push back to the middle.
+  "fente-laterale": {
+    cam: { yaw: 70, pitch: 10 },
+    poids: [
+      { pin: ["far.heel", 0, -8], near: { upper: 6, fore: 30, upperOut: 8 }, far: { upper: 6, fore: 30, upperOut: 8 } },
+      { torso: 38, pin: ["far.heel", 0, -8], near: { thigh: 88, thighOut: 24, shin: -40, shinOut: 12, upper: 70, fore: 90 }, far: { thigh: 14, thighOut: 46, shin: 4, shinOut: 46, upper: 70, fore: 90 } },
+    ],
+  },
+  // Cossack squat, seen from the front: feet very wide, down onto one leg (heel down), the other
+  // leg straight with the toes up, then across to the other side without standing up fully.
+  cosaque: {
+    cam: { yaw: 70, pitch: 10 },
+    poids: [
+      { torso: 32, near: { thigh: 92, thighOut: 26, shin: -52, shinOut: 12, upper: 75, fore: 90 }, far: { thigh: 8, thighOut: 58, shin: 8, shinOut: 58, foot: 160, upper: 75, fore: 90 },
+        solve: [{ vary: ["far.thighOut", "far.shinOut"], a: "far.heel", b: "near.heel", dy: 0 }] },
+      { torso: 22, near: { thigh: 55, thighOut: 40, shin: -30, shinOut: 30, upper: 60, fore: 85 }, far: { thigh: 55, thighOut: 40, shin: -30, shinOut: 30, upper: 60, fore: 85 } },
+      { torso: 32, far: { thigh: 92, thighOut: 26, shin: -52, shinOut: 12, upper: 75, fore: 90 }, near: { thigh: 8, thighOut: 58, shin: 8, shinOut: 58, foot: 160, upper: 75, fore: 90 },
+        solve: [{ vary: ["near.thighOut", "near.shinOut"], a: "near.heel", b: "far.heel", dy: 0 }] },
+    ],
+  },
+  // On the back, knees bent, a ball between the knees: squeeze for 5 seconds, then relax.
+  adduction: {
+    cam: { yaw: 35, pitch: 35 },
+    poids: [
+      { ...bridge(false), gear: ["ballKnees"], near: { ...bridge(false).near, thighOut: 13 }, far: { ...bridge(false).far, thighOut: 13 } },
+      { ...bridge(false), gear: ["ballKnees"], near: { ...bridge(false).near, thighOut: 4 }, far: { ...bridge(false).far, thighOut: 4 } },
+    ],
   },
   "cheville-mur": {
     scene: { all: [{ wall: 10 }] },
