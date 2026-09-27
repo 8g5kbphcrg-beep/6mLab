@@ -28,7 +28,7 @@ export default function AccessGate({ lang, next, state, code: givenRef, offer }:
       <div className="exo-card acc">
         {confirm ? (
           <>
-            <p className="acc-k">{fr ? "Espace clients" : "Customer area"}</p>
+            <p className="acc-k">{fr ? "Espace client" : "Customer area"}</p>
             <h1>{fr ? "Prêt à lancer ton accès aux animations ?" : "Ready to start your access to the animations?"}</h1>
             <p className="acc-dates">
               {fr ? `${OFFERS[o][0]} : ton accès sera ouvert ${accessWeeks(o)} semaines, ` : `${OFFERS[o][1]}: your access will be open for ${accessWeeks(o)} weeks, `}
@@ -45,7 +45,7 @@ export default function AccessGate({ lang, next, state, code: givenRef, offer }:
           </>
         ) : (
           <>
-            <p className="acc-k">{fr ? "Espace clients" : "Customer area"}</p>
+            <p className="acc-k">{fr ? "Espace client" : "Customer area"}</p>
             <h1>{fr ? "Les animations sont réservées aux clients" : "The animations are for customers"}</h1>
             {state && errors[state] && <p className="acc-err" role="alert">{errors[state][fr ? 0 : 1]}</p>}
             <p>{fr ? "Entre la référence de ta commande : elle est dans ton email de confirmation, ligne « Référence »." : "Enter your order reference: it is in your confirmation email, on the “Reference” line."}</p>
@@ -61,6 +61,7 @@ export default function AccessGate({ lang, next, state, code: givenRef, offer }:
               <li>{fr ? `À ouvrir dans les 12 mois après l'achat, sur ${MAX_DEVICES} appareils au plus.` : `To be opened within 12 months of the purchase, on ${MAX_DEVICES} devices at most.`}</li>
             </ul>
             <p className="acc-cta">{fr ? "Pas encore client ?" : "Not a customer yet?"} <a href={`/${lang}/programmes`}>{fr ? "Découvre les programmes" : "See the programs"}</a> · <a href={`/${lang}/handball#seance-gratuite`}>{fr ? "Essaie la séance gratuite" : "Try the free session"}</a></p>
+            <p className="acc-cta">{fr ? "Tu as reçu la séance gratuite ?" : "Got the free session?"} <a href={`/${lang}/exercices/seance-gratuite`}>{fr ? "Voir ses animations" : "See its animations"}</a></p>
           </>
         )}
       </div>

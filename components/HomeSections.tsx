@@ -112,6 +112,7 @@ export function FreeSession({ lang }: { lang: Lang }) {
             </figure>
           ))}
         </div>
+        <p className="teaser-link"><a href={`/${lang}/exercices/seance-gratuite`}>{fr ? "Voir les 8 animations de la séance gratuite →" : "See the free session's 8 animations →"}</a></p>
         <p className="note">{fr ? "Et 5 autres exercices pour tes genoux, tes chevilles, tes hanches et tes épaules. Les +60 animations complètes sont réservées aux clients des programmes." : "And 5 more exercises for your knees, ankles, hips and shoulders. The full library of 60+ animations is for program customers."}</p>
       </div>
     </section>

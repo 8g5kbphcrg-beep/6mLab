@@ -249,8 +249,8 @@ export async function sendFreeSession(to: string, lang: Lang, unsub: string) {
   const content = await readFile(join(process.cwd(), "programmes", "seance-decouverte.pdf"));
   await leadMail(to, lang, unsub, fr ? "Ta séance gratuite 6M Lab" : "Your free 6M Lab session",
     fr
-      ? ["Salut,", "Voici ta séance découverte en pièce jointe : 15 minutes de prévention des blessures pour le handball, sans matériel. Touche l'œil à côté de chaque exercice pour le voir en mouvement.", "Fais-la 2 fois par semaine, en fin d'échauffement ou un jour sans handball. Dans les prochains jours, je t'envoie 3 conseils pour mieux te préparer.", "Raphaël, 6M Lab"]
-      : ["Hi,", "Here is your free session, attached: 15 minutes of injury prevention for handball, no equipment. Tap the eye next to each exercise to see it in motion.", "Do it twice a week, at the end of your warm-up or on a day without handball. Over the next few days, I'll send you 3 tips to prepare better.", "Raphaël, 6M Lab"],
+      ? ["Salut,", `Voici ta séance découverte en pièce jointe : 15 minutes de prévention des blessures pour le handball, sans matériel. Touche l'œil à côté de chaque exercice pour le voir en mouvement, ou retrouve les 8 animations sur <a href="${SITE}/fr/exercices/seance-gratuite">cette page</a>.`, "Fais-la 2 fois par semaine, en fin d'échauffement ou un jour sans handball. Dans les prochains jours, je t'envoie 3 conseils pour mieux te préparer.", "Raphaël, 6M Lab"]
+      : ["Hi,", `Here is your free session, attached: 15 minutes of injury prevention for handball, no equipment. Tap the eye next to each exercise to see it in motion, or find all 8 animations on <a href="${SITE}/en/exercices/seance-gratuite">this page</a>.`, "Do it twice a week, at the end of your warm-up or on a day without handball. Over the next few days, I'll send you 3 tips to prepare better.", "Raphaël, 6M Lab"],
     [fr ? "Voir les programmes complets" : "See the full programs", `${SITE}/${lang}/programmes`],
     [{ filename: fr ? "6M-Lab-seance-decouverte.pdf" : "6M-Lab-free-session.pdf", content }]);
 }

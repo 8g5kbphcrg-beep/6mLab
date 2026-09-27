@@ -41,4 +41,5 @@
 .teaser-g figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:.5rem;display:grid;gap:.3rem}
 .teaser-fig svg{display:block;width:100%;height:auto;max-height:180px}
 .teaser-g figcaption{font-size:.85rem;font-weight:600;color:#100A24;text-align:center}
+.teaser-link{margin:0;font-weight:700}.teaser-link a{color:var(--At)}
 .teaser .note{margin:0;font-size:.85rem;color:var(--muted)}

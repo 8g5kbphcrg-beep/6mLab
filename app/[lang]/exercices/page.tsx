@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { locales, type Lang } from "@/lib/dict";
 import { animatedIds, exerciseList } from "@/components/ExerciseCard";
 import AccessGate from "@/components/AccessGate";
+import LibrarySearch from "@/components/LibrarySearch";
 import { accessEnd, type Gate } from "@/lib/access-page";
 import "@/app/library.css";
 
@@ -41,19 +42,20 @@ export default async function Library({ params, searchParams }: P) {
     .filter(([, ids]) => ids.length);
   return (
     <div className="lib wrap">
-      <p className="lib-k">{fr ? "Espace clients" : "Customer area"}</p>
+      <p className="lib-k">{fr ? "Espace client" : "Customer area"}</p>
       <h1>{fr ? "Bibliothèque d'exercices" : "Exercise library"}</h1>
       <p className="lib-acc">
         {fr ? "Ton accès est ouvert jusqu'au " : "Your access is open until "}
         <strong>{new Date(end).toLocaleDateString(fr ? "fr-FR" : "en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" })}</strong>
         {fr ? ` (encore ${days} jour${days > 1 ? "s" : ""}).` : ` (${days} day${days > 1 ? "s" : ""} left).`}
       </p>
+      <LibrarySearch fr={fr} items={families.flatMap(([, ids]) => ids.map((id) => [id, exerciseList[id].name] as [string, string]))} />
       {families.map(([name, ids]) => (
         <section key={name}>
           <h2>{name}</h2>
           <ul className="lib-grid">
             {ids.map((id) => (
-              <li key={id}><Link href={`/${l}/exercices/${id}`}>{exerciseList[id].name}<span aria-hidden="true">→</span></Link></li>
+              <li key={id} id={`ex-${id}`}><Link href={`/${l}/exercices/${id}`}>{exerciseList[id].name}<span aria-hidden="true">→</span></Link></li>
             ))}
           </ul>
         </section>
