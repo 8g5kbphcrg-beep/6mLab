@@ -85,3 +85,5 @@
 .cf-pop-t{display:flex;align-items:center;gap:.55rem;font-weight:700;margin-bottom:.7rem!important;padding-right:2rem}
 .cf-pop-x{position:absolute;top:.6rem;right:.6rem;width:2.2rem;height:2.2rem;border-radius:50%;border:0;background:color-mix(in srgb,var(--ink) 8%,transparent);color:var(--ink);font-size:1.4rem;line-height:1;cursor:pointer}
 @keyframes cfpop{from{opacity:0}to{opacity:1}}
+.cf-pop-l{margin:0 0 .2rem;padding-left:1.2rem;display:grid;gap:.35rem}
+.cf-pop-adv{margin-top:.8rem!important;padding:.7rem .9rem;border-radius:10px;background:color-mix(in srgb,#FFC75F 18%,var(--card));border:1px solid #E0A93A;font-size:.93rem!important}
