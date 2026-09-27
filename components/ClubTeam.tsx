@@ -12,6 +12,8 @@ const text = {
     level: "Niveau", levels: ["Départemental", "Régional", "National", "Professionnel"],
     from: "Les programmes pour les clubs commencent à partir des U15.",
     u15: "U15 : la musculation n'est pas recommandée à cet âge. Le programme travaille au poids du corps (coordination, gainage, appuis, prévention), même si le club a une salle de musculation.",
+    info: "Pour chaque catégorie et chaque niveau de jeu, le programme part du principe que certains acquis sont déjà en place (par exemple, des U15 en départemental ont déjà un premier bagage physique et technique). Si certains joueurs du groupe sont très débutants et loin de ces acquis, le programme ne peut pas combler cet écart à lui seul : c'est à l'entraîneur d'adapter pour eux.",
+    infoL: "Ce que suppose le niveau choisi",
     lvl: "Le programme est calibré sur ce niveau. Prendre un niveau au-dessus de celui de ton équipe est possible, mais en ayant bien conscience du niveau réel de ton effectif.",
   },
   en: {
@@ -20,6 +22,8 @@ const text = {
     level: "Level", levels: ["County", "Regional", "National", "Professional"],
     from: "Club programs start from U15.",
     u15: "U15: weight training is not recommended at this age. The program uses bodyweight (coordination, core, footwork, prevention), even if the club has a weight room.",
+    info: "For each age group and level of play, the program assumes some prerequisites are already in place (for example, county-level U15s already have a first physical and technical background). If some players in the group are complete beginners, far from those prerequisites, the program cannot close that gap on its own: the coach has to adapt for them.",
+    infoL: "What the chosen level assumes",
     lvl: "The program is calibrated on this level. Choosing a level above your team's is possible, but only with a clear view of your squad's real level.",
   },
 };
@@ -51,7 +55,8 @@ export default function ClubTeam({ lang }: { lang: Lang }) {
             </select>
           </label>
           {levels.length > 0 && (
-            <label className="cf-field">{t.level}
+            <label className="cf-field"><span className="cf-lvl">{t.level}
+              <details className="cf-info"><summary aria-label={t.infoL} title={t.infoL}>i</summary><p>{t.info}</p></details></span>
               <select key={cat} name="level" required defaultValue=""><option value="" disabled>—</option>{levels.map((l) => <option key={l}>{l}</option>)}</select>
             </label>
           )}

@@ -66,3 +66,19 @@
 .care-muscu{background:color-mix(in srgb,#FFC75F 18%,var(--card));border:1.5px solid #E0A93A}
 .care-level{background:var(--card);border:1px solid var(--line)}
 .cf-warn{margin:0;padding:.7rem .9rem;border-radius:10px;background:color-mix(in srgb,#FFC75F 20%,var(--card));border:1.5px solid #E0A93A;font-size:.92rem}
+/* A typical session: movement, strength, running. */
+.clubs-plan>p{color:var(--muted)}
+.plan-steps{list-style:none;padding:0;margin:1.2rem 0;display:grid;gap:.8rem}
+@media(min-width:760px){.plan-steps{grid-template-columns:repeat(3,1fr)}}
+.plan-steps li{position:relative;display:grid;gap:.35rem;align-content:start;padding:1.1rem 1.2rem;border-radius:var(--r);background:var(--card);border:1px solid var(--line)}
+.plan-steps strong{font:400 1.35rem var(--font-display),sans-serif;color:var(--Bt)}.plan-steps li>span:last-child{color:var(--muted);font-size:.95rem}
+.plan-n{width:1.8rem;height:1.8rem;border-radius:50%;display:grid;place-items:center;background:var(--Bt);color:var(--bg);font-weight:700}
+.plan-custom{margin:0;padding:.9rem 1.1rem;border-left:4px solid #2EC4B6;background:color-mix(in srgb,var(--B) 10%,var(--card));border-radius:0 12px 12px 0}
+/* "i" next to the level of play. */
+.cf-lvl{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.cf-info{font-weight:400}
+.cf-info summary{list-style:none;width:1.3rem;height:1.3rem;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--Bt);color:var(--Bt);font:700 .8rem var(--font-text),serif;font-style:italic;cursor:pointer}
+.cf-info summary::-webkit-details-marker{display:none}
+.cf-info[open] summary{background:var(--Bt);color:var(--bg)}
+.cf-info p{margin:.5rem 0 0;padding:.7rem .9rem;border-radius:10px;background:color-mix(in srgb,var(--B) 12%,var(--card));border:1px solid color-mix(in srgb,var(--B) 50%,var(--line));font-size:.9rem;color:var(--ink);width:100%}
+.cf-lvl .cf-info[open]{flex-basis:100%;order:3}
