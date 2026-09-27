@@ -32,7 +32,7 @@ export default function ExerciseCard({ lang, id, option, back }: { lang: Lang; i
   return (
     <div className="exo-back">
       <div className="exo-card" role="dialog" aria-modal="true" aria-labelledby="exo-title">
-        <CloseX label={fr ? "Fermer" : "Close"} back={back} />
+        <CloseX label={fr ? "Fermer" : "Close"} back={back && `${back}#ex-${id}`} />
         <h1 id="exo-title">{ex.name}</h1>
         <div className={`exo-anims n${figs.length}`}>
           {figs.map(([fid, v, label]) => (
