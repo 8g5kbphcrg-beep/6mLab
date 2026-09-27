@@ -126,7 +126,7 @@ export default async function AdminAvis() {
           <tr key={o.id}>
             <td>{new Date(o.created * 1000).toLocaleDateString("fr-FR")}</td>
             <td>{o.firstName}<br /><span className="muted">{o.email}</span></td>
-            <td>{o.meta.pack === "oui" ? "Pack Saison complète" : programs.fr[o.program]?.name}<br /><span className="muted">{o.goals.map((g) => goalName(g, "fr")).join(" + ")}{o.meta.lieu ? ` · ${o.meta.lieu === "salle" ? "Salle" : "Maison"}` : ""}</span></td>
+            <td>{o.meta.pack === "oui" ? "Pack Saison complète" : programs.fr[o.program]?.name}<br /><span className="muted">{o.goals.map((g) => goalName(g, "fr")).join(" + ")}{o.meta.lieu ? ` · ${o.meta.lieu === "salle" ? "Salle" : "Maison"}` : ""}{o.meta.plang === "en" ? " · PDF en anglais" : ""}</span></td>
             <td>
               {o.meta.acc_start ? (() => {
                 const end = endOf({ offer: offerOf(o.meta), start: Date.parse(o.meta.acc_start) }), n = (o.meta.acc_dev ?? "").split(",").filter(Boolean).length;

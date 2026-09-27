@@ -15,6 +15,8 @@ export type Order = {
   id: string;
   email: string;
   lang: Lang;
+  // Language of the program PDF (programmes/ or programmes/en/).
+  plang: Lang;
   program: ProgramSlug;
   goals: GoalId[];
   running: boolean;
@@ -59,25 +61,26 @@ export async function programFiles(o: Order) {
   // the silhouette matching the gender (femme, homme). The customer gets them under the names
   // above.
   const sil = o.gender === "femme" || o.gender === "homme" ? `-${o.gender}` : "";
-  const paths = names.map((n) => join(process.cwd(), "programmes", n.replace(/\.pdf$/, `-${o.lieu}${n.startsWith("seances-") ? sil : ""}.pdf`)));
+  const dir = o.plang === "en" ? join(process.cwd(), "programmes", "en") : join(process.cwd(), "programmes");
+  const paths = names.map((n) => join(dir, n.replace(/\.pdf$/, `-${o.lieu}${n.startsWith("seances-") ? sil : ""}.pdf`)));
   try {
     await Promise.all(paths.map((p) => access(p)));
   } catch {
     return null;
   }
   const ref = o.id.slice(-12);
-  return Promise.all(names.map(async (filename, i) => ({ filename, content: await personal(await readFile(paths[i]), o.firstName, ref) })));
+  return Promise.all(names.map(async (filename, i) => ({ filename, content: await personal(await readFile(paths[i]), o.firstName, ref, o.plang) })));
 }
 
 // Each PDF carries the customer's first name and order reference at the foot of every page:
 // people think twice before passing on a document with someone's name on it. Falls back to the
 // plain file if the stamp fails.
-export async function personal(pdf: Buffer, firstName: string, ref: string): Promise<Buffer> {
+export async function personal(pdf: Buffer, firstName: string, ref: string, lang: Lang = "fr"): Promise<Buffer> {
   try {
     const doc = await PDFDocument.load(pdf);
     const font = await doc.embedFont(StandardFonts.Helvetica);
     // The standard font only covers Latin-1: other characters are dropped.
-    const text = `Programme personnel de ${firstName || "client"} · Réf. ${ref} · Usage personnel, merci de ne pas le diffuser.`.replace(/[^\x20-\xFF·]/g, "").replace(/·/g, "-");
+    const text = (lang === "en" ? `Personal program of ${firstName || "customer"} · Ref. ${ref} · Personal use only, please do not share.` : `Programme personnel de ${firstName || "client"} · Réf. ${ref} · Usage personnel, merci de ne pas le diffuser.`).replace(/[^\x20-\xFF·]/g, "").replace(/·/g, "-");
     for (const page of doc.getPages()) {
       const { width } = page.getSize(), size = 6.5, w = font.widthOfTextAtSize(text, size);
       page.drawText(text, { x: (width - w) / 2, y: 7, size, font, color: rgb(0.55, 0.53, 0.62) });
@@ -99,6 +102,7 @@ export async function sendConfirmation(o: Order) {
       : `${p.name} (${p.duration})`],
     [fr ? "Objectifs" : "Goals", goalsTitle(o.goals, o.lang)],
     [fr ? "Lieu" : "Place", buy[o.lang].places[o.lieu][0]],
+    [buy[o.lang].plangT, buy[o.lang].plangs[o.plang]],
     ...(o.running ? [[fr ? "Option" : "Option", fr ? "Programme course à pied" : "Running program"] as [string, string]] : []),
     [fr ? "Total payé" : "Total paid", fmtPrice(o.amount, o.lang)],
     [fr ? "Référence" : "Reference", o.id.slice(-12)],
@@ -161,6 +165,7 @@ export async function notifyOwner(o: Order, delivered: boolean) {
     `Programme : ${programs.fr[o.program].name}`,
     `Objectifs : ${goalsTitle(o.goals, "fr")}`,
     `Lieu : ${buy.fr.places[o.lieu][0]}`,
+    `Langue du programme : ${o.plang === "en" ? "ANGLAIS (dossier programmes/en)" : "français"}`,
     `Pack Saison complète (+ Maintien) : ${o.pack ? "oui" : "non"}`,
     `Option course : ${o.running ? "oui" : "non"}`,
     `Prénom : ${o.firstName}`,
@@ -281,7 +286,7 @@ const leadMail = async (to: string, lang: Lang, unsub: string, subject: string, 
 // The session PDF, right after the request.
 export async function sendFreeSession(to: string, lang: Lang, unsub: string) {
   const fr = lang === "fr";
-  const content = await readFile(join(process.cwd(), "programmes", "seance-decouverte.pdf"));
+  const content = await readFile(join(process.cwd(), "programmes", ...(fr ? [] : ["en"]), "seance-decouverte.pdf"));
   await leadMail(to, lang, unsub, fr ? "Ta séance gratuite 6M Lab" : "Your free 6M Lab session",
     fr
       ? ["Salut,", `Voici ta séance découverte en pièce jointe : 15 minutes de prévention des blessures pour le handball, sans matériel. Touche l'œil à côté de chaque exercice pour le voir en mouvement, ou retrouve les 8 animations sur <a href="${SITE}/fr/exercices/seance-gratuite">cette page</a>.`, "Fais-la 2 fois par semaine, en fin d'échauffement ou un jour sans handball. Dans les prochains jours, je t'envoie 3 conseils pour mieux te préparer.", "Raphaël, 6M Lab"]

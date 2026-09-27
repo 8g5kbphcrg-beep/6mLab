@@ -46,7 +46,7 @@
 .bgoals{scroll-margin-top:84px}
 .bmissmsg{margin:0;background:#FDECEC;color:#B42318;border:1.5px solid #F4A7A0;border-radius:10px;padding:.7rem .9rem;font-weight:700;font-size:.95rem}
 .bmiss .bcards .bcard,.bmiss .breath:not(.bsoon){border-color:#F4A7A0}
-.bsoon{cursor:default;padding-left:1rem;align-items:center;justify-content:space-between;border-style:dashed;background:transparent}.bsoon-tag{flex:none;font:600 .72rem var(--body,inherit);letter-spacing:.06em;text-transform:uppercase;color:#7A5712;background:#FBF1DC;border-radius:999px;padding:.2rem .6rem}
+.bsoon{cursor:default;padding-left:1rem;flex-direction:column;align-items:flex-start;gap:.45rem;border-style:dashed;background:transparent}.bsoon-tag{order:-1;flex:none;font:600 .7rem var(--body,inherit);letter-spacing:.06em;text-transform:uppercase;color:#7A5712;background:#FBF1DC;border-radius:999px;padding:.2rem .6rem}
 :root[data-theme="dark"] .bmissmsg{background:#3A1418;color:#FFB4AB;border-color:#8C2F2A}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .bmissmsg{background:#3A1418;color:#FFB4AB;border-color:#8C2F2A}}
 /* Home or gym: two cards side by side, each with its icon. */
@@ -57,3 +57,9 @@
 /* Single program: reminder of the pack right before paying. */
 .bupsell{display:grid;gap:.25rem;margin:1rem 0 .2rem;padding:.8rem 1rem;border-radius:12px;border:1.5px dashed color-mix(in srgb,var(--A) 60%,var(--line));background:color-mix(in srgb,var(--A) 8%,var(--card));color:var(--ink);text-decoration:none;font-size:.92rem}
 .bupsell strong{font-size:1rem}.bupsell span{color:var(--muted)}.bupsell:hover{border-style:solid}
+/* Language of the program PDF, under the place. */
+.blang{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;margin-top:.8rem;font-size:.92rem;color:var(--muted)}
+.blang label{display:inline-flex;align-items:center;gap:.4rem;color:var(--ink);cursor:pointer;border:1.5px solid var(--line);border-radius:999px;padding:.3rem .8rem;background:var(--card)}
+.blang label:has(:checked){border-color:var(--ink);background:var(--band)}
+.blang input{margin:0;accent-color:var(--ink)}
+.blang label:has(:focus-visible){outline:3px solid var(--cta);outline-offset:2px}

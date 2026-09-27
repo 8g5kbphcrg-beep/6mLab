@@ -19,6 +19,8 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, place: c
   const [sel, setSel] = useState<GoalId[]>(goals.filter((g) => REATH_READY || g !== REATH));
   const [running, setRunning] = useState(false);
   const [place, setPlace] = useState<Place | null>(chosen ?? null);
+  // Language of the PDF: the page's by default, can be changed (an English speaker on the French site).
+  const [plang, setPlang] = useState<Lang>(lang);
   const [err, setErr] = useState(error);
   // Paying without a goal: the page scrolls back up to the goals, which show a red message.
   const [noGoal, setNoGoal] = useState(false);
@@ -83,6 +85,12 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, place: c
             </label>
           ))}
         </div>
+        <div className="blang" role="radiogroup" aria-label={t.plangT}>
+          <span>{t.plangT}</span>
+          {(["fr", "en"] as const).map((l) => (
+            <label key={l}><input type="radio" name="plang" value={l} checked={plang === l} onChange={() => setPlang(l)} />{t.plangs[l]}</label>
+          ))}
+        </div>
       </fieldset>
 
       <fieldset className="bstep">
@@ -116,6 +124,7 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, place: c
           <div><dt>{pack ? t.packT : p.name}</dt><dd>{fmtPrice(pack ? PACK_PRICE : prices[slug], lang)}</dd></div>
           <div><dt>{t.goalsLb}</dt><dd>{sel.length ? goalsTitle(sel, lang) : t.none}</dd></div>
           <div><dt>{t.placeLb}</dt><dd>{place ? t.places[place][0] : t.none}</dd></div>
+          <div><dt>{t.plangT}</dt><dd>{t.plangs[plang]}</dd></div>
           {sel.length === 2 && <div><dt>{t.second}</dt><dd>{fmtPrice(SECOND_GOAL_PRICE, lang)}</dd></div>}
           {running && <div><dt>{t.runT}</dt><dd>{fmtPrice(RUNNING_PRICE, lang)}</dd></div>}
           <div className="btotal"><dt>{t.total}</dt><dd>{fmtPrice(total, lang)}</dd></div>

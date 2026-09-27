@@ -33,6 +33,20 @@ L'email de confirmation joint ces fichiers si l'envoi automatique est activé (v
 `PROGRAMMES_ENVOI_AUTO=1` sur Vercel) et que tous les fichiers de la commande existent. Sinon, il
 annonce un envoi sous 48 heures et tu envoies le programme à la main.
 
+## Version anglaise
+
+Les mêmes fichiers existent en anglais dans `programmes/en/`. Le client choisit la langue de son
+programme à l'achat (celle de la page par défaut) ; l'email joint les PDF du bon dossier, et les
+yeux des PDF anglais ouvrent les animations sur `/en/exercices/…`.
+
+Les textes anglais sont dans `source/en.mjs` : chaque texte français des sources, avec sa
+traduction. Si tu modifies un texte en français, `npm run programmes` s'arrête et liste les textes
+à traduire dans `en.mjs` avant de fabriquer le moindre PDF.
+
+Attention au poids : les PDF sont embarqués dans la fonction d'envoi de Vercel (limite 250 Mo). Avec
+le français et l'anglais, elle pèse environ 203 Mo : une troisième langue ne tiendrait pas sans
+changer de méthode.
+
 ## Modifier le contenu
 
 Tout est dans `programmes/source/` :
@@ -46,7 +60,9 @@ Tout est dans `programmes/source/` :
 Après une modification, regénère les PDF :
 
 ```bash
-npm run programmes                                          # tous
+npm run programmes                                          # tous, français et anglais
+npm run programmes -- --fr                                  # français seulement
+npm run programmes -- --en seance-decouverte                # un seul, en anglais
 npm run programmes -- seances-pre-saison-explosivite-muscle-maison  # un seul
 ```
 

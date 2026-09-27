@@ -47,8 +47,10 @@ export default function Quiz({ lang, test }: { lang: Lang; test: boolean }) {
       <>
         <h2 className="qq" tabIndex={-1} ref={head}>{t.soon.t}</h2>
         <p>{t.soon.p}</p>
-        <button type="button" className="qlink" onClick={back}>{t.back}</button>
-        <button type="button" className="qlink" onClick={() => setA([])}>{t.restart}</button>
+        <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
+          <button type="button" className="qlink" onClick={back}>{t.back}</button>
+          <button type="button" className="qlink" onClick={() => setA([])}>{t.restart}</button>
+        </div>
       </>
     );
   } else if (i < n) {
