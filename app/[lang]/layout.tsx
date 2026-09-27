@@ -12,6 +12,7 @@ import { Splash, Transition } from "@/components/Brand";
 import { splashScript } from "@/lib/brand";
 import { Analytics } from "@vercel/analytics/next";
 import Track from "@/components/Track";
+import BackButton from "@/components/BackButton";
 import "../globals.css";
 
 const display = Anton({ subsets: ["latin"], weight: "400", variable: "--font-display" });
@@ -64,7 +65,10 @@ export default async function RootLayout({ children, params }: { children: React
         <Defs />
         <a className="skip" href="#main">{d.nav.skip}</a>
         <header className="bar">
-          <Link href={`/${lang}`} className="logo" aria-label="6M Lab"><Logo /></Link>
+          <div className="bar-l">
+            <BackButton label={fr ? "Revenir à la page précédente" : "Back to the previous page"} />
+            <Link href={`/${lang}`} className="logo" aria-label="6M Lab"><Logo /></Link>
+          </div>
           <nav className="navd" aria-label="Navigation">
             {links.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
             <Link className="lang" href={`/${other}`} hrefLang={other} lang={other}>{d.nav.other}</Link>
