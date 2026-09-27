@@ -93,6 +93,7 @@ export default async function RootLayout({ children, params }: { children: React
             <nav aria-label={fr ? "Site" : "Site"}>
               <p className="flab">{fr ? "Site" : "Site"}</p>
               {links.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
+              <a href={`/${lang}/clubs`}>{fr ? "Clubs et entraîneurs" : "Clubs and coaches"}</a>
             </nav>
             <nav aria-label={fr ? "Informations légales" : "Legal"}>
               <p className="flab">{fr ? "Informations légales" : "Legal"}</p>

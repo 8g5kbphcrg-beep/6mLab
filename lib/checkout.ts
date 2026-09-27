@@ -22,8 +22,13 @@ export type Gender = (typeof genders)[number];
 // 39,99 € / €39.99 (no decimals for whole euros: 9 €).
 export const fmtPrice = (cents: number, lang: Lang) => {
   const n = cents % 100 ? (cents / 100).toFixed(2) : String(cents / 100);
-  return lang === "fr" ? `${n.replace(".", ",")} €` : `€${n}`;
+  // Non-breaking space: "9,99 €" never splits across two lines.
+  return lang === "fr" ? `${n.replace(".", ",")}\u00a0€` : `€${n}`;
 };
+
+// Price per week, rounded to 10 cents: the pack's 59,99 € over 20 weeks is 3 € a week.
+export const perWeek = (cents: number, weeks: number, lang: Lang) => fmtPrice(Math.round(cents / weeks / 10) * 10, lang);
+export const PACK_WEEKS = 20;
 
 export const buy = {
   fr: {
@@ -42,7 +47,9 @@ export const buy = {
     reathQ: "Tu reviens de blessure ?",
     reathD: "Objectif unique, à suivre avec le feu vert de ton médecin.",
     runT: "Programme course à pied", runD: "Des séances de 30 à 45 min, en plus de ton programme.",
-    packT: "Pack Saison complète", packWeeks: "20 semaines",
+    packT: "Pack Saison complète", packWeeks: "20 semaines", perWeek: (w: string) => `soit ${w} par semaine`,
+    upsellT: "Et si tu prenais toute la saison ?",
+    upsellD: (pack: string, full: string, save: string, w: string) => `Le Pack Saison complète (Pré-saison + Maintien, mêmes objectifs) : ${pack} au lieu de ${full}, tu économises ${save}. Soit ${w} par semaine. Voir le pack →`,
     goalsLb: "Objectifs", none: "À choisir", total: "Total",
     consent: "J'accepte les conditions générales de vente. Je demande l'accès immédiat au programme et je reconnais perdre mon droit de rétractation une fois le programme envoyé.",
     cgv: "Lire les CGV",
@@ -68,7 +75,9 @@ export const buy = {
     reathQ: "Coming back from injury?",
     reathD: "A single goal, to follow with your doctor's clearance.",
     runT: "Running program", runD: "30 to 45 min sessions, on top of your program.",
-    packT: "Full season pack", packWeeks: "20 weeks",
+    packT: "Full season pack", packWeeks: "20 weeks", perWeek: (w: string) => `just ${w} a week`,
+    upsellT: "Why not the whole season?",
+    upsellD: (pack: string, full: string, save: string, w: string) => `The Full season pack (Pre-season + In-season, same goals): ${pack} instead of ${full}, you save ${save}. Just ${w} a week. See the pack →`,
     goalsLb: "Goals", none: "To choose", total: "Total",
     consent: "I accept the terms of sale. I ask for immediate access to the program and acknowledge that I lose my right of withdrawal once the program has been sent.",
     cgv: "Read the terms",

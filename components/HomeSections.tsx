@@ -18,10 +18,33 @@ export function Product({ lang }: { lang: Lang }) {
         <p>{fr ? "Un vrai programme, pas une liste d'exercices." : "A real program, not a list of exercises."}</p>
       </header>
       <div className="prod">
-        <figure className="prod-doc">
-          <img className="prod-cover" src="/apercu/couverture.jpg" alt={fr ? "Couverture du programme Pré-saison" : "Pre-season program cover"} width={909} height={1286} loading="lazy" />
-          <img className="prod-page" src="/apercu/seance.jpg" alt={fr ? "Extrait d'une séance : échauffement, blocs d'exercices, séries, repos" : "Sample session: warm-up, exercise blocks, sets, rest"} width={1092} height={904} loading="lazy" />
-          <figcaption>{fr ? "Chaque séance détaillée : exercices, séries, répétitions, temps de repos." : "Every session in detail: exercises, sets, reps, rest times."}</figcaption>
+        {/* The program as the customer gets it: its real pages, turned one after the other, then the
+            eye of an exercise opening its animation (CSS only, 16 s loop). */}
+        <figure className="flip">
+          <div className="flip-dev">
+            <div className="flip-scr">
+              {[["f1-couverture", fr ? "Couverture du programme Pré-saison" : "Pre-season program cover"],
+                ["f2-guide", fr ? "Page du guide : quand commencer" : "Guide page: when to start"],
+                ["f3-seance", fr ? "Une séance écrite en entier" : "A session written out in full"],
+                ["f4-fiche", fr ? "La fiche d'un exercice" : "An exercise sheet"]].map(([f, alt], i) => (
+                <img key={f} className={`flip-p s${i + 1}`} src={`/apercu/${f}.jpg`} alt={alt} width={620} height={878} loading="lazy" />
+              ))}
+              <div className="flip-anim s5" aria-hidden="true">
+                <span className="flip-tap" />
+                <div className="flip-card">
+                  <div dangerouslySetInnerHTML={{ __html: animatedFigure("squat-jump", "poids") ?? "" }} />
+                  <span>{names["squat-jump"]?.name}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <figcaption>
+            <ol className="flip-steps">
+              <li className="t1">{fr ? "Ton guide : le programme expliqué" : "Your guide: the program explained"}</li>
+              <li className="t2">{fr ? "Tes séances, écrites en entier, semaine par semaine" : "Your sessions, written out in full, week by week"}</li>
+              <li className="t3">{fr ? "La fiche de chaque exercice : touche l'œil, il s'anime" : "A sheet for every exercise: tap the eye, it comes to life"}</li>
+            </ol>
+          </figcaption>
         </figure>
         <div>
           <p className="prod-lab">{fr ? "Chaque exercice est animé" : "Every exercise is animated"}</p>
@@ -88,7 +111,7 @@ export function FreeSessionForm({ lang, title }: { lang: Lang; title?: string })
         <label className="sr" htmlFor={`free-email-${title ? "b" : "a"}`}>Email</label>
         <input id={`free-email-${title ? "b" : "a"}`} name="email" type="email" required autoComplete="email" placeholder={fr ? "Ton adresse email" : "Your email address"} />
         <button className="btn" type="submit">{fr ? "Recevoir ma séance" : "Send me the session"}</button>
-        <p className="note">{fr ? "Pas de spam : la séance, puis 3 conseils de préparation. Désinscription en un clic." : "No spam: the session, then 3 training tips. Unsubscribe in one click."}</p>
+        <p className="note">{fr ? "Pas de spam : la séance, 3 conseils de préparation, puis un email aux moments clés de la saison (reprise, rentrée, trêve). Désinscription en un clic." : "No spam: the session, 3 training tips, then one email at the key moments of the season (restart, back to school, winter break). Unsubscribe in one click."}</p>
       </div>
     </form>
   );

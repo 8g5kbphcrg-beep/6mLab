@@ -61,6 +61,11 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       <Parents lang={lang as Lang} />
 
       <section className="sec wrap">
+        <a className="clubcta" href={`/${lang}/clubs`}>
+          <span className="clubcta-k">{fr ? "Clubs et entraîneurs" : "Clubs and coaches"}</span>
+          <strong>{fr ? "Toute ton équipe sur le même programme" : "Your whole team on the same program"}</strong>
+          <span>{fr ? "Tarif de groupe, calé sur le calendrier de ton club. Devis sous 48 heures →" : "Group pricing, fitted to your club's calendar. Quote within 48 hours →"}</span>
+        </a>
         <div className="endcta">
           <h2>{fr ? "Ta saison commence ici" : "Ready for your season?"}</h2>
           <p>{fr ? "Choisis ta formule et tes objectifs, reçois ton programme par email." : "Pick your program and goals, get your plan by email."}</p>

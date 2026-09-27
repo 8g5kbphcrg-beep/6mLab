@@ -9,6 +9,7 @@ import { goalOrder, goalsTitle, type GoalId } from "@/lib/goals";
 import { buy, fmtPrice, type Place } from "@/lib/checkout";
 import { legalPaths, owner } from "@/lib/legal";
 import { SITE } from "@/lib/dict";
+import type { Campaign } from "@/lib/season-mail";
 
 export type Order = {
   id: string;
@@ -222,6 +223,33 @@ export async function sendAccessEnding(o: { email: string; lang: Lang; firstName
   const html = frame(`<p>${esc(hello)}</p>${lines.map((l) => `<p>${esc(l)}</p>`).join("")}${button(link, fr ? "Voir les programmes" : "See the programs")}`);
   const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: o.email, replyTo: owner.email, subject: fr ? "Ton accès aux animations se termine dans 7 jours" : "Your access to the animations ends in 7 days", html, text: [hello, "", ...lines, "", link].join("\n") });
   if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
+}
+
+// Abandoned cart (app/api/cron): a single reminder, only to buyers who accepted offers by email on
+// the payment page. The link recreates the same order.
+export async function sendCartReminder(o: { email: string; lang: Lang; firstName: string; what: string; total: number }, link: string) {
+  const fr = o.lang === "fr";
+  const hello = fr ? `Bonjour${o.firstName ? ` ${o.firstName}` : ""},` : `Hi${o.firstName ? ` ${o.firstName}` : ""},`;
+  const lines = fr
+    ? [`Tu as commencé ta commande sans la terminer : ${o.what}, pour ${fmtPrice(o.total, "fr")}.`, "Ton choix est gardé : le bouton ci-dessous te ramène au paiement, avec les mêmes objectifs et les mêmes options.", "Une question avant de te lancer (objectifs, niveau, matériel) ? Réponds simplement à cet email, je te réponds sous 48 heures.", "C'est le seul rappel que tu recevras pour cette commande."]
+    : [`You started your order without finishing it: ${o.what}, for ${fmtPrice(o.total, "en")}.`, "Your choices are saved: the button below takes you back to payment, with the same goals and options.", "A question before you start (goals, level, equipment)? Just reply to this email, I'll answer within 48 hours.", "This is the only reminder you'll get for this order."];
+  const cta = fr ? "Reprendre ma commande" : "Resume my order";
+  const html = frame(`<p>${esc(hello)}</p>${lines.map((l) => `<p>${esc(l)}</p>`).join("")}${button(link, cta)}<p style="font-size:12px;color:#5B5673">${fr ? "Tu reçois cet email parce que tu as accepté de recevoir des offres par email sur la page de paiement." : "You are receiving this email because you agreed to receive offers by email on the payment page."}</p>`);
+  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: o.email, replyTo: owner.email, subject: fr ? "Ton programme t'attend" : "Your program is waiting", html, text: [hello, "", ...lines, "", `${cta} : ${link}`].join("\n") });
+  if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
+}
+
+// Quote request from the Clubs page (app/api/clubs), to 6M Lab; replying answers the coach.
+export async function sendClubRequest(r: { name: string; role: string; club: string; email: string; size: string; level: string; period: string; message: string; src: string; lang: Lang }) {
+  const lines = [`Nom : ${r.name}`, `Rôle : ${r.role}`, `Club : ${r.club}`, `Email : ${r.email}`, `Joueurs : ${r.size}`, `Niveau : ${r.level}`, `Période : ${r.period}`, `Langue : ${r.lang}`, `Origine de la visite : ${r.src}`, "", r.message || "(pas de message)", "", "À faire : répondre sous 48 heures avec un devis (répondre à cet email écrit directement au club)."];
+  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: MAIL_FROM(), replyTo: r.email, subject: `Demande club : ${r.club} (${r.size} joueurs)`, text: lines.join("\n") });
+  if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
+}
+
+// Email at a key moment of the season (lib/season-mail.ts), to a free-session subscriber.
+export async function sendSeasonMail(to: string, lang: Lang, c: Campaign, unsub: string) {
+  const t = c[lang];
+  await leadMail(to, lang, unsub, t.s, t.p, [t.c, `${SITE}/${lang}${c.path}`]);
 }
 
 // The discount code, sent after the final questionnaire so the customer keeps it.

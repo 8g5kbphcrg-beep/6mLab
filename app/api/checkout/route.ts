@@ -35,7 +35,12 @@ export async function POST(req: NextRequest) {
   const meta = { program: slug, goals: goals.join("+"), running: running ? "oui" : "non", lieu, ...(pack ? { pack: "oui" } : {}), firstName, age: String(age), gender, lang, src };
   const stripe = stripeClient()!;
   try {
-    const session = await stripe.checkout.sessions.create({
+    // Abandoned carts (app/api/cron): Stripe asks the buyer whether they accept offers by email,
+    // and keeps a link that recreates the same order after the page has expired. If the account
+    // cannot collect that consent, the payment page opens without it.
+    const recovery = { consent_collection: { promotions: "auto" as const }, after_expiration: { recovery: { enabled: true } } };
+    const create = (extra: typeof recovery | object) => stripe.checkout.sessions.create({
+      ...extra,
       mode: "payment",
       locale: lang,
       line_items: [{
@@ -74,6 +79,10 @@ export async function POST(req: NextRequest) {
       },
       success_url: `${origin}/${lang}/merci?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/${lang}/programmes/${page}#acheter`,
+    });
+    const session = await create(recovery).catch((e) => {
+      console.error("[checkout] without recovery:", e?.message);
+      return create({});
     });
     return NextResponse.redirect(session.url!, 303);
   } catch (e) {

@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 import type { Lang } from "@/lib/dict";
 import { programs, type ProgramSlug } from "@/lib/programs";
-import { buy, fmtPrice, genders, orderTotal, PACK_PRICE, places, prices, RUNNING_PRICE, SECOND_GOAL_PRICE, type Place } from "@/lib/checkout";
+import { buy, fmtPrice, genders, orderTotal, PACK_PRICE, PACK_WEEKS, perWeek, places, prices, RUNNING_PRICE, SECOND_GOAL_PRICE, type Place } from "@/lib/checkout";
 import { Dumbbell, House } from "@/components/PlaceIcons";
 import { goalIds, goals as goalInfo, goalName, goalsTitle, REATH, type GoalId } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
@@ -38,7 +38,7 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, place: c
       <div className="bprice">
         <strong>{fmtPrice(pack ? PACK_PRICE : prices[slug], lang)}</strong>
         {pack && <s>{fmtPrice(prices["pre-saison"] + prices["maintien-saison"], lang)}</s>}
-        <span>{pack ? `${t.packT} · ${t.packWeeks}` : `${p.name} · ${p.duration}`}</span>
+        <span>{pack ? `${t.packT} · ${t.packWeeks} · ${t.perWeek(perWeek(PACK_PRICE, PACK_WEEKS, lang))}` : `${p.name} · ${p.duration}`}</span>
       </div>
 
       <fieldset className={noGoal && !done ? "bstep bgoals bmiss" : "bstep bgoals"} ref={goalsRef}>
@@ -113,6 +113,13 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, place: c
           {running && <div><dt>{t.runT}</dt><dd>{fmtPrice(RUNNING_PRICE, lang)}</dd></div>}
           <div className="btotal"><dt>{t.total}</dt><dd>{fmtPrice(total, lang)}</dd></div>
         </dl>
+        {/* A single program: the pack is reminded right before paying, with the same goals. */}
+        {!pack && (
+          <a className="bupsell" href={`/${lang}/programmes/saison-complete${sel.length ? `?objectifs=${sel.join(",")}` : ""}#acheter`}>
+            <strong>{t.upsellT}</strong>
+            <span>{t.upsellD(fmtPrice(PACK_PRICE, lang), fmtPrice(prices["pre-saison"] + prices["maintien-saison"], lang), fmtPrice(prices["pre-saison"] + prices["maintien-saison"] - PACK_PRICE, lang), perWeek(PACK_PRICE, PACK_WEEKS, lang))}</span>
+          </a>
+        )}
         <label className="bconsent">
           <input type="checkbox" name="consent" required />
           <span>{t.consent} <a href={legalPaths[lang].cgv} target="_blank">{t.cgv}</a></span>

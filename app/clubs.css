@@ -1,0 +1,17 @@
+.clubs-k{margin:0;color:var(--At);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:.85rem}
+.clubs h2{font-size:clamp(1.6rem,5vw,2.2rem);margin-top:2.5rem}
+.clubs-why{list-style:none;padding:0;margin:2rem 0 0;display:grid;gap:.9rem}
+@media(min-width:640px){.clubs-why{grid-template-columns:1fr 1fr}}
+.clubs-why li{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.1rem 1.2rem;display:grid;gap:.25rem}
+.clubs-why strong{font:400 1.3rem var(--font-display),sans-serif;color:var(--At)}.clubs-why span{color:var(--muted)}
+.clubs-how{margin:0;padding-left:1.3rem;display:grid;gap:.45rem;color:var(--muted)}
+.cf{display:grid;gap:1rem;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.4rem;box-shadow:var(--shadow)}
+.cf-row{display:grid;gap:1rem}
+@media(min-width:640px){.cf-row{grid-template-columns:1fr 1fr}.cf-row.cf-3{grid-template-columns:1fr 1fr 1fr}}
+.cf-field{display:grid;gap:.35rem;font-weight:600;font-size:.92rem}
+.cf-field input,.cf-field select,.cf-field textarea{font:inherit;font-weight:400;padding:.7rem .8rem;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);width:100%;min-width:0}
+.cf-field textarea{resize:vertical}
+.cf .btn{justify-self:start}.cf .note{margin:0}
+.cf-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.clubs-ok{background:color-mix(in srgb,var(--B) 18%,var(--card));border:1px solid var(--B);border-radius:12px;padding:1rem 1.2rem;font-weight:600}
+.clubs-err{margin:0;color:var(--At)}

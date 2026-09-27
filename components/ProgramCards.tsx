@@ -1,6 +1,6 @@
 import { dict, type Lang } from "@/lib/dict";
 import { programs, programSlugs } from "@/lib/programs";
-import { fmtPrice, PACK_PRICE, prices } from "@/lib/checkout";
+import { fmtPrice, PACK_PRICE, PACK_WEEKS, perWeek, prices } from "@/lib/checkout";
 import { recommended } from "@/lib/season";
 import "@/app/offers.css";
 
@@ -34,6 +34,7 @@ export default function ProgramCards({ lang, shared = true }: { lang: Lang; shar
           <div className="opack-buy">
             <span className="opack-save">{fr ? `Tu économises ${fmtPrice(save, lang)}` : `You save ${fmtPrice(save, lang)}`}</span>
             <p className="opack-p"><strong>{fmtPrice(PACK_PRICE, lang)}</strong> <s>{fmtPrice(full, lang)}</s></p>
+            <p className="opack-w">{fr ? `soit ${perWeek(PACK_PRICE, PACK_WEEKS, lang)} par semaine` : `just ${perWeek(PACK_PRICE, PACK_WEEKS, lang)} a week`}</p>
             <a className="btn" data-go href={`/${lang}/programmes/saison-complete`}>{fr ? "Choisir le pack" : "Choose the pack"} →</a>
           </div>
         </div>

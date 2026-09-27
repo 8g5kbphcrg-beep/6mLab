@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { DAY, formUrl, paidOrders, PROMO_PERCENT, stripe, whenDays, type Stage } from "@/lib/feedback";
-import { mailReady, sendAccessEnding, sendFeedbackRequest, sendTip, TIP_DAYS } from "@/lib/email";
+import { mailReady, sendAccessEnding, sendCartReminder, sendFeedbackRequest, sendSeasonMail, sendTip, TIP_DAYS } from "@/lib/email";
+import { abandonedCarts } from "@/lib/cart";
+import { dueCampaign } from "@/lib/season-mail";
 import { endOf, offerOf } from "@/lib/access";
 import { recentLeads, unsubUrl } from "@/lib/leads";
 import { SITE } from "@/lib/dict";
@@ -10,7 +12,10 @@ import { SITE } from "@/lib/dict";
 // metadata). Emails that are more than 10 days late are skipped, so switching this on does not
 // flood past customers. Also sends the 3 tips to people who asked for the free session (t1, t2,
 // t3 in the lead's metadata), at most one per person and per day. And warns customers 7 days
-// before their access to the animations ends (s_acc).
+// before their access to the animations ends (s_acc). And reminds, once, the buyers whose payment
+// page expired in the last 24 hours without an order (lib/cart.ts). And, around the key dates of the
+// season, the email of that moment to the subscribers who accepted it (lib/season-mail.ts), at
+// most 150 a day so a run stays short; the rest go out on the following days of the week.
 export async function GET(req: NextRequest) {
   if (!process.env.CRON_SECRET || req.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`) return new NextResponse("Unauthorized", { status: 401 });
   const s = stripe();
@@ -51,6 +56,28 @@ export async function GET(req: NextRequest) {
       await s.customers.update(l.id, { metadata: { [`t${n + 1}`]: new Date().toISOString().slice(0, 10) } });
       sent.push(`${l.id}:t${n + 1}`);
     } catch (e) { console.error("[tips cron]", l.id, e); }
+  }
+  const due = dueCampaign();
+  if (due) {
+    const key = `c_${due.c.id}`, year = String(due.year);
+    let n = 0;
+    for (const l of await recentLeads(s, 0)) {
+      if (n >= 150) break;
+      if (!l.email || l.meta.unsub || l.meta.saison !== "1" || l.meta[key] === year || l.created > due.start || !l.meta.t3) continue;
+      try {
+        await sendSeasonMail(l.email, l.lang, due.c, unsubUrl(SITE, l.lang, l.id));
+        await s.customers.update(l.id, { metadata: { [key]: year } });
+        sent.push(`${l.id}:${due.c.id}`);
+        n++;
+      } catch (e) { console.error("[season cron]", l.id, e); }
+    }
+  }
+  for (const c of await abandonedCarts(s, now)) {
+    try {
+      await sendCartReminder(c, c.link);
+      await s.checkout.sessions.update(c.id, { metadata: { relance: new Date().toISOString().slice(0, 10) } }).catch(() => {});
+      sent.push(`${c.id}:panier`);
+    } catch (e) { console.error("[cart cron]", c.id, e); }
   }
   return NextResponse.json({ sent });
 }
