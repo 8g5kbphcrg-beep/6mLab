@@ -63,7 +63,7 @@
 @media(min-width:640px){.clubs-care-g{grid-template-columns:1fr 1fr}}
 .clubs-care-g>div{border-radius:var(--r);padding:1.1rem 1.2rem;display:grid;gap:.4rem;align-content:start}
 .clubs-care-g strong{font-size:1.05rem}.clubs-care-g p{margin:0;font-size:.97rem;color:var(--muted)}
-.care-muscu{background:color-mix(in srgb,#FFC75F 18%,var(--card));border:1.5px solid #E0A93A}
+.care-muscu{grid-column:1/-1;background:color-mix(in srgb,#FFC75F 18%,var(--card));border:1.5px solid #E0A93A}
 .care-level{background:var(--card);border:1px solid var(--line)}
 .cf-warn{margin:0;padding:.7rem .9rem;border-radius:10px;background:color-mix(in srgb,#FFC75F 20%,var(--card));border:1.5px solid #E0A93A;font-size:.92rem}
 /* A typical session: movement, strength, running. */
