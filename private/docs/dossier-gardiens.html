@@ -1,0 +1,658 @@
+<title>Dossier Gardiens 6M Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root{color-scheme:light;
+  --paper:#F8F7FB;--card:#FFFFFF;--ink:#17122B;--muted:#5C5670;--line:#E4E0EC;--accent:#5B3FB0;--accent-bg:#EFEAFB;
+  --n12:#136F63;--n12-bg:#DDF3EF;--n34:#2C5BA8;--n34-bg:#E2EBFA;--n56:#9A6A12;--n56-bg:#FBF0D8;--n7:#A83A2C;--n7-bg:#FCE6E2;
+  --display:"Anton","Impact","Arial Narrow",sans-serif;--body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:400 16px/1.62 var(--body);margin:0}
+.page{max-width:1160px;margin:0 auto;padding-inline:20px;padding-block:0 4rem;display:grid;gap:2.2rem}
+@media(min-width:1000px){.page{grid-template-columns:230px minmax(0,1fr);align-items:start}}
+header.top{grid-column:1/-1;background:var(--card);border-bottom:4px solid var(--accent);margin-inline:-20px;padding:2.2rem 20px 2rem}
+header.top .in{max-width:1120px;margin:0 auto;display:grid;gap:.7rem}
+.kick{font:600 .78rem var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+h1{font:400 clamp(2.3rem,6.5vw,4rem)/1 var(--display);margin:0;text-wrap:balance}
+header.top p{margin:0;max-width:70ch;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.3rem}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 1rem);display:none;font-size:.86rem;max-height:calc(100vh - 2rem);overflow:auto}
+@media(min-width:1000px){nav.toc{display:grid;gap:.05rem}}
+nav.toc a{color:var(--muted);text-decoration:none;padding:.22rem .55rem;border-radius:7px}
+nav.toc a:hover,nav.toc a:focus-visible{background:var(--card);color:var(--ink);outline:none}
+main{display:grid;gap:3rem;min-width:0}
+section{display:grid;gap:1rem;scroll-margin-top:1rem}
+h2{font:400 clamp(1.6rem,4.2vw,2.3rem)/1.05 var(--display);margin:0;text-wrap:balance}
+h3{font:700 1.06rem/1.3 var(--body);margin:0}
+h4{font:700 .95rem/1.3 var(--body);margin:0}
+p{margin:0;max-width:72ch}
+.lead{color:var(--muted)}
+ul,ol{margin:0;padding-left:1.2rem;display:grid;gap:.35rem;max-width:74ch}
+a{color:var(--accent)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.15rem;display:grid;gap:.55rem;align-content:start}
+.grid2{display:grid;gap:1rem}@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.grid3{display:grid;gap:.9rem}@media(min-width:900px){.grid3{grid-template-columns:repeat(3,1fr)}}
+/* Evidence tags: 1-2 strong, 3-4 moderate, 5-6 practice, 7 hypothesis. */
+.e{display:inline-block;font:700 .7rem/1 var(--body);letter-spacing:.03em;padding:.22rem .45rem;border-radius:999px;vertical-align:.1em;white-space:nowrap}
+.e1,.e2{color:var(--n12);background:var(--n12-bg)}.e3,.e4{color:var(--n34);background:var(--n34-bg)}.e5,.e6{color:var(--n56);background:var(--n56-bg)}.e7{color:var(--n7);background:var(--n7-bg)}
+.g{display:inline-block;font:700 .72rem/1 var(--body);padding:.2rem .45rem;border-radius:6px;background:var(--accent-bg);color:var(--accent)}
+.note{background:var(--n56-bg);border:1px solid #E6CF9C;border-radius:14px;padding:.9rem 1.1rem;display:grid;gap:.4rem}
+.warn{background:var(--n7-bg);border:1px solid #F0BDB4;border-radius:14px;padding:.9rem 1.1rem;display:grid;gap:.4rem}
+.key{background:var(--n12-bg);border:1px solid #A9DDD3;border-radius:14px;padding:.9rem 1.1rem;display:grid;gap:.4rem}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:680px;font-size:.88rem}
+th,td{padding:.55rem .75rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{font-weight:700;background:#F2F0F7}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600}
+.ex{display:grid;gap:.9rem}@media(min-width:820px){.ex{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:14px;padding:.95rem 1.05rem;display:grid;gap:.45rem;align-content:start;font-size:.9rem}
+.card h4{font-size:1rem}
+.card dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.2rem .7rem}
+.card dt{color:var(--muted);font-weight:600}.card dd{margin:0}
+.cat{font:700 .74rem var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-top:.6rem}
+.tree{display:grid;gap:.7rem}
+.rule{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.8rem 1rem;display:grid;gap:.35rem;font-size:.92rem}
+.rule b.si{color:var(--accent)}
+.refs{font-size:.84rem}.refs li{color:var(--muted)}.refs li b{color:var(--ink)}
+.small{font-size:.84rem;color:var(--muted)}
+footer{color:var(--muted);font-size:.85rem}
+</style>
+
+<div class="page">
+<header class="top"><div class="in">
+  <p class="kick">Base de connaissances · préparation physique du gardien de handball</p>
+  <h1>Dossier Gardiens 6M Lab</h1>
+  <p>Ce que la littérature permet réellement d'affirmer sur la préparation physique du gardien de handball, ce qui reste incertain, et comment le transformer en règles de construction de programmes. Chaque affirmation importante porte son niveau de preuve.</p>
+  <div class="legend">
+    <span class="e e1">N1-2 méta-analyse, consensus</span><span class="e e3">N3-4 études cohérentes ou isolées</span><span class="e e5">N5-6 institution, terrain</span><span class="e e7">N7 hypothèse, extrapolation</span>
+  </div>
+</div></header>
+
+<nav class="toc" aria-label="Sommaire">
+  <a href="#s1">1. Résumé exécutif</a><a href="#s2">2. Méthodologie</a><a href="#s3">3. Sources utilisées</a><a href="#s4">4. Exigences du poste</a><a href="#s5">5. Physiologie</a><a href="#s6">6. Biomécanique</a><a href="#s7">7. Qualités physiques</a><a href="#s8">8. Blessures</a><a href="#s9">9. Prévention</a><a href="#s10">10. Réactivité, perception</a><a href="#s11">11. Force</a><a href="#s12">12. Puissance</a><a href="#s13">13. Pliométrie</a><a href="#s14">14. Mobilité</a><a href="#s15">15. Conditionnement</a><a href="#s16">16. Jeunes</a><a href="#s17">17. Féminin, masculin</a><a href="#s18">18. Gardien vs champ</a><a href="#s19">19. Exercices</a><a href="#s20">20. Programmation</a><a href="#s21">21. Arbre décisionnel</a><a href="#s22">22. Erreurs à éviter</a><a href="#s23">23. Limites</a><a href="#s24">24. Synthèse pratique</a><a href="#s25">25. Bibliographie</a>
+</nav>
+
+<main>
+
+<section id="s1">
+  <h2>1. Résumé exécutif</h2>
+  <div class="key">
+    <h3>Le constat principal</h3>
+    <p>La littérature scientifique spécifique à la préparation physique des gardiens de handball est très pauvre. On dispose de données solides sur le handball en général (exigences, blessures, prévention), de quelques études sur les gardiens (charge en match, anticipation, profils physiques, blessures par poste), mais d'<b>aucun essai contrôlé montrant qu'un programme de préparation physique améliore le taux d'arrêts</b>. Une grande partie de ce dossier repose donc sur des extrapolations, signalées comme telles.</p>
+  </div>
+  <div class="grid2">
+    <div class="box"><h3>Ce qui est solide</h3><ul>
+      <li>Le gardien a une charge de déplacement en match nettement plus faible que tous les joueurs de champ <span class="e e4">N4</span>. Les programmes de course des joueurs de champ ne lui conviennent pas tels quels.</li>
+      <li>L'avantage des gardiens experts vient surtout de l'anticipation et de la lecture du tireur, pas d'un temps de réaction général plus rapide <span class="e e3">N3</span>.</li>
+      <li>Genou, cheville, épaule, hanche et aine, bas du dos : ce sont les zones à protéger en handball ; les programmes neuromusculaires, épaule, Nordic et adducteurs réduisent le risque chez les sportifs <span class="e e1">N1-2</span> (pas testés chez les gardiens seuls).</li>
+      <li>Chez les jeunes, le renforcement et la pliométrie bien encadrés sont sûrs et efficaces <span class="e e2">N2</span>.</li>
+    </ul></div>
+    <div class="box"><h3>Ce qui guide les programmes (avec prudence)</h3><ul>
+      <li>Les actions du gardien durent quelques centaines de millisecondes : la capacité à produire vite de la force (RFD), surtout latéralement, est probablement déterminante <span class="e e7">N7</span>.</li>
+      <li>Force des adducteurs et mobilité de hanche contrôlée sont prioritaires pour la santé du gardien, compte tenu de ses amplitudes extrêmes <span class="e e7">N7</span> appuyé sur <span class="e e2">N2</span> hors gardiens.</li>
+      <li>Le travail « perceptivo-cognitif » (lecture du tireur) relève de l'entraînement spécifique, pas de la préparation physique ; les outils génériques de « réflexes » ont un transfert faible <span class="e e2">N2</span>.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="s2">
+  <h2>2. Méthodologie de recherche</h2>
+  <ul>
+    <li>Recherche par mots-clés (anglais et français) sur PubMed, Google Scholar et les sites d'éditeurs (Springer, SAGE, Frontiers, Human Kinetics, Taylor &amp; Francis, BMJ, Termedia, MDPI) : « handball goalkeeper » croisé avec demands, biomechanics, anticipation, reaction time, injury, position, fitness profile ; puis prévention, force, RFD, pliométrie, jeunes, charge.</li>
+    <li>Priorité aux méta-analyses, consensus et études prospectives ; études isolées et sources professionnelles utilisées en complément, avec leur niveau.</li>
+    <li>Quand les données gardiens manquent : handball général, puis gardiens d'autres sports (football, hockey sur glace), puis science de l'entraînement générale. Chaque extrapolation est marquée <span class="e e7">N7</span>.</li>
+    <li>Limites de la démarche : accès au texte intégral parfois impossible (seuls les résumés ont été lus pour certaines études) ; les chiffres cités proviennent des résumés et des publications, pas d'une ré-analyse.</li>
+  </ul>
+</section>
+
+<section id="s3">
+  <h2>3. Sources utilisées (vue d'ensemble)</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Domaine</th><th>Ce qui existe</th><th>Qualité globale</th></tr></thead>
+    <tbody>
+      <tr><td>Exigences en match des gardiens de handball</td><td>1 étude de grande taille (27 gardiens, Euro 2022) ; données éparses ; plusieurs études récentes excluent les gardiens</td><td>Faible à moyenne</td></tr>
+      <tr><td>Profil physique des gardiens</td><td>Études transversales par poste, petits effectifs de gardiens, résultats parfois contradictoires</td><td>Faible</td></tr>
+      <tr><td>Anticipation, perception, réaction</td><td>Plusieurs études expérimentales dédiées aux gardiens de handball, cohérentes entre elles</td><td>Moyenne, la mieux documentée</td></tr>
+      <tr><td>Blessures par poste</td><td>Quelques cohortes prospectives et transversales incluant les gardiens</td><td>Moyenne, peu de détail par blessure</td></tr>
+      <tr><td>Prévention (handball, sports collectifs)</td><td>Essais randomisés et méta-analyses</td><td>Forte, mais pas spécifique aux gardiens</td></tr>
+      <tr><td>Entraînement de la force, pliométrie, jeunes</td><td>Méta-analyses, consensus</td><td>Forte, générale</td></tr>
+      <tr><td>Interventions physiques chez des gardiens</td><td>1 étude sur 4 gardiens roumains, sans groupe contrôle</td><td>Très faible</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s4">
+  <h2>4. Exigences du poste</h2>
+  <div class="grid2">
+    <div class="box"><h3>Ce que mesurent les études</h3><ul>
+      <li>À l'Euro 2022 (27 gardiens suivis par système de positionnement), les gardiens se distinguent de tous les autres postes, avec des écarts « très grands à quasi parfaits », et ont les charges de déplacement les plus faibles <span class="e e4">N4</span>.</li>
+      <li>Une analyse de temps de jeu rapporte environ 1,6 km par match pour les gardiens, avec une très grande variabilité (± 1 km) et surtout de la marche et de l'arrêt <span class="e e4">N4</span>.</li>
+      <li>Plusieurs grandes études récentes (Bundesliga 2019-2022) ont <b>exclu les gardiens</b>, faute d'indicateurs adaptés : la charge réelle d'un gardien (sauts, impacts au sol, extensions) est mal mesurée par les capteurs de course <span class="e e5">N5</span>.</li>
+    </ul></div>
+    <div class="box"><h3>Ce que cela signifie</h3><ul>
+      <li>Le poste est dominé par des actions très brèves et maximales : placement, poussée, extension, plongeon, relevé, relance.</li>
+      <li>Chez les gardiens de football, 98 % du temps se passe à faible intensité, et ce sont les 2 à 10 arrêts décisifs, souvent explosifs, qui comptent <span class="e e3">N3</span> (revue, autre sport, <span class="e e7">N7</span> pour le transfert).</li>
+      <li>Le temps disponible est extrêmement court : à 20-22 m/s (vitesses mesurées sur penalty et tir en suspension chez des joueurs élites), un ballon tiré à 7 m arrive en ≈ 0,33 s, à 9 m en ≈ 0,4 s <span class="e e7">N7 : calcul simple à partir de vitesses mesurées</span>.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="s5">
+  <h2>5. Physiologie</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Question</th><th>Ce que l'on sait</th><th>Preuve</th><th>Importance pour le programme</th></tr></thead>
+    <tbody>
+      <tr><td>Système énergétique dominant</td><td>Actions de moins de 1 s, très intenses, séparées de longues pauses : phosphocréatine surtout. Aucune étude ne mesure la lactatémie ou la VO<sub>2</sub> du gardien en match.</td><td><span class="e e7">N7</span></td><td>Prioritaire : puissance et répétition d'actions brèves</td></tr>
+      <tr><td>Aérobie</td><td>Sert surtout à récupérer entre les actions et à tenir le volume d'entraînement. Chez des adolescentes, les gardiennes progressent moins que les ailières en capacité cardio-respiratoire, reflet d'une charge plus faible.</td><td><span class="e e4">N4</span> <span class="e e7">N7</span></td><td>Secondaire : un niveau de base suffit</td></tr>
+      <tr><td>Anaérobie lactique</td><td>Probablement peu sollicitée en match, sauf séquences de tirs enchaînés (contre-attaques répétées, exercices d'entraînement).</td><td><span class="e e7">N7</span></td><td>Faible</td></tr>
+      <tr><td>Répéter des efforts explosifs</td><td>Qualité centrale plausible : séries de tirs à l'entraînement, fins de match serrées. Pas de mesure directe.</td><td><span class="e e7">N7</span></td><td>Importante, sous forme spécifique courte</td></tr>
+      <tr><td>Fréquence cardiaque</td><td>Une seule étude télémétrique ancienne (1988) sur le gardien en attaque et en défense ; pas de donnée moderne exploitable.</td><td><span class="e e4">N4</span>, datée</td><td>Ne pas piloter le gardien au cardio</td></tr>
+      <tr><td>Fatigue en match</td><td>Chez les joueurs de champ, les actions intenses baissent en 2<sup>e</sup> mi-temps. Chez le gardien : non étudié. Les temps de réaction se dégradent sous forte fatigue physique (données générales).</td><td><span class="e e7">N7</span></td><td>Arriver frais : gérer la charge avant les matchs</td></tr>
+      <tr><td>Entraînement vs match</td><td>Les séances de tirs peuvent imposer au gardien bien plus d'actions qu'un match. C'est souvent l'entraînement, pas le match, qui charge le plus le gardien.</td><td><span class="e e6">N6</span></td><td>Compter les séances de tirs dans la charge</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s6">
+  <h2>6. Biomécanique du gardien</h2>
+  <div class="note"><p><b>Avertissement.</b> Il n'existe presque aucune étude biomécanique détaillée (cinématique articulaire, électromyographie) des gestes du gardien de handball. Les données mesurées portent sur le <b>moment de départ</b> du mouvement et le déplacement du centre de masse. Le reste de ce tableau est une analyse fonctionnelle déduite de l'anatomie et de la biomécanique générale <span class="e e7">N7</span>.</p></div>
+  <div class="grid2">
+    <div class="box"><h3>Données mesurées</h3><ul>
+      <li>Sur des tirs à distance, les gardiens experts commencent à bouger ≈ 193 ms <b>avant</b> le lâcher du ballon avec 67 % d'arrêts, contre 24 % pour les inexpérimentés ; les experts déclenchent le mouvement vertical du centre de masse plus tôt (77 vs 141 ms) <span class="e e4">N4</span> (14 sujets, plateforme de force).</li>
+      <li>Sur 7 m, quand l'incertitude diminue, les gardiens retardent leur départ (≈ 349 ms) : la stratégie dépend de l'information disponible <span class="e e4">N4</span>.</li>
+      <li>Conséquence : le mouvement du gardien est un <b>mouvement balistique déclenché sur anticipation</b>, avec très peu de temps pour corriger. La vitesse de mise en action compte autant que l'amplitude.</li>
+    </ul></div>
+    <div class="box"><h3>Ce qui manque</h3><ul>
+      <li>Forces au sol lors des poussées latérales, angles de hanche en écart, charges sur l'épaule lors des arrêts hauts, impacts à la réception au sol : non mesurés chez le gardien de handball.</li>
+      <li>Chez les gardiens de hockey, la rotation interne de hanche en fin d'amplitude (et non le « papillon » lui-même) semble le geste le plus contraignant pour la hanche <span class="e e4">N4</span>, autre sport.</li>
+    </ul></div>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>Geste</th><th>Articulations et muscles clés</th><th>Contraction dominante</th><th>Exigences</th><th>Risques plausibles</th></tr></thead>
+    <tbody>
+      <tr><td>Position de base</td><td>Hanches, genoux et chevilles fléchis ; fessiers, quadriceps, mollets, tronc</td><td>Isométrique, pré-tension</td><td>Stabilité, capacité à partir de tous côtés</td><td>Fatigue lombaire si posture tenue longtemps</td></tr>
+      <tr><td>Déplacement latéral (pas chassés)</td><td>Abducteurs de hanche (moyen fessier), adducteurs, quadriceps, mollets</td><td>Concentrique-excentrique rapide</td><td>Vitesse d'appuis, contrôle du bassin</td><td>Entorse de cheville</td></tr>
+      <tr><td>Poussée latérale / sortie sur une jambe</td><td>Extension de hanche et genou, abduction de hanche, flexion plantaire de la jambe d'appui</td><td>Concentrique explosive (triple extension latérale)</td><td>RFD, force unilatérale</td><td>Adducteurs de la jambe qui s'ouvre</td></tr>
+      <tr><td>Écart, arrêt bas au pied</td><td>Adducteurs en allongement, fléchisseurs de hanche, ischios</td><td>Excentrique puis isométrique en grande amplitude</td><td>Mobilité active d'abduction, force excentrique des adducteurs</td><td>Lésion des adducteurs, douleur d'aine</td></tr>
+      <tr><td>Arrêt haut, extension</td><td>Épaule en élévation, coiffe des rotateurs, dentelé, triceps, extension du tronc</td><td>Concentrique rapide puis encaissement de l'impact</td><td>Mobilité d'épaule, stabilité scapulaire</td><td>Épaule, doigts et poignet (impact du ballon)</td></tr>
+      <tr><td>Plongeon et réception au sol</td><td>Chaîne latérale, épaule, hanche, tronc</td><td>Excentrique à l'impact</td><td>Savoir chuter, gainage latéral</td><td>Épaule, hanche, côtes</td></tr>
+      <tr><td>Retour en position</td><td>Tout le membre inférieur, tronc</td><td>Concentrique</td><td>Force, coordination</td><td>Faible</td></tr>
+      <tr><td>Relance</td><td>Chaîne du lancer : jambes, rotation du tronc, épaule</td><td>Étirement-détente</td><td>Puissance du haut du corps</td><td>Épaule (moins exposée que chez un arrière)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s7">
+  <h2>7. Qualités physiques</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Qualité</th><th>Pourquoi elle peut compter pour le gardien</th><th>Preuve directe chez le gardien</th><th>Priorité</th></tr></thead>
+    <tbody>
+      <tr><td>Force produite rapidement (RFD)</td><td>Les actions explosives durent 50 à 250 ms ; dans ce délai, la vitesse de montée en force compte plus que la force maximale</td><td>Aucune ; principe général <span class="e e2">N2</span> appliqué au gardien <span class="e e7">N7</span></td><td>Très haute</td></tr>
+      <tr><td>Force maximale et relative</td><td>Base de la RFD et de la puissance ; associée au saut, au sprint, aux changements de direction et à moins de blessures</td><td>Aucune ; revue générale <span class="e e2">N2</span></td><td>Haute (fondation)</td></tr>
+      <tr><td>Puissance latérale unilatérale</td><td>Poussée vers le poteau, sortie sur une jambe</td><td>Aucune <span class="e e7">N7</span></td><td>Très haute</td></tr>
+      <tr><td>Force excentrique des adducteurs</td><td>Écarts et arrêts bas ; adducteurs faibles = risque d'aine accru</td><td>Risque démontré hors gardiens <span class="e e2">N2</span></td><td>Très haute</td></tr>
+      <tr><td>Mobilité active de hanche</td><td>Amplitude utile pour couvrir le but sans se blesser</td><td>Gardiens plus souples que les autres postes <span class="e e4">N4</span> ; lien avec l'efficacité non démontré</td><td>Haute</td></tr>
+      <tr><td>Contrôle du tronc et du bassin</td><td>Transmettre la force des jambes aux bras, chuter et se relever</td><td>Aucune <span class="e e7">N7</span></td><td>Moyenne à haute</td></tr>
+      <tr><td>Robustesse de l'épaule</td><td>Arrêts hauts, chutes, relances</td><td>Facteurs de risque démontrés chez les joueurs <span class="e e4">N4</span></td><td>Moyenne à haute</td></tr>
+      <tr><td>Stabilité cheville et genou</td><td>Appuis latéraux répétés, réceptions</td><td>Prévention démontrée en handball <span class="e e2">N2</span></td><td>Haute</td></tr>
+      <tr><td>Répétition d'actions explosives</td><td>Séries de tirs, fins de match</td><td>Aucune <span class="e e7">N7</span></td><td>Moyenne</td></tr>
+      <tr><td>Endurance aérobie</td><td>Récupération, tolérance au volume</td><td>Charge de course faible en match <span class="e e4">N4</span></td><td>Faible à moyenne</td></tr>
+      <tr><td>Vitesse linéaire (sprint)</td><td>Sorties, contre-attaques rares</td><td>Corrélation isolée avec le classement de l'équipe (petit échantillon) <span class="e e4">N4</span></td><td>Faible</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Groupes musculaires qui comptent réellement (lecture fonctionnelle)</h3>
+  <div class="grid3">
+    <div class="box"><h4>Membres inférieurs</h4><p><b>Fessiers (grand et moyen)</b> et <b>adducteurs</b> : moteurs et freins des déplacements latéraux et des écarts. <b>Quadriceps</b> : position fléchie et poussée. <b>Mollets et pied</b> : raideur et vitesse de l'appui. <b>Ischios</b> : moins sollicités en sprint que chez un ailier, mais utiles en extension et en écart. <span class="e e7">N7</span></p></div>
+    <div class="box"><h4>Tronc</h4><p><b>Obliques et chaîne latérale</b> (plongeon, extension latérale), <b>contrôle lombo-pelvien</b> (posture tenue, transmission de force). Les « muscles profonds » isolés n'ont pas d'intérêt démontré séparément du gainage global. <span class="e e7">N7</span></p></div>
+    <div class="box"><h4>Membres supérieurs</h4><p><b>Coiffe des rotateurs</b> (surtout rotateurs externes) et <b>stabilisateurs de l'omoplate</b> : contrôle et protection. <b>Grand dorsal, pectoraux, triceps</b> : relance et extension. <b>Avant-bras et doigts</b> : encaissement du ballon (aucune preuve de prévention). <span class="e e7">N7</span></p></div>
+  </div>
+</section>
+
+<section id="s8">
+  <h2>8. Blessures</h2>
+  <div class="grid2">
+    <div class="box"><h3>Données chez les gardiens de handball</h3><ul>
+      <li>Cohorte de 45 semaines, 189 joueurs élites masculins : les gardiens ont la <b>plus longue absence par problème de santé</b>, mais un « fardeau » global (12,2 jours d'absence pour 1 000 h) bien plus faible que les arrières (60,7) et les ailiers (54,3), proche des pivots (13,1). Genou le plus touché ; bassin et bas du dos, et épaule, fréquents en surcharge <span class="e e4">N4</span>.</li>
+      <li>2 056 universitaires japonais : les gardiens ont une proportion plus élevée de blessures <b>sans contact</b> que les autres postes <span class="e e4">N4</span>.</li>
+      <li>164 joueurs d'un club élite (dont 27 gardiens) et 68 professionnels suivis 4 saisons : les postes les plus touchés sont les arrières ; genou et ligaments dominent tous postes confondus ; apophysites plus fréquentes chez les jeunes immatures <span class="e e4">N4</span>.</li>
+      <li>Hanche et aine représentent ≈ 11 à 12,5 % des blessures en handball, et les anciens handballeurs élites ont plus d'arthrose de hanche que la population générale <span class="e e4">N4</span>. Pas de chiffre propre aux gardiens.</li>
+    </ul></div>
+    <div class="box"><h3>Données empruntées à d'autres gardiens</h3><ul>
+      <li>Football : les gardiens ont une incidence 7 fois plus élevée de blessures de main, poignet et avant-bras que les joueurs de champ <span class="e e4">N4</span>, autre sport <span class="e e7">N7</span> pour le transfert.</li>
+      <li>Hockey sur glace : les gardiens ont la plus forte prévalence de déformations de hanche (conflit fémoro-acétabulaire) <span class="e e4">N4</span> ; transfert au handball <span class="e e7">N7</span>.</li>
+    </ul></div>
+  </div>
+  <div class="warn"><p><b>Attention aux conclusions.</b> Ces études décrivent des associations. « Les gardiens se blessent plus sans contact » ne dit pas quel geste ni quelle qualité physique en est la cause. Aucune étude n'a testé un programme de prévention chez des gardiens seuls.</p></div>
+  <div class="tw"><table>
+    <thead><tr><th>Zone</th><th>Mécanisme probable</th><th>Facteurs de risque connus (hors gardiens)</th><th>Facteurs modifiables</th><th>Stratégie</th><th>Preuve</th></tr></thead>
+    <tbody>
+      <tr><td>Aine, adducteurs</td><td>Écart brusque en excentrique, grande amplitude</td><td>Blessure antérieure, force excentrique d'adduction faible, rotation de hanche limitée, préparation insuffisante</td><td>Force des adducteurs, mobilité</td><td>Copenhague progressif, pré-saison progressive</td><td><span class="e e2">N2</span> hors gardiens</td></tr>
+      <tr><td>Hanche</td><td>Fins d'amplitude répétées (flexion + rotation interne)</td><td>Morphologie (non modifiable), volume</td><td>Contrôle actif, gestion du volume</td><td>Mobilité contrôlée, renforcement des rotateurs, surveiller les douleurs</td><td><span class="e e4">N4</span> autre sport, <span class="e e7">N7</span></td></tr>
+      <tr><td>Genou</td><td>Réception, appui latéral, torsion</td><td>Sexe féminin (LCA 2 à 5 fois plus fréquent), contrôle neuromusculaire</td><td>Technique de réception, force</td><td>Programme neuromusculaire à l'échauffement</td><td><span class="e e1">N1</span> (handball, tous postes)</td></tr>
+      <tr><td>Cheville</td><td>Appuis latéraux, réception sur un pied</td><td>Entorse antérieure</td><td>Proprioception, force des fibulaires et du mollet</td><td>Équilibre, sauts-réceptions</td><td><span class="e e2">N2</span> (handball jeunes)</td></tr>
+      <tr><td>Épaule</td><td>Arrêts hauts, chutes, relances</td><td>Faiblesse des rotateurs externes, rotation totale réduite, dyskinésie scapulaire, hausse brutale de charge</td><td>Force des rotateurs externes, mobilité, progressivité</td><td>Programme épaule OSTRC</td><td><span class="e e2">N2</span> joueurs ; gardiens <span class="e e7">N7</span></td></tr>
+      <tr><td>Bas du dos</td><td>Posture fléchie tenue, chutes, extensions</td><td>Non établis chez le gardien</td><td>Contrôle du tronc, volume</td><td>Gainage global, mobilité thoracique</td><td><span class="e e7">N7</span></td></tr>
+      <tr><td>Doigts, poignet</td><td>Impact direct du ballon</td><td>Non établis en handball</td><td>Peu (technique, protection)</td><td>Renforcement de la préhension : aucune preuve</td><td><span class="e e7">N7</span></td></tr>
+      <tr><td>Ischios</td><td>Écart avant, sprint rare</td><td>Blessure antérieure, faiblesse excentrique</td><td>Force excentrique</td><td>Nordic</td><td><span class="e e2">N2</span> hors gardiens, contesté</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s9">
+  <h2>9. Prévention : ce qui est réellement soutenu</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Intervention</th><th>Résultat</th><th>Population</th><th>Preuve</th><th>Pour le gardien</th></tr></thead>
+    <tbody>
+      <tr><td>Échauffement neuromusculaire (course, équilibre, réceptions)</td><td>Blessures genou et cheville divisées par ≈ 2</td><td>1 837 handballeurs de 15-17 ans</td><td><span class="e e3">N3</span> essai randomisé</td><td>Oui, intégralement</td></tr>
+      <tr><td>Programmes neuromusculaires pour le LCA féminin</td><td>Réduction du risque de LCA (OR ≈ 0,40), surtout avant 18 ans</td><td>Athlètes féminines, méta-analyse</td><td><span class="e e1">N1</span></td><td>Oui, gardiennes en priorité</td></tr>
+      <tr><td>Programme épaule OSTRC</td><td>Prévalence des problèmes d'épaule 17 % vs 23 %</td><td>660 handballeurs élites</td><td><span class="e e3">N3</span> essai randomisé</td><td>Oui ; bénéfice non isolé chez les gardiens</td></tr>
+      <tr><td>Copenhague (adducteurs)</td><td>≈ 41 % de problèmes d'aine en moins</td><td>652 footballeurs</td><td><span class="e e3">N3</span>, autre sport</td><td>Oui, priorité haute (<span class="e e7">N7</span> pour le transfert)</td></tr>
+      <tr><td>Nordic (ischios)</td><td>Blessures des ischios environ divisées par 2 dans une méta-analyse, mais une réanalyse la juge non concluante</td><td>8 459 athlètes</td><td><span class="e e1">N1</span> débattu</td><td>Utile, priorité moindre que chez un ailier</td></tr>
+      <tr><td>Gainage, « muscles profonds »</td><td>Pas de preuve isolée de prévention</td><td>—</td><td><span class="e e7">N7</span></td><td>Inclus dans le renforcement global</td></tr>
+      <tr><td>Travail isométrique lourd</td><td>Améliore la raideur des tendons (≥ 70 % de la force max)</td><td>Études mécanistiques</td><td><span class="e e3">N3</span></td><td>Intéressant pour adducteurs et tendons, en saison</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s10">
+  <h2>10. Réaction et perception</h2>
+  <div class="key"><p><b>Point essentiel.</b> Les gardiens experts ne réagissent pas plus vite que des novices à un signal quelconque ; ils sont plus rapides <b>uniquement dans des tâches propres au gardien</b> (15 gardiens contre 15 novices) <span class="e e4">N4</span>. Ils sont aussi bien plus justes que des non-gardiens pour prédire la direction d'un 7 m, moins face aux gauchers <span class="e e4">N4</span>, et leur regard se fixe plus longtemps (« quiet eye ») lors des arrêts réussis <span class="e e4">N4</span>. Leur avantage est donc <b>perceptif et spécifique</b>.</p></div>
+  <div class="tw"><table>
+    <thead><tr><th>Domaine</th><th>Ce qu'il recouvre</th><th>Qui le travaille</th><th>Ce que disent les preuves</th></tr></thead>
+    <tbody>
+      <tr><td>Préparation physique</td><td>Vitesse de mise en action, RFD, puissance latérale, amplitude, capacité à répéter</td><td>Préparateur physique</td><td>Principes solides en général, non testés chez le gardien</td></tr>
+      <tr><td>Préparation perceptivo-cognitive</td><td>Lecture du tireur (bras, tronc, course d'élan), anticipation, regard</td><td>Entraîneur des gardiens, vidéo, situations</td><td>Méta-analyse 2024 : effet en laboratoire (ES 1,51) plus fort que sur le terrain (0,65) ; l'occlusion vidéo améliore l'anticipation <span class="e e1">N1</span></td></tr>
+      <tr><td>Technico-tactique</td><td>Placement, choix de parade, relation avec la défense</td><td>Entraîneur</td><td>Hors du champ de ce dossier</td></tr>
+      <tr><td>Outils de « réflexes » génériques (lumières, stroboscope, applis)</td><td>Temps de réaction à des stimuli non liés au hand</td><td>—</td><td>Progrès sur la tâche entraînée, transfert au jeu mal démontré ; études souvent sous-dimensionnées <span class="e e2">N2</span> critique. Temps de réaction simple très génétique, marge limitée <span class="e e5">N5</span></td></tr>
+    </tbody>
+  </table></div>
+  <p><b>Règle pour le site :</b> un programme de préparation physique ne doit pas promettre d'améliorer les « réflexes ». Il peut améliorer ce qui se passe <b>après</b> la décision : la vitesse et l'amplitude du geste, et la capacité à le répéter.</p>
+</section>
+
+<section id="s11">
+  <h2>11. Force</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Méthode</th><th>Intérêt pour le gardien</th><th>Exemples</th><th>Période</th><th>Preuve</th></tr></thead>
+    <tbody>
+      <tr><td>Force maximale (3-6 rép., 80-90 %)</td><td>Fondation de la RFD et de la puissance</td><td>Squat, soulevé de terre avec barre hexagonale, fente bulgare</td><td>Pré-saison, maintien en saison</td><td><span class="e e2">N2</span> général</td></tr>
+      <tr><td>Hypertrophie (6-12 rép.)</td><td>Utile chez le jeune adulte peu musclé ; rarement prioritaire</td><td>Mêmes exercices, plus de volume</td><td>Début de pré-saison, intersaison</td><td><span class="e e2">N2</span> général</td></tr>
+      <tr><td>Force unilatérale et latérale</td><td>Plus proche des appuis du gardien</td><td>Fente latérale, fente bulgare, step-up latéral</td><td>Toute l'année</td><td><span class="e e7">N7</span></td></tr>
+      <tr><td>Force-vitesse, puissance (30-60 %)</td><td>Transformer la force en vitesse</td><td>Sauts chargés légers, lancers de médecine-ball</td><td>Fin de pré-saison, saison</td><td><span class="e e2">N2</span> général</td></tr>
+      <tr><td>Excentrique</td><td>Adducteurs, ischios : prévention et force en allongement</td><td>Copenhague, Nordic, descentes lentes</td><td>Toute l'année, faible volume</td><td><span class="e e2">N2</span></td></tr>
+      <tr><td>Isométrique</td><td>Tendons, position de base, adducteurs en saison (peu de courbatures)</td><td>Adduction isométrique contre ballon ou partenaire, squat isométrique</td><td>Saison, reprise après douleur</td><td><span class="e e3">N3</span></td></tr>
+      <tr><td>Bilatéral</td><td>Charges plus lourdes, plus simple à apprendre</td><td>Squat, soulevé</td><td>Pré-saison</td><td><span class="e e2">N2</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s12">
+  <h2>12. Puissance</h2>
+  <ul>
+    <li><b>Membres inférieurs :</b> la puissance latérale unilatérale est la cible la plus logique (poussée vers le poteau). Aucun test de puissance latérale n'a été relié à l'efficacité du gardien <span class="e e7">N7</span>.</li>
+    <li><b>Saut vertical :</b> en handball, les gardiens ne sautent pas plus haut que les ailiers et les arrières (plusieurs études par poste) <span class="e e3">N3</span>. Chez les gardiens de football, c'est l'inverse <span class="e e3">N3</span>. Le saut vertical n'est pas le geste principal du gardien de handball, sauf sur les tirs en suspension proches.</li>
+    <li><b>Membres supérieurs et tronc :</b> utiles pour la relance et l'extension ; le travail de force améliore la vitesse de lancer chez les handballeurs (méta-analyse) <span class="e e1">N1</span>, transfert à la relance du gardien plausible <span class="e e7">N7</span>.</li>
+    <li><b>RFD :</b> améliorée à la fois par l'entraînement explosif et par la force lourde <span class="e e2">N2</span>.</li>
+  </ul>
+</section>
+
+<section id="s13">
+  <h2>13. Pliométrie</h2>
+  <div class="grid2">
+    <div class="box"><h3>Ce que l'on sait</h3><ul>
+      <li>Chez les handballeurs, la pliométrie améliore les sauts, le sprint sur 5-20 m et les changements de direction (méta-analyse, 11 études, 302 sujets) <span class="e e1">N1</span>.</li>
+      <li>Chez les jeunes, les effets sont comparables avant et après le pic de croissance ; la pliométrie est jugée sûre si elle est encadrée <span class="e e1">N1</span>.</li>
+      <li>Repères de volume NSCA : ≈ 80-100 contacts par séance pour un débutant, 100-120 intermédiaire, 120-140 avancé <span class="e e5">N5</span>.</li>
+      <li>Les sauts en contrebas et la pliométrie de haute intensité sont à réserver aux athlètes entraînés et plus âgés <span class="e e5">N5</span>.</li>
+    </ul></div>
+    <div class="box"><h3>Pour le gardien</h3><ul>
+      <li>Privilégier le <b>latéral et l'unilatéral</b> (bonds latéraux, sauts de patineur avec stabilisation) et les <b>pogos</b> (raideur de cheville) <span class="e e7">N7</span>.</li>
+      <li>Compter aussi les sauts et extensions faits à l'entraînement de gardien dans le volume total : ils existent déjà en grand nombre <span class="e e6">N6</span>.</li>
+      <li>Progression : réception stabilisée → sauts enchaînés → sauts réactifs → contrebas bas (adulte). Toujours qualité maximale, arrêt dès que la réception se dégrade.</li>
+      <li>Précautions : douleur au genou ou au talon chez l'adolescent en croissance (apophysite) → baisser le volume.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="s14">
+  <h2>14. Mobilité</h2>
+  <ul>
+    <li><b>Hanches et adducteurs :</b> les gardiennes sont plus souples que les autres postes <span class="e e4">N4</span> ; une abduction de hanche réduite est un facteur de risque modéré de douleur d'aine <span class="e e2">N2</span>. Viser une mobilité <b>active</b> (contrôlée par la force), pas seulement passive <span class="e e7">N7</span>.</li>
+    <li><b>Étirements :</b> un étirement statique de 60 s ou moins par muscle, suivi d'un échauffement dynamique, a des effets négligeables sur la performance ; au-delà, légère baisse de force <span class="e e1">N1</span>. Le travail de souplesse long se place à distance des séances explosives.</li>
+    <li><b>Chevilles :</b> la dorsiflexion conditionne la position basse et la réception <span class="e e7">N7</span>.</li>
+    <li><b>Colonne thoracique :</b> rotation et extension pour les arrêts hauts et la relance, fait partie du programme épaule OSTRC <span class="e e3">N3</span>.</li>
+    <li><b>Épaules :</b> une rotation totale réduite est associée aux blessures d'épaule chez les handballeurs <span class="e e4">N4</span>.</li>
+    <li><b>Poignets :</b> aucune donnée.</li>
+  </ul>
+</section>
+
+<section id="s15">
+  <h2>15. Conditionnement</h2>
+  <div class="warn"><p><b>Les méthodes des joueurs de champ ne sont pas adaptées telles quelles.</b> Le 15-15, le 30-15, les sprints répétés sur 30 m entraînent des qualités (course répétée, vitesse aérobie) que le gardien utilise peu en match <span class="e e4">N4</span>. Ils peuvent servir à entretenir une base aérobie, mais ne doivent pas occuper le temps prioritaire.</p></div>
+  <ul>
+    <li><b>Conditionnement spécifique :</b> séries courtes d'actions de gardien (déplacements, extensions, relevés) de 20 à 40 s, récupération d'au moins 3 fois la durée, qualité maintenue <span class="e e7">N7</span>.</li>
+    <li><b>Base aérobie :</b> 1 à 2 séances courtes par semaine en pré-saison (vélo, course, circuits à faible impact), surtout pour récupérer et tolérer le volume <span class="e e7">N7</span>.</li>
+    <li><b>Récupération entre actions :</b> assurée par le système aérobie et la phosphocréatine ; pas besoin de travail lactique prolongé <span class="e e7">N7</span>.</li>
+  </ul>
+</section>
+
+<section id="s16">
+  <h2>16. Jeunes gardiens</h2>
+  <div class="note"><p>Aucune étude ne traite spécifiquement la préparation physique des jeunes gardiens de handball. Ce qui suit applique les consensus sur le développement des jeunes <span class="e e2">N2</span> au poste de gardien <span class="e e7">N7</span>, et la règle 6M Lab : musculation avec charges à partir des U17 filles et U18 garçons.</p></div>
+  <div class="tw"><table>
+    <thead><tr><th>Catégorie</th><th>Priorités</th><th>À proposer</th><th>À éviter ou limiter</th></tr></thead>
+    <tbody>
+      <tr><td>U11</td><td>Motricité générale, coordination, habiletés de chute et de réception, plaisir</td><td>Jeux, parcours, sauts variés au poids du corps, ramper, rouler, se relever</td><td>Spécialisation précoce, répétitions monotones de plongeons</td></tr>
+      <tr><td>U13</td><td>Coordination, vitesse (fenêtre favorable), bases de force au poids du corps, apprentissage des gestes</td><td>Pliométrie basse intensité, gainage ludique, équilibre, appuis latéraux en jeu</td><td>Charges externes, volume de sauts élevé</td></tr>
+      <tr><td>U15</td><td>Technique des mouvements de force, mobilité active, prévention genou et cheville, gestion de la croissance</td><td>Poids du corps, élastiques, médecine-ball léger ; programme neuromusculaire systématique</td><td>Musculation avec charges (règle 6M Lab), augmentations brusques de volume pendant le pic de croissance</td></tr>
+      <tr><td>U17 F / U18 M</td><td>Force de base, puissance, adducteurs, épaule</td><td>Charges légères à modérées, technique validée ; pliométrie moyenne intensité</td><td>Contrebas hauts, charges maximales sans technique</td></tr>
+      <tr><td>U19 et adultes</td><td>Force maximale, RFD, puissance latérale, robustesse</td><td>Programmation complète selon le niveau</td><td>Copier le programme d'un joueur de champ</td></tr>
+    </tbody>
+  </table></div>
+  <div class="grid2">
+    <div class="box"><h3>Croissance et maturation</h3><ul>
+      <li>L'année du pic de croissance, les blessures traumatiques augmentent (1,41 contre 0,81 par joueur et par an chez de jeunes footballeurs) et les jours d'absence doublent <span class="e e4">N4</span>, autre sport.</li>
+      <li>Apophysites (Osgood-Schlatter, talon) plus fréquentes chez les jeunes immatures, y compris en handball <span class="e e4">N4</span>.</li>
+      <li>Suivre la taille tous les 3 mois ; en phase de croissance rapide, garder la régularité mais éviter les hausses brutales de sauts et de chutes <span class="e e5">N5</span>.</li>
+    </ul></div>
+    <div class="box"><h3>Âge chronologique ou biologique</h3><ul>
+      <li>Deux jeunes du même âge peuvent avoir plusieurs années d'écart de maturité : individualiser selon la maturité quand c'est possible (regroupement par maturité, « bio-banding ») <span class="e e2">N2</span>.</li>
+      <li>Le renforcement encadré est sûr et bénéfique à tout âge d'après le consensus ; les blessures rapportées viennent surtout de mauvaises techniques, de charges excessives et du manque d'encadrement <span class="e e2">N2</span>.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="s17">
+  <h2>17. Féminin et masculin</h2>
+  <ul>
+    <li><b>Morphologie :</b> chez les femmes comme chez les hommes, les gardiens sont parmi les plus grands et les plus lourds de l'effectif <span class="e e3">N3</span>. Dans une étude espagnole, les gardiennes avaient une force du genou supérieure aux pivots, ailières et demi-centres <span class="e e4">N4</span>.</li>
+    <li><b>Genou :</b> les handballeuses ont un risque de rupture du LCA 2 à 5 fois plus élevé que les hommes <span class="e e2">N2</span> ; aucune donnée propre aux gardiennes, mais la prévention neuromusculaire s'applique <span class="e e1">N1</span>.</li>
+    <li><b>Regard :</b> les gardiens regardent surtout le bras qui tire, les gardiennes surtout le tronc et la tête du tireur <span class="e e4">N4</span> (intéresse l'entraînement spécifique, pas la préparation physique).</li>
+    <li><b>Hanche, épaule :</b> pas de données comparatives chez les gardiens.</li>
+    <li><b>Conséquence pour les programmes :</b> même structure ; chez les gardiennes, programme neuromusculaire genou non négociable, et vigilance accrue sur les réceptions <span class="e e7">N7</span>.</li>
+  </ul>
+</section>
+
+<section id="s18">
+  <h2>18. Gardien et joueur de champ</h2>
+  <p class="lead">Seules les lignes appuyées par des données portent un niveau N3-N4. Les autres sont des déductions du poste (N7).</p>
+  <div class="tw"><table>
+    <thead><tr><th>Qualité</th><th>Joueur de champ</th><th>Gardien</th><th>Importance pour le gardien</th></tr></thead>
+    <tbody>
+      <tr><td>Force</td><td>Élevée (tir, duels, sauts)</td><td>Élevée (base de la vitesse de mise en action)</td><td>Haute <span class="e e7">N7</span></td></tr>
+      <tr><td>Puissance</td><td>Verticale et horizontale, tir</td><td>Surtout latérale et unilatérale</td><td>Très haute <span class="e e7">N7</span></td></tr>
+      <tr><td>Vitesse linéaire</td><td>Élevée ; ailiers les plus rapides</td><td>Plus lents sur 10-20 m que les joueurs de champ</td><td>Faible <span class="e e3">N3</span></td></tr>
+      <tr><td>Accélération</td><td>Nombreuses, sur plusieurs mètres</td><td>Très courtes, sur 1 ou 2 appuis</td><td>Haute sur 0-2 m <span class="e e7">N7</span></td></tr>
+      <tr><td>Mobilité</td><td>Moyenne</td><td>Plus élevée (gardiennes les plus souples)</td><td>Haute <span class="e e4">N4</span></td></tr>
+      <tr><td>Pliométrie</td><td>Verticale, horizontale, changements de direction</td><td>Latérale, réactive, faible volume</td><td>Moyenne à haute <span class="e e7">N7</span></td></tr>
+      <tr><td>Aérobie</td><td>Importante (4 à 5 km par match)</td><td>Faible charge de déplacement en match</td><td>Faible à moyenne <span class="e e4">N4</span></td></tr>
+      <tr><td>Anaérobie</td><td>Sprints répétés</td><td>Actions de moins d'une seconde</td><td>Alactique : haute ; lactique : faible <span class="e e7">N7</span></td></tr>
+      <tr><td>Réactivité</td><td>Importante (défense, duels)</td><td>Décisive, mais surtout perceptive et spécifique</td><td>Très haute, hors préparation physique <span class="e e4">N4</span></td></tr>
+      <tr><td>Coordination</td><td>Gestes techniques variés</td><td>Dissociation haut-bas, gestes en extension</td><td>Haute <span class="e e7">N7</span></td></tr>
+      <tr><td>Stabilité</td><td>Genou, cheville, épaule</td><td>Idem, plus bassin et tronc en extension</td><td>Haute <span class="e e7">N7</span></td></tr>
+      <tr><td>Force des adducteurs</td><td>Importante (changements de direction)</td><td>Critique (écarts, arrêts bas)</td><td>Très haute <span class="e e7">N7</span></td></tr>
+      <tr><td>Force de l'épaule</td><td>Critique pour les tireurs</td><td>Utile (arrêts hauts, relances), moins de lancers</td><td>Moyenne à haute <span class="e e7">N7</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">Contradiction à signaler : une source rapporte des gardiens meilleurs en détente que les joueurs de champ ; ce résultat vient du football. En handball, les études par poste montrent l'inverse <span class="e e3">N3</span>.</p>
+</section>
+
+<section id="s19">
+  <h2>19. Bibliothèque d'exercices</h2>
+  <p class="lead">Sélection resserrée. Pour chaque exercice : le transfert est noté comme <b>démontré</b>, <b>plausible</b> ou <b>non démontré</b>. Âges selon la règle 6M Lab (charges externes à partir des U17 F et U18 M).</p>
+
+  <p class="cat">Force</p>
+  <div class="ex">
+    <article class="card"><h4>Squat goblet puis squat avant</h4><dl><dt>Objectif</dt><dd>Force de base des jambes, position fléchie</dd><dt>Muscles</dt><dd>Quadriceps, fessiers, adducteurs, tronc</dd><dt>Transfert</dt><dd>Plausible (force de base, RFD) <span class="e e7">N7</span></dd><dt>Âge</dt><dd>U15 sans charge (technique) ; charges dès U17/U18</dd><dt>Dosage</dt><dd>3-4 séries × 4-8 rép., récupération 2-3 min</dd><dt>Progression</dt><dd>Goblet → squat avant → charge plus lourde</dd><dt>Régression</dt><dd>Squat sur boîte</dd><dt>Erreurs</dt><dd>Genoux qui rentrent, dos arrondi</dd><dt>Précautions</dt><dd>Douleur de hanche en fin de flexion : réduire l'amplitude</dd></dl></article>
+    <article class="card"><h4>Fente bulgare</h4><dl><dt>Objectif</dt><dd>Force unilatérale</dd><dt>Muscles</dt><dd>Quadriceps, fessiers, adducteurs</dd><dt>Transfert</dt><dd>Plausible, appuis sur une jambe <span class="e e7">N7</span></dd><dt>Âge</dt><dd>U15 au poids du corps ; haltères dès U17/U18</dd><dt>Dosage</dt><dd>3 × 6-8 par jambe, 90 s</dd><dt>Progression</dt><dd>Poids du corps → haltères → tempo lent</dd><dt>Régression</dt><dd>Fente statique</dd><dt>Erreurs</dt><dd>Bassin qui tourne, pied avant trop proche</dd><dt>Précautions</dt><dd>—</dd></dl></article>
+    <article class="card"><h4>Fente latérale et squat cosaque</h4><dl><dt>Objectif</dt><dd>Force en déplacement latéral et en amplitude</dd><dt>Muscles</dt><dd>Adducteurs (excentrique), fessiers, quadriceps</dd><dt>Transfert</dt><dd>Plausible, proche de l'écart <span class="e e7">N7</span></dd><dt>Âge</dt><dd>Dès U13 au poids du corps</dd><dt>Dosage</dt><dd>3 × 6-8 par côté, 60-90 s</dd><dt>Progression</dt><dd>Amplitude → charge goblet → départ explosif</dd><dt>Régression</dt><dd>Appui sur un bâton</dd><dt>Erreurs</dt><dd>Talon qui décolle, dos qui s'effondre</dd><dt>Précautions</dt><dd>Douleur d'aine : rester en amplitude indolore</dd></dl></article>
+    <article class="card"><h4>Soulevé de terre roumain</h4><dl><dt>Objectif</dt><dd>Chaîne postérieure, charnière de hanche</dd><dt>Muscles</dt><dd>Ischios, fessiers, érecteurs</dd><dt>Transfert</dt><dd>Plausible (extension de hanche, dos robuste) <span class="e e7">N7</span></dd><dt>Âge</dt><dd>Technique au bâton dès U15 ; charge dès U17/U18</dd><dt>Dosage</dt><dd>3 × 6-8, 2 min</dd><dt>Progression</dt><dd>Bilatéral → unilatéral</dd><dt>Régression</dt><dd>Pont fessier</dd><dt>Erreurs</dt><dd>Dos arrondi, genoux trop fléchis</dd><dt>Précautions</dt><dd>Douleur lombaire : alléger</dd></dl></article>
+  </div>
+
+  <p class="cat">Puissance, explosivité, pliométrie</p>
+  <div class="ex">
+    <article class="card"><h4>Bonds latéraux stabilisés (patineur)</h4><dl><dt>Objectif</dt><dd>Puissance latérale unilatérale, contrôle de la réception</dd><dt>Muscles</dt><dd>Fessiers, adducteurs, quadriceps, mollets</dd><dt>Transfert</dt><dd>Plausible, poussée vers le poteau <span class="e e7">N7</span></dd><dt>Âge</dt><dd>Dès U13 (faible amplitude)</dd><dt>Dosage</dt><dd>3-4 × 5 par côté, tenue 2 s, 60-90 s</dd><dt>Progression</dt><dd>Stabilisé → enchaîné → avec élastique à la taille</dd><dt>Régression</dt><dd>Pas latéral large</dd><dt>Erreurs</dt><dd>Genou qui rentre à la réception</dd><dt>Précautions</dt><dd>Compter dans le volume de sauts</dd></dl></article>
+    <article class="card"><h4>Poussée latérale résistée</h4><dl><dt>Objectif</dt><dd>RFD latérale, départ explosif sur 1-2 appuis</dd><dt>Muscles</dt><dd>Fessiers, adducteurs, quadriceps</dd><dt>Transfert</dt><dd>Plausible <span class="e e7">N7</span></dd><dt>Âge</dt><dd>Dès U15 (élastique léger)</dd><dt>Dosage</dt><dd>4 × 3 poussées par côté, 90 s</dd><dt>Progression</dt><dd>Élastique plus fort → départ au signal</dd><dt>Régression</dt><dd>Sans élastique</dd><dt>Erreurs</dt><dd>Se relever avant de pousser</dd><dt>Précautions</dt><dd>—</dd></dl></article>
+    <article class="card"><h4>Pogos (sauts de cheville)</h4><dl><dt>Objectif</dt><dd>Raideur de cheville, appuis rapides</dd><dt>Muscles</dt><dd>Mollets, pied</dd><dt>Transfert</dt><dd>Plausible, vitesse d'appui <span class="e e7">N7</span></dd><dt>Âge</dt><dd>Dès U11 (jeux)</dd><dt>Dosage</dt><dd>3 × 10-15, 60 s</dd><dt>Progression</dt><dd>Sur place → latéral → une jambe</dd><dt>Régression</dt><dd>Montées sur pointes</dd><dt>Erreurs</dt><dd>Talons qui touchent, genoux trop fléchis</dd><dt>Précautions</dt><dd>Douleur au talon chez le jeune : arrêter</dd></dl></article>
+    <article class="card"><h4>Lancers de médecine-ball en rotation, genou au sol</h4><dl><dt>Objectif</dt><dd>Transmission de force jambes-tronc-bras</dd><dt>Muscles</dt><dd>Obliques, fessiers, épaules</dd><dt>Transfert</dt><dd>Démontré pour la vitesse de lancer des joueurs <span class="e e1">N1</span> ; plausible pour la relance</dd><dt>Âge</dt><dd>Dès U13 (1-2 kg)</dd><dt>Dosage</dt><dd>3 × 6 par côté, 60-90 s</dd><dt>Progression</dt><dd>Genou au sol → debout → après un pas latéral</dd><dt>Régression</dt><dd>Ballon plus léger</dd><dt>Erreurs</dt><dd>Lancer seulement avec les bras</dd><dt>Précautions</dt><dd>—</dd></dl></article>
+    <article class="card"><h4>Saut contre-mouvement et saut en contrebas bas</h4><dl><dt>Objectif</dt><dd>Puissance verticale, réactivité</dd><dt>Muscles</dt><dd>Extenseurs de jambe</dd><dt>Transfert</dt><dd>Plausible pour les tirs en suspension proches <span class="e e7">N7</span></dd><dt>Âge</dt><dd>Contre-mouvement dès U13 ; contrebas (20-30 cm) adultes entraînés</dd><dt>Dosage</dt><dd>3 × 4-5, récupération complète</dd><dt>Progression</dt><dd>Contre-mouvement → contrebas bas</dd><dt>Régression</dt><dd>Sauts sur boîte</dd><dt>Erreurs</dt><dd>Réception bruyante, genoux qui rentrent</dd><dt>Précautions</dt><dd>Contrebas proscrit chez les jeunes non entraînés</dd></dl></article>
+  </div>
+
+  <p class="cat">Mobilité et stabilité</p>
+  <div class="ex">
+    <article class="card"><h4>90/90 actif des hanches</h4><dl><dt>Objectif</dt><dd>Rotations de hanche contrôlées</dd><dt>Transfert</dt><dd>Non démontré ; rotation limitée = risque d'aine <span class="e e2">N2</span></dd><dt>Âge</dt><dd>Tous</dd><dt>Dosage</dt><dd>2 × 6-8 transitions, pendant l'échauffement</dd><dt>Progression</dt><dd>Mains au sol → sans les mains → levée de genou</dd><dt>Erreurs</dt><dd>Compenser avec le dos</dd></dl></article>
+    <article class="card"><h4>Écart latéral actif</h4><dl><dt>Objectif</dt><dd>Amplitude d'abduction utilisable</dd><dt>Transfert</dt><dd>Plausible, arrêts bas <span class="e e7">N7</span></dd><dt>Âge</dt><dd>Tous, sans forcer chez le jeune en croissance</dd><dt>Dosage</dt><dd>2 × 6 montées-descentes contrôlées</dd><dt>Progression</dt><dd>Amplitude, puis tenue isométrique en bas</dd><dt>Erreurs</dt><dd>Chercher l'amplitude en passif</dd></dl></article>
+    <article class="card"><h4>Rotation thoracique et dorsiflexion au mur</h4><dl><dt>Objectif</dt><dd>Mobilité du haut du dos et de la cheville</dd><dt>Transfert</dt><dd>Plausible <span class="e e7">N7</span> ; thoracique inclus dans OSTRC <span class="e e3">N3</span></dd><dt>Âge</dt><dd>Tous</dd><dt>Dosage</dt><dd>2 × 8 par côté</dd><dt>Erreurs</dt><dd>Tourner le bassin au lieu du thorax</dd></dl></article>
+    <article class="card"><h4>Équilibre unipodal avec perturbations et réceptions</h4><dl><dt>Objectif</dt><dd>Stabilité cheville et genou</dd><dt>Transfert</dt><dd>Prévention démontrée en handball <span class="e e3">N3</span></dd><dt>Âge</dt><dd>Tous</dd><dt>Dosage</dt><dd>2-3 × 20-30 s par jambe</dd><dt>Progression</dt><dd>Stable → yeux fermés → réception de balle → après un saut</dd><dt>Erreurs</dt><dd>Genou verrouillé ou qui rentre</dd></dl></article>
+    <article class="card"><h4>Pallof et gainage latéral dynamique</h4><dl><dt>Objectif</dt><dd>Contrôle du tronc anti-rotation et latéral</dd><dt>Transfert</dt><dd>Non démontré <span class="e e7">N7</span></dd><dt>Âge</dt><dd>Tous</dd><dt>Dosage</dt><dd>3 × 20-30 s ou 8-10 rép.</dd><dt>Progression</dt><dd>Genoux → debout → en fente latérale</dd><dt>Erreurs</dt><dd>Bassin qui tourne</dd></dl></article>
+  </div>
+
+  <p class="cat">Prévention ciblée</p>
+  <div class="ex">
+    <article class="card"><h4>Copenhague progressif</h4><dl><dt>Objectif</dt><dd>Force excentrique des adducteurs</dd><dt>Transfert</dt><dd>Prévention de l'aine démontrée en football <span class="e e3">N3</span></dd><dt>Âge</dt><dd>Version genou dès U13</dd><dt>Dosage</dt><dd>Pré-saison 3 fois/semaine, saison 1 fois ; 2-3 × 6-15 rép. ou 15-30 s selon niveau</dd><dt>Progression</dt><dd>Genou (court) → cheville (long) → dynamique</dd><dt>Erreurs</dt><dd>Bassin qui tombe</dd><dt>Précautions</dt><dd>Courbatures les 2 premières semaines : démarrer bas</dd></dl></article>
+    <article class="card"><h4>Nordic</h4><dl><dt>Objectif</dt><dd>Force excentrique des ischios</dd><dt>Transfert</dt><dd>Prévention démontrée chez les sportifs, débattue <span class="e e1">N1</span></dd><dt>Âge</dt><dd>Amplitude partielle dès U15</dd><dt>Dosage</dt><dd>2-3 × 4-6, 1 à 2 fois/semaine</dd><dt>Progression</dt><dd>Assisté → complet</dd><dt>Erreurs</dt><dd>Plier les hanches</dd></dl></article>
+    <article class="card"><h4>Programme épaule (rotation externe, Y-T-W, pompes scapulaires)</h4><dl><dt>Objectif</dt><dd>Rotateurs externes, contrôle scapulaire</dd><dt>Transfert</dt><dd>Moins de problèmes d'épaule chez les handballeurs <span class="e e3">N3</span></dd><dt>Âge</dt><dd>Tous</dd><dt>Dosage</dt><dd>2 × 10-15, 3 fois/semaine à l'échauffement</dd><dt>Progression</dt><dd>Coude au corps → bras à 90° → rapide</dd><dt>Erreurs</dt><dd>Hausser l'épaule</dd></dl></article>
+    <article class="card"><h4>Mollets excentriques et isométriques</h4><dl><dt>Objectif</dt><dd>Tendon d'Achille, cheville robuste</dd><dt>Transfert</dt><dd>Plausible <span class="e e7">N7</span></dd><dt>Âge</dt><dd>Tous (poids du corps chez le jeune)</dd><dt>Dosage</dt><dd>3 × 10-15 descentes lentes ou 3 × 30-45 s isométrique</dd><dt>Erreurs</dt><dd>Aller trop vite</dd></dl></article>
+    <article class="card"><h4>Adduction isométrique (ballon entre les genoux)</h4><dl><dt>Objectif</dt><dd>Force des adducteurs en saison, test de suivi</dd><dt>Transfert</dt><dd>Plausible ; utile comme indicateur <span class="e e7">N7</span></dd><dt>Âge</dt><dd>Tous</dd><dt>Dosage</dt><dd>5 × 5 s à forte intensité</dd><dt>Précautions</dt><dd>Douleur à l'effort = signal d'alerte (aine)</dd></dl></article>
+  </div>
+
+  <p class="cat">Coordination et conditionnement</p>
+  <div class="ex">
+    <article class="card"><h4>Appuis latéraux vers une cible, au signal</h4><dl><dt>Objectif</dt><dd>Vitesse de mise en action sur 1-2 appuis</dd><dt>Transfert</dt><dd>Plausible ; les signaux génériques transfèrent peu <span class="e e2">N2</span></dd><dt>Âge</dt><dd>Tous</dd><dt>Dosage</dt><dd>3 × 6 rép. de 3-5 s, 20-30 s entre les rép.</dd><dt>Progression</dt><dd>Signal simple → choix → ballon lancé</dd><dt>Erreurs</dt><dd>Se relever avant de partir</dd></dl></article>
+    <article class="card"><h4>Répétition d'actions de gardien</h4><dl><dt>Objectif</dt><dd>Répéter des actions explosives sans perte de qualité</dd><dt>Transfert</dt><dd>Non démontré <span class="e e7">N7</span></dd><dt>Âge</dt><dd>Dès U15, volume modéré</dd><dt>Dosage</dt><dd>4-6 séries de 20-40 s, récupération 1:3 à 1:5</dd><dt>Progression</dt><dd>Plus de séries avant plus de durée</dd><dt>Erreurs</dt><dd>Transformer l'exercice en épreuve d'endurance</dd></dl></article>
+  </div>
+</section>
+
+<section id="s20">
+  <h2>20. Principes de programmation</h2>
+  <div class="grid2">
+    <div class="box"><h3>Structure hebdomadaire type (adulte, saison)</h3><ul>
+      <li>1 à 2 séances de préparation physique de 30 à 50 min, placées à distance du match (la plus dure au moins 3 jours avant).</li>
+      <li>Ordre dans la séance : activation et prévention → puissance et pliométrie → force → prévention ciblée → mobilité.</li>
+      <li>Pré-saison : 2 à 3 séances, en réduisant la pliométrie les jours d'entraînement de gardien intensif.</li>
+    </ul></div>
+    <div class="box"><h3>Charge et suivi</h3><ul>
+      <li>Effort ressenti de séance × durée (sRPE) : méthode valide et simple en sport collectif <span class="e e2">N2</span>.</li>
+      <li>Le ratio charge aiguë / chronique n'a pas de fondement solide pour prédire les blessures <span class="e e2">N2</span> critique : l'utiliser au plus comme repère, jamais comme règle.</li>
+      <li>Éviter les hausses brutales : chez les jeunes handballeurs, une hausse de plus de 60 % de la charge hebdomadaire est associée à plus de blessures d'épaule, surtout avec des rotateurs externes faibles <span class="e e4">N4</span>.</li>
+      <li>Compter les séances spécifiques de gardien (nombre de tirs reçus) dans la charge <span class="e e6">N6</span>.</li>
+    </ul></div>
+    <div class="box"><h3>Progression</h3><ul>
+      <li>Blocs de 3 semaines de charge croissante, puis 1 semaine allégée.</li>
+      <li>Ordre : technique → volume → intensité → vitesse.</li>
+      <li>Ne changer qu'une variable à la fois ; garder les exercices clés assez longtemps pour mesurer un progrès.</li>
+    </ul></div>
+    <div class="box"><h3>Tests utiles (indicateurs, pas prédicteurs)</h3><ul>
+      <li>Saut contre-mouvement et saut latéral unipodal (symétrie).</li>
+      <li>Force d'adduction (squeeze test) et d'abduction.</li>
+      <li>Force de rotation externe de l'épaule, rotation totale.</li>
+      <li>Mobilité de hanche (rotations, abduction) et de cheville.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="s21">
+  <h2>21. Arbre décisionnel</h2>
+  <p class="lead">Règles appliquées dans l'ordre : sécurité d'abord (douleur, blessure, croissance), puis niveau d'entraînement, puis objectif.</p>
+  <div class="tree">
+    <div class="rule"><p><b class="si">SI</b> douleur actuelle (aine, hanche, épaule, genou) ou blessure récente non rééduquée</p><p><b>ALORS</b> pas de programme de performance : orientation vers un professionnel de santé ; seuls les exercices indolores et le travail des autres zones sont proposés.</p></div>
+    <div class="rule"><p><b class="si">SI</b> antécédent de blessure d'aine</p><p><b>ALORS</b> Copenhague et adduction isométrique prioritaires dès la semaine 1, montée d'amplitude des écarts très progressive, test d'adduction toutes les 4 semaines <span class="e e2">N2</span>.</p></div>
+    <div class="rule"><p><b class="si">SI</b> antécédent d'épaule</p><p><b>ALORS</b> programme OSTRC 3 fois/semaine, rotateurs externes renforcés en priorité, hausse de charge limitée <span class="e e3">N3</span>.</p></div>
+    <div class="rule"><p><b class="si">SI</b> joueuse, ou antécédent de genou</p><p><b>ALORS</b> programme neuromusculaire genou à chaque séance, réceptions travaillées avant toute pliométrie intense <span class="e e1">N1</span>.</p></div>
+    <div class="rule"><p><b class="si">SI</b> jeune en phase de croissance rapide (taille qui augmente vite, douleur genou ou talon)</p><p><b>ALORS</b> garder la régularité, réduire les sauts et les chutes, pas de nouvelle charge, mobilité douce, suivre la taille tous les 3 mois <span class="e e4">N4</span>.</p></div>
+    <div class="rule"><p><b class="si">SI</b> U11-U13</p><p><b>ALORS</b> motricité générale, jeux, poids du corps, apprendre à chuter et se relever ; aucune spécialisation de préparation physique.</p></div>
+    <div class="rule"><p><b class="si">SI</b> U15, ou débutant en renforcement, ou force faible, ou stabilité faible</p><p><b>ALORS</b> priorités : technique des mouvements de base, stabilité cheville-genou, adducteurs et épaule au poids du corps ou à l'élastique, pliométrie basse intensité ; pas de charges externes (règle 6M Lab).</p></div>
+    <div class="rule"><p><b class="si">SI</b> U17 F / U18 M ou adulte, base technique acquise, force moyenne</p><p><b>ALORS</b> force de base (squat, fente, soulevé) 2 fois/semaine en pré-saison, puissance latérale, prévention ciblée ; pliométrie moyenne intensité.</p></div>
+    <div class="rule"><p><b class="si">SI</b> gardien expérimenté, force correcte (squat ≥ 1,5 fois le poids du corps pour un homme, repère indicatif) et objectif explosivité</p><p><b>ALORS</b> maintien de la force lourde 1 fois/semaine, priorité à la RFD latérale (poussées résistées, bonds latéraux, sauts chargés légers), pliométrie réactive <span class="e e7">N7</span>.</p></div>
+    <div class="rule"><p><b class="si">SI</b> mobilité de hanche limitée (rotation ou abduction)</p><p><b>ALORS</b> mobilité active quotidienne courte, renforcement en fin d'amplitude (cosaque, écart actif) <span class="e e2">N2</span>.</p></div>
+    <div class="rule"><p><b class="si">SI</b> 3 entraînements de hand ou plus et 1 match par semaine</p><p><b>ALORS</b> 1 à 2 séances courtes (30-40 min), pliométrie limitée, pas de conditionnement supplémentaire.</p></div>
+    <div class="rule"><p><b class="si">SI</b> matériel limité (maison)</p><p><b>ALORS</b> fentes, cosaque, pogos, bonds latéraux, élastiques, Copenhague sur canapé, Nordic avec partenaire ; la force lourde est remplacée par l'unilatéral et le tempo lent.</p></div>
+  </div>
+</section>
+
+<section id="s22">
+  <h2>22. Erreurs à éviter</h2>
+  <div class="grid2">
+    <div class="box"><h3>Pseudo-spécificité</h3><ul>
+      <li>Choisir un exercice parce qu'il « ressemble » à un arrêt (plongeons lestés, élastiques pendant les parades) : il peut dégrader la technique sans bénéfice démontré <span class="e e7">N7</span>.</li>
+      <li>Vendre des outils de « réflexes » comme une amélioration des arrêts : transfert au jeu non démontré <span class="e e2">N2</span>.</li>
+    </ul></div>
+    <div class="box"><h3>Copier le joueur de champ</h3><ul>
+      <li>Imposer au gardien le même volume de course, de 15-15 ou de sprints répétés : sa charge de déplacement en match est bien plus faible <span class="e e4">N4</span>.</li>
+      <li>Négliger la force parce que « le gardien, c'est du réflexe » : la force est la base de la vitesse de mise en action <span class="e e2">N2</span>.</li>
+    </ul></div>
+    <div class="box"><h3>Surcharge</h3><ul>
+      <li>Ajouter de la pliométrie à des séances de gardien déjà très riches en sauts et extensions.</li>
+      <li>Hausses brutales de charge, surtout en reprise et chez les jeunes en croissance.</li>
+    </ul></div>
+    <div class="box"><h3>Oublis</h3><ul>
+      <li>Adducteurs et hanches (zone la plus logique à protéger chez le gardien).</li>
+      <li>Épaule (programme validé en handball).</li>
+      <li>Progression : mêmes exercices, mêmes charges toute la saison.</li>
+      <li>Étirements passifs longs juste avant les exercices explosifs.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="s23">
+  <h2>23. Limites des connaissances actuelles</h2>
+  <div class="grid3">
+    <div class="key"><h3>Ce que nous savons réellement</h3><ul>
+      <li>Le gardien a la plus faible charge de déplacement en match.</li>
+      <li>L'avantage de l'expert est perceptif et spécifique, pas un temps de réaction général.</li>
+      <li>Les experts déclenchent leur mouvement avant le lâcher du ballon.</li>
+      <li>Les gardiens sont grands, souples, moins rapides en sprint que les joueurs de champ.</li>
+      <li>Les programmes neuromusculaires, épaule et adducteurs réduisent les blessures chez les sportifs.</li>
+      <li>Force et pliométrie bien encadrées sont sûres et efficaces chez les jeunes.</li>
+    </ul></div>
+    <div class="note"><h3>Ce que nous pensons savoir mais qui reste incertain</h3><ul>
+      <li>Que la RFD latérale améliore le taux d'arrêts.</li>
+      <li>Que la mobilité de hanche rend plus efficace (et pas seulement plus souple).</li>
+      <li>Que le gardien a un risque d'aine et de hanche plus élevé que les autres postes.</li>
+      <li>Que les programmes de prévention ont le même effet chez les gardiens.</li>
+      <li>Que le Nordic réduit de moitié les blessures (réanalyse non concluante).</li>
+      <li>La part réelle de la fatigue physique dans la baisse de performance du gardien.</li>
+    </ul></div>
+    <div class="warn"><h3>Ce qui manque dans la recherche</h3><ul>
+      <li>Aucun essai contrôlé d'un programme physique chez des gardiens de handball.</li>
+      <li>Pas de biomécanique détaillée des arrêts (forces, angles, activité musculaire).</li>
+      <li>Pas de mesure de la charge interne du gardien en match et à l'entraînement.</li>
+      <li>Pas de données sur les jeunes gardiens ni sur les gardiennes en préparation physique.</li>
+      <li>Pas de test physique validé comme prédicteur de la performance du gardien.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="s24">
+  <h2>24. Synthèse pratique pour le site</h2>
+  <h3>A. Les 10 qualités prioritaires</h3>
+  <div class="tw"><table>
+    <thead><tr><th>#</th><th>Qualité</th><th>Importance</th><th>Justification courte</th><th>Preuve</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Force produite vite (RFD), surtout latérale</td><td>Très haute</td><td>Gestes de quelques centaines de ms</td><td><span class="e e7">N7</span> sur base <span class="e e2">N2</span></td></tr>
+      <tr><td>2</td><td>Force excentrique des adducteurs</td><td>Très haute</td><td>Écarts, prévention de l'aine</td><td><span class="e e2">N2</span> hors gardiens</td></tr>
+      <tr><td>3</td><td>Force maximale et relative des jambes</td><td>Haute</td><td>Base de la RFD et de la puissance</td><td><span class="e e2">N2</span></td></tr>
+      <tr><td>4</td><td>Mobilité active de hanche</td><td>Haute</td><td>Amplitude utile et sûre</td><td><span class="e e4">N4</span> <span class="e e2">N2</span></td></tr>
+      <tr><td>5</td><td>Stabilité cheville et genou, réceptions</td><td>Haute</td><td>Prévention démontrée en handball</td><td><span class="e e1">N1</span></td></tr>
+      <tr><td>6</td><td>Robustesse de l'épaule</td><td>Moyenne à haute</td><td>Arrêts hauts, chutes, relances</td><td><span class="e e3">N3</span></td></tr>
+      <tr><td>7</td><td>Contrôle du tronc et du bassin</td><td>Moyenne à haute</td><td>Transmission, chutes</td><td><span class="e e7">N7</span></td></tr>
+      <tr><td>8</td><td>Puissance du haut du corps</td><td>Moyenne</td><td>Relance, extension</td><td><span class="e e1">N1</span> joueurs, <span class="e e7">N7</span> gardien</td></tr>
+      <tr><td>9</td><td>Répétition d'actions explosives</td><td>Moyenne</td><td>Séries de tirs, fins de match</td><td><span class="e e7">N7</span></td></tr>
+      <tr><td>10</td><td>Base aérobie</td><td>Faible à moyenne</td><td>Récupération, tolérance au volume</td><td><span class="e e4">N4</span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="grid2">
+    <div class="box"><h3>B. Par catégorie d'âge</h3><ul>
+      <li><b>U11-U13 :</b> motricité, coordination, chutes, jeux, poids du corps.</li>
+      <li><b>U15 :</b> technique de force sans charge, stabilité, prévention, mobilité active, prudence en croissance.</li>
+      <li><b>U17 F / U18 M :</b> force avec charges légères à modérées, puissance latérale, adducteurs et épaule.</li>
+      <li><b>Adultes :</b> programmation complète selon le niveau.</li>
+    </ul></div>
+    <div class="box"><h3>C. Par niveau</h3><ul>
+      <li><b>Départemental :</b> fondations, prévention, 1 à 2 séances courtes.</li>
+      <li><b>Régional :</b> force de base, puissance latérale, tests simples.</li>
+      <li><b>National et plus :</b> RFD, individualisation, suivi de la charge et tests réguliers.</li>
+    </ul></div>
+    <div class="box"><h3>D. Zones à surveiller</h3><p>Aine et adducteurs, hanche, genou (gardiennes surtout), cheville, épaule, bas du dos, doigts.</p></div>
+    <div class="box"><h3>E. Exercices les plus pertinents</h3><p>Copenhague, fente latérale et cosaque, bonds latéraux stabilisés, poussée latérale résistée, squat et fente bulgare, programme épaule, équilibre et réceptions, lancers de médecine-ball en rotation, 90/90 actif, Nordic.</p></div>
+    <div class="box"><h3>F. Méthodes pertinentes</h3><p>Force (maximale puis force-vitesse), pliométrie latérale à faible volume, excentrique et isométrique pour la prévention, mobilité active, conditionnement par actions spécifiques courtes.</p></div>
+    <div class="box"><h3>G. Erreurs à éviter</h3><p>Pseudo-spécificité, promesses sur les réflexes, copie du joueur de champ, surcharge de sauts, oubli des adducteurs et de l'épaule, hausses brutales de charge.</p></div>
+    <div class="box"><h3>H. Règles de progression</h3><p>Technique → volume → intensité → vitesse ; blocs de 3 semaines + 1 semaine allégée ; une variable à la fois ; réceptions maîtrisées avant la pliométrie intense ; charge hebdomadaire sans hausse brutale.</p></div>
+    <div class="box"><h3>I. Critères de personnalisation</h3><p>Âge et maturité, sexe, niveau, expérience en renforcement, blessures et douleurs, mobilité de hanche, force des adducteurs et de l'épaule, nombre d'entraînements et de matchs, matériel, temps disponible, objectif.</p></div>
+  </div>
+</section>
+
+<section id="s25">
+  <h2>25. Bibliographie</h2>
+  <p class="small">Classement : A très forte pertinence et qualité ; B bonne qualité avec limites ; C utile mais preuves limitées ; D expertise, source professionnelle ou hypothèse. Type d'étude et population indiqués quand connus.</p>
+  <h3>Niveau A</h3>
+  <ul class="refs">
+    <li><b>Olsen O.E. et coll. (2005).</b> Exercises to prevent lower limb injuries in youth sports: cluster randomised controlled trial. <i>BMJ</i>. Essai randomisé, 1 837 handballeurs 15-17 ans ; blessures genou-cheville ≈ divisées par 2. <a href="https://pubmed.ncbi.nlm.nih.gov/16163002">Lien</a></li>
+    <li><b>Andersson S.H. et coll. (2017).</b> Preventing overuse shoulder injuries among throwing athletes. <i>BJSM</i> 51:1073-80. Essai randomisé en grappes, 660 handballeurs élites ; 17 % vs 23 %. Limite : mesure auto-rapportée. <a href="https://ostrc.no/en/projects/preventing-overuse-shoulder-injuries-among-throwing-athletes-a-cluster-randomised-controlled-trial-in-660-elite-handball-players/">Lien</a></li>
+    <li><b>Lloyd R.S. et coll. (2014).</b> Position statement on youth resistance training: the 2014 International Consensus. <i>BJSM</i> 48:498-505. Consensus. <a href="https://pubmed.ncbi.nlm.nih.gov/24055781/">Lien</a></li>
+    <li><b>Effects of perceptual-cognitive training on anticipation and decision-making in team sports (2024).</b> Méta-analyse, 22 études ; effet laboratoire 1,51 vs terrain 0,65. <a href="https://pubmed.ncbi.nlm.nih.gov/39457791/">Lien</a></li>
+    <li><b>Accelerating visual anticipation through temporal occlusion training (2024).</b> <i>Sports Medicine</i>. Méta-analyse. <a href="https://pubmed.ncbi.nlm.nih.gov/39102157/">Lien</a></li>
+    <li><b>Ramirez-Campillo R. et coll. (2023).</b> Plyometric-jump training according to maturity. <i>Sports Medicine Open</i>. Méta-analyse ; effets similaires avant et après le pic de croissance. Limite : petits échantillons. <a href="https://link.springer.com/article/10.1186/s40798-023-00568-6">Lien</a></li>
+    <li><b>Meta-analysis of the effects of plyometric training in handball athletes (2025).</b> <i>Scientific Reports</i>. 11 études, 302 sujets. <a href="https://www.nature.com/articles/s41598-025-15526-3">Lien</a></li>
+    <li><b>Bragazzi N.L. et coll. (2020).</b> Resistance training and handball players' strength, power and throwing velocity. Méta-analyse, 18 études, 275 joueurs. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7215414/">Lien</a></li>
+    <li><b>Yoo J.H. et coll. (2010).</b> Neuromuscular training and ACL injury prevention in female athletes. <i>KSSTA</i>. Méta-analyse. <a href="https://pubmed.ncbi.nlm.nih.gov/19760399/">Lien</a></li>
+    <li><b>Behm D.G. et coll. (2016).</b> Acute effects of muscle stretching on physical performance, ROM and injury. <i>Appl Physiol Nutr Metab</i>. Revue systématique. <a href="https://pure.northampton.ac.uk/en/publications/acute-effects-of-muscle-stretching-on-physical-performance-range-/">Lien</a></li>
+  </ul>
+  <h3>Niveau B</h3>
+  <ul class="refs">
+    <li><b>Carton-Llorente A. et coll. (2023).</b> Worst-case scenario analysis of physical demands in elite men handball players by playing position. <i>Biology of Sport</i>. Observationnelle, 180 joueurs dont 27 gardiens, Euro 2022 ; gardiens très différents de tous les postes. Limite : uniquement la locomotion. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10588589/">Lien</a></li>
+    <li><b>Rojas F.J., Gutiérrez-Dávila M. et coll. (2012).</b> Biomechanical analysis of anticipation of elite and inexperienced goalkeepers to distance shots in handball. <i>J Hum Kinet</i>. Expérimentale, 14 sujets. <a href="https://pubmed.ncbi.nlm.nih.gov/23487516/">Lien</a></li>
+    <li><b>Gutiérrez-Dávila M. et coll. (2011).</b> Anticipatory strategies of team-handball goalkeepers (7 m). Expérimentale. <a href="https://pubmed.ncbi.nlm.nih.gov/21751856/">Lien</a></li>
+    <li><b>Helm F., Reiser M., Munzert J. (2016).</b> Domain-specific and unspecific reaction times in experienced team handball goalkeepers and novices. <i>Front Psychol</i> 7:882. 15 gardiens vs 15 novices. <a href="https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2016.00882/full">Lien</a></li>
+    <li><b>Loffing F. et coll. (2015).</b> Accuracy of outcome anticipation against left- and right-handed penalties in team-handball goalkeeping. <i>Front Psychol</i> 6:1820. <a href="https://pubmed.ncbi.nlm.nih.gov/26648887/">Lien</a></li>
+    <li><b>Differences in gaze behavior between male and female elite handball goalkeepers during penalty throws (2025).</b> 40 gardiens élites, oculométrie mobile. <a href="https://pubmed.ncbi.nlm.nih.gov/40149833/">Lien</a></li>
+    <li><b>Prevalence, incidence and burden of health problems across playing positions in elite male handball players (45 semaines).</b> Cohorte prospective, 189 joueurs. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11973782/">Lien</a></li>
+    <li><b>Clarsen B. et coll. (2014).</b> Reduced glenohumeral rotation, external rotation weakness and scapular dyskinesis are risk factors for shoulder injuries among elite male handball players. <i>BJSM</i>. Cohorte, 206 joueurs. <a href="https://pubmed.ncbi.nlm.nih.gov/24948083">Lien</a></li>
+    <li><b>Møller M. et coll. (2017).</b> Handball load and shoulder injury rate: 679 elite youth players. <i>BJSM</i>. Cohorte. <a href="https://pubmed.ncbi.nlm.nih.gov/28104592/">Lien</a></li>
+    <li><b>Harøy J. et coll. (2019).</b> The Adductor Strengthening Programme prevents groin problems. <i>BJSM</i>. Essai randomisé en grappes, 652 footballeurs. <a href="https://pubmed.ncbi.nlm.nih.gov/29891614/">Lien</a></li>
+    <li><b>van Dyk N. et coll. (2019).</b> Including the Nordic hamstring exercise halves the rate of hamstring injuries. <i>BJSM</i>. Méta-analyse, 8 459 athlètes ; résultat contesté par une réanalyse (<i>J Clin Epidemiol</i>, 2021). <a href="https://www.sciencedirect.com/science/article/abs/pii/S0895435621002870">Réanalyse</a></li>
+    <li><b>Is hip adductor or abductor strength associated with future groin pain? (2024).</b> Revue systématique et méta-analyse, 13 cohortes. <a href="https://pubmed.ncbi.nlm.nih.gov/39532315/">Lien</a></li>
+    <li><b>Risk factors associated with groin pain in athletes (revue systématique).</b> <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12653094/">Lien</a></li>
+    <li><b>Myklebust G. et coll. (2003).</b> Prevention of ACL injuries in female team handball players. <i>Clin J Sport Med</i>. Intervention sur 3 saisons. <a href="https://pubmed.ncbi.nlm.nih.gov/12629423">Lien</a></li>
+    <li><b>Suchomel T.J. et coll. (2016).</b> The importance of muscular strength in athletic performance. <i>Sports Medicine</i>. Revue. <a href="https://pubmed.ncbi.nlm.nih.gov/26838985/">Lien</a></li>
+    <li><b>Maffiuletti N.A. et coll. (2016).</b> Rate of force development: physiological and methodological considerations. <i>Eur J Appl Physiol</i>. Revue. <a href="https://link.springer.com/article/10.1007/s00421-016-3346-6">Lien</a></li>
+    <li><b>Haddad M. et coll. (2017).</b> Session-RPE method for training load monitoring. <i>Front Neurosci</i>. Revue. <a href="https://pubmed.ncbi.nlm.nih.gov/29163016/">Lien</a></li>
+    <li><b>Impellizzeri F.M. et coll. (2020).</b> Acute:chronic workload ratio: conceptual issues and fundamental pitfalls. <i>IJSPP</i>. <a href="https://pubmed.ncbi.nlm.nih.gov/32502973/">Lien</a></li>
+    <li><b>White A. et coll. (2018).</b> Match-play and performance test responses of soccer goalkeepers. <i>Sports Medicine</i>. Revue (autre sport). <a href="https://link.springer.com/article/10.1007/s40279-018-0977-2">Lien</a></li>
+    <li><b>Lloyd R.S. et coll. (2016).</b> NSCA position statement on long-term athletic development. <i>JSCR</i>. <a href="https://www.nsca.com/education/articles/nsca-position-statement-on-long-term-athletic-development/">Lien</a></li>
+    <li><b>Faigenbaum A.D. et coll. (2009).</b> Youth resistance training: updated position statement. <i>JSCR</i>. <a href="https://www.nsca.com/globalassets/about/position-statements/position_stand_youth_resistance_training---2009.pdf">Lien</a></li>
+  </ul>
+  <h3>Niveau C</h3>
+  <ul class="refs">
+    <li><b>Krüger K. et coll. (2014).</b> Physical performance profile of handball players is related to playing position and playing class. <i>JSCR</i>. Transversale. <a href="https://pubmed.ncbi.nlm.nih.gov/23539084/">Lien</a></li>
+    <li><b>Vila H. et coll. (2012).</b> Anthropometric profile, vertical jump and throwing velocity in elite female handball players by playing positions. <i>JSCR</i>. <a href="https://pubmed.ncbi.nlm.nih.gov/21997459">Lien</a></li>
+    <li><b>Physical fitness profile of high-level female Portuguese handball players.</b> Transversale ; gardiennes plus souples. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10178563/">Lien</a></li>
+    <li><b>Relationship between team ranking and physical fitness in elite male handball players by position (2024).</b> <i>Scientific Reports</i>. Petits effectifs de gardiens. <a href="https://www.nature.com/articles/s41598-024-53435-z">Lien</a></li>
+    <li><b>Mónaco M. et coll. (2019).</b> Injury incidence and patterns by category, position and maturation in elite male handball. <i>Biology of Sport</i>. 164 joueurs dont 27 gardiens. <a href="https://pubmed.ncbi.nlm.nih.gov/30899141/">Lien</a></li>
+    <li><b>Raya-González J. et coll. (2022).</b> Injury profile in professional handball players over 4 seasons by position. <i>Sports Health</i>. 68 joueurs. <a href="https://doi.org/10.1177/19417381211011430">Lien</a></li>
+    <li><b>Injury pattern based on player positions in Japanese university handball (2022).</b> Transversale, 2 056 joueurs. <a href="https://pubmed.ncbi.nlm.nih.gov/34664909/">Lien</a></li>
+    <li><b>Hip, groin and abdominal injuries in handball.</b> Chapitre d'ouvrage. <a href="https://www.researchgate.net/publication/325067352_Hip_Groin_and_Abdominal_Injuries_in_Handball">Lien</a></li>
+    <li><b>Hip passive ROM and radiographic hip osteoarthritis in former elite handball players.</b> <a href="https://pubmed.ncbi.nlm.nih.gov/16371490/">Lien</a></li>
+    <li><b>Whiteside D. et coll. (2015).</b> Femoroacetabular impingement in elite ice hockey goaltenders. <i>AJSM</i> (autre sport). <a href="https://pubmed.ncbi.nlm.nih.gov/25878118/">Lien</a></li>
+    <li><b>Hand, wrist and forearm injuries in male professional soccer players (558 saisons-équipes).</b> Autre sport. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7841683/">Lien</a></li>
+    <li><b>Huesmann K. et coll. (2023).</b> Expert goalkeepers' and coaches' views on anticipation facing backcourt throws. <i>Front Sports Act Living</i>. Qualitative, 6 experts. <a href="https://pubmed.ncbi.nlm.nih.gov/37877118/">Lien</a></li>
+    <li><b>Appelbaum L.G., Erickson G. (2018).</b> Sports vision training: a review of digital training techniques. Revue ; transfert au terrain peu démontré. <a href="https://www.semanticscholar.org/paper/Sports-vision-training:-A-review-of-the-in-digital-Appelbaum-Erickson/2f63859b2d07ce520cc966ff4d1fb07d85969777">Lien</a></li>
+    <li><b>Stroboscopic visual training on reaction time in athletes.</b> Méta-analyse, résultats sur tâches de laboratoire. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12254360/">Lien</a></li>
+    <li><b>Injury risk and burden related to age group and peak height velocity in youth soccer.</b> Autre sport. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6293374/">Lien</a></li>
+    <li><b>Physical match demands of four Handball-Bundesliga teams 2019-2022 (2023).</b> <i>Front Sports Act Living</i>. Gardiens exclus. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10246450/">Lien</a></li>
+    <li><b>Telemetrical study of the handball goalkeeper's heart rate (1988).</b> Ancienne. <a href="https://pubmed.ncbi.nlm.nih.gov/3230902/">Lien</a></li>
+  </ul>
+  <h3>Niveau D</h3>
+  <ul class="refs">
+    <li><b>Characteristics of specific training in elite handball goalkeepers (2024).</b> <i>Pedagogy of Physical Culture and Sports</i>. 4 gardiens, sans groupe contrôle. <a href="https://sportpedagogy.org.ua/index.php/ppcs/article/view/2636">Lien</a></li>
+    <li><b>NSCA, repères de volume de pliométrie</b> (manuels de certification). <a href="https://www.nsca.com/education/articles/nsca-coach/enhancing-athletic-performance-a-guide-to-plyometric-training-for-high-school-athletes/">Lien</a></li>
+    <li><b>Cyril Dumoulin,</b> exercices d'entraînement spécifiques au gardien de handball. <a href="https://cyrildumoulin.com/entrainement-handball/exercices-entrainement-specifique-gardien-handball/">Lien</a></li>
+    <li><b>Vanja Radic,</b> ressources d'entraînement de gardiens (mobilité de hanche, puissance, doigts). <a href="https://vanjaradic.fi/importance-of-hip-mobility-for-handball-goalkeepers/">Lien</a></li>
+    <li><b>FFHandball, plateforme IFFE</b> de ressources pour les entraîneurs. <a href="https://www.ffhandball.fr/actualite/lactualite-federale/iffe-nouvelle-plateforme-ressources-ffhandball/">Lien</a></li>
+  </ul>
+</section>
+
+<footer><p>Dossier 6M Lab, septembre 2026. Base de travail pour construire les programmes de gardiens ; à faire relire par un entraîneur de gardiens avant publication d'un programme.</p></footer>
+</main>
+</div>

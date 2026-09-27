@@ -1,9 +1,19 @@
-// Links between the admin pages.
-export default function Nav({ here }: { here: "audience" | "avis" }) {
+// The admin sections, at the top of every admin page.
+const SECTIONS = [
+  ["accueil", "/admin", "Accueil"],
+  ["audience", "/admin/audience", "Audience & ventes"],
+  ["avis", "/admin/avis", "Commandes & avis"],
+  ["programmes", "/admin/programmes", "Programmes"],
+  ["clubs", "/admin/clubs", "Clubs"],
+  ["memo", "/admin/memo", "Aide-mémoire"],
+] as const;
+export type Section = (typeof SECTIONS)[number][0];
+
+export default function Nav({ here }: { here: Section }) {
   return (
-    <p className="sub" style={{ display: "flex", gap: 16 }}>
-      {here === "audience" ? <b>Audience & ventes</b> : <a href="/admin/audience">Audience & ventes</a>}
-      {here === "avis" ? <b>Avis & commandes</b> : <a href="/admin/avis">Avis & commandes</a>}
-    </p>
+    <nav className="adm-nav" aria-label="Espace 6M Lab">
+      <b className="adm-brand">6M Lab</b>
+      {SECTIONS.map(([id, href, label]) => (id === here ? <span key={id} aria-current="page">{label}</span> : <a key={id} href={href}>{label}</a>))}
+    </nav>
   );
 }

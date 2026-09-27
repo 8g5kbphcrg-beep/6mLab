@@ -51,8 +51,10 @@ const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`)
 // réathlétisation, whose program is not written yet).
 export const deliversNow = (goals: string[]) => process.env.PROGRAMMES_ENVOI_AUTO === "1" && !goals.includes("reathletisation");
 
-export async function programFiles(o: Order) {
-  if (!deliversNow(o.goals)) return null;
+// The files of an order: the name the customer gets, and where the PDF is on disk. Also used by the
+// admin page that finds an order's PDFs for sending by hand.
+export type OrderFilesInput = Pick<Order, "program" | "goals" | "pack" | "running" | "gender" | "lieu" | "plang">;
+export function orderFiles(o: OrderFilesInput) {
   const goals = [...o.goals].sort((a, b) => goalOrder.indexOf(a) - goalOrder.indexOf(b));
   // The "Saison complète" pack adds the Maintien en saison with the same goals.
   const formulas = o.pack ? [o.program, "maintien-saison"] : [o.program];
@@ -62,7 +64,12 @@ export async function programFiles(o: Order) {
   // above.
   const sil = o.gender === "femme" || o.gender === "homme" ? `-${o.gender}` : "";
   const dir = o.plang === "en" ? join(process.cwd(), "programmes", "en") : join(process.cwd(), "programmes");
-  const paths = names.map((n) => join(dir, n.replace(/\.pdf$/, `-${o.lieu}${n.startsWith("seances-") ? sil : ""}.pdf`)));
+  return names.map((filename) => ({ filename, path: join(dir, filename.replace(/\.pdf$/, `-${o.lieu}${filename.startsWith("seances-") ? sil : ""}.pdf`)) }));
+}
+
+export async function programFiles(o: Order) {
+  if (!deliversNow(o.goals)) return null;
+  const files = orderFiles(o), names = files.map((f) => f.filename), paths = files.map((f) => f.path);
   try {
     await Promise.all(paths.map((p) => access(p)));
   } catch {

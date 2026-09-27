@@ -32,13 +32,13 @@ const count = (orders: FeedbackOrder[], key: string) => {
 
 export default async function AdminAvis() {
   const s = stripe();
-  if (!s) return <main><h1>Avis clients</h1><p>Stripe n'est pas configuré.</p></main>;
+  if (!s) return <main><Nav here="avis" /><h1>Commandes & avis</h1><p>Stripe n'est pas configuré.</p></main>;
   let orders: FeedbackOrder[];
   try {
     orders = await paidOrders(s);
   } catch (e) {
     console.error("[admin/avis]", e);
-    return <main><h1>Avis clients</h1><p>Impossible de lire les commandes dans Stripe : {e instanceof Error ? e.message : String(e)}</p></main>;
+    return <main><Nav here="avis" /><h1>Commandes & avis</h1><p>Impossible de lire les commandes dans Stripe : {e instanceof Error ? e.message : String(e)}</p></main>;
   }
   const leads = await recentLeads(s, Math.floor(Date.now() / 1000) - 365 * DAY).catch(() => []);
   const waiting = await recentLeads(s, Math.floor(Date.now() / 1000) - 365 * DAY, "forme").catch(() => []);
@@ -62,7 +62,7 @@ export default async function AdminAvis() {
   return (
     <main>
       <Nav here="avis" />
-      <h1>Avis clients</h1>
+      <h1>Commandes & avis</h1>
       <p className="sub">{orders.length} commande{orders.length > 1 ? "s" : ""}. Questionnaire 1 envoyé 14 jours après l'achat, questionnaire 2 à la fin du programme (8 ou 12 semaines). Données lues dans Stripe{process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_") ? " (mode test)" : ""}. <a href="/admin/avis/export">Exporter en CSV (Excel)</a></p>
       <div className="kpis">
         <div className="kpi"><b>{avg}{stars.length ? " / 5" : ""}</b><span>Note moyenne ({stars.length} avis)</span></div>
@@ -126,7 +126,8 @@ export default async function AdminAvis() {
           <tr key={o.id}>
             <td>{new Date(o.created * 1000).toLocaleDateString("fr-FR")}</td>
             <td>{o.firstName}<br /><span className="muted">{o.email}</span></td>
-            <td>{o.meta.pack === "oui" ? "Pack Saison complète" : programs.fr[o.program]?.name}<br /><span className="muted">{o.goals.map((g) => goalName(g, "fr")).join(" + ")}{o.meta.lieu ? ` · ${o.meta.lieu === "salle" ? "Salle" : "Maison"}` : ""}{o.meta.plang === "en" ? " · PDF en anglais" : ""}</span></td>
+            <td>{o.meta.pack === "oui" ? "Pack Saison complète" : programs.fr[o.program]?.name}<br /><span className="muted">{o.goals.map((g) => goalName(g, "fr")).join(" + ")}{o.meta.lieu ? ` · ${o.meta.lieu === "salle" ? "Salle" : "Maison"}` : ""}{o.meta.plang === "en" ? " · PDF en anglais" : ""}</span>
+              <br /><a href={`/admin/programmes?${new URLSearchParams({ prog: o.meta.pack === "oui" ? "pack" : o.program, g: o.goals.join(","), lieu: o.meta.lieu ?? "maison", genre: o.meta.gender ?? "", plang: o.meta.plang ?? (o.meta.lang === "en" ? "en" : "fr"), course: o.meta.running === "oui" ? "oui" : "", prenom: o.firstName, ref: o.meta.ref ?? "" })}`}>PDF du programme</a></td>
             <td>
               {o.meta.acc_start ? (() => {
                 const end = endOf({ offer: offerOf(o.meta), start: Date.parse(o.meta.acc_start) }), n = (o.meta.acc_dev ?? "").split(",").filter(Boolean).length;
