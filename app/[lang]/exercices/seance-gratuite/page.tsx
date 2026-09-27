@@ -10,7 +10,14 @@ import "@/app/library.css";
 // The animations of the free session, open to everyone: the 8 exercises, in the session's order,
 // each opening its full page. The rest of the library is for customers (lib/access.ts).
 export const generateStaticParams = () => locales.map((lang) => ({ lang }));
-export const metadata: Metadata = { title: "Séance gratuite : les animations | 6M Lab" };
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const fr = (await params).lang === "fr";
+  return {
+    title: fr ? "Séance gratuite de prévention handball : les 8 exercices animés | 6M Lab" : "Free handball injury-prevention session: the 8 animated exercises | 6M Lab",
+    description: fr ? "15 minutes sans matériel pour protéger chevilles, genoux et épaules : chaque exercice de la séance gratuite 6M Lab en animation." : "15 minutes, no equipment, to protect ankles, knees and shoulders: every exercise of the free 6M Lab session, animated.",
+    alternates: { canonical: `/${fr ? "fr" : "en"}/exercices/seance-gratuite` },
+  };
+}
 
 export default async function FreeAnimations({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;

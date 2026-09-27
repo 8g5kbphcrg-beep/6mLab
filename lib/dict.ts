@@ -1,14 +1,17 @@
 export const locales = ["fr", "en"] as const;
 export type Lang = (typeof locales)[number];
 export const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://6mlab.com";
+// Closed to search engines until the launch: the variable SITE_PUBLIC=oui on Vercel (then a
+// redeploy) opens the site to them. Read at build time.
+export const OPEN = process.env.SITE_PUBLIC === "oui";
 
 export const dict = {
   fr: {
-    title: "6M Lab | Préparation physique",
+    title: "6M Lab | Programmes de préparation physique animés",
     desc: "Programmes de préparation physique planifiés, chaque exercice animé : préparation spécifique au handball, et bientôt forme et bien-être pour tous.",
-    hb: { title: "Préparation physique handball | 6M Lab", desc: "Programmes de préparation physique pour les joueurs et joueuses de handball : pré-saison et maintien en saison, conçus par Raphaël, 5 ans en structures de haut niveau." },
+    hb: { title: "Préparation physique handball : pré-saison et en saison | 6M Lab", desc: "Programmes de préparation physique pour les joueurs et joueuses de handball : pré-saison et maintien en saison, conçus par Raphaël, 5 ans en structures de haut niveau." },
     nav: { cmp: "Comparer", goal: "Trouver mon programme", other: "EN", skip: "Aller au contenu" },
-    hero: { h1: "La prépa physique du haut niveau, pour ta saison de handball", sub: "Des programmes conçus par Raphaël, entraîneur et préparateur physique. Chaque exercice est animé, chaque semaine est planifiée.", cta: "Voir les programmes", trust: "5 ans en structures de haut niveau", foot: "La préparation physique du haut niveau, pour tous. Par Raphaël, 5 ans en structures de haut niveau." },
+    hero: { h1: "Prépa physique de haut niveau et adaptée, pour ta saison de handball", sub: "Des programmes conçus par Raphaël, entraîneur et préparateur physique. Chaque exercice est animé, chaque semaine est planifiée.", cta: "Voir les programmes", trust: "5 ans en structures de haut niveau", foot: "Une préparation physique de haut niveau et adaptée, pour tous. Par Raphaël, 5 ans en structures de haut niveau." },
     cmp: {
       title: "Choisis ta formule", sub: "Toute la saison avec le pack, ou un seul programme : les mêmes objectifs au choix.",
       heads: [["Pré-saison", "Avant la saison"], ["Maintien en saison", "Pendant la saison"]],
@@ -35,11 +38,11 @@ export const dict = {
     },
   },
   en: {
-    title: "6M Lab | Physical preparation",
+    title: "6M Lab | Animated physical preparation programs",
     desc: "Planned physical preparation programs, every exercise animated: handball-specific preparation, and soon fitness and well-being for everyone.",
-    hb: { title: "Handball physical preparation | 6M Lab", desc: "Physical training programs for handball players: pre-season and in-season plans, designed by Raphaël, 5 years in elite-level handball programs." },
+    hb: { title: "Handball physical preparation: pre-season and in-season | 6M Lab", desc: "Physical training programs for handball players: pre-season and in-season plans, designed by Raphaël, 5 years in elite-level handball programs." },
     nav: { cmp: "Compare", goal: "Find my program", other: "FR", skip: "Skip to content" },
-    hero: { h1: "Elite-level physical prep for your handball season", sub: "Programs built by Raphaël, coach and strength coach. Every exercise animated, every week planned.", cta: "See the programs", trust: "5 years in elite-level handball", foot: "Elite-level physical preparation, for everyone. By Raphaël, 5 years in elite-level handball programs." },
+    hero: { h1: "Elite-level, tailored physical prep for your handball season", sub: "Programs built by Raphaël, coach and strength coach. Every exercise animated, every week planned.", cta: "See the programs", trust: "5 years in elite-level handball", foot: "Elite-level, tailored physical preparation, for everyone. By Raphaël, 5 years in elite-level handball programs." },
     cmp: {
       title: "Choose your program", sub: "The whole season with the pack, or a single program: same goals to choose from.",
       heads: [["Pre-season", "Before the season"], ["In-season maintenance", "During the season"]],

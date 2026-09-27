@@ -71,3 +71,30 @@ export const programs = {
     },
   },
 } as const;
+
+// When to do the Pré-saison: the 2 months before the season (offer pages, guide PDF, email).
+// Each case: the 8 weeks, alone ("solo") or alongside the club's physical prep ("club").
+export const whenToStart = {
+  fr: {
+    title: "Quand commencer ?",
+    lead: "Fais ton programme pendant les 2 mois qui précèdent le début de la saison : en général en juillet et en août, pour une saison qui démarre début septembre.",
+    months: ["Juillet", "Août"],
+    legend: { solo: "Seul(e)", club: "En parallèle de la prépa du club" },
+    cases: [
+      { t: "Ton club fait une prépa physique à la reprise", d: "Par exemple à partir de début août : fais les 4 premières semaines seul(e), avant la reprise, puis les 4 dernières en parallèle des entraînements de prépa physique du club.", weeks: ["solo", "solo", "solo", "solo", "club", "club", "club", "club"] },
+      { t: "Ton club ne fait pas de prépa physique", d: "Commence 2 mois avant le début de la saison, vers début juillet, pour finir ta semaine d'affûtage juste avant début septembre.", weeks: ["solo", "solo", "solo", "solo", "solo", "solo", "solo", "solo"] },
+    ],
+    note: "En parallèle du club, garde 48 heures entre deux séances A, B ou C, pas de séance la veille d'un entraînement collectif très intense, et allège (moins de séries) si la fatigue s'accumule.",
+  },
+  en: {
+    title: "When to start?",
+    lead: "Do your program over the 2 months before the season starts: usually July and August, for a season that begins in early September.",
+    months: ["July", "August"],
+    legend: { solo: "On your own", club: "Alongside the club's physical prep" },
+    cases: [
+      { t: "Your club runs a physical prep at the restart", d: "For example from early August: do the first 4 weeks on your own, before the restart, then the last 4 alongside the club's physical prep sessions.", weeks: ["solo", "solo", "solo", "solo", "club", "club", "club", "club"] },
+      { t: "Your club does no physical prep", d: "Start 2 months before the season, around early July, so your taper week ends just before early September.", weeks: ["solo", "solo", "solo", "solo", "solo", "solo", "solo", "solo"] },
+    ],
+    note: "Alongside the club, keep 48 hours between two A, B or C sessions, no session the day before a very intense team training, and go lighter (fewer sets) if fatigue builds up.",
+  },
+} as const;

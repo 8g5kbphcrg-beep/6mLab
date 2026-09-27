@@ -17,12 +17,19 @@ export default function Quiz({ lang, test }: { lang: Lang; test: boolean }) {
   // Steps: 0 moment, 1 period (pre-season, in-season, or both: the "Saison complète" pack), 2 first
   // goal, 3 second goal, 4 level, 5 place (home, gym), 6 injury. The number of sessions is set by
   // each program, so it is not asked.
-  // Picking Réathlétisation (last option of step 2) skips step 3, recorded as -1.
+  // "During the season" (step 0) leaves only the in-season program: step 1 is answered with it
+  // and skipped. Picking Réathlétisation (last option of step 2) skips step 3, recorded as -1.
   const i = a.length;
   const n = t.steps.length;
   const R = goalIds.length;
-  const answer = (j: number) => setA(i === 2 && j === R ? [...a, j, -1] : [...a, j]);
-  const back = () => setA(a.slice(0, a[a.length - 1] === -1 ? -2 : -1));
+  const answer = (j: number) => setA(i === 0 && j === 1 ? [j, 1] : i === 2 && j === R ? [...a, j, -1] : [...a, j]);
+  // Back undoes the last question actually asked.
+  const back = () => {
+    let k = a.length - 1;
+    if (a[k] === -1) k--;
+    if (k === 1 && a[0] === 1) k--;
+    setA(a.slice(0, k));
+  };
   useEffect(() => {
     if (i > 0) head.current?.focus();
     // Audience: started at the first answer, finished with the recommended offer (or the advice to
@@ -31,12 +38,14 @@ export default function Quiz({ lang, test }: { lang: Lang; test: boolean }) {
     if (i >= n) track("quiz_fin", a[6] === 1 ? "blessure" : a[1] === 2 ? "pack" : programSlugs[a[1]], true);
   }, [i, n, a]);
 
+  // Numbering and progress without the skipped question.
+  const skip = a[0] === 1 ? 1 : 0, shown = Math.min(i, n) - (i > 1 ? skip : 0), total = n - skip;
   let body;
   if (i < n) {
     const s = t.steps[i];
     body = (
       <>
-        <p className="lab" style={{ margin: 0 }}>{t.q} {i + 1} {t.of} {n}</p>
+        <p className="lab" style={{ margin: 0 }}>{t.q} {shown + 1} {t.of} {total}</p>
         <h2 className="qq" tabIndex={-1} ref={head}>{s.q}</h2>
         <div className="qopts">
           {s.o.map((o, j) => (i === 3 && j === a[2] ? null :
@@ -82,8 +91,8 @@ export default function Quiz({ lang, test }: { lang: Lang; test: boolean }) {
   return (
     <div className="quiz">
       <h1 style={{ fontSize: "1.4rem", color: "var(--muted)" }}>{t.title}</h1>
-      <div className="qbar" role="progressbar" aria-valuemin={0} aria-valuemax={n} aria-valuenow={Math.min(i, n)}>
-        <span style={{ width: `${(Math.min(i, n) / n) * 100}%` }} />
+      <div className="qbar" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={shown}>
+        <span style={{ width: `${(shown / total) * 100}%` }} />
       </div>
       {i === 0 && <p>{t.intro}</p>}
       {body}

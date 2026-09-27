@@ -5,7 +5,9 @@ import { notFound, redirect } from "next/navigation";
 import { dict, type Lang } from "@/lib/dict";
 import { programs, programSlugs, type ProgramSlug } from "@/lib/programs";
 import BuyForm from "@/components/BuyForm";
-import { testMode } from "@/lib/checkout";
+import WhenToStart from "@/components/WhenToStart";
+import { prices, testMode } from "@/lib/checkout";
+import { Ld, offerLd } from "@/lib/seo";
 import { validGoals } from "@/lib/goals";
 import "@/app/programme.css";
 
@@ -21,7 +23,8 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
   const { lang, slug } = await params;
   if (!(lang in dict) || !(slug in programs[lang as Lang])) return {};
   const p = programs[lang as Lang][slug as ProgramSlug];
-  return { title: `${p.name} | 6M Lab`, description: p.pitch, alternates: { canonical: `/${lang}/programmes/${slug}` } };
+  const title = lang === "fr" ? `Programme ${p.name} handball, ${p.duration} | 6M Lab` : `Handball ${p.name.toLowerCase()} program, ${p.duration} | 6M Lab`;
+  return { title, description: p.pitch, alternates: { canonical: `/${lang}/programmes/${slug}`, languages: { fr: `/fr/programmes/${slug}`, en: `/en/programmes/${slug}` } } };
 }
 
 export default async function Programme({ params, searchParams }: P) {
@@ -37,6 +40,7 @@ export default async function Programme({ params, searchParams }: P) {
   const fr = lang === "fr";
   return (
     <div className="prog">
+      <Ld data={offerLd(`${p.name} · 6M Lab`, p.pitch, prices[slug as ProgramSlug], `/${lang}/programmes/${slug}`)} />
       <Link className="pback" href={`/${lang}/programmes`}>← {d.cmp.title}</Link>
       <div className="pgrid">
         <header className="phead">
@@ -60,6 +64,7 @@ export default async function Programme({ params, searchParams }: P) {
               </div>
             ))}
           </section>
+          {slug === "pre-saison" && <WhenToStart lang={lang as Lang} />}
           <section>
             <h2>FAQ</h2>
             <div className="faq">

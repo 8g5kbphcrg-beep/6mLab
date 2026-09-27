@@ -4,7 +4,7 @@ import nodemailer from "nodemailer";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { accessWeeks, MAX_DEVICES, offerOf } from "@/lib/access";
 import type { Lang } from "@/lib/dict";
-import { programs, type ProgramSlug } from "@/lib/programs";
+import { programs, whenToStart, type ProgramSlug } from "@/lib/programs";
 import { goalOrder, goalsTitle, type GoalId } from "@/lib/goals";
 import { buy, fmtPrice, type Place } from "@/lib/checkout";
 import { legalPaths, owner } from "@/lib/legal";
@@ -118,6 +118,11 @@ export async function sendConfirmation(o: Order) {
     : [`Your animations: tap the eye next to each exercise in your program, or open the exercise library. All you need is your order reference: ${o.id.slice(-12)}.`,
       `Your access starts the first time you open it (you will be asked to confirm) and lasts ${weeks} weeks (your program + 2 weeks). Open it on the day you start, within 12 months, on ${MAX_DEVICES} devices at most. Your PDF is yours to keep.`];
   const lib = `${SITE}/${o.lang}/exercices`;
+  // Pré-saison (alone or in the pack): when to do it (lib/programs.ts whenToStart).
+  const w = whenToStart[o.lang];
+  const when = o.program === "pre-saison"
+    ? [fr ? "Quand commencer ta Pré-saison ?" : "When to start your Pre-season?", w.lead, ...w.cases.map((c) => `${c.t} : ${c.d}`)]
+    : [];
   const health = fr
     ? "Nos programmes sont destinés aux personnes en bonne santé. En cas de doute ou de blessure, demande l'avis d'un professionnel de santé."
     : "Our programs are for healthy people. If you have doubts or an injury, ask a health professional first.";
@@ -128,12 +133,13 @@ export async function sendConfirmation(o: Order) {
     <p>${esc(hello)}</p><p>${intro}</p>
     <table style="width:100%;border-collapse:collapse;margin:16px 0">${rows.map(([k, v]) => `<tr><td style="padding:8px 0;color:#5B5673;border-bottom:1px solid #E3E0F0">${k}</td><td style="padding:8px 0;text-align:right;font-weight:700;border-bottom:1px solid #E3E0F0">${esc(v)}</td></tr>`).join("")}</table>
     <p style="font-weight:700">${delivery}</p>
+    ${when.length ? `<div style="border-left:4px solid #FF7A59;padding:2px 0 2px 14px;margin:16px 0"><p style="margin:0 0 8px;font-weight:700">${esc(when[0])}</p>${when.slice(1).map((l) => `<p style="margin:0 0 8px">${esc(l)}</p>`).join("")}</div>` : ""}
     <div style="background:#F5F3FB;border-radius:10px;padding:14px 16px;margin:16px 0">${anims.map((l) => `<p style="margin:0 0 8px">${esc(l)}</p>`).join("")}<p style="margin:0"><a href="${lib}" style="color:#C4452A;font-weight:700">${fr ? "Ouvrir la bibliothèque d'exercices" : "Open the exercise library"}</a></p></div>
     <p>${fr ? "Une question ? Réponds simplement à cet email." : "Any question? Just reply to this email."}</p>
     <p style="font-size:12px;color:#5B5673;margin-top:24px">${esc(health)}</p>
     <p style="font-size:12px;color:#5B5673">${esc(legal)}</p>
   </div></div>`;
-  const text = [hello, "", intro, "", ...rows.map(([k, v]) => `${k} : ${v}`), "", delivery, "", ...anims, lib, "", health, "", legal].join("\n");
+  const text = [hello, "", intro, "", ...rows.map(([k, v]) => `${k} : ${v}`), "", delivery, "", ...(when.length ? [...when, ""] : []), ...anims, lib, "", health, "", legal].join("\n");
 
   const info = await transport().sendMail({
     from: `6M Lab <${MAIL_FROM()}>`,

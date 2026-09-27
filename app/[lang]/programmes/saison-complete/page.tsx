@@ -3,10 +3,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Reviews from "@/components/Reviews";
 import BuyForm from "@/components/BuyForm";
+import WhenToStart from "@/components/WhenToStart";
 import { dict, type Lang } from "@/lib/dict";
 import { programs } from "@/lib/programs";
 import { fmtPrice, PACK_PRICE, prices, testMode } from "@/lib/checkout";
 import { validGoals } from "@/lib/goals";
+import { Ld, offerLd } from "@/lib/seo";
 import "@/app/programme.css";
 
 // The "Saison complète" pack: the Pré-saison, then the Maintien en saison, same goals, one price.
@@ -66,7 +68,8 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
   const { lang } = await params;
   if (!(lang in dict)) return {};
   const t = text[lang as Lang];
-  return { title: `${t.name} | 6M Lab`, description: t.pitch, alternates: { canonical: `/${lang}/programmes/saison-complete` } };
+  const title = lang === "fr" ? `${t.name} handball : pré-saison + maintien, 20 semaines | 6M Lab` : `Handball ${t.name.toLowerCase()}: pre-season + in-season, 20 weeks | 6M Lab`;
+  return { title, description: t.pitch, alternates: { canonical: `/${lang}/programmes/saison-complete`, languages: { fr: "/fr/programmes/saison-complete", en: "/en/programmes/saison-complete" } } };
 }
 
 export default async function SaisonComplete({ params, searchParams }: P) {
@@ -81,6 +84,7 @@ export default async function SaisonComplete({ params, searchParams }: P) {
   const goals = sp?.objectifs?.split(",") ?? [];
   return (
     <div className="prog">
+      <Ld data={offerLd(`${t.name} · 6M Lab`, t.pitch, PACK_PRICE, `/${l}/programmes/saison-complete`)} />
       <Link className="pback" href={`/${l}/programmes`}>← {t.back}</Link>
       <div className="pgrid">
         <header className="phead">
@@ -105,6 +109,7 @@ export default async function SaisonComplete({ params, searchParams }: P) {
               </div>
             ))}
           </section>
+          <WhenToStart lang={l} />
           <section>
             <h2>FAQ</h2>
             <div className="faq">

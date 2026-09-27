@@ -65,6 +65,13 @@ export const formules = {
     guide: [
       { h2: "Avant de commencer" },
       { p: "8 semaines pour reprendre sur des bases solides avant la reprise avec ton club. Ce guide t'explique comment fonctionne ton programme." },
+      { h2: "Quand commencer ?" },
+      { p: "Fais ton programme pendant les **2 mois qui précèdent le début de la saison** : en général en juillet et en août, pour une saison qui démarre début septembre." },
+      { table: { head: ["Ton club", "Semaines 1 à 4", "Semaines 5 à 8"], rows: [
+        ["Fait une prépa physique à la reprise (par exemple début août)", "Seul(e), avant la reprise du club", "En parallèle des entraînements de prépa physique du club"],
+        ["Ne fait pas de prépa physique", "Seul(e), à partir de début juillet", "Seul(e), jusqu'au début de la saison"],
+      ] } },
+      { note: "**En parallèle du club :** garde 48 heures entre deux séances A, B ou C, pas de séance la veille d'un entraînement collectif très intense, et allège (moins de séries) si la fatigue s'accumule. Lance ton accès aux animations le jour de ta première séance." },
       ...documents("l'échauffement, ton ou tes objectifs, le gainage et le retour au calme"),
       ...materiel,
       ...niveaux,
