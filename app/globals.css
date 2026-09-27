@@ -165,3 +165,8 @@ html.splash-seen .splash{display:none}html.splash-out .splash{opacity:0;pointer-
 .rlist li{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.2rem 1.3rem;box-shadow:var(--shadow)}
 .rlist li p{margin:.5rem 0 0}.rby{color:var(--muted);font-size:.9rem}
 @media(min-width:760px){.rlist{grid-template-columns:repeat(3,1fr)}}
+/* Back arrow at the top left of every page but the home page (components/BackButton.tsx). */
+.bar-l{display:flex;align-items:center;gap:.7rem;min-width:0}
+.backb{flex:none;width:2.25rem;height:2.25rem;border-radius:50%;display:grid;place-items:center;border:1.5px solid rgba(255,255,255,.4);color:#fff;transition:background .2s,border-color .2s}
+.backb:hover,.backb:focus-visible{background:rgba(255,255,255,.12);border-color:#fff}
+.backb svg{width:1.2rem;height:1.2rem;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
