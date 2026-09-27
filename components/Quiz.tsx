@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { dict, type Lang } from "@/lib/dict";
 import { quiz } from "@/lib/quiz";
-import { goalIds, goalsTitle, REATH, type GoalId } from "@/lib/goals";
+import { goalIds, goalsTitle, REATH, REATH_READY, type GoalId } from "@/lib/goals";
 import { programSlugs } from "@/lib/programs";
 import { fmtPrice, PACK_PRICE, prices } from "@/lib/checkout";
 import BuyForm from "@/components/BuyForm";
@@ -41,7 +41,17 @@ export default function Quiz({ lang, test }: { lang: Lang; test: boolean }) {
   // Numbering and progress without the skipped question.
   const skip = a[0] === 1 ? 1 : 0, shown = Math.min(i, n) - (i > 1 ? skip : 0), total = n - skip;
   let body;
-  if (i < n) {
+  if (!REATH_READY && a[2] === R) {
+    // Réathlétisation is not for sale yet: the questionnaire stops here.
+    body = (
+      <>
+        <h2 className="qq" tabIndex={-1} ref={head}>{t.soon.t}</h2>
+        <p>{t.soon.p}</p>
+        <button type="button" className="qlink" onClick={back}>{t.back}</button>
+        <button type="button" className="qlink" onClick={() => setA([])}>{t.restart}</button>
+      </>
+    );
+  } else if (i < n) {
     const s = t.steps[i];
     body = (
       <>

@@ -46,6 +46,8 @@ export const buy = {
     second: "2e objectif",
     reathQ: "Tu reviens de blessure ?",
     reathD: "Objectif unique, à suivre avec le feu vert de ton médecin.",
+    soon: "En préparation",
+    reathSoon: "Ce programme est en préparation : il sera bientôt disponible.",
     runT: "Programme course à pied", runD: "Des séances de 30 à 45 min, en plus de ton programme.",
     packT: "Pack Saison complète", packWeeks: "20 semaines", perWeek: (w: string) => `soit ${w} par semaine`,
     upsellT: "Et si tu prenais toute la saison ?",
@@ -57,7 +59,7 @@ export const buy = {
     secure: "Paiement sécurisé par Stripe. Programme envoyé par email.",
     test: "Mode test : aucun paiement réel. Carte 4242 4242 4242 4242, date future, code au choix.",
     off: "Le paiement est momentanément indisponible. Réessaie plus tard ou écris-nous.",
-    invalid: "Choisis au moins 1 objectif (ou la réathlétisation seule), ton lieu d'entraînement, remplis ton profil et accepte les CGV.",
+    invalid: "Choisis au moins 1 objectif, ton lieu d'entraînement, remplis ton profil et accepte les CGV.",
   },
   en: {
     step1: "Your goals", stepPlace: "Where do you train?", step2: "Options", step3: "About you", step4: "Summary",
@@ -74,6 +76,8 @@ export const buy = {
     second: "2nd goal",
     reathQ: "Coming back from injury?",
     reathD: "A single goal, to follow with your doctor's clearance.",
+    soon: "Coming soon",
+    reathSoon: "This program is being prepared and will be available soon.",
     runT: "Running program", runD: "30 to 45 min sessions, on top of your program.",
     packT: "Full season pack", packWeeks: "20 weeks", perWeek: (w: string) => `just ${w} a week`,
     upsellT: "Why not the whole season?",
@@ -85,7 +89,7 @@ export const buy = {
     secure: "Secure payment by Stripe. Program sent by email.",
     test: "Test mode: no real payment. Card 4242 4242 4242 4242, any future date, any code.",
     off: "Payment is temporarily unavailable. Please try again later or contact us.",
-    invalid: "Pick at least 1 goal (or return to play alone) and where you train, fill in your details and accept the terms.",
+    invalid: "Pick at least 1 goal and where you train, fill in your details and accept the terms.",
   },
 };
 

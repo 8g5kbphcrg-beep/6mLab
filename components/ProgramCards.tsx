@@ -65,7 +65,7 @@ export default function ProgramCards({ lang, shared = true }: { lang: Lang; shar
         <ul>
           <li>{fr ? "Le planning complet en PDF, semaine par semaine" : "The full week-by-week plan as a PDF"}</li>
           <li>{fr ? "Une animation pour chaque exercice, en ligne pendant tout ton programme + 2 semaines" : "An animation for every exercise, online for your whole program + 2 weeks"}</li>
-          <li>{fr ? "1 objectif au choix, +5 € pour un 2e, ou la réathlétisation" : "1 goal of your choice, +€5 for a 2nd, or return to play"}</li>
+          <li>{fr ? "1 objectif au choix, +5 € pour un 2e (réathlétisation en préparation)" : "1 goal of your choice, +€5 for a 2nd (return to play coming soon)"}</li>
           <li>{fr ? "Option course à pied : +9 €" : "Running option: +€9"}</li>
         </ul>
       </div>}

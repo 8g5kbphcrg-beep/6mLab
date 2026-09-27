@@ -117,13 +117,24 @@ const proneLegs = { thigh: -90, shin: -90, foot: -95 };
 // Feet apart, knees slightly bent.
 const STANCE = { thigh: 10, thighOut: 10, shin: -6, shinOut: 8 };
 
-// Seated 90/90: "front" = the leg folded in front (the other one is out to the side).
-const ARMS_BEHIND = { upper: -40, upperOut: 20, fore: -40, foreOut: 20 };
+// Seated 90/90 (Raphaël's video): leaning back on both hands, flat on the floor behind the hips.
+// "front" = the leg folded in front (the other one is out to the side, shin going back). In the
+// middle, knees up and feet flat, wider than the hips, before the knees swing to the other side.
+const HANDS_BEHIND = { upper: -30, upperOut: 12, fore: -30, foreOut: 12, hand: -90 };
+// Same adjustments in every position (so they also hold in between): heels on the floor, hands
+// flat behind.
+// Ankle height with the foot flat.
+const ANKLE_FLAT = 7;
+// ankle: height of the ankles above the floor.
+const seat9090 = (ankle) => [{ vary: ["near.shin"], a: "near.ankle", b: "seat", dy: -ankle }, { vary: ["far.shin"], a: "far.ankle", b: "seat", dy: -ankle },
+  { vary: ["near.upper", "far.upper", "near.fore", "far.fore"], a: "near.wrist", b: "seat", dy: -3 }];
 const hips9090 = (front) => {
-  const f = { thigh: 90, thighOut: 15, shin: 90, shinOut: -75, foot: 90, footOut: -75, ...ARMS_BEHIND };
-  const b = { thigh: 90, thighOut: 75, shin: -90, shinOut: 15, foot: -90, footOut: 15, ...ARMS_BEHIND };
-  return { torso: -12, near: front === "near" ? f : b, far: front === "near" ? b : f };
+  const f = { thigh: 90, thighOut: 35, shin: 90, shinOut: -60, foot: 90, footOut: -60, ...HANDS_BEHIND };
+  const b = { thigh: 90, thighOut: 80, shin: -90, shinOut: 20, foot: 270, footOut: 20, ...HANDS_BEHIND };
+  return { torso: -18, head: 10, contact: "seat", near: front === "near" ? f : b, far: front === "near" ? b : f, solve: seat9090(4) };
 };
+const hips9090Mid = { torso: -22, head: 12, contact: "seat", near: { thigh: 150, thighOut: 26, shin: 0, shinOut: 6, ...HANDS_BEHIND }, far: { thigh: 150, thighOut: 26, shin: 0, shinOut: 6, ...HANDS_BEHIND },
+  solve: seat9090(ANKLE_FLAT) };
 
 // On all fours. up: the arm reaching to the ceiling, the upper back turning with it.
 const allFours = (up) => {
@@ -656,8 +667,8 @@ export const defs = {
   // Seated, seen from the front and above: front leg folded in front, back leg out to the side,
   // then the knees swing over to the other side (windscreen wiper).
   "hanches-9090": {
-    cam: { yaw: 80, pitch: 55 },
-    poids: [hips9090("near"), { torso: -12, ...legs({ thigh: 135, thighOut: 15, shin: 0 }, ARMS_BEHIND), solve: [{ vary: ["near.shin", "far.shin"], a: "near.heel", b: "hip", dy: 7.5 }] }, hips9090("far")],
+    cam: { yaw: 55, pitch: 20 },
+    poids: [hips9090("near"), hips9090Mid, hips9090("far")],
   },
   "cheville-mur": {
     scene: { all: [{ wall: 10 }] },

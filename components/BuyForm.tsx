@@ -4,7 +4,7 @@ import type { Lang } from "@/lib/dict";
 import { programs, type ProgramSlug } from "@/lib/programs";
 import { buy, fmtPrice, genders, orderTotal, PACK_PRICE, PACK_WEEKS, perWeek, places, prices, RUNNING_PRICE, SECOND_GOAL_PRICE, type Place } from "@/lib/checkout";
 import { Dumbbell, House } from "@/components/PlaceIcons";
-import { goalIds, goals as goalInfo, goalName, goalsTitle, REATH, type GoalId } from "@/lib/goals";
+import { goalIds, goals as goalInfo, goalName, goalsTitle, REATH, REATH_READY, type GoalId } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
 import Suggestions from "@/components/Suggestions";
 import "@/app/buy.css";
@@ -16,7 +16,7 @@ import "@/app/buy.css";
 export default function BuyForm({ lang, slug, goals = [], pack = false, place: chosen, test, error }: { lang: Lang; slug: ProgramSlug; goals?: GoalId[]; pack?: boolean; place?: Place; test: boolean; error?: string }) {
   const t = buy[lang];
   const p = programs[lang][slug];
-  const [sel, setSel] = useState<GoalId[]>(goals);
+  const [sel, setSel] = useState<GoalId[]>(goals.filter((g) => REATH_READY || g !== REATH));
   const [running, setRunning] = useState(false);
   const [place, setPlace] = useState<Place | null>(chosen ?? null);
   const [err, setErr] = useState(error);
@@ -58,10 +58,17 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, place: c
             );
           })}
         </div>
-        <label className="bcard breath">
-          <input type="checkbox" name="goal" value={REATH} checked={reath} onChange={() => setSel(reath ? [] : [REATH])} />
-          <span><strong>{t.reathQ}</strong> {goalName(REATH, lang)}. {t.reathD}</span>
-        </label>
+        {REATH_READY ? (
+          <label className="bcard breath">
+            <input type="checkbox" name="goal" value={REATH} checked={reath} onChange={() => setSel(reath ? [] : [REATH])} />
+            <span><strong>{t.reathQ}</strong> {goalName(REATH, lang)}. {t.reathD}</span>
+          </label>
+        ) : (
+          <div className="bcard breath bsoon">
+            <span><strong>{t.reathQ}</strong> {goalName(REATH, lang)}. {t.reathSoon}</span>
+            <b className="bsoon-tag">{t.soon}</b>
+          </div>
+        )}
       </fieldset>
 
       <fieldset className="bstep">
