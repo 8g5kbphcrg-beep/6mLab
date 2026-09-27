@@ -19,6 +19,11 @@ const text = {
     k: "Clubs et entraîneurs", h1: "Toute ton équipe sur le même programme",
     lead: "Des U15 aux seniors, en filière féminine ou masculine. Pré-saison, maintien en saison ou toute la saison : chaque joueur et chaque joueuse reçoit son programme, et toi, tu gardes la main sur le planning.",
     time: ["Du temps gagné pour toi", "Pas de préparateur physique au club\u00a0? Tu n'as plus à construire les séances de prépa : elles sont écrites, planifiées sur ton calendrier et chaque exercice est animé. Toi, tu gardes ton temps et ton énergie pour le terrain."],
+    care: {
+      h: "Âge et niveau de jeu : deux repères qui changent tout",
+      muscu: ["La musculation chez les jeunes", "Bien menée, la musculation est très bénéfique pour les jeunes, mais elle doit être très bien encadrée. Dans nos programmes club, elle est intégrée à partir des U17 féminines et des U18 masculins. Pour les U15, elle n'est pas recommandée : le travail se fait au poids du corps, avec coordination, gainage, appuis et prévention des blessures."],
+      level: ["Le niveau de ton effectif", "Des joueurs de National ont plus d'expérience, plus de physique et une meilleure condition que des joueurs de départemental : le programme est calibré sur le niveau de ton équipe. Utiliser un programme prévu pour le National avec une équipe de région est possible, mais seulement en ayant bien conscience du niveau réel de ton effectif et en adaptant les charges."],
+    },
     why: [
       ["Adapté à l'âge et à la filière", "Un U15 ne travaille pas comme un U18 ou un senior : le programme suit la catégorie et le niveau de ton équipe."],
       ["Calé sur ton calendrier", "Dates de reprise, matchs, trêve : on place les semaines de prépa autour de tes entraînements."],
@@ -42,6 +47,11 @@ const text = {
     k: "Clubs and coaches", h1: "Your whole team on the same program",
     lead: "From U15 to seniors, women's or men's teams. Pre-season, in-season or the whole season: every player gets their program, and you stay in charge of the schedule.",
     time: ["Time saved for you", "No strength coach at the club? You no longer have to build the training sessions: they are written out, planned around your calendar, and every exercise is animated. You keep your time and energy for the court."],
+    care: {
+      h: "Age and level of play: two markers that change everything",
+      muscu: ["Weight training for young players", "Done well, weight training is very beneficial for young players, but it must be very well supervised. In our club programs, it starts with U17 girls and U18 boys. For U15s, it is not recommended: the work is done with bodyweight, coordination, core, footwork and injury prevention."],
+      level: ["Your squad's level", "National-level players have more experience, more physical strength and better fitness than county-level players: the program is calibrated on your team's level. Using a program built for national level with a regional team is possible, but only with a clear view of your squad's real level and by adjusting the loads."],
+    },
     why: [
       ["Fitted to age and team", "A U15 does not train like a U18 or a senior: the program follows your team's age group and level."],
       ["Fitted to your calendar", "Restart dates, games, winter break: the training weeks are placed around your sessions."],
@@ -94,6 +104,13 @@ export default async function Clubs({ params, searchParams }: P) {
           <div className="clubs-club"><strong>{t.more.club[0]}</strong><ul>{(t.more.club[1] as readonly string[]).map((x) => <li key={x}>{x}</li>)}</ul></div>
         </div>
         <ClubDrill lang={lang as Lang} />
+      </section>
+      <section className="clubs-care">
+        <h2>{t.care.h}</h2>
+        <div className="clubs-care-g">
+          <div className="care-muscu" role="note"><strong>⚠ {t.care.muscu[0]}</strong><p>{t.care.muscu[1]}</p></div>
+          <div className="care-level"><strong>{t.care.level[0]}</strong><p>{t.care.level[1]}</p></div>
+        </div>
       </section>
       <h2>{t.howT}</h2>
       <ol className="clubs-how">{t.how.map((s) => <li key={s}>{s}</li>)}</ol>

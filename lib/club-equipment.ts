@@ -5,7 +5,7 @@ export const CLUB_PLACES = [
   ["gymnase", "Gymnase ou salle de handball", "Sports hall"],
   ["exterieur", "Terrain extérieur ou stade", "Outdoor pitch or stadium"],
   ["piste", "Piste d'athlétisme", "Athletics track"],
-  ["muscu", "Salle de musculation", "Weight room"],
+  ["muscu", "Salle de musculation (en plus du gymnase)", "Weight room (on top of the hall)"],
 ] as const;
 
 export const CLUB_GEAR = [

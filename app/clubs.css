@@ -58,3 +58,11 @@
 .ceq-w{display:flex;gap:.4rem}
 .ceq-c{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .65rem;border-radius:999px;border:1.5px solid var(--line);font-size:.85rem;font-weight:600;cursor:pointer;background:var(--card)}
 .ceq-c:has(input:checked){border-color:var(--B);background:color-mix(in srgb,var(--B) 16%,var(--card))}
+/* Age (weight training for young players) and level of play. */
+.clubs-care-g{display:grid;gap:1rem}
+@media(min-width:640px){.clubs-care-g{grid-template-columns:1fr 1fr}}
+.clubs-care-g>div{border-radius:var(--r);padding:1.1rem 1.2rem;display:grid;gap:.4rem;align-content:start}
+.clubs-care-g strong{font-size:1.05rem}.clubs-care-g p{margin:0;font-size:.97rem;color:var(--muted)}
+.care-muscu{background:color-mix(in srgb,#FFC75F 18%,var(--card));border:1.5px solid #E0A93A}
+.care-level{background:var(--card);border:1px solid var(--line)}
+.cf-warn{margin:0;padding:.7rem .9rem;border-radius:10px;background:color-mix(in srgb,#FFC75F 20%,var(--card));border:1.5px solid #E0A93A;font-size:.92rem}

@@ -11,12 +11,16 @@ const text = {
     cat: "Catégorie", cats: { f: ["U15 (13-14 ans)", "U17 (15-16 ans)", "Seniors"], m: ["U15 (13-14 ans)", "U18 (15-17 ans)", "Seniors"] },
     level: "Niveau", levels: ["Départemental", "Régional", "National", "Professionnel"],
     from: "Les programmes pour les clubs commencent à partir des U15.",
+    u15: "U15 : la musculation n'est pas recommandée à cet âge. Le programme travaille au poids du corps (coordination, gainage, appuis, prévention), même si le club a une salle de musculation.",
+    lvl: "Le programme est calibré sur ce niveau. Prendre un niveau au-dessus de celui de ton équipe est possible, mais en ayant bien conscience du niveau réel de ton effectif.",
   },
   en: {
     side: "Team", sides: { f: "Women / girls", m: "Men / boys" },
     cat: "Age group", cats: { f: ["U15 (13-14)", "U17 (15-16)", "Seniors"], m: ["U15 (13-14)", "U18 (15-17)", "Seniors"] },
     level: "Level", levels: ["County", "Regional", "National", "Professional"],
     from: "Club programs start from U15.",
+    u15: "U15: weight training is not recommended at this age. The program uses bodyweight (coordination, core, footwork, prevention), even if the club has a weight room.",
+    lvl: "The program is calibrated on this level. Choosing a level above your team's is possible, but only with a clear view of your squad's real level.",
   },
 };
 
@@ -53,6 +57,8 @@ export default function ClubTeam({ lang }: { lang: Lang }) {
           )}
         </div>
       )}
+      {idx === 0 && <p className="cf-warn" role="note">⚠ {t.u15}</p>}
+      {levels.length > 0 && <p className="note">{t.lvl}</p>}
       <p className="note">{t.from}</p>
     </fieldset>
   );
