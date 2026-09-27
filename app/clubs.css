@@ -21,3 +21,6 @@
 .cf-chip{display:inline-flex;align-items:center;gap:.45rem;padding:.55rem .9rem;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);cursor:pointer;font-weight:600;font-size:.95rem}
 .cf-chip:has(input:checked){border-color:var(--A);background:color-mix(in srgb,var(--A) 14%,var(--card))}
 .cf-team .note{margin:0}
+.clubs-time{margin:1.6rem 0 0;padding:1.2rem 1.3rem;border-radius:var(--r);background:linear-gradient(125deg,#16123F 0%,#123A4F 60%,#0B7A70 100%);color:#D6E9EE;display:grid;gap:.35rem}
+.clubs-time strong{font:400 1.5rem var(--font-display),sans-serif;color:#4FE0D2}
+.clubs-go{margin-top:1.2rem;background:#2EC4B6;color:#100A24}

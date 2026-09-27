@@ -4,7 +4,7 @@ import type { Lang } from "@/lib/dict";
 
 // Team fields of the club quote form (app/[lang]/clubs): the side (girls or boys), then the age
 // category, which differs between the two (youth ends at U17 for girls, U18 for boys), then the
-// level of play for seniors only. From U15: younger players do not train the same way.
+// level of play open to that category. From U15: younger players do not train the same way.
 const text = {
   fr: {
     side: "Filière", sides: { f: "Féminine", m: "Masculine" },
@@ -24,7 +24,10 @@ export default function ClubTeam({ lang }: { lang: Lang }) {
   const t = text[lang];
   const [side, setSide] = useState<"f" | "m" | "">("");
   const [cat, setCat] = useState("");
-  const senior = cat === t.cats.f[2];
+  // Levels open to each age group: U15 up to regional, U17 girls and U18 boys up to national,
+  // seniors up to professional.
+  const idx = side ? t.cats[side].indexOf(cat) : -1;
+  const levels = t.levels.slice(0, [2, 3, 4][idx] ?? 0);
   return (
     <fieldset className="cf-team">
       <legend className="cf-lab">{t.side}</legend>
@@ -43,9 +46,9 @@ export default function ClubTeam({ lang }: { lang: Lang }) {
               {t.cats[side].map((c) => <option key={c}>{c}</option>)}
             </select>
           </label>
-          {senior && (
+          {levels.length > 0 && (
             <label className="cf-field">{t.level}
-              <select name="level" required defaultValue=""><option value="" disabled>—</option>{t.levels.map((l) => <option key={l}>{l}</option>)}</select>
+              <select key={cat} name="level" required defaultValue=""><option value="" disabled>—</option>{levels.map((l) => <option key={l}>{l}</option>)}</select>
             </label>
           )}
         </div>

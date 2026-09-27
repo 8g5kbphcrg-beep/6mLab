@@ -67,8 +67,3 @@
 @keyframes flipstep1{0%,3%{color:var(--muted)}5%,50%{color:var(--ink)}53%,100%{color:var(--muted)}}
 .flip-steps .t1{animation-name:flipstep1;animation-delay:-1s}.flip-steps .t2{animation-delay:7s}.flip-steps .t3{animation-delay:11s}
 @media(prefers-reduced-motion:reduce){.flip-p,.flip-anim,.flip-card,.flip-tap,.flip-steps li{animation:none}.flip-p:not(.s3){display:none}.flip-p.s3{transform:none}}
-/* Clubs and coaches, before the last call to action (handball page). */
-.clubcta{display:grid;gap:.3rem;margin-bottom:1.5rem;padding:1.2rem 1.4rem;border-radius:var(--r);border:1px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none;box-shadow:var(--shadow)}
-.clubcta-k{color:var(--At);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:.8rem}
-.clubcta strong{font:400 clamp(1.4rem,4vw,1.8rem) var(--font-display),sans-serif}.clubcta span:last-child{color:var(--muted)}
-.clubcta:hover{border-color:var(--A)}

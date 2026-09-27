@@ -1,0 +1,14 @@
+/* Clubs and coaches band (components/ClubBand.tsx): night blue to teal, set apart from the pack. */
+.clubb{position:relative;overflow:hidden;display:grid;gap:1.5rem;padding:2rem 1.4rem;border-radius:var(--r);background:linear-gradient(125deg,#16123F 0%,#123A4F 60%,#0B7A70 100%);color:#F3F1FB;box-shadow:0 0 0 3px #2EC4B6,var(--shadow)}
+.clubb-k{margin:0;color:#4FE0D2;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:.85rem}
+.clubb h2{margin:.4rem 0 .7rem;font-size:clamp(1.7rem,4.6vw,2.6rem);line-height:1.08;text-wrap:balance;color:#fff}
+.clubb-p{margin:0;color:#D6E9EE;max-width:58ch}
+.clubb-l{list-style:none;padding:0;margin:1rem 0 1.3rem;display:grid;gap:.45rem}
+.clubb-l li{display:flex;gap:.55rem;align-items:baseline}.clubb-l li::before{content:"✓";color:#4FE0D2;font-weight:700}
+.clubb-btn{background:#2EC4B6;color:#100A24}.clubb-btn:hover{background:#4FE0D2}
+.clubb-team{display:flex;justify-content:center;align-items:flex-end;gap:0}
+.clubb-fig{width:30%;max-width:110px;background:rgba(255,255,255,.94);border-radius:14px;padding:.3rem;margin:0 -4px;box-shadow:0 8px 20px rgba(0,0,0,.25)}
+.clubb-fig svg{display:block;width:100%;height:auto}
+.clubb-fig.f0,.clubb-fig.f2{transform:scale(.86);opacity:.95}.clubb-fig.f1{position:relative;z-index:1}
+@media(min-width:860px){.clubb{grid-template-columns:1.4fr 1fr;align-items:center;padding:2.4rem 2.4rem}}
+@media(min-width:860px){.clubb-fig{max-width:150px}}

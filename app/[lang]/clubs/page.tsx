@@ -16,6 +16,7 @@ const text = {
     desc: "Un programme de préparation physique handball pour tout ton groupe, calé sur le calendrier du club. Tarif de groupe, devis sous 48 heures.",
     k: "Clubs et entraîneurs", h1: "Toute ton équipe sur le même programme",
     lead: "Des U15 aux seniors, en filière féminine ou masculine. Pré-saison, maintien en saison ou toute la saison : chaque joueur et chaque joueuse reçoit son programme, et toi, tu gardes la main sur le planning.",
+    time: ["Du temps gagné pour toi", "Pas de préparateur physique au club\u00a0? Tu n'as plus à construire les séances de prépa : elles sont écrites, planifiées sur ton calendrier et chaque exercice est animé. Toi, tu gardes ton temps et ton énergie pour le terrain."],
     why: [
       ["Adapté à l'âge et à la filière", "Un U15 ne travaille pas comme un U18 ou un senior : le programme suit la catégorie et le niveau de ton équipe."],
       ["Calé sur ton calendrier", "Dates de reprise, matchs, trêve : on place les semaines de prépa autour de tes entraînements."],
@@ -32,6 +33,7 @@ const text = {
     desc: "A handball physical preparation program for your whole squad, fitted to your club's calendar. Group pricing, quote within 48 hours.",
     k: "Clubs and coaches", h1: "Your whole team on the same program",
     lead: "From U15 to seniors, women's or men's teams. Pre-season, in-season or the whole season: every player gets their program, and you stay in charge of the schedule.",
+    time: ["Time saved for you", "No strength coach at the club? You no longer have to build the training sessions: they are written out, planned around your calendar, and every exercise is animated. You keep your time and energy for the court."],
     why: [
       ["Fitted to age and team", "A U15 does not train like a U18 or a senior: the program follows your team's age group and level."],
       ["Fitted to your calendar", "Restart dates, games, winter break: the training weeks are placed around your sessions."],
@@ -67,6 +69,8 @@ export default async function Clubs({ params, searchParams }: P) {
       <p className="clubs-k">{t.k}</p>
       <h1>{t.h1}</h1>
       <p className="lead2">{t.lead}</p>
+      <p className="clubs-time"><strong>{t.time[0]}</strong>{t.time[1]}</p>
+      <a className="btn clubs-go" href="#devis">{t.formT} →</a>
       <ul className="clubs-why">{t.why.map(([h, p]) => <li key={h}><strong>{h}</strong><span>{p}</span></li>)}</ul>
       <h2>{t.howT}</h2>
       <ol className="clubs-how">{t.how.map((s) => <li key={s}>{s}</li>)}</ol>

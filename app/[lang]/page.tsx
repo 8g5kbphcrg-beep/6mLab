@@ -8,6 +8,7 @@ import { Founder } from "@/components/HomeSections";
 import { Anim } from "@/components/BlogBits";
 import { Dumbbell, House } from "@/components/PlaceIcons";
 import SportSlider from "@/components/SportSlider";
+import ClubBand from "@/components/ClubBand";
 import "@/app/home.css";
 import "@/app/portal.css";
 
@@ -149,6 +150,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           </article>
         </div>
       </section>
+
+      <ClubBand lang={l} />
 
       <section className="band">
         <div className="sec wrap">
