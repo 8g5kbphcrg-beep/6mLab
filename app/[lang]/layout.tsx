@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Anton, Bebas_Neue, Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { dict, locales, SITE, type Lang } from "@/lib/dict";
+import { dict, locales, OPEN, SITE, type Lang } from "@/lib/dict";
 import { legalPaths } from "@/lib/legal";
 import Defs from "@/components/Defs";
 import Logo, { Lockup } from "@/components/Logo";
@@ -30,6 +30,8 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     description: d.desc,
     alternates: { canonical: `/${lang}`, languages: { fr: "/fr", en: "/en" } },
     openGraph: { title: d.title, description: d.desc, siteName: "6M Lab", locale: lang === "fr" ? "fr_FR" : "en_GB", type: "website" },
+    // Before the launch, no page may be indexed (lib/dict.ts OPEN).
+    ...(!OPEN && { robots: { index: false, follow: false } }),
   };
 }
 

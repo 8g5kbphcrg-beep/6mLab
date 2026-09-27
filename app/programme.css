@@ -24,3 +24,17 @@
 .ptag.p{background:var(--sky);color:#fff}
 .pprice2{display:flex;flex-wrap:wrap;align-items:baseline;gap:.4rem .8rem;margin:0 0 1rem}.pprice2>*{white-space:nowrap}.pprice2 strong{font:400 2.6rem/1 var(--font-display),sans-serif}.pprice2 s{color:var(--muted);font-size:1.1rem}.pprice2 span{background:#FFC75F;color:#100A24;font-weight:700;font-size:.85rem;border-radius:999px;padding:.2rem .7rem}
 .pinc.p li::before{color:#9E3456}
+/* When to start the Pré-saison: two cases, 8 weeks over July-August. */
+.when-lead{margin:0 0 1.2rem;color:var(--muted);max-width:62ch}
+.when-g{display:grid;gap:1rem}
+@media(min-width:760px){.when-g{grid-template-columns:1fr 1fr}}
+.when-c{border:1px solid var(--line);border-radius:14px;padding:1.1rem 1.1rem 1rem}
+.when-c h3{margin:0 0 .8rem;font-size:1.1rem;line-height:1.2}.when-c p{margin:.6rem 0 0;color:var(--muted);font-size:.95rem}
+.when-w{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
+.when-w li{height:2rem;border-radius:6px;display:grid;place-items:center;font-weight:700;font-size:.85rem;font-variant-numeric:tabular-nums}
+.when .solo{background:var(--A);color:#100A24}
+.when .club{background:repeating-linear-gradient(135deg,var(--B) 0 6px,color-mix(in srgb,var(--B) 70%,#fff) 6px 12px);color:#100A24}
+.when-c .when-m{display:grid;grid-template-columns:1fr 1fr;margin:.3rem 0 0;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.when-m span{border-top:2px solid var(--line);padding-top:.25rem;text-align:center}.when-m span+span{margin-left:4px}
+.when-key{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .6rem;margin:1rem 0 .6rem;font-size:.9rem;color:var(--muted)}
+.when-key span{width:1rem;height:1rem;border-radius:4px;display:inline-block}.when-key .club{margin-left:.6rem}
