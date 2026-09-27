@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { dict, type Lang } from "@/lib/dict";
 import { owner } from "@/lib/legal";
 import ClubTeam from "@/components/ClubTeam";
+import ClubEquipment from "@/components/ClubEquipment";
+import ClubDrill from "@/components/ClubDrill";
 import "@/app/pages.css";
 import "@/app/clubs.css";
 
@@ -23,7 +25,13 @@ const text = {
       ["Chaque joueur équipé", "Son PDF à son prénom, et l'accès aux animations de chaque exercice sur son téléphone."],
       ["Tarif de groupe", "Un prix par joueur dégressif selon la taille du groupe, sur devis."],
     ],
-    how: ["Tu remplis le formulaire (2 minutes).", "On échange sur ton groupe, ton niveau et ton calendrier.", "Tu reçois un devis sous 48 heures.", "Chaque joueur reçoit son programme par email."],
+    more: {
+      h: "Bien plus qu'un programme individuel donné à tout le groupe",
+      p: "Le programme club est construit pour le collectif et poussé plus loin vers le handball. On reste sur de la vraie préparation physique, avec du renforcement et de la musculation, mais on y ajoute des situations de prépa ludiques qui ressemblent au jeu et qui fonctionnent en groupe.",
+      solo: ["Programme individuel", ["Un joueur seul, à la maison ou en salle", "Poids du corps, haltères, élastique", "Chacun à son rythme"]],
+      club: ["Programme club", ["Des séances pensées pour tout le groupe : ateliers, circuits, relais, duels", "Des situations ludiques proches du hand : appuis, changements de direction, contacts, tir en fin d'effort", "Avec le matériel du club : plots, échelles de rythme, haies, médecine-balls, élastiques", "L'organisation prête à l'emploi : nombre de joueurs par atelier, rotations, temps d'effort et de récupération", "Construit avec tes installations et ton matériel, en pré-saison comme en saison"]],
+    },
+    how: ["Tu remplis le formulaire (2 minutes), avec ton matériel et tes installations.", "On échange sur ton groupe, ton niveau, ton calendrier et ton matériel.", "Tu reçois un devis sous 48 heures.", "Chaque joueur reçoit son programme par email."],
     howT: "Comment ça se passe", formT: "Demander un devis",
     f: { name: "Ton prénom et ton nom", role: "Tu es", roles: ["Entraîneur ou entraîneuse", "Préparateur ou préparatrice physique", "Dirigeant ou dirigeante", "Autre"], club: "Club", email: "Ton email", size: "Nombre de joueurs", sizes: ["Moins de 10", "10 à 15", "16 à 25", "Plus de 25"], period: "Quand ?", periods: ["Avant la saison", "Pendant la saison", "Toute la saison"], msg: "Ton message (facultatif)", send: "Envoyer ma demande", privacy: "Ces informations servent uniquement à te répondre et à préparer ton devis." },
     ok: "Merci, ta demande est bien partie ! Je te réponds sous 48 heures par email.", err: "La demande n'a pas pu partir. Vérifie ton email, ou écris-moi directement :",
@@ -40,7 +48,13 @@ const text = {
       ["Every player equipped", "Their PDF with their name, and the animation of every exercise on their phone."],
       ["Group pricing", "A price per player that goes down with the size of the group, on quote."],
     ],
-    how: ["Fill in the form (2 minutes).", "We talk about your group, level and calendar.", "You get a quote within 48 hours.", "Every player gets their program by email."],
+    more: {
+      h: "Much more than an individual program handed to the whole group",
+      p: "The club program is built for the team and taken further towards handball. It is still real physical preparation, with strength and weight training, plus fun, game-like conditioning drills that work in a group.",
+      solo: ["Individual program", ["One player, at home or at the gym", "Bodyweight, dumbbells, band", "Everyone at their own pace"]],
+      club: ["Club program", ["Sessions built for the whole group: stations, circuits, relays, duels", "Fun, handball-like drills: footwork, changes of direction, contact, shooting at the end of the effort", "With the club's equipment: cones, agility ladders, hurdles, medicine balls, bands", "Ready-to-run organisation: players per station, rotations, work and rest times", "Built around your facilities and equipment, pre-season and in-season"]],
+    },
+    how: ["Fill in the form (2 minutes), with your equipment and facilities.", "We talk about your group, level, calendar and equipment.", "You get a quote within 48 hours.", "Every player gets their program by email."],
     howT: "How it works", formT: "Ask for a quote",
     f: { name: "Your name", role: "You are", roles: ["Coach", "Strength and conditioning coach", "Club official", "Other"], club: "Club", email: "Your email", size: "Number of players", sizes: ["Fewer than 10", "10 to 15", "16 to 25", "More than 25"], period: "When?", periods: ["Before the season", "During the season", "The whole season"], msg: "Your message (optional)", send: "Send my request", privacy: "This information is only used to reply to you and prepare your quote." },
     ok: "Thank you, your request has been sent! I'll reply within 48 hours by email.", err: "The request could not be sent. Check your email, or write to me directly:",
@@ -72,6 +86,15 @@ export default async function Clubs({ params, searchParams }: P) {
       <p className="clubs-time"><strong>{t.time[0]}</strong>{t.time[1]}</p>
       <a className="btn clubs-go" href="#devis">{t.formT} →</a>
       <ul className="clubs-why">{t.why.map(([h, p]) => <li key={h}><strong>{h}</strong><span>{p}</span></li>)}</ul>
+      <section className="clubs-more">
+        <h2>{t.more.h}</h2>
+        <p>{t.more.p}</p>
+        <div className="clubs-cmp">
+          <div className="clubs-solo"><strong>{t.more.solo[0]}</strong><ul>{(t.more.solo[1] as readonly string[]).map((x) => <li key={x}>{x}</li>)}</ul></div>
+          <div className="clubs-club"><strong>{t.more.club[0]}</strong><ul>{(t.more.club[1] as readonly string[]).map((x) => <li key={x}>{x}</li>)}</ul></div>
+        </div>
+        <ClubDrill lang={lang as Lang} />
+      </section>
       <h2>{t.howT}</h2>
       <ol className="clubs-how">{t.how.map((s) => <li key={s}>{s}</li>)}</ol>
       <h2 id="devis">{t.formT}</h2>
@@ -92,6 +115,7 @@ export default async function Clubs({ params, searchParams }: P) {
             {select("size", f.size, f.sizes)}
             {select("period", f.period, f.periods)}
           </div>
+          <ClubEquipment lang={lang as Lang} />
           <label className="cf-field">{f.msg}<textarea name="message" rows={4} maxLength={2000} /></label>
           {/* Left empty by people, filled in by spam bots. */}
           <input className="cf-hp" name="site" tabIndex={-1} autoComplete="off" aria-hidden="true" />

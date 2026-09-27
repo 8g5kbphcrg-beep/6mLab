@@ -24,3 +24,37 @@
 .clubs-time{margin:1.6rem 0 0;padding:1.2rem 1.3rem;border-radius:var(--r);background:linear-gradient(125deg,#16123F 0%,#123A4F 60%,#0B7A70 100%);color:#D6E9EE;display:grid;gap:.35rem}
 .clubs-time strong{font:400 1.5rem var(--font-display),sans-serif;color:#4FE0D2}
 .clubs-go{margin-top:1.2rem;background:#2EC4B6;color:#100A24}
+/* Club program vs individual program, and a sample drill. */
+.clubs-more p{color:var(--muted)}
+.clubs-cmp{display:grid;gap:1rem;margin:1.4rem 0}
+@media(min-width:640px){.clubs-cmp{grid-template-columns:1fr 1.5fr}}
+.clubs-cmp>div{border-radius:var(--r);padding:1.1rem 1.2rem;display:grid;gap:.5rem;align-content:start}
+.clubs-cmp strong{font:400 1.35rem var(--font-display),sans-serif}
+.clubs-cmp ul{margin:0;padding:0;list-style:none;display:grid;gap:.45rem;font-size:.97rem}
+.clubs-cmp li{display:flex;gap:.5rem;align-items:baseline}
+.clubs-solo{border:1px solid var(--line);background:var(--card);color:var(--muted)}.clubs-solo li::before{content:"•"}
+.clubs-club{background:linear-gradient(125deg,#16123F 0%,#123A4F 60%,#0B7A70 100%);color:#E6F2F5;box-shadow:0 0 0 2px #2EC4B6}
+.clubs-club strong{color:#4FE0D2}.clubs-club li::before{content:"✓";color:#4FE0D2;font-weight:700}
+.drill{margin:0;display:grid;gap:1rem;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1rem}
+@media(min-width:640px){.drill{grid-template-columns:1.3fr 1fr;align-items:center}}
+.drill svg{width:100%;height:auto;display:block}
+.drill figcaption{display:grid;gap:.4rem;font-size:.95rem}.drill ol{margin:0;padding-left:1.2rem;color:var(--muted);display:grid;gap:.3rem}
+.d-court{fill:color-mix(in srgb,var(--B) 10%,var(--card));stroke:var(--line);stroke-width:2}
+.d-goal{fill:var(--ink)}.d-line{fill:none;stroke:var(--muted);stroke-width:2}.d-line.dash{stroke-dasharray:8 7;opacity:.7}
+.d-ladder{fill:none;stroke:#FFC75F;stroke-width:3}.d-rung{stroke:#FFC75F;stroke-width:3}
+.d-cone{fill:#FF7A59}
+.d-run{fill:none;stroke:var(--Bt);stroke-width:3;stroke-dasharray:7 6}.d-shot{fill:none;stroke:#FF7A59;stroke-width:3}
+.d-arrow{fill:var(--Bt)}.d-arrow2{fill:#FF7A59}
+.d-player{fill:var(--muted)}.d-player.on{fill:var(--Bt)}
+.d-ball{fill:#FFC75F;stroke:var(--ink);stroke-width:1.5}
+.d-num circle{fill:var(--ink)}.d-num text{fill:var(--bg);font:700 13px var(--font-text),sans-serif;text-anchor:middle}
+/* Facilities and equipment, each with pre-season / season boxes. */
+.ceq{border:0;margin:0;padding:0;display:grid;gap:.8rem;min-width:0}
+.ceq .note{margin:0}
+.ceq-g{display:grid;gap:.35rem}
+.ceq-t{margin:.2rem 0 .1rem;font-weight:700;font-size:.92rem}
+.ceq-r{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.4rem .8rem;padding:.5rem .7rem;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.ceq-n{font-size:.95rem;min-width:0}
+.ceq-w{display:flex;gap:.4rem}
+.ceq-c{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .65rem;border-radius:999px;border:1.5px solid var(--line);font-size:.85rem;font-weight:600;cursor:pointer;background:var(--card)}
+.ceq-c:has(input:checked){border-color:var(--B);background:color-mix(in srgb,var(--B) 16%,var(--card))}

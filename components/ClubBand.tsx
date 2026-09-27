@@ -8,13 +8,13 @@ const text = {
   fr: {
     k: "Clubs et entraîneurs", h: "Toute ton équipe prête, sans passer tes soirées à écrire les séances",
     p: "Pas de préparateur physique au club\u00a0? Les séances de ton groupe sont écrites, planifiées sur ton calendrier et chaque exercice est animé. Toi, tu gardes ton temps pour le terrain.",
-    l: ["Des U15 aux seniors, filière féminine ou masculine", "Chaque joueur reçoit son programme et ses animations", "Tarif de groupe, devis sous 48\u00a0heures"],
+    l: ["Des situations de prépa ludiques, proches du hand, pensées pour le groupe", "Avec le matériel du club : plots, échelles, haies, médecine-balls", "Des U15 aux seniors, filière féminine ou masculine", "Tarif de groupe, devis sous 48\u00a0heures"],
     cta: "Demander un devis pour mon équipe",
   },
   en: {
     k: "Clubs and coaches", h: "Your whole team ready, without spending your evenings writing sessions",
     p: "No strength coach at the club? Your group's sessions are written out, planned around your calendar, and every exercise is animated. You keep your time for the court.",
-    l: ["From U15 to seniors, women's or men's teams", "Every player gets their program and animations", "Group pricing, quote within 48 hours"],
+    l: ["Fun, handball-like conditioning drills built for the group", "With the club's equipment: cones, ladders, hurdles, medicine balls", "From U15 to seniors, women's or men's teams", "Group pricing, quote within 48 hours"],
     cta: "Get a quote for my team",
   },
 };

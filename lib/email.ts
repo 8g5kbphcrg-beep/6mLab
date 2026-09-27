@@ -240,8 +240,9 @@ export async function sendCartReminder(o: { email: string; lang: Lang; firstName
 }
 
 // Quote request from the Clubs page (app/api/clubs), to 6M Lab; replying answers the coach.
-export async function sendClubRequest(r: { name: string; role: string; club: string; email: string; size: string; side: string; category: string; level: string; period: string; message: string; src: string; lang: Lang }) {
-  const lines = [`Nom : ${r.name}`, `Rôle : ${r.role}`, `Club : ${r.club}`, `Email : ${r.email}`, `Joueurs : ${r.size}`, `Filière : ${r.side}`, `Catégorie : ${r.category}`, ...(r.level ? [`Niveau : ${r.level}`] : []), `Période : ${r.period}`, `Langue : ${r.lang}`, `Origine de la visite : ${r.src}`, "", r.message || "(pas de message)", "", "À faire : répondre sous 48 heures avec un devis (répondre à cet email écrit directement au club)."];
+export async function sendClubRequest(r: { name: string; role: string; club: string; email: string; size: string; side: string; category: string; level: string; period: string; message: string; src: string; lang: Lang }, eq: { places: string[]; gear: string[]; other: string } = { places: [], gear: [], other: "" }) {
+  const list = (l: string[]) => (l.length ? l.map((x) => `- ${x}`) : ["- rien de coché"]);
+  const lines = [`Nom : ${r.name}`, `Rôle : ${r.role}`, `Club : ${r.club}`, `Email : ${r.email}`, `Joueurs : ${r.size}`, `Filière : ${r.side}`, `Catégorie : ${r.category}`, ...(r.level ? [`Niveau : ${r.level}`] : []), `Période : ${r.period}`, `Langue : ${r.lang}`, `Origine de la visite : ${r.src}`, "", "Installations :", ...list(eq.places), "", "Matériel :", ...list(eq.gear), ...(eq.other ? [`- Autre : ${eq.other}`] : []), "", r.message || "(pas de message)", "", "À faire : répondre sous 48 heures avec un devis (répondre à cet email écrit directement au club)."];
   const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: MAIL_FROM(), replyTo: r.email, subject: `Demande club : ${r.club}, ${r.category} ${r.side.toLowerCase()} (${r.size} joueurs)`, text: lines.join("\n") });
   if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
 }
