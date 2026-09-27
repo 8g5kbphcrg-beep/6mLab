@@ -87,3 +87,4 @@
 @keyframes cfpop{from{opacity:0}to{opacity:1}}
 .cf-pop-l{margin:0 0 .2rem;padding-left:1.2rem;display:grid;gap:.35rem}
 .cf-pop-adv{margin-top:.8rem!important;padding:.7rem .9rem;border-radius:10px;background:color-mix(in srgb,#FFC75F 18%,var(--card));border:1px solid #E0A93A;font-size:.93rem!important}
+.cf-pop-soon{padding:.8rem .9rem;border-radius:10px;border:1.5px dashed color-mix(in srgb,var(--B) 60%,var(--line));color:var(--muted)!important;font-size:.93rem!important}
