@@ -4,7 +4,7 @@ import { locales, type Lang } from "@/lib/dict";
 import ExerciseCard, { animatedIds, exerciseList } from "@/components/ExerciseCard";
 import AccessGate from "@/components/AccessGate";
 import { FREE_EXERCISES } from "@/lib/access";
-import { accessEnd, type Gate } from "@/lib/access-page";
+import { accessEnd, backPath, type Gate } from "@/lib/access-page";
 
 // The animation of one exercise, every version with the neutral silhouette (library, tips). The
 // program PDFs link to the customer's place and silhouette: /exercices/<id>/maison-femme… For
@@ -21,9 +21,9 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
 export default async function Exercice({ params, searchParams }: P) {
   const { lang, id } = await params;
   if (!(locales as readonly string[]).includes(lang) || !animatedIds.includes(id)) notFound();
+  const g = await searchParams;
   if (!FREE_EXERCISES.includes(id) && !(await accessEnd())) {
-    const g = await searchParams;
     return <AccessGate lang={lang as Lang} next={`/${lang}/exercices/${id}`} state={g.acces} code={g.ref} offer={g.offre} />;
   }
-  return <ExerciseCard lang={lang as Lang} id={id} />;
+  return <ExerciseCard lang={lang as Lang} id={id} back={backPath(g.retour)} />;
 }

@@ -88,7 +88,7 @@ export default async function Article({ params }: P) {
             <h2>Les exercices en mouvement</h2>
             <div className="pexos-g">
               {post.exos.map((id) => (
-                <Link key={id} href={`/fr/exercices/${id}`} className="pexo">
+                <Link key={id} href={`/fr/exercices/${id}?retour=/fr/conseils/${slug}`} className="pexo">
                   <Anim id={id} className="pexo-fig" />
                   <span>{names[id]?.name}</span>
                 </Link>

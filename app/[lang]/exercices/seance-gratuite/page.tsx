@@ -26,7 +26,7 @@ export default async function FreeAnimations({ params }: { params: Promise<{ lan
       <ul className="free-grid">
         {FREE_EXERCISES.map((id, i) => (
           <li key={id}>
-            <Link href={`/${l}/exercices/${id}`}>
+            <Link href={`/${l}/exercices/${id}?retour=/${l}/exercices/seance-gratuite`}>
               <span className="free-fig" aria-hidden="true" dangerouslySetInnerHTML={{ __html: animatedFigure(id, variants(id)[0]) ?? "" }} />
               <span className="free-name"><b>{i + 1}</b> {exerciseList[id]?.name}</span>
             </Link>

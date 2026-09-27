@@ -23,7 +23,7 @@ const parse = (option?: string) => {
 
 const LABELS: Record<string, [string, string]> = { poids: ["Au poids du corps", "Bodyweight"], maison: ["À la maison", "At home"], elastique: ["Avec un élastique", "With a band"], materiel: ["Avec matériel", "With equipment"] };
 
-export default function ExerciseCard({ lang, id, option }: { lang: Lang; id: string; option?: string }) {
+export default function ExerciseCard({ lang, id, option, back }: { lang: Lang; id: string; option?: string; back?: string }) {
   const fr = lang === "fr";
   const { lieu, sex } = parse(option);
   // Without a place: the drawings shared by both places when there are some (circuit), else every version.
@@ -32,7 +32,7 @@ export default function ExerciseCard({ lang, id, option }: { lang: Lang; id: str
   return (
     <div className="exo-back">
       <div className="exo-card" role="dialog" aria-modal="true" aria-labelledby="exo-title">
-        <CloseX label={fr ? "Fermer" : "Close"} />
+        <CloseX label={fr ? "Fermer" : "Close"} back={back} />
         <h1 id="exo-title">{ex.name}</h1>
         <div className={`exo-anims n${figs.length}`}>
           {figs.map(([fid, v, label]) => (

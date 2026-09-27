@@ -55,7 +55,7 @@ export default async function Library({ params, searchParams }: P) {
           <h2>{name}</h2>
           <ul className="lib-grid">
             {ids.map((id) => (
-              <li key={id} id={`ex-${id}`}><Link href={`/${l}/exercices/${id}`}>{exerciseList[id].name}<span aria-hidden="true">→</span></Link></li>
+              <li key={id} id={`ex-${id}`}><Link href={`/${l}/exercices/${id}?retour=/${l}/exercices`}>{exerciseList[id].name}<span aria-hidden="true">→</span></Link></li>
             ))}
           </ul>
         </section>
