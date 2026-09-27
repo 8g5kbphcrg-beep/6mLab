@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { track } from "@/components/Track";
 import type { Lang } from "@/lib/dict";
 import Silhouette from "@/components/Silhouette";
 import {
@@ -188,6 +189,11 @@ export default function FormeQuiz({ lang }: { lang: Lang }) {
   ];
 
   const last = steps.length;
+  // Audience: questionnaire started (first "Continue") and finished (result shown).
+  useEffect(() => {
+    if (step === 1) track("quiz_debut", "forme", true);
+    if (step === last) track("quiz_fin", "forme", true);
+  }, [step, last]);
   const go = (d: number) => { setStep((s) => s + d); top.current?.scrollIntoView({ behavior: "smooth", block: "start" }); };
   const cur = steps[step];
   const g = a.goal as FitGoal;
@@ -225,7 +231,7 @@ export default function FormeQuiz({ lang }: { lang: Lang }) {
           <div className="fq-wait">
             <p className="fq-st">{fr ? "Lancement prochainement" : "Launching soon"}</p>
             <p>{fr ? "Le programme Forme & bien-être est en préparation. Laisse ton email : tu seras prévenu(e) dès le lancement, et ton programme sera prêt avec tes réponses." : "The Fitness & well-being program is being prepared. Leave your email: you'll hear from us on launch day, and your program will be ready with your answers."}</p>
-            <form method="post" action="/api/liste-attente" className="notify">
+            <form method="post" action="/api/liste-attente" className="notify" data-lead="forme">
               <input type="hidden" name="lang" value={lang} />
               <input className="sr" name="site" tabIndex={-1} autoComplete="off" aria-hidden="true" />
               {Object.entries({ q_name: a.name.trim(), q_age: a.age, q_sex: a.sex, q_cur: String(a.cur), q_target: String(a.target), q_goal: a.goal, q_zone: a.zone, q_level: a.level, q_place: a.place, q_freq: a.freq, q_dur: a.dur, q_pain: a.pain.join("+"), q_height: a.height, q_weight: a.weight, q_consent: a.consent ? "1" : "" })

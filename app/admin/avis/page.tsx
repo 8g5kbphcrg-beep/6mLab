@@ -3,6 +3,7 @@ import { programs } from "@/lib/programs";
 import { formUrl, paidOrders, questions, stripe, whenDays, DAY, type FeedbackOrder } from "@/lib/feedback";
 import { recentLeads } from "@/lib/leads";
 import { goals as fitGoals, type FitGoal } from "@/lib/forme";
+import Nav from "../Nav";
 
 // Customer feedback dashboard: response rates, ratings, answers to every question, reviews to
 // publish, and each order's questionnaires (send now, open, export).
@@ -59,6 +60,7 @@ export default async function AdminAvis() {
   const now = Date.now() / 1000;
   return (
     <main>
+      <Nav here="avis" />
       <h1>Avis clients</h1>
       <p className="sub">{orders.length} commande{orders.length > 1 ? "s" : ""}. Questionnaire 1 envoyé 14 jours après l'achat, questionnaire 2 à la fin du programme (8 ou 12 semaines). Données lues dans Stripe{process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_") ? " (mode test)" : ""}. <a href="/admin/avis/export">Exporter en CSV (Excel)</a></p>
       <div className="kpis">

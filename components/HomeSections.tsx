@@ -74,7 +74,7 @@ export function Founder({ lang }: { lang: Lang }) {
 export function FreeSessionForm({ lang, title }: { lang: Lang; title?: string }) {
   const fr = lang === "fr";
   return (
-    <form className="free" method="post" action="/api/seance-gratuite">
+    <form className="free" method="post" action="/api/seance-gratuite" data-lead="seance">
       <input type="hidden" name="lang" value={lang} />
       <input className="sr" name="site" tabIndex={-1} autoComplete="off" aria-hidden="true" />
       <div>

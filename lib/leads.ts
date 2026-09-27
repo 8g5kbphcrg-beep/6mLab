@@ -15,13 +15,16 @@ export const validEmail = (e: string) => e.length <= 254 && /^[^\s@]+@[^\s@]+\.[
 // subscribed again. kind: "seance" (free session, then 3 tips), "forme", "foot" or "basket"
 // (waiting lists: one email on launch day, nothing before), "sport" (a sport proposed on the home
 // page, metadata sport; the email is optional there).
-// extra: more metadata to save (the questionnaire answers), replacing earlier ones.
+// extra: more metadata to save (the questionnaire answers, src: where the visit came from),
+// replacing earlier ones.
 export type LeadKind = "seance" | "forme" | "foot" | "basket" | "sport";
 export async function addLead(s: Stripe, email: string, lang: Lang, kind: LeadKind = "seance", extra: Record<string, string> = {}): Promise<Lead> {
   // customers.list is up to date immediately (search can lag by a minute).
   const c = (await s.customers.list({ email, limit: 20 })).data.find((x) => x.metadata?.lead === kind);
   if (c) {
-    return toLead(c.metadata?.unsub || Object.keys(extra).length ? await s.customers.update(c.id, { metadata: { unsub: "", ...extra } }) : c);
+    // The first source (src) of a lead is kept: it says where this person first came from.
+    const more = c.metadata?.src ? Object.fromEntries(Object.entries(extra).filter(([k]) => k !== "src")) : extra;
+    return toLead(c.metadata?.unsub || Object.keys(more).length ? await s.customers.update(c.id, { metadata: { unsub: "", ...more } }) : c);
   }
   return toLead(await s.customers.create({ email, metadata: { lead: kind, lang, lead_at: new Date().toISOString(), ...extra } }));
 }

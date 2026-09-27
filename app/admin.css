@@ -14,3 +14,4 @@
 .adm button.ghost{background:#F5EDF0}.adm form{display:inline}
 .adm .muted{color:#5B5673}.adm .stars{color:#E0A100;letter-spacing:1px}.adm .quote{font-style:italic}
 .adm .tag{display:inline-block;font-size:12px;border-radius:999px;padding:1px 8px;background:#F5EDF0}.adm .tag.ok{background:#D6F5F1}
+.adm .bar.w{grid-template-columns:200px 1fr 230px}@media(max-width:700px){.adm .bar.w{grid-template-columns:1fr;gap:2px;margin:10px 0}}

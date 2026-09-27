@@ -107,7 +107,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
                   <span className="sport-t"><strong>{name}</strong><b className="soon-b">{x.soon}</b></span>
                   <details className="soon-d">
                     <summary className="btn">{x.notify}</summary>
-                    <form method="post" action="/api/liste-attente" className="notify">
+                    <form method="post" action="/api/liste-attente" className="notify" data-lead={kind}>
                       <input type="hidden" name="lang" value={l} />
                       <input type="hidden" name="kind" value={kind} />
                       <input className="sr" name="site" tabIndex={-1} autoComplete="off" aria-hidden="true" />
@@ -119,7 +119,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
                   </details>
                 </div>
               ))}
-              <form method="post" action="/api/liste-attente" className="propose">
+              <form method="post" action="/api/liste-attente" className="propose" data-lead="sport">
                 <input type="hidden" name="lang" value={l} />
                 <input type="hidden" name="kind" value="sport" />
                 <input className="sr" name="site" tabIndex={-1} autoComplete="off" aria-hidden="true" />

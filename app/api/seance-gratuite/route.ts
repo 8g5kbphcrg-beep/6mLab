@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { locales, SITE, type Lang } from "@/lib/dict";
 import { stripe } from "@/lib/feedback";
 import { addLead, unsubUrl, validEmail } from "@/lib/leads";
+import { cleanSrc } from "@/lib/analytics";
 import { mailReady, sendFreeSession } from "@/lib/email";
 
 // Free session form (home page): saves the email as a lead in Stripe and sends the session PDF.
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest) {
   const s = stripe();
   if (!s || !mailReady()) return page("?erreur=indisponible");
   try {
-    const lead = await addLead(s, email, lang);
+    const lead = await addLead(s, email, lang, "seance", { src: cleanSrc(String(form.get("src") ?? "direct")) });
     await sendFreeSession(email, lang, unsubUrl(SITE, lang, lead.id));
     return page("");
   } catch (e) {
