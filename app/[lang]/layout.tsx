@@ -27,6 +27,8 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const d = dict[lang as Lang];
   return {
     metadataBase: new URL(SITE),
+    // iOS turns the test card number into a phone link otherwise.
+    formatDetection: { telephone: false },
     title: d.title,
     description: d.desc,
     alternates: { canonical: `/${lang}`, languages: { fr: "/fr", en: "/en" } },

@@ -26,7 +26,9 @@
 .bchip:has(:disabled){opacity:.4;cursor:not-allowed}
 .bchip:has(:focus-visible){outline:3px solid var(--cta);outline-offset:2px}
 .bsum{margin:0;display:grid;gap:.45rem;font-size:.95rem}.bsum div{display:flex;justify-content:space-between;gap:1rem}
-.bsum dt{color:var(--muted)}.bsum dd{margin:0;text-align:right;font-weight:600;white-space:nowrap}
+.bsum dt{color:var(--muted);flex:none}.bsum dd{margin:0;text-align:right;font-weight:600;min-width:0}
+/* Long goal names wrap inside the card instead of widening it (the prices keep a non-breaking space). */
+.buy>*{min-width:0}
 .btotal{border-top:1px solid var(--line);padding-top:.6rem;margin-top:.2rem;font-size:1.1rem}.btotal dt{color:var(--ink);font-weight:700}
 .bconsent{display:flex;gap:.7rem;align-items:flex-start;font-size:.88rem;color:var(--muted);cursor:pointer;line-height:1.5}
 .bconsent input{width:1.1rem;height:1.1rem;margin-top:.15rem;flex:none;accent-color:var(--ink)}.bconsent a{color:var(--ink)}
