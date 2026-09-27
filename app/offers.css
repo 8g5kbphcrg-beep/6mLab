@@ -18,3 +18,4 @@
 .oquiz{display:grid;justify-items:center;gap:.45rem;margin:.2rem 0 1.9rem;text-align:center}
 .oquiz .btn{background:var(--ink);color:var(--bg);padding:.95rem 1.8rem;font-size:1.05rem;width:min(100%,26rem)}
 .oquiz span{font-size:.85rem;color:var(--muted)}
+.opack-w{margin:.1rem 0 .4rem;color:#CFC8EE;font-size:.95rem}

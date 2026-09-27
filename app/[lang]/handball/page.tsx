@@ -5,6 +5,7 @@ import Scene from "@/components/Scene";
 import ProgramCards from "@/components/ProgramCards";
 import { SLOGAN } from "@/lib/brand";
 import Reviews from "@/components/Reviews";
+import ClubBand from "@/components/ClubBand";
 import { Founder, FreeSession, Parents, Product } from "@/components/HomeSections";
 import "@/app/home.css";
 
@@ -36,6 +37,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
               <a className="btn" href="#formules">{d.hero.cta}</a>
             </div>
             <p className="hquiz rise" style={d3(3)}>{fr ? "Pas sûr de ton choix ?" : "Not sure?"} <a href={`/${lang}/questionnaire`}>{fr ? "Trouve ton programme en 1 minute" : "Find your program in 1 minute"}</a></p>
+            <p className="hquiz rise" style={d3(3)}>{fr ? "Tu es entraîneur ?" : "Are you a coach?"} <a href={`/${lang}/clubs`}>{fr ? "Un programme pour toute ton équipe" : "A program for your whole team"}</a></p>
             <ul className="trust rise" style={d3(4)}>
               <li>{d.hero.trust}</li>
               <li>{fr ? "Sans matériel obligatoire" : "No equipment required"}</li>
@@ -54,6 +56,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         <ProgramCards lang={lang as Lang} shared={false} />
       </section>
 
+      <ClubBand lang={lang as Lang} />
       <Product lang={lang as Lang} />
       <Founder lang={lang as Lang} />
       <Reviews lang={lang as Lang} />

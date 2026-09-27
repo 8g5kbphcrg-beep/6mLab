@@ -4,6 +4,7 @@ declare module "@/programmes/source/figures.mjs" {
   // sex: silhouette of the figure, f (woman), h (man) or n (not specified, the default).
   export function animatedFigure(id: string, variant?: string, opts?: { seconds?: number; steps?: number; sex?: "f" | "h" | "n" }): string | null;
   export function variants(id: string): string[];
+  export const figureIds: string[];
 }
 declare module "@/lib/mark.mjs" {
   export const SLOGAN: string;

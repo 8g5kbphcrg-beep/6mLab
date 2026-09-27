@@ -41,6 +41,8 @@ export async function POST(req: NextRequest) {
         id: s.id,
         email: s.customer_details.email,
         lang: (m.lang === "en" ? "en" : "fr") as Lang,
+        // Orders placed before the choice existed got the program in the language of the page.
+        plang: (m.plang === "en" || (!m.plang && m.lang === "en") ? "en" : "fr") as Lang,
         program: m.program as ProgramSlug,
         goals: (m.goals ?? "").split("+") as GoalId[],
         running: m.running === "oui",

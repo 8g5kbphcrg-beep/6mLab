@@ -1,0 +1,458 @@
+<title>Méthode Clubs 6M Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{color-scheme:light;
+  --paper:#FAF7F8; --card:#FFFFFF; --ink:#17122B; --muted:#5E5870; --line:#E8DFE4; --night:#16123F;
+  --mot:#E4572E; --mot-bg:#FDEDE8; --ren:#138A7E; --ren-bg:#E3F4F1; --run:#B9861F; --run-bg:#FBF1DC; --warn-bg:#FFF4DA; --warn-line:#E0A93A;
+  --display:"Anton","Impact","Arial Narrow",sans-serif; --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:400 16px/1.6 var(--body);margin:0}
+.page{max-width:1120px;margin:0 auto;padding-inline:20px;padding-block:0 4rem;display:grid;gap:2.5rem}
+@media(min-width:980px){.page{grid-template-columns:220px minmax(0,1fr);align-items:start}}
+header.top{grid-column:1/-1;background:#FFFFFF;color:var(--ink);margin-inline:-20px;padding:2.4rem 20px 2.2rem;border-bottom:4px solid var(--mot)}
+header.top .in{max-width:1080px;margin:0 auto;display:grid;gap:.7rem}
+.kick{font:600 .78rem var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--mot)}
+h1{font:400 clamp(2.4rem,7vw,4.2rem)/1 var(--display);margin:0;letter-spacing:.01em;text-wrap:balance}
+header.top p{margin:0;max-width:62ch;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.4rem}
+.legend span{font:600 .8rem var(--body);padding:.25rem .7rem;border-radius:999px;color:#17122B}
+.l-mot{background:#FF9C7D}.l-ren{background:#6FE0D2}.l-run{background:#F2C86B}.l-gk{background:#C9B8F2}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 1rem);display:none;font-size:.9rem}
+@media(min-width:980px){nav.toc{display:grid;gap:.15rem}}
+nav.toc a{color:var(--muted);text-decoration:none;padding:.3rem .6rem;border-radius:8px}
+nav.toc a:hover,nav.toc a:focus-visible{background:var(--card);color:var(--ink);outline:none}
+main{display:grid;gap:3.2rem;min-width:0}
+section{display:grid;gap:1rem;scroll-margin-top:1rem}
+h2{font:400 clamp(1.7rem,4.5vw,2.4rem)/1.05 var(--display);margin:0;text-wrap:balance}
+h3{font:700 1.08rem/1.3 var(--body);margin:0}
+p{margin:0;max-width:68ch}
+.lead{color:var(--muted);font-size:1.02rem}
+ul,ol{margin:0;padding-left:1.2rem;display:grid;gap:.35rem;max-width:70ch}
+.src{font-size:.82rem;color:var(--muted)}
+.src a{color:inherit}
+a{color:var(--ren)}
+.grid2{display:grid;gap:1rem}
+@media(min-width:720px){.grid2{grid-template-columns:1fr 1fr}}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.1rem 1.2rem;display:grid;gap:.55rem;align-content:start}
+.figs{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.fig{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem;display:grid;gap:.2rem;align-content:start}
+.fig b{font:400 1.9rem/1 var(--display);font-variant-numeric:tabular-nums}
+.fig span{font-size:.88rem;color:var(--muted)}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:14px;padding:1rem 1.2rem;display:grid;gap:.4rem}
+/* Session bar, drawn to scale (minutes). */
+.bar{display:flex;width:100%;height:56px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.bar div{display:grid;place-items:center;font:600 .78rem var(--body);color:#17122B;text-align:center;line-height:1.15;padding:0 .2rem;min-width:0}
+.b-act{background:#CFC8E8}.b-mot{background:#FF9C7D}.b-ren{background:#6FE0D2}.b-run{background:#F2C86B}.b-cool{background:#E5E0EE}
+.ticks{display:flex;justify-content:space-between;font:500 .75rem var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+/* Drill cards. */
+.drills{display:grid;gap:.9rem}
+@media(min-width:720px){.drills{grid-template-columns:1fr 1fr}}
+.drill{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;display:grid;gap:.5rem;align-content:start;border-top:4px solid var(--c)}
+.mot{--c:var(--mot);--cb:var(--mot-bg)}.gk{--c:#6A4FB3;--cb:#EFEAFB}.ren{--c:var(--ren);--cb:var(--ren-bg)}.run{--c:var(--run);--cb:var(--run-bg)}
+.drill .tag{justify-self:start;font:600 .72rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--c);background:var(--cb);padding:.18rem .55rem;border-radius:999px}
+.drill p{font-size:.94rem}
+.dose{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.25rem .8rem;background:var(--cb);border-radius:8px;padding:.55rem .7rem;font-size:.86rem}
+.dose dt{font-weight:700;color:var(--c)}.dose dd{margin:0;font-variant-numeric:tabular-nums}
+.read{display:grid;gap:.4rem;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}.read div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.6rem .8rem;font-size:.9rem}.read b{display:block}
+.drill .why{font-size:.84rem;color:var(--muted)}
+.drill dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.2rem .7rem;font-size:.9rem}
+.drill dt{color:var(--muted)}.drill dd{margin:0}
+.bloc-h{display:flex;align-items:center;gap:.6rem}
+.bloc-h i{width:14px;height:14px;border-radius:4px;background:var(--c);flex:none}
+/* Tables. */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:.9rem}
+th,td{padding:.6rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{font-weight:700;background:color-mix(in srgb,var(--line) 45%,var(--card))}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600;white-space:nowrap}
+.q{counter-reset:q;list-style:none;padding:0;gap:.7rem}
+.q li{counter-increment:q;display:grid;grid-template-columns:2rem 1fr;gap:.6rem;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.8rem 1rem}
+.q li::before{content:counter(q);font:400 1.4rem/1 var(--display);color:var(--mot)}
+.refs{font-size:.88rem}
+.refs li{color:var(--muted)}
+.gk-key{display:flex;flex-wrap:wrap;gap:.5rem}
+.st{display:inline-block;font:600 .74rem var(--body);padding:.12rem .5rem;border-radius:999px;margin-right:.35rem;white-space:nowrap}
+.st-all{background:#E3F4F1;color:#0E6A61}.st-role{background:#FBF1DC;color:#7A5712}.st-spe{background:#EFEAFB;color:#553C9A}
+.gkt td:first-child{white-space:normal}
+.gkt tr.sep td{background:#F4F0F8;font-weight:700;color:#553C9A}
+footer{color:var(--muted);font-size:.85rem}
+</style>
+
+<div class="page">
+  <header class="top">
+    <div class="in">
+      <p class="kick">Document de travail · programmes Clubs et entraîneurs</p>
+      <h1>Méthode Clubs 6M Lab</h1>
+      <p>La base pour construire les programmes d'équipe avant d'avoir un devis : ce qu'exige le handball, la séance type, une banque de situations collectives, les dosages par catégorie et par niveau, la planification et les tests. Tout est à discuter et à ajuster ensemble.</p>
+      <div class="legend"><span class="l-mot">Circuit motricité</span><span class="l-ren">Circuit renforcement</span><span class="l-run">Course</span><span class="l-gk">Gardiens</span></div>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Sommaire">
+    <a href="#exigences">1. Ce qu'exige le handball</a>
+    <a href="#principes">2. Principes</a>
+    <a href="#seance">3. La séance type</a>
+    <a href="#motricite">4. Circuit motricité</a>
+    <a href="#renfo">5. Circuit renforcement</a>
+    <a href="#course">6. Course</a>
+    <a href="#gardiens">7. Gardiens de but</a>
+    <a href="#postes">8. Travail par poste</a>
+    <a href="#categories">9. Catégories et niveaux</a>
+    <a href="#planif">10. Planification</a>
+    <a href="#tests">11. Tests</a>
+    <a href="#livrable">12. Ce que reçoit le coach</a>
+    <a href="#questions">13. Décisions</a>
+    <a href="#sources">Sources</a>
+  </nav>
+
+  <main>
+    <section id="exigences">
+      <h2>1. Ce qu'exige le handball</h2>
+      <p class="lead">Le handball est un sport intermittent : beaucoup de temps à faible intensité, entrecoupé de très nombreuses actions explosives répétées. C'est cette répétition qui fatigue et qui blesse, plus que la distance parcourue.</p>
+      <div class="figs">
+        <div class="fig"><b>~70 %</b><span>du temps de jeu à faible intensité (arrêt, marche), chez les joueurs élites</span></div>
+        <div class="fig"><b>4 à 5 km</b><span>par match ; les arrières courent le plus (≈ 5 km), les ailiers sprintent le plus</span></div>
+        <div class="fig"><b>≈ 53</b><span>courses à haute intensité par match, plus les sauts, duels et changements de direction</span></div>
+        <div class="fig"><b>Force</b><span>force maximale, puissance et vitesse de tir sont des déterminants majeurs de la performance</span></div>
+      </div>
+      <div class="grid2">
+        <div class="box">
+          <h3>Les qualités à développer</h3>
+          <ul>
+            <li>Explosivité : départs, sprints courts (5 à 20 m), sauts, tir en suspension.</li>
+            <li>Changements de direction et appuis, en attaque comme en défense.</li>
+            <li>Force et puissance, du bas du corps et du haut du corps (tir, duels, contacts du pivot).</li>
+            <li>Capacité à répéter les efforts intenses et à récupérer vite entre eux.</li>
+            <li>Robustesse : genou, cheville, épaule du bras qui tire, ischios, adducteurs.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Selon le poste</h3>
+          <ul>
+            <li>Arrières : volume de course et d'actions le plus élevé, tirs en suspension, duels.</li>
+            <li>Ailiers : les plus sprinteurs, les plus sauteurs, contre-attaques.</li>
+            <li>Pivots : contacts et duels permanents, force et gainage.</li>
+            <li>Gardiens : réactivité, souplesse, appuis latéraux, puissance latérale (voir la section dédiée).</li>
+          </ul>
+          <p class="src">Karcher et Buchheit, 2014 ; Michalsik et coll., 2013-2015 ; Bragazzi et coll., 2020.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="principes">
+      <h2>2. Principes du programme club</h2>
+      <div class="grid2">
+        <div class="box"><h3>Du plus frais au plus fatigant</h3><p>La motricité (vitesse, appuis, sauts) passe en premier, quand le système nerveux est frais. Le renforcement vient ensuite. La course de condition physique termine la séance, car la fatigue qu'elle crée gênerait la qualité de tout le reste.</p></div>
+        <div class="box"><h3>La prévention dans chaque séance</h3><p>Un échauffement structuré (course, équilibre, réceptions, appuis) divise environ par deux les blessures du genou et de la cheville chez les jeunes handballeurs. Le programme épaule de l'OSTRC fait baisser les problèmes d'épaule. Les deux sont intégrés à chaque séance, sans coûter de temps en plus.</p></div>
+        <div class="box"><h3>Ludique, collectif, proche du jeu</h3><p>Chaque qualité physique est travaillée dans une situation qui ressemble au hand : ballon, duel, lecture d'un signal, but à atteindre. Les joueurs s'engagent davantage, et le transfert vers le terrain est meilleur.</p></div>
+        <div class="box"><h3>Simple à diriger</h3><p>Ateliers en rotation, temps de travail et de récupération fixes, un chrono, un sifflet. Le coach installe une fois, lance les rotations et corrige. Chaque séance tient dans le créneau d'entraînement du club.</p></div>
+        <div class="box"><h3>Une progression lisible</h3><p>Des blocs de 3 semaines de charge croissante puis une semaine plus légère. Les exercices évoluent par niveaux (plus rapide, plus complexe, plus chargé), la structure reste la même.</p></div>
+        <div class="box"><h3>Avec les installations réelles</h3><p>On part d'un seul terrain de hand et de 2 cages. Les exercices sont organisés en ateliers, en colonnes ou en vagues, et le temps d'attente de chaque joueur compte comme sa récupération : il est prévu dans la durée de la séance. Chaque exercice explique ses rotations derrière l'œil.</p></div>
+        <div class="box"><h3>Individualiser dans le collectif</h3><p>Groupes de niveau pour la course (selon le test 30-15), variantes faciles et difficiles pour chaque atelier. Personne ne fait un exercice qu'il ne maîtrise pas.</p></div>
+      </div>
+    </section>
+
+    <section id="seance">
+      <h2>3. La séance type (≈ 75 min)</h2>
+      <p class="lead">Décidé : une séance de prépa physique dédiée de 75 min, avec du ballon dans certaines situations. Elle s'ajoute aux entraînements de hand du coach. Une version intégrée à l'entraînement (30 à 40 min) pourra être proposée plus tard.</p>
+      <div class="bar" role="img" aria-label="Séance de 75 minutes : activation et prévention 12 minutes, circuit motricité 18 minutes, circuit renforcement 25 minutes, course 15 minutes, retour au calme 5 minutes">
+        <div class="b-act" style="flex:12">Activation 12'</div>
+        <div class="b-mot" style="flex:18">Motricité 18'</div>
+        <div class="b-ren" style="flex:25">Renforcement 25'</div>
+        <div class="b-run" style="flex:15">Course 15'</div>
+        <div class="b-cool" style="flex:5">5'</div>
+      </div>
+      <div class="ticks"><span>0'</span><span>15'</span><span>30'</span><span>45'</span><span>60'</span><span>75'</span></div>
+      <div class="grid2">
+        <div class="box"><h3>0. Activation et prévention (10-12')</h3><p>Course et gammes, équilibre, réceptions de sauts genoux dans l'axe, activation de l'épaule (élastique). C'est l'échauffement « anti-blessures », identique d'une séance à l'autre pour devenir automatique.</p></div>
+        <div class="box"><h3>1. Circuit motricité (15-20')</h3><p>Appuis, coordination, changements de direction, réactivité à un signal, sauts et réceptions. Efforts courts (5 à 10 s), récupération complète, qualité maximale.</p></div>
+        <div class="box"><h3>2. Circuit renforcement (20-25')</h3><p>4 ateliers de 6 min, 4 joueurs par atelier, avec 2 exercices en alternance dans chaque atelier (un exercice de force, puis un exercice de prévention ou de gainage) : bas du corps, ischios et adducteurs, épaule et haut du corps, gainage, lancers. Musculation avec charges selon l'âge (voir section 9). Les gardiens ont leurs remplacements (section 7).</p></div>
+        <div class="box"><h3>3. Course (12-20')</h3><p>Intermittent court, sprints répétés ou jeux réduits, selon la période. Réglé par groupes de niveau. Puis 5' de retour au calme : marche, respiration, étirements légers.</p></div>
+      </div>
+    </section>
+
+    <section id="lire">
+      <h2>Comment lire les dosages</h2>
+      <div class="read">
+        <div><b>Série</b>Un bloc d'efforts faits à la suite, avec une récupération plus longue après.</div>
+        <div><b>Répétition</b>Un effort : un sprint, un saut, un duel, un mouvement.</div>
+        <div><b>Effort ou durée</b>Ce que dure une répétition, ou une série quand elle se fait en continu.</div>
+        <div><b>Récupération</b>Entre deux répétitions, puis entre deux séries.</div>
+      </div>
+      <p class="src">Exemple : « Séries 2 · Répétitions 6 · Effort 6 s · Récupération 30 s entre les répétitions, 2 min entre les séries » veut dire 6 efforts de 6 s séparés de 30 s, puis 2 min de pause, puis encore 6 efforts.</p>
+    </section>
+
+    <section id="motricite">
+      <div class="bloc-h mot"><i></i><h2>4. Banque de situations : circuit motricité</h2></div>
+      <p class="lead">Principe : 6 à 10 s d'effort, au moins 30 à 45 s de récupération, qualité avant quantité. On arrête une série dès que la vitesse ou la propreté des appuis baisse.</p>
+      <div class="drills">
+        <article class="drill mot"><span class="tag">Réactivité · défense</span><h3>Le miroir</h3><p>Par deux, face à face entre deux plots écartés de 4 m. L'attaquant se déplace librement en pas chassés, le défenseur doit rester exactement devant lui. Répétitions de 6 s, on échange les rôles à chaque répétition. Tout le groupe en même temps, un binôme par paire de plots.</p><dl class="dose"><dt>Séries</dt><dd>2</dd><dt>Répétitions</dt><dd>6 par joueur</dd><dt>Effort</dt><dd>6 s</dd><dt>Récupération</dt><dd>30 s entre les répétitions · 2 min entre les séries</dd></dl><dl><dt>Matériel</dt><dd>Plots</dd><dt>Variante</dt><dd>Le coach annonce « balle ! » : l'attaquant sprinte 5 m, le défenseur le poursuit.</dd></dl><p class="why">Transfert direct : déplacements défensifs, lecture du porteur.</p></article>
+        <article class="drill mot"><span class="tag">Appuis · tir</span><h3>Échelle, induction, tir</h3><p>Échelle de rythme (un appui par case, puis deux, puis en latéral), induction devant un plot (montrer un côté pour faire réagir un défenseur imaginaire, puis partir de l'autre), réception d'une passe et tir au-dessus de la ligne des 9 m. Une colonne par cage, un gardien dans chaque cage : le joueur qui vient de tirer devient le passeur du suivant.</p><dl class="dose"><dt>Séries</dt><dd>1</dd><dt>Répétitions</dt><dd>4 à 6 passages par joueur</dd><dt>Effort</dt><dd>≈ 8 s par passage</dd><dt>Récupération</dt><dd>le temps d'attente dans la colonne (≈ 40 s à 1 min)</dd></dl><dl><dt>Matériel</dt><dd>1 échelle et 1 plot par colonne, ballons, 2 cages</dd><dt>Variante</dt><dd>Induction du côté annoncé par le coach.</dd></dl><p class="why">Fréquence d'appuis puis enchaînement technique à vitesse de match. Gardiens : 30 tirs maximum chacun sur la séance.</p></article>
+        <article class="drill mot"><span class="tag">Changement de direction</span><h3>L'étoile de couleurs</h3><p>Cinq plots de couleurs en étoile, à 4 m d'un plot central. Le coach annonce une couleur : sprint, touche du plot avec la main, retour au centre en pas arrière. 3 couleurs par passage. Un joueur par étoile, les autres attendent : l'attente est la récupération.</p><dl class="dose"><dt>Séries</dt><dd>2</dd><dt>Répétitions</dt><dd>4 passages</dd><dt>Effort</dt><dd>8 s (3 à 4 couleurs annoncées)</dd><dt>Récupération</dt><dd>40 s entre les passages · 2 min entre les séries</dd></dl><dl><dt>Matériel</dt><dd>Plots de couleurs</dd><dt>Variante</dt><dd>À deux : le premier arrivé au plot marque un point.</dd></dl><p class="why">Freinage, réorientation, prise d'information.</p></article>
+        <article class="drill mot"><span class="tag">Sauts · réception</span><h3>Haies, réception, passe</h3><p>4 mini-haies à franchir pieds joints, réception stabilisée 2 secondes dans un cerceau (genoux dans l'axe), puis passe à un partenaire. En colonne : celui qui a passé devient le partenaire du suivant. Progression : sur une jambe, avec rotation, avec un léger contact au bouclier.</p><dl class="dose"><dt>Séries</dt><dd>1 à 2</dd><dt>Répétitions</dt><dd>4 à 6 passages</dd><dt>Effort</dt><dd>3 à 4 sauts + réception + passe</dd><dt>Récupération</dt><dd>45 s entre les passages</dd><dt>Total</dt><dd>20 à 30 contacts au sol</dd></dl><dl><dt>Matériel</dt><dd>Mini-haies, cerceaux, ballons</dd><dt>Variante</dt><dd>Réception sur une jambe puis départ de l'autre côté.</dd></dl><p class="why">Apprendre à bien retomber : cœur de la prévention du genou.</p></article>
+        <article class="drill mot"><span class="tag">Duel · 1 contre 1</span><h3>Franchir la ligne</h3><p>1 contre 1 sans ballon dans un couloir de 4 m : l'attaquant doit franchir la ligne de fond ; le défenseur, face à lui, doit l'en empêcher pendant toute la durée du duel (5 s) en se plaçant devant lui et en le repoussant avec le haut du corps et les bras, sans le ceinturer. Plusieurs couloirs côte à côte, deux binômes par couloir : le duel de l'autre binôme est la récupération.</p><dl class="dose"><dt>Séries</dt><dd>2</dd><dt>Répétitions</dt><dd>3 duels par joueur</dd><dt>Effort</dt><dd>5 s maximum</dd><dt>Récupération</dt><dd>30 s entre les duels · 2 min entre les séries</dd></dl><dl><dt>Matériel</dt><dd>Plots</dd><dt>Variante</dt><dd>Avec ballon, défenseur les mains dans le dos (pieds uniquement).</dd></dl><p class="why">Appuis offensifs et défensifs dans une vraie situation d'opposition.</p></article>
+        <article class="drill mot"><span class="tag">Réactivité · départ</span><h3>Départs au signal</h3><p>Départs de positions variées (assis, dos au sens de course, en appui sur les mains) sur signal visuel ou sonore, sprint de 10 m, retour en marchant. Par vagues de 4 : le temps des autres vagues est la récupération.</p><dl class="dose"><dt>Séries</dt><dd>1</dd><dt>Répétitions</dt><dd>6 à 8 départs</dd><dt>Effort</dt><dd>10 m (≈ 2 s)</dd><dt>Récupération</dt><dd>45 à 60 s, complète</dd></dl><dl><dt>Matériel</dt><dd>Plots, sifflet</dd><dt>Variante</dt><dd>Poursuite : départ décalé de 1 m, rattraper le partenaire.</dd></dl><p class="why">Accélération sur 5-10 m, la distance clé du hand.</p></article>
+      </div>
+    </section>
+
+    <section id="renfo">
+      <div class="bloc-h ren"><i></i><h2>5. Banque de situations : circuit renforcement</h2></div>
+      <p class="lead">Organisation : 4 ateliers de 6 min, 4 joueurs par atelier (2 binômes), rotation au coup de sifflet. Dans chaque atelier, on alterne deux exercices (A puis B) : la série de l'autre exercice fait partie de la récupération. Pour le Nordic et le Copenhague, le partenaire tient les jambes : son tour est ta récupération.</p>
+      <div class="drills">
+        <article class="drill ren"><span class="tag">Ischios · prévention</span><h3>Nordic en binôme</h3><p>À genoux, un partenaire bloque les chevilles. Descente le plus lentement possible, corps gainé, retour avec les mains. L'exercice de prévention des ischios le mieux étudié.</p><dl class="dose"><dt>Séries</dt><dd>2 à 3</dd><dt>Répétitions</dt><dd>4 à 6</dd><dt>Récupération</dt><dd>1 min 30 entre les séries</dd><dt>Fréquence</dt><dd>1 à 2 fois par semaine</dd></dl><dl><dt>Matériel</dt><dd>Tapis</dd><dt>Variante</dt><dd>Débutant : amplitude partielle, ou élastique d'assistance.</dd></dl></article>
+        <article class="drill ren"><span class="tag">Adducteurs · prévention</span><h3>Copenhague en binôme</h3><p>Gainage latéral, jambe du dessus tenue au niveau du genou (facile) ou de la cheville (difficile) par le partenaire. Le programme Copenhague a réduit de 41 % les problèmes d'adducteurs en football.</p><dl class="dose"><dt>Séries</dt><dd>2 à 3 par côté</dd><dt>Durée</dt><dd>15 à 30 s</dd><dt>Récupération</dt><dd>45 s</dd></dl><dl><dt>Matériel</dt><dd>Tapis</dd><dt>Variante</dt><dd>Montées et descentes du bassin.</dd></dl></article>
+        <article class="drill ren"><span class="tag">Épaule du tireur</span><h3>Atelier épaule OSTRC</h3><p>Rotations externes à l'élastique (coude au corps puis bras à 90°), Y-T-W au sol, pompes avec protraction des omoplates, rotation du thorax. Programme d'échauffement épaule validé chez 660 handballeurs.</p><dl class="dose"><dt>Séries</dt><dd>2 par exercice</dd><dt>Répétitions</dt><dd>10 à 15</dd><dt>Récupération</dt><dd>30 s</dd><dt>Fréquence</dt><dd>3 fois par semaine, dans l'activation</dd></dl><dl><dt>Matériel</dt><dd>Élastiques, tapis</dd><dt>Variante</dt><dd>Rotations externes rapides en fin d'amplitude (catch élastique).</dd></dl></article>
+        <article class="drill ren"><span class="tag">Tir · puissance</span><h3>Lancers de médecine-ball</h3><p>Contre un mur ou à un partenaire : lancer par-dessus la tête, lancer latéral en rotation, lancer à un bras en fente, lancer au sol. Le travail de force et de puissance améliore la vitesse de tir.</p><dl class="dose"><dt>Séries</dt><dd>3</dd><dt>Répétitions</dt><dd>6 à 8 lancers, tous explosifs</dd><dt>Récupération</dt><dd>1 min 30 entre les séries</dd></dl><dl><dt>Matériel</dt><dd>Médecine-balls de 1 à 3 kg</dd><dt>Variante</dt><dd>Lancer après un pas de course ou après un saut (tir en suspension simulé).</dd></dl></article>
+        <article class="drill ren"><span class="tag">Bas du corps</span><h3>Squat et fente</h3><p>U15 : poids du corps, squat sauté contrôlé, fente arrière, apprentissage des gestes. U17 et U18 : charges légères à modérées, technique d'abord. Seniors : squat, fente bulgare, soulevé de terre roumain avec charges progressives.</p><dl class="dose"><dt>Séries</dt><dd>3</dd><dt>Répétitions</dt><dd>6 à 10</dd><dt>Récupération</dt><dd>1 min 30 à 2 min</dd><dt>Charge</dt><dd>selon l'âge et le niveau (section 9)</dd></dl><dl><dt>Matériel</dt><dd>Aucun, haltères, barres ou salle de musculation</dd><dt>Variante</dt><dd>Fente avec lancer de médecine-ball en fin de mouvement.</dd></dl></article>
+        <article class="drill ren"><span class="tag">Gainage · duel</span><h3>Gainage anti-rotation et contacts</h3><p>Gainage à l'élastique tiré sur le côté par le partenaire (anti-rotation). Puis duel d'épaules contrôlé : deux joueurs épaule contre épaule, pousser 5 s sans reculer, comme le pivot au contact.</p><dl class="dose"><dt>Gainage</dt><dd>3 séries de 20 s</dd><dt>Poussées</dt><dd>6 poussées de 5 s</dd><dt>Récupération</dt><dd>30 s</dd></dl><dl><dt>Matériel</dt><dd>Élastiques, tapis</dd><dt>Variante</dt><dd>Gainage planche avec passes à une main.</dd></dl></article>
+      </div>
+    </section>
+
+    <section id="course">
+      <div class="bloc-h run"><i></i><h2>6. Banque de situations : course</h2></div>
+      <p class="lead">Le handball se joue en efforts courts et répétés : on travaille surtout en intermittent court et en sprints répétés, et de plus en plus avec ballon en approchant de la saison. Les vitesses se règlent sur le résultat du test 30-15 (VIFT) de chaque joueur.</p>
+      <div class="drills">
+        <article class="drill run"><span class="tag">Condition · intermittent</span><h3>15-15 par groupes de niveau</h3><p>15 s de course, 15 s de récupération, à 90-100 % de la vitesse du test 30-15. Chaque groupe a sa distance (plots à 3 ou 4 distances différentes), tous partent au même sifflet.</p><dl class="dose"><dt>Séries</dt><dd>2</dd><dt>Durée</dt><dd>6 à 8 min par série, soit 12 à 16 courses de 15 s</dd><dt>Intensité</dt><dd>90 à 100 % de la vitesse du test 30-15</dd><dt>Récupération</dt><dd>15 s entre les courses · 3 min entre les séries</dd></dl><dl><dt>Matériel</dt><dd>Plots, sifflet ou chrono</dd><dt>Variante</dt><dd>Navettes avec changement de direction (plus proche du hand, plus exigeant).</dd></dl></article>
+        <article class="drill run"><span class="tag">Sprints répétés · jeu</span><h3>Contre-attaque en vague, 2 contre 1</h3><p>Tous les joueurs de champ d'un même côté du terrain, un gardien dans chaque cage. Au signal, une vague de 3 part en contre-attaque ; le gardien relance à l'un des trois. Sans dribble, le receveur passe à un des deux autres : les deux joueurs qui ont touché le ballon attaquent à 2 contre 1 jusqu'au tir, le troisième devient défenseur. Toutes les vagues passent, puis on repart dans l'autre sens (l'autre gardien relance).</p><dl class="dose"><dt>Séries</dt><dd>2 à 3</dd><dt>Répétitions</dt><dd>1 aller + 1 retour par joueur et par série</dd><dt>Effort</dt><dd>sprint de 20 à 30 m, puis 2 contre 1</dd><dt>Récupération</dt><dd>le temps des autres vagues (≈ 1 min) · 2 min entre les séries</dd></dl><dl><dt>Matériel</dt><dd>Ballons, 2 cages, sifflet</dd><dt>Variante</dt><dd>Le défenseur part avec 1 m d'avance.</dd></dl></article>
+        <article class="drill run"><span class="tag">Jeu réduit</span><h3>3 contre 3 sur demi-terrain</h3><p>3 attaquants contre 3 défenseurs et un gardien, sur un demi-terrain. Pour tirer, l'attaque doit faire au moins 3 passes et les 3 attaquants doivent avoir touché le ballon. Après un tir, un but ou une perte de balle, les défenseurs ressortent derrière la ligne des 9 m et deviennent attaquants. Deux matchs en même temps (un par demi-terrain, un gardien chacun) ; les joueurs en plus entrent à chaque pause. Aussi exigeant pour le cœur qu'un intermittent, avec beaucoup de touches de balle.</p><dl class="dose"><dt>Séries</dt><dd>4</dd><dt>Durée</dt><dd>3 min de jeu</dd><dt>Récupération</dt><dd>2 min entre les séries</dd></dl><dl><dt>Matériel</dt><dd>Chasubles, ballons, buts</dd><dt>Variante</dt><dd>4 contre 4 sur tout le terrain en fin de pré-saison.</dd></dl></article>
+        <article class="drill run"><span class="tag">Capacité · pré-saison</span><h3>Intermittent long à la piste</h3><p>Début de pré-saison, pour les clubs qui ont une piste ou un stade : 30 s de course, 30 s de récupération, plus long et un peu moins rapide que le 15-15.</p><dl class="dose"><dt>Séries</dt><dd>2 à 3</dd><dt>Durée</dt><dd>6 à 8 min par série (30 s de course, 30 s de récupération)</dd><dt>Récupération</dt><dd>3 min entre les séries</dd></dl><dl><dt>Matériel</dt><dd>Piste ou terrain, plots</dd><dt>Variante</dt><dd>En saison, on revient au format court avec changements de direction.</dd></dl></article>
+      </div>
+    </section>
+
+    <section id="gardiens">
+      <div class="bloc-h gk"><i></i><h2>7. Les gardiens de but</h2></div>
+      <p class="lead">Décidé : les gardiens restent dans le groupe. Ils font avec tout le monde ce qui sert à tous, ils prennent leur rôle de gardien dans les situations avec ballon, et quelques ateliers sont remplacés par du travail propre au poste. Cette section s'appuie sur le Dossier Gardiens. Il n'existe encore aucune étude contrôlée d'un programme physique chez des gardiens de handball : ce qui est démontré et ce qui est seulement plausible est indiqué sur chaque fiche.</p>
+
+      <div class="grid2">
+        <div class="box"><h3>Ce que dit la recherche</h3><ul>
+          <li><b>Il court le moins de toute l'équipe</b> (Euro 2022, 27 gardiens). Il ne fait donc pas le même volume de course que les joueurs de champ.</li>
+          <li><b>Ses efforts :</b> des actions de quelques centaines de millisecondes (fentes latérales, extensions, écarts), répétées tout le match, puis des relances longues.</li>
+          <li><b>L'expert gagne par la lecture, pas par les réflexes :</b> il se met en mouvement avant que le ballon parte. Son temps de réaction n'est meilleur que face à de vrais tirs. Les outils de « réflexes » (lumières, applis) n'ont pas montré d'effet sur les arrêts : on ne les utilise pas.</li>
+          <li><b>La force est la base de la vitesse de mise en action,</b> y compris pour lui.</li>
+        </ul></div>
+        <div class="box"><h3>Ce qu'on protège en priorité</h3><ul>
+          <li><b>Aine et adducteurs, hanches :</b> écarts et flexions extrêmes. Copenhague 3 fois par semaine en pré-saison (2 fois dans les séances de prépa, 1 fois dans l'échauffement de l'entraînement gardien) et 1 fois en saison, mobilité active à chaque séance.</li>
+          <li><b>Épaule :</b> arrêts hauts, chutes, relances. Programme épaule OSTRC, comme le groupe.</li>
+          <li><b>Genou et cheville :</b> réceptions et poussées latérales. Échauffement de prévention, comme le groupe. À surveiller encore plus chez les gardiennes.</li>
+          <li><b>Doigts et poignets :</b> activation au ballon avant les tirs.</li>
+          <li>Les gardiens ont peu de blessures par contact, mais leurs arrêts de jeu sont parmi les plus longs de l'équipe.</li>
+        </ul></div>
+      </div>
+
+      <h3>Séance par séance : ce que fait le gardien</h3>
+      <div class="gk-key"><span class="st st-all">Avec le groupe</span><span class="st st-role">Avec le groupe, dans son rôle</span><span class="st st-spe">Remplacé par du spécifique</span></div>
+      <div class="tw"><table class="gkt">
+        <thead><tr><th>Bloc de la séance</th><th>Exercice du groupe</th><th>Le gardien</th></tr></thead>
+        <tbody>
+          <tr class="sep"><td colspan="3">0. Activation et prévention (12')</td></tr>
+          <tr><td>Activation</td><td>Course, gammes, équilibre, réceptions, épaule</td><td><span class="st st-all">Avec le groupe</span> + 3 min de <b>Hanches du gardien</b> et de doigts au ballon pendant que le groupe finit ses gammes</td></tr>
+          <tr class="sep"><td colspan="3">1. Circuit motricité (18')</td></tr>
+          <tr><td>Atelier 1</td><td>Le miroir</td><td><span class="st st-all">Avec le groupe</span> déplacements latéraux en position de base : très proche de son poste</td></tr>
+          <tr><td>Atelier 2</td><td>Échelle, induction, tir</td><td><span class="st st-role">Dans le but</span> il reçoit les tirs, les 2 gardiens se relaient (30 tirs maximum chacun sur la séance)</td></tr>
+          <tr><td>Atelier 3</td><td>L'étoile de couleurs</td><td><span class="st st-spe">Remplacé</span> <b>Appuis latéraux vers une cible</b> : même principe (signal, déplacement), mais sur 1 à 2 appuis latéraux</td></tr>
+          <tr><td>Atelier 4</td><td>Haies, réception, passe</td><td><span class="st st-all">Avec le groupe</span> apprendre à bien retomber sert à tout le monde</td></tr>
+          <tr><td>Atelier 5</td><td>Franchir la ligne</td><td><span class="st st-spe">Remplacé</span> <b>Échelle du gardien</b> ou <b>Poussée latérale résistée</b></td></tr>
+          <tr><td>Atelier 6</td><td>Départs au signal</td><td><span class="st st-all">Avec le groupe</span> départs courts, 5 m au lieu de 10</td></tr>
+          <tr class="sep"><td colspan="3">2. Circuit renforcement (25')</td></tr>
+          <tr><td>Ischios</td><td>Nordic en binôme</td><td><span class="st st-all">Avec le groupe</span></td></tr>
+          <tr><td>Adducteurs</td><td>Copenhague en binôme</td><td><span class="st st-all">Avec le groupe</span> + 1 série de plus, et <b>adduction isométrique</b> (ballon entre les genoux) en fin d'atelier</td></tr>
+          <tr><td>Épaule</td><td>Atelier épaule OSTRC</td><td><span class="st st-all">Avec le groupe</span></td></tr>
+          <tr><td>Lancers</td><td>Médecine-ball orienté tir</td><td><span class="st st-spe">Remplacé</span> <b>Lancers en rotation genou au sol</b> et lancer long à un bras (relance)</td></tr>
+          <tr><td>Bas du corps</td><td>Squat et fente</td><td><span class="st st-all">Avec le groupe</span> la fente arrière devient <b>fente latérale et squat cosaque</b></td></tr>
+          <tr><td>Tronc</td><td>Gainage anti-rotation et contacts</td><td><span class="st st-all">Avec le groupe</span> pour le gainage ; les poussées d'épaules sont remplacées par un <b>Pallof en fente latérale</b></td></tr>
+          <tr class="sep"><td colspan="3">3. Course (15')</td></tr>
+          <tr><td>Intermittent</td><td>15-15 par groupes de niveau</td><td><span class="st st-all">1re série avec le groupe</span> (base aérobie) puis <span class="st st-spe">Remplacé</span> <b>Répétition d'arrêts et relances</b></td></tr>
+          <tr><td>Sprints répétés</td><td>Contre-attaque en vague, 2 contre 1</td><td><span class="st st-role">Dans son rôle</span> il fait la relance qui lance la vague (un gardien à l'aller, l'autre au retour), puis les arrêts au tir</td></tr>
+          <tr><td>Jeu réduit</td><td>3 contre 3 sur demi-terrain</td><td><span class="st st-role">Dans le but</span> c'est son travail spécifique en situation de match</td></tr>
+          <tr><td>Piste</td><td>Intermittent long</td><td><span class="st st-all">1 série sur 2 avec le groupe</span> puis mobilité de hanche</td></tr>
+          <tr class="sep"><td colspan="3">Retour au calme (5')</td></tr>
+          <tr><td>Retour au calme</td><td>Marche, respiration, étirements légers</td><td><span class="st st-all">Avec le groupe</span></td></tr>
+        </tbody>
+      </table></div>
+      <p class="src">Au total, sur une séance de 75 min, le gardien passe environ deux tiers du temps avec le groupe (dont une partie dans le but) et un tiers sur ses ateliers. Le coach n'a rien à installer en plus : les ateliers du gardien utilisent le matériel déjà sorti (plots, échelle, élastiques, médecine-ball).</p>
+
+      <h3>Les ateliers spécifiques</h3>
+      <div class="drills">
+        <article class="drill gk"><span class="tag">Mobilité active · chaque séance</span><h3>Hanches du gardien</h3><p>90/90 des hanches sans les mains, écart latéral actif (on descend et on remonte en contrôlant, sans chercher l'amplitude en force), jambe tendue levée sur le côté. De la mobilité qu'il peut utiliser et contrôler dans l'arrêt.</p><dl class="dose"><dt>Séries</dt><dd>2</dd><dt>Répétitions</dt><dd>6 à 8 par côté et par exercice</dd><dt>Récupération</dt><dd>30 s</dd></dl><dl><dt>Matériel</dt><dd>Tapis</dd><dt>Quand</dt><dd>Activation, à chaque séance</dd><dt>Preuve</dt><dd>Une rotation de hanche limitée est un facteur de risque de douleur d'aine ; l'effet sur les arrêts n'est pas démontré.</dd></dl></article>
+        <article class="drill gk"><span class="tag">Appuis latéraux · signal</span><h3>Appuis latéraux vers une cible</h3><p>En position de base au milieu du but. Le coach montre un plot (ou lance une balle) : 1 à 2 appuis latéraux et extension vers la cible, retour au centre. Progression : signal simple, puis choix entre deux cibles, puis vrai ballon lancé.</p><dl class="dose"><dt>Séries</dt><dd>3</dd><dt>Répétitions</dt><dd>6</dd><dt>Effort</dt><dd>3 à 5 s</dd><dt>Récupération</dt><dd>20 à 30 s entre les répétitions · 2 min entre les séries</dd></dl><dl><dt>Matériel</dt><dd>Plots de couleurs, balles</dd><dt>Remplace</dt><dd>L'étoile de couleurs</dd><dt>Preuve</dt><dd>Plausible. Plus le signal ressemble à un vrai tir, meilleur est le transfert.</dd></dl></article>
+        <article class="drill gk"><span class="tag">Appuis · explosivité</span><h3>Échelle du gardien</h3><p>Deux appuis latéraux dans l'échelle, puis sortie explosive sur une jambe vers une balle lancée par un partenaire, bras et jambe en extension. Même chose de l'autre côté.</p><dl class="dose"><dt>Séries</dt><dd>2</dd><dt>Répétitions</dt><dd>4 de chaque côté</dd><dt>Effort</dt><dd>≈ 5 s</dd><dt>Récupération</dt><dd>30 s entre les répétitions · 2 min entre les séries</dd></dl><dl><dt>Matériel</dt><dd>Échelle, balles</dd><dt>Remplace</dt><dd>Franchir la ligne</dd><dt>Preuve</dt><dd>Plausible, pas étudié chez le gardien.</dd></dl></article>
+        <article class="drill gk"><span class="tag">Puissance latérale</span><h3>Poussée latérale résistée</h3><p>Un élastique autour de la taille, tenu par un partenaire sur le côté. En position de base, poussée explosive sur une jambe vers le côté opposé, sur 1 à 2 appuis, puis retour contrôlé. Progression : élastique plus fort, puis départ au signal.</p><dl class="dose"><dt>Séries</dt><dd>4</dd><dt>Répétitions</dt><dd>3 poussées de chaque côté</dd><dt>Récupération</dt><dd>1 min 30 entre les séries</dd></dl><dl><dt>Matériel</dt><dd>Élastique large</dd><dt>Âge</dt><dd>Dès U15, élastique léger</dd><dt>Preuve</dt><dd>Plausible. Que la puissance latérale fasse arrêter plus de tirs n'est pas démontré.</dd></dl></article>
+        <article class="drill gk"><span class="tag">Force en amplitude</span><h3>Fente latérale et squat cosaque</h3><p>Fente latérale profonde, talon au sol, dos droit, puis retour. Le squat cosaque va plus bas, la jambe opposée tendue. C'est la force dans la position de l'arrêt bas.</p><dl class="dose"><dt>Séries</dt><dd>3</dd><dt>Répétitions</dt><dd>6 à 8 par côté</dd><dt>Récupération</dt><dd>1 min à 1 min 30</dd><dt>Charge</dt><dd>U15 poids du corps · U17 F, U18 M et seniors : haltère tenu devant la poitrine</dd></dl><dl><dt>Matériel</dt><dd>Aucun ou haltère</dd><dt>Remplace</dt><dd>La fente arrière du groupe</dd><dt>Précaution</dt><dd>Douleur d'aine : rester dans l'amplitude sans douleur.</dd></dl></article>
+        <article class="drill gk"><span class="tag">Relance · puissance du haut</span><h3>Lancers en rotation genou au sol</h3><p>Un genou au sol, lancer de médecine-ball en rotation contre un mur, de chaque côté. Puis lancer long à un bras avec un ballon lesté léger ou un ballon de hand, vers une cible à 20-30 m (la relance).</p><dl class="dose"><dt>Séries</dt><dd>3</dd><dt>Répétitions</dt><dd>6 lancers de chaque côté · 4 relances</dd><dt>Récupération</dt><dd>1 min à 1 min 30</dd></dl><dl><dt>Matériel</dt><dd>Médecine-ball de 1 à 3 kg, ballons</dd><dt>Remplace</dt><dd>Lancers orientés tir</dd><dt>Preuve</dt><dd>Améliore la vitesse de lancer chez les joueurs de champ ; plausible pour la relance.</dd></dl></article>
+        <article class="drill gk"><span class="tag">Adducteurs · suivi</span><h3>Adduction isométrique</h3><p>Allongé sur le dos, genoux pliés, un ballon entre les genoux : serrer fort 5 s, relâcher. Sert aussi de repère : si le gardien sent une douleur d'aine en serrant, on le signale au coach et on allège les écarts.</p><dl class="dose"><dt>Séries</dt><dd>1</dd><dt>Répétitions</dt><dd>5 serrages de 5 s</dd><dt>Récupération</dt><dd>10 s</dd></dl><dl><dt>Matériel</dt><dd>Ballon</dd><dt>Quand</dt><dd>Après le Copenhague, en saison surtout</dd><dt>Preuve</dt><dd>Une faible force d'adduction est associée à plus de douleurs d'aine chez les sportifs.</dd></dl></article>
+        <article class="drill gk"><span class="tag">Condition spécifique</span><h3>Répétition d'arrêts et relances</h3><p>Pendant 20 à 30 s, le gardien reçoit un tir toutes les 4 à 5 s, à des endroits différents, puis fait une relance longue vers une cible. Les deux gardiens alternent : pendant que l'un est dans la cage, l'autre tire (ballons préparés au 9 m), puis il récupère encore 1 min avant sa série suivante.</p><dl class="dose"><dt>Séries</dt><dd>3 à 6</dd><dt>Effort</dt><dd>20 à 30 s (5 à 7 tirs puis 1 relance)</dd><dt>Récupération</dt><dd>3 à 4 fois la durée de l'effort : la série de l'autre gardien + 1 min</dd></dl><dl><dt>Matériel</dt><dd>Ballons, 1 cage, l'autre gardien ou le coach qui tire</dd><dt>Remplace</dt><dd>2e série du 15-15</dd><dt>Preuve</dt><dd>Non démontré : c'est une logique de terrain. Ne pas en faire une épreuve d'endurance.</dd></dl></article>
+      </div>
+
+      <div class="grid2">
+        <div class="box"><h3>Selon la catégorie</h3><ul>
+          <li><b>U15 :</b> pas de charge ; fente latérale et cosaque au poids du corps, poussée latérale à l'élastique léger. Les écarts ne se forcent jamais, surtout pendant la croissance (le gardien grandit vite, a mal au genou ou au talon : moins de sauts, pas de nouvel exercice).</li>
+          <li><b>U17 F · U18 M :</b> charges légères à modérées (goblet, haltères), puissance latérale, adducteurs et épaule en priorité.</li>
+          <li><b>Seniors :</b> force lourde 1 fois par semaine en saison pour la garder, et priorité à la puissance latérale.</li>
+        </ul></div>
+        <div class="box"><h3>Règles de charge du gardien</h3><ul>
+          <li>Ses entraînements de hand sont déjà pleins de sauts, d'écarts et d'extensions : les jours d'entraînement spécifique gardien intense, on réduit les sauts de la séance de prépa.</li>
+          <li>On compte les tirs reçus dans sa charge, comme on compte les sprints des joueurs.</li>
+          <li>Pas de hausse brutale d'une semaine à l'autre, surtout à la reprise.</li>
+          <li>Douleur d'aine, de hanche ou d'épaule : on arrête l'exercice concerné et on oriente vers un professionnel de santé.</li>
+        </ul></div>
+      </div>
+
+      <div class="box"><h3>Ce qu'on évite</h3><ul>
+        <li>Les exercices qui « ressemblent » à un arrêt mais avec du lest (plongeons lestés, élastiques pendant les parades) : ils peuvent abîmer la technique sans bénéfice démontré.</li>
+        <li>Promettre de meilleurs « réflexes » : ce n'est pas démontré.</li>
+        <li>Faire courir le gardien comme un ailier, ou à l'inverse le laisser de côté pendant le renforcement.</li>
+        <li>Les étirements passifs longs juste avant les exercices explosifs.</li>
+      </ul></div>
+      <p class="src">Sources : Dossier Gardiens 6M Lab (Carton-Llorente 2023 ; Rojas et Gutiérrez-Dávila 2012 ; Helm 2016 ; cohorte de 45 semaines sur les postes ; Harøy 2019 ; Andersson 2017 ; Olsen 2005 ; méta-analyses sur l'entraînement perceptif et la pliométrie). Ce volet est à relire avec un entraîneur de gardiens avant le premier programme club.</p>
+    </section>
+
+    <section id="postes">
+      <h2>8. Travailler par poste</h2>
+      <p class="lead">Décidé : on différencie les postes quand les joueurs ont réellement un poste. Avant, on privilégie la polyvalence, qui fait partie de la formation.</p>
+      <div class="tw"><table>
+        <thead><tr><th>Catégorie et niveau</th><th>Postes</th><th>Dans le programme</th></tr></thead>
+        <tbody>
+          <tr><td>U15 départemental</td><td>Tout le monde joue un peu partout</td><td>Pas de différenciation : mêmes ateliers pour tous (sauf gardiens)</td></tr>
+          <tr><td>U15 régional</td><td>Plusieurs postes par joueur, volontairement</td><td>Début de différenciation, mais chaque joueur tourne sur les ateliers de 2 postes, pour se former sous plusieurs angles</td></tr>
+          <tr><td>U17 F · U18 M régional</td><td>Les joueurs ont leur poste</td><td>Ateliers par poste dans le renforcement et la course</td></tr>
+          <tr><td>U17 F · U18 M national</td><td>Postes établis (quelques joueurs tournent encore)</td><td>Ateliers par poste, et variantes pour les joueurs polyvalents</td></tr>
+          <tr><td>Seniors (du régional au pro)</td><td>Chacun a son poste, dès le régional (pas de programme seniors en départemental)</td><td>Ateliers par poste</td></tr>
+        </tbody>
+      </table></div>
+      <div class="grid2">
+        <div class="box"><h3>Arrières</h3><p>Volume de course et d'actions le plus élevé : puissance du haut du corps pour le tir en suspension, sauts, duels, intermittent.</p></div>
+        <div class="box"><h3>Ailiers</h3><p>Sprint et accélération, sauts, tir en angle après extension, contre-attaques répétées.</p></div>
+        <div class="box"><h3>Pivots</h3><p>Force, gainage, contacts et duels épaule contre épaule, appuis dans un petit espace.</p></div>
+        <div class="box"><h3>Demi-centres</h3><p>Changements de direction et de rythme, lecture du jeu sous fatigue, tir à distance.</p></div>
+      </div>
+    </section>
+
+    <section id="categories">
+      <h2>9. Adapter à la catégorie et au niveau</h2>
+      <div class="warn"><h3>La musculation chez les jeunes</h3><p>Le consensus international (Lloyd et coll., 2014) considère que le renforcement musculaire est sûr et bénéfique pour les jeunes quand il est encadré par une personne qualifiée. Ton choix est plus prudent : pas de charges externes en U15, musculation à partir des U17 filles et U18 garçons. En U15, on développe donc la force au poids du corps, avec élastiques et médecine-balls légers, et on apprend les gestes (squat, fente, soulevé) sans charge : c'est ce qui permettra de charger ensuite en sécurité.</p></div>
+      <div class="tw"><table>
+        <thead><tr><th>Catégorie</th><th>Priorités</th><th>Renforcement</th><th>Sauts (contacts par séance)</th><th>Séances de prépa / semaine</th></tr></thead>
+        <tbody>
+          <tr><td>U15</td><td>Motricité, coordination, technique de course et de réception, prévention</td><td>Poids du corps, élastiques, médecine-ball léger ; apprentissage des gestes</td><td>≈ 40 à 80, faible intensité</td><td>1 à 2 séances dédiées, en plus des entraînements du coach</td></tr>
+          <tr><td>U17 F · U18 M</td><td>Force de base, puissance, vitesse, prévention genou et épaule</td><td>Charges légères à modérées, technique validée avant d'augmenter</td><td>≈ 60 à 100</td><td>2</td></tr>
+          <tr><td>Seniors</td><td>Force, puissance, répétition des efforts intenses, robustesse</td><td>Charges progressives jusqu'à lourdes selon le niveau et la salle</td><td>≈ 80 à 120 (et plus en national et pro)</td><td>2 à 3 en pré-saison, 1 à 2 en saison</td></tr>
+        </tbody>
+      </table></div>
+      <div class="tw"><table>
+        <thead><tr><th>Niveau</th><th>Ce que ça change</th></tr></thead>
+        <tbody>
+          <tr><td>Départemental</td><td>Volume modéré, exercices simples, beaucoup de situations ludiques, pré-saison de 6 semaines</td></tr>
+          <tr><td>Régional</td><td>Volume et intensité en hausse, premiers tests pour faire des groupes, pré-saison de 6 à 8 semaines</td></tr>
+          <tr><td>National</td><td>Charges plus lourdes, pliométrie plus intense, tests réguliers, suivi de la charge (effort ressenti)</td></tr>
+          <tr><td>Professionnel</td><td>Individualisation poussée, travail par poste, pré-saison de 8 semaines et plus, en lien avec le staff du club</td></tr>
+        </tbody>
+      </table></div>
+      <p class="src">Les repères de contacts au sol sont des ordres de grandeur issus des recommandations NSCA sur la pliométrie ; à valider ensemble selon ton expérience.</p>
+    </section>
+
+    <section id="planif">
+      <h2>10. Planification</h2>
+      <p class="lead">Les clubs amateurs reprennent au plus tôt début août. Les semaines 1 à 4 de la pré-saison se font donc en autonomie : le coach transmet à ses joueurs un programme individuel, et les séances collectives commencent à la reprise du club, en semaine 5.</p>
+      <div class="tw"><table>
+        <thead><tr><th>Période</th><th>Qui encadre</th><th>Objectif</th><th>Contenu dominant</th></tr></thead>
+        <tbody>
+          <tr><td>Sem. 1-2 (juillet)</td><td>Autonomie</td><td>Reprendre, poser les bases</td><td>Programme individuel envoyé par le coach : footing et intermittent long, renforcement au poids du corps, prévention, gestes de base</td></tr>
+          <tr><td>Sem. 3-4 (juillet)</td><td>Autonomie</td><td>Monter en charge</td><td>Même programme, plus de volume, premiers sprints et sauts simples ; chaque joueur note son effort ressenti</td></tr>
+          <tr><td>Sem. 5 (reprise, début août)</td><td>Coach, en club</td><td>Faire le point et lancer le collectif</td><td>Tests, séances collectives de reprise, groupes de niveau ; on vérifie que tout le monde arrive à peu près au même niveau</td></tr>
+          <tr><td>Sem. 6-7</td><td>Coach</td><td>Développer et transférer vers le jeu</td><td>Puissance, vitesse, sprints répétés avec ballon, jeux réduits, charges les plus élevées</td></tr>
+          <tr><td>Sem. 8</td><td>Coach</td><td>Affûter</td><td>Volume divisé par deux, intensité gardée, arrivée fraîche au premier match</td></tr>
+          <tr><td>Saison</td><td>Coach</td><td>Entretenir sans fatiguer</td><td>Séance la plus dure au moins 3 jours avant le match, la plus légère au plus tard 2 jours avant, jamais la veille</td></tr>
+          <tr><td>Trêve</td><td>Autonomie</td><td>Ne pas tout perdre</td><td>1 semaine de repos, puis 2 séances courtes par semaine</td></tr>
+        </tbody>
+      </table></div>
+      <div class="grid2">
+        <div class="box"><h3>Le principe des semaines 5 à 8</h3><p>On part du principe que les joueurs ont suivi le programme d'autonomie avec sérieux : ils arrivent globalement dans la même forme, avec de petits écarts. Les tests de la semaine 5 servent justement à repérer ces écarts et à ajuster les groupes.</p></div>
+        <div class="box"><h3>Footings du mardi et du jeudi (U17 F et U18 M nationaux, seniors)</h3><p>Pendant les semaines 1 à 4 d'autonomie, ces équipes courent aussi le mardi et le jeudi, en un seul bloc sans pause où seule l'allure change :</p><ul><li>Semaine 1 : 30 min à allure facile.</li><li>Semaine 2 : 10 min facile, 10 min soutenue, 10 min très facile.</li><li>Semaine 3 : 15 min facile, 15 min soutenue, 15 min très facile.</li><li>Semaine 4 : 15 min facile, 15 min rapide, 15 min très facile.</li></ul><p class="src">Allures sans montre : facile, tu peux parler ; soutenue, des phrases courtes seulement ; rapide, quelques mots seulement ; très facile, tu parles normalement et la respiration redescend. Les autres catégories gardent le mardi et le jeudi en repos.</p></div>
+        <div class="box"><h3>Variante : reprise mi-juillet</h3><p>Pour les équipes qui reprennent plus tôt (centres de formation, niveau national), les semaines 1 et 2 sont du repos ou de l'autonomie, puis les semaines 3 à 8 se font en club.</p></div>
+      </div>
+    </section>
+
+    <section id="tests">
+      <h2>11. Tests simples pour régler le programme</h2>
+      <p class="lead">Décidé : les tests sont obligatoires à partir du niveau régional, et conseillés en départemental. Ils ne servent pas à noter les joueurs : ce sont des indicateurs d'évolution, pour savoir où en est chacun, ce qu'il faut adapter pour certains, et si le groupe est sur la bonne voie. On les fait à la reprise du club (semaine 5), en fin de pré-saison, puis à la trêve.</p>
+      <div class="grid2">
+        <div class="box"><h3>30-15 Intermittent Fitness Test</h3><p>Créé et validé d'abord chez des handballeurs par Martin Buchheit. Donne une vitesse (VIFT) qui sert directement à régler les distances des courses intermittentes. Application gratuite disponible.</p></div>
+        <div class="box"><h3>Sprint 10 et 20 m</h3><p>Chrono au téléphone ou cellules si le club en a. Mesure l'accélération, la qualité numéro un en hand.</p></div>
+        <div class="box"><h3>Détente verticale</h3><p>Saut contre-mouvement, mesuré avec une application ou au mur. Suit l'explosivité et la fatigue.</p></div>
+        <div class="box"><h3>Changement de direction (505)</h3><p>Sprint, demi-tour sur une ligne, retour. Compare le côté droit et le côté gauche.</p></div>
+        <div class="box"><h3>Lancer de médecine-ball</h3><p>Assis au sol, dos contre un mur, ballon de 3 kg lancé à deux mains depuis la poitrine, le plus loin possible. On mesure du mur à l'impact. Suit la puissance du haut du corps.</p></div>
+        <div class="box"><h3>Tests du gardien</h3><p>En plus du saut et du lancer : saut latéral sur une jambe (on compare gauche et droite), adduction isométrique (ballon entre les genoux, douleur ou pas), mobilité de hanche en 90/90. Le 30-15 reste utile mais ne sert pas à régler ses courses.</p></div>
+        <div class="box"><h3>Questionnaire de forme</h3><p>Effort ressenti de la séance (sur 10) et forme du jour (sur 5), comme dans nos programmes individuels, pour ajuster la charge.</p></div>
+      </div>
+    </section>
+
+    <section id="livrable">
+      <h2>12. Ce que reçoit le coach</h2>
+      <ul>
+        <li>Le plan de la saison ou de la période : semaines, objectifs, séances par semaine, placement par rapport aux matchs.</li>
+        <li>Le programme d'autonomie des semaines 1 à 4, à transmettre avant la reprise : un PDF pour les joueurs de champ, un PDF pour les gardiens (leurs exercices déjà à la bonne place).</li>
+        <li>Chaque séance sur une page : durées, schéma d'installation des ateliers (comme l'exemple du site), rotations, temps de travail et de récupération, consignes et variantes faciles et difficiles.</li>
+        <li>Un œil à côté de chaque exercice : l'animation (exercices individuels) ou un schéma animé avec légende et rotations (situations collectives), avec l'explication en dessous.</li>
+        <li>La fiche de suivi à imprimer, avec une ligne par joueur du devis (joueurs de champ et gardiens) : tests, présence et effort ressenti à chaque séance, retour de l'autonomie. Et le tableau pour régler les groupes de course.</li>
+        <li>Pour chaque séance, la colonne du gardien : ce qu'il fait avec le groupe, dans le but, et ses ateliers de remplacement.</li>
+        <li>Un rappel des règles de sécurité (musculation selon l'âge, arrêt en cas de douleur).</li>
+      </ul>
+    </section>
+
+    <section id="questions">
+      <h2>13. Décisions et points ouverts</h2>
+      <div class="tw"><table>
+        <thead><tr><th>Point</th><th>Décision</th></tr></thead>
+        <tbody>
+          <tr><td>1. Format de séance</td><td>Séance de prépa dédiée de 75 min, avec du ballon. Version intégrée à l'entraînement : peut-être plus tard.</td></tr>
+          <tr><td>2. Fréquence</td><td>Validée (section 9) : séances dédiées, en plus des entraînements du coach.</td></tr>
+          <tr><td>3. Gardiens</td><td>Intégrés séance par séance (section 7) : avec le groupe pour ce qui sert à tous, dans le but pour les situations avec ballon, ateliers spécifiques en remplacement. À relire avec un entraîneur de gardiens.</td></tr>
+          <tr><td>4. Postes</td><td>Selon la catégorie et le niveau (section 8).</td></tr>
+          <tr><td>5. Tests</td><td>Obligatoires à partir du régional, comme indicateurs d'évolution ; conseillés en départemental (section 11).</td></tr>
+          <tr><td>6. Tes situations</td><td>Plus tard. On garde la banque actuelle pour l'instant.</td></tr>
+          <tr><td>7. Acquis par niveau</td><td>Plus tard, pour le bouton « i » du formulaire de devis.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="sources">
+      <h2>Sources</h2>
+      <ul class="refs">
+        <li>Karcher C., Buchheit M. (2014). On-court demands of elite handball, with special reference to playing positions. <em>Sports Medicine</em>. <a href="https://link.springer.com/article/10.1007/s40279-014-0164-z">Lien</a></li>
+        <li>Michalsik L.B. et coll. (2013-2015). Demandes physiques du handball élite, hommes et femmes. <a href="https://pubmed.ncbi.nlm.nih.gov/24947813/">Lien</a></li>
+        <li>Revue systématique des demandes physiques en compétition (2023). <a href="https://www.mdpi.com/1660-4601/20/4/3353">Lien</a></li>
+        <li>Olsen O.E. et coll. (2005). Exercises to prevent lower limb injuries in youth sports: cluster randomised controlled trial. <em>BMJ</em>. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC549633/">Lien</a></li>
+        <li>Myklebust G. et coll. (2003). Prevention of ACL injuries in female team handball players. <em>Clin J Sport Med</em>. <a href="https://pubmed.ncbi.nlm.nih.gov/12629423">Lien</a></li>
+        <li>Andersson S.H. et coll. (2017). Preventing overuse shoulder injuries among throwing athletes, 660 elite handball players. <em>BJSM</em>. <a href="https://ostrc.no/en/projects/preventing-overuse-shoulder-injuries-among-throwing-athletes-a-cluster-randomised-controlled-trial-in-660-elite-handball-players/">Lien</a></li>
+        <li>Harøy J. et coll. (2019). The Adductor Strengthening Programme prevents groin problems. <em>BJSM</em>. <a href="https://pubmed.ncbi.nlm.nih.gov/29891614/">Lien</a></li>
+        <li>van der Horst N. et coll. (2015). The preventive effect of the Nordic hamstring exercise. <em>AJSM</em>. <a href="https://journals.sagepub.com/doi/abs/10.1177/0363546515574057">Lien</a></li>
+        <li>Bragazzi N.L. et coll. (2020). Resistance training and handball players' strength, power and throwing velocity: meta-analysis. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7215414/">Lien</a></li>
+        <li>Conditioning strategies for improving handball throwing velocity (2023). <a href="https://pubmed.ncbi.nlm.nih.gov/37229399">Lien</a></li>
+        <li>Meta-analysis of the effects of plyometric training in handball athletes (2025). <em>Scientific Reports</em>. <a href="https://www.nature.com/articles/s41598-025-15526-3">Lien</a></li>
+        <li>Small-sided games vs simulated match training, youth female handball (2022). <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9469977/">Lien</a></li>
+        <li>Buchheit M., Laursen P. (2013). High-intensity interval training, solutions to the programming puzzle. <em>Sports Medicine</em>. <a href="https://pubmed.ncbi.nlm.nih.gov/23539308/">Lien</a></li>
+        <li>Buchheit M. Le 30-15 Intermittent Fitness Test, 20 ans de recul. <a href="https://martin-buchheit.net/wp-content/uploads/2021/11/SPSR148_Buchheit.pdf">Lien</a></li>
+        <li>Lloyd R.S. et coll. (2014). Position statement on youth resistance training: the 2014 International Consensus. <em>BJSM</em>. <a href="https://pubmed.ncbi.nlm.nih.gov/24055781/">Lien</a></li>
+        <li>Lloyd R.S., Oliver J.L. (2012). The Youth Physical Development Model. <a href="https://www.researchgate.net/publication/271953822_The_Youth_Physical_Development_Model">Lien</a></li>
+        <li>Playing level and position differences in body characteristics and physical fitness, male team handball players. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6598545/">Lien</a></li>
+        <li>Physical fitness profile of high-level female Portuguese handball players (profil par poste, souplesse des gardiennes). <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10178563/">Lien</a></li>
+        <li>Domain-specific and unspecific reaction times in experienced team handball goalkeepers and novices. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4915076/">Lien</a></li>
+        <li>Sensor-based and VR-assisted visual training enhances visuomotor reaction metrics in youth handball players. <a href="https://pubmed.ncbi.nlm.nih.gov/42076664/">Lien</a></li>
+        <li>Hip, groin, and abdominal injuries in handball. <a href="https://www.researchgate.net/publication/325067352_Hip_Groin_and_Abdominal_Injuries_in_Handball">Lien</a></li>
+        <li>The most common handball injuries: a systematic review. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9518369/">Lien</a></li>
+        <li>Dossier Gardiens 6M Lab (septembre 2026) : recherche complète sur la préparation physique du gardien, avec niveaux de preuve et bibliographie graduée. <a href="https://claude.ai/artifact/4DrkMwQ1QWH4tQEr3etBP3">Lien</a></li>
+        <li>Carton-Llorente A. et coll. (2023). Worst-case scenario analysis of physical demands by playing position (Euro 2022, dont 27 gardiens). <em>Biology of Sport</em>.</li>
+        <li>Rojas F.J., Gutiérrez-Dávila M. et coll. (2012). Anticipation of elite and inexperienced handball goalkeepers. <em>J Hum Kinet</em>.</li>
+        <li>Cyril Dumoulin, exercices d'entraînement spécifiques au gardien de handball. <a href="https://cyrildumoulin.com/entrainement-handball/exercices-entrainement-specifique-gardien-handball/">Lien</a></li>
+        <li>Handball Formation, entraînement du gardien. <a href="https://handball-formation.fr/entrainement-handball/gardien-seul/">Lien</a></li>
+        <li>FFHandball, plateforme de ressources IFFE pour les entraîneurs. <a href="https://www.ffhandball.fr/actualite/lactualite-federale/iffe-nouvelle-plateforme-ressources-ffhandball/">Lien</a></li>
+      </ul>
+    </section>
+
+    <footer><p>Document de travail 6M Lab, septembre 2026. Les dosages sont des propositions de départ, à valider par Raphaël avant tout programme club.</p></footer>
+  </main>
+</div>

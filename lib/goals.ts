@@ -31,6 +31,8 @@ export const goals = {
 
 export type GoalId = keyof typeof goals;
 export const REATH: GoalId = "reathletisation";
+// Réathlétisation is shown as "en préparation" and cannot be bought until its program is written.
+export const REATH_READY = false;
 export const goalIds = (Object.keys(goals) as GoalId[]).filter((g) => g !== REATH);
 
 // Order of the blocks in a session (explosive work first) and in the PDF file names. Must match
@@ -43,7 +45,7 @@ export const goalsTitle = (sel: readonly GoalId[], lang: Lang) => sel.map((g) =>
 
 // 1 goal, or 2 distinct goals (the second one is paid extra), or Réathlétisation alone.
 export const validGoals = (g: string[]): g is GoalId[] =>
-  g.length === 1 ? g[0] in goals
+  g.length === 1 ? g[0] in goals && (REATH_READY || g[0] !== REATH)
     : g.length === 2 && g[0] !== g[1] && g.every((x) => x in goals && x !== REATH);
 // Whether the order pays for a second goal.
 export const hasSecondGoal = (g: readonly string[]) => g.length === 2;

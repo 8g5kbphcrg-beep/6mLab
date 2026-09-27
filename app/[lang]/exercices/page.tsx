@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { locales, type Lang } from "@/lib/dict";
-import { animatedIds, exerciseList } from "@/components/ExerciseCard";
+import { animatedIds, exName } from "@/components/ExerciseCard";
 import AccessGate from "@/components/AccessGate";
 import LibrarySearch from "@/components/LibrarySearch";
 import { accessEnd, type Gate } from "@/lib/access-page";
@@ -21,6 +21,7 @@ const FAMILIES: [string, string, string[]][] = [
   ["Lancers", "Throws", ["lancer-poitrine", "lancer-rotation", "lancer-haut"]],
   ["Gainage", "Core", ["planche", "gainage-lateral", "dead-bug", "pallof", "copenhague"]],
   ["Prévention des blessures", "Injury prevention", ["pont-fessier", "pont-une-jambe", "equilibre", "equilibre-balle", "nordic", "mollets-excentrique", "ytw", "rotation-externe", "rotation-externe-haute", "pompes-scapulaires"]],
+  ["Gardiens de but", "Goalkeepers", ["fente-laterale", "cosaque", "adduction"]],
   ["Condition physique", "Conditioning", ["footing", "intervalles-1515", "intervalles-3030", "sprints-repetes", "navettes-hand", "circuit"]],
 ];
 
@@ -49,13 +50,13 @@ export default async function Library({ params, searchParams }: P) {
         <strong>{new Date(end).toLocaleDateString(fr ? "fr-FR" : "en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" })}</strong>
         {fr ? ` (encore ${days} jour${days > 1 ? "s" : ""}).` : ` (${days} day${days > 1 ? "s" : ""} left).`}
       </p>
-      <LibrarySearch fr={fr} items={families.flatMap(([, ids]) => ids.map((id) => [id, exerciseList[id].name] as [string, string]))} />
+      <LibrarySearch fr={fr} items={families.flatMap(([, ids]) => ids.map((id) => [id, exName(id, fr ? "fr" : "en")] as [string, string]))} />
       {families.map(([name, ids]) => (
         <section key={name}>
           <h2>{name}</h2>
           <ul className="lib-grid">
             {ids.map((id) => (
-              <li key={id} id={`ex-${id}`}><Link href={`/${l}/exercices/${id}?retour=/${l}/exercices`}>{exerciseList[id].name}<span aria-hidden="true">→</span></Link></li>
+              <li key={id} id={`ex-${id}`}><Link href={`/${l}/exercices/${id}?retour=/${l}/exercices`}>{exName(id, fr ? "fr" : "en")}<span aria-hidden="true">→</span></Link></li>
             ))}
           </ul>
         </section>

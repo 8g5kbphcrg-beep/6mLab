@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { locales, type Lang } from "@/lib/dict";
 import { FREE_EXERCISES } from "@/lib/access";
-import { exerciseList } from "@/components/ExerciseCard";
+import { exName } from "@/components/ExerciseCard";
 import { animatedFigure, variants } from "@/programmes/source/figures.mjs";
 import "@/app/library.css";
 
@@ -35,7 +35,7 @@ export default async function FreeAnimations({ params }: { params: Promise<{ lan
           <li key={id}>
             <Link href={`/${l}/exercices/${id}?retour=/${l}/exercices/seance-gratuite`}>
               <span className="free-fig" aria-hidden="true" dangerouslySetInnerHTML={{ __html: animatedFigure(id, variants(id)[0]) ?? "" }} />
-              <span className="free-name"><b>{i + 1}</b> {exerciseList[id]?.name}</span>
+              <span className="free-name"><b>{i + 1}</b> {exName(id, fr ? "fr" : "en")}</span>
             </Link>
           </li>
         ))}

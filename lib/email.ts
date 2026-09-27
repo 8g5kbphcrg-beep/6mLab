@@ -9,11 +9,14 @@ import { goalOrder, goalsTitle, type GoalId } from "@/lib/goals";
 import { buy, fmtPrice, type Place } from "@/lib/checkout";
 import { legalPaths, owner } from "@/lib/legal";
 import { SITE } from "@/lib/dict";
+import type { Campaign } from "@/lib/season-mail";
 
 export type Order = {
   id: string;
   email: string;
   lang: Lang;
+  // Language of the program PDF (programmes/ or programmes/en/).
+  plang: Lang;
   program: ProgramSlug;
   goals: GoalId[];
   running: boolean;
@@ -48,8 +51,10 @@ const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`)
 // réathlétisation, whose program is not written yet).
 export const deliversNow = (goals: string[]) => process.env.PROGRAMMES_ENVOI_AUTO === "1" && !goals.includes("reathletisation");
 
-export async function programFiles(o: Order) {
-  if (!deliversNow(o.goals)) return null;
+// The files of an order: the name the customer gets, and where the PDF is on disk. Also used by the
+// admin page that finds an order's PDFs for sending by hand.
+export type OrderFilesInput = Pick<Order, "program" | "goals" | "pack" | "running" | "gender" | "lieu" | "plang">;
+export function orderFiles(o: OrderFilesInput) {
   const goals = [...o.goals].sort((a, b) => goalOrder.indexOf(a) - goalOrder.indexOf(b));
   // The "Saison complète" pack adds the Maintien en saison with the same goals.
   const formulas = o.pack ? [o.program, "maintien-saison"] : [o.program];
@@ -58,25 +63,31 @@ export async function programFiles(o: Order) {
   // the silhouette matching the gender (femme, homme). The customer gets them under the names
   // above.
   const sil = o.gender === "femme" || o.gender === "homme" ? `-${o.gender}` : "";
-  const paths = names.map((n) => join(process.cwd(), "programmes", n.replace(/\.pdf$/, `-${o.lieu}${n.startsWith("seances-") ? sil : ""}.pdf`)));
+  const dir = o.plang === "en" ? join(process.cwd(), "programmes", "en") : join(process.cwd(), "programmes");
+  return names.map((filename) => ({ filename, path: join(dir, filename.replace(/\.pdf$/, `-${o.lieu}${filename.startsWith("seances-") ? sil : ""}.pdf`)) }));
+}
+
+export async function programFiles(o: Order) {
+  if (!deliversNow(o.goals)) return null;
+  const files = orderFiles(o), names = files.map((f) => f.filename), paths = files.map((f) => f.path);
   try {
     await Promise.all(paths.map((p) => access(p)));
   } catch {
     return null;
   }
   const ref = o.id.slice(-12);
-  return Promise.all(names.map(async (filename, i) => ({ filename, content: await personal(await readFile(paths[i]), o.firstName, ref) })));
+  return Promise.all(names.map(async (filename, i) => ({ filename, content: await personal(await readFile(paths[i]), o.firstName, ref, o.plang) })));
 }
 
 // Each PDF carries the customer's first name and order reference at the foot of every page:
 // people think twice before passing on a document with someone's name on it. Falls back to the
 // plain file if the stamp fails.
-export async function personal(pdf: Buffer, firstName: string, ref: string): Promise<Buffer> {
+export async function personal(pdf: Buffer, firstName: string, ref: string, lang: Lang = "fr"): Promise<Buffer> {
   try {
     const doc = await PDFDocument.load(pdf);
     const font = await doc.embedFont(StandardFonts.Helvetica);
     // The standard font only covers Latin-1: other characters are dropped.
-    const text = `Programme personnel de ${firstName || "client"} · Réf. ${ref} · Usage personnel, merci de ne pas le diffuser.`.replace(/[^\x20-\xFF·]/g, "").replace(/·/g, "-");
+    const text = (lang === "en" ? `Personal program of ${firstName || "customer"} · Ref. ${ref} · Personal use only, please do not share.` : `Programme personnel de ${firstName || "client"} · Réf. ${ref} · Usage personnel, merci de ne pas le diffuser.`).replace(/[^\x20-\xFF·]/g, "").replace(/·/g, "-");
     for (const page of doc.getPages()) {
       const { width } = page.getSize(), size = 6.5, w = font.widthOfTextAtSize(text, size);
       page.drawText(text, { x: (width - w) / 2, y: 7, size, font, color: rgb(0.55, 0.53, 0.62) });
@@ -98,6 +109,7 @@ export async function sendConfirmation(o: Order) {
       : `${p.name} (${p.duration})`],
     [fr ? "Objectifs" : "Goals", goalsTitle(o.goals, o.lang)],
     [fr ? "Lieu" : "Place", buy[o.lang].places[o.lieu][0]],
+    [buy[o.lang].plangT, buy[o.lang].plangs[o.plang]],
     ...(o.running ? [[fr ? "Option" : "Option", fr ? "Programme course à pied" : "Running program"] as [string, string]] : []),
     [fr ? "Total payé" : "Total paid", fmtPrice(o.amount, o.lang)],
     [fr ? "Référence" : "Reference", o.id.slice(-12)],
@@ -160,6 +172,7 @@ export async function notifyOwner(o: Order, delivered: boolean) {
     `Programme : ${programs.fr[o.program].name}`,
     `Objectifs : ${goalsTitle(o.goals, "fr")}`,
     `Lieu : ${buy.fr.places[o.lieu][0]}`,
+    `Langue du programme : ${o.plang === "en" ? "ANGLAIS (dossier programmes/en)" : "français"}`,
     `Pack Saison complète (+ Maintien) : ${o.pack ? "oui" : "non"}`,
     `Option course : ${o.running ? "oui" : "non"}`,
     `Prénom : ${o.firstName}`,
@@ -224,6 +237,34 @@ export async function sendAccessEnding(o: { email: string; lang: Lang; firstName
   if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
 }
 
+// Abandoned cart (app/api/cron): a single reminder, only to buyers who accepted offers by email on
+// the payment page. The link recreates the same order.
+export async function sendCartReminder(o: { email: string; lang: Lang; firstName: string; what: string; total: number }, link: string) {
+  const fr = o.lang === "fr";
+  const hello = fr ? `Bonjour${o.firstName ? ` ${o.firstName}` : ""},` : `Hi${o.firstName ? ` ${o.firstName}` : ""},`;
+  const lines = fr
+    ? [`Tu as commencé ta commande sans la terminer : ${o.what}, pour ${fmtPrice(o.total, "fr")}.`, "Ton choix est gardé : le bouton ci-dessous te ramène au paiement, avec les mêmes objectifs et les mêmes options.", "Une question avant de te lancer (objectifs, niveau, matériel) ? Réponds simplement à cet email, je te réponds sous 48 heures.", "C'est le seul rappel que tu recevras pour cette commande."]
+    : [`You started your order without finishing it: ${o.what}, for ${fmtPrice(o.total, "en")}.`, "Your choices are saved: the button below takes you back to payment, with the same goals and options.", "A question before you start (goals, level, equipment)? Just reply to this email, I'll answer within 48 hours.", "This is the only reminder you'll get for this order."];
+  const cta = fr ? "Reprendre ma commande" : "Resume my order";
+  const html = frame(`<p>${esc(hello)}</p>${lines.map((l) => `<p>${esc(l)}</p>`).join("")}${button(link, cta)}<p style="font-size:12px;color:#5B5673">${fr ? "Tu reçois cet email parce que tu as accepté de recevoir des offres par email sur la page de paiement." : "You are receiving this email because you agreed to receive offers by email on the payment page."}</p>`);
+  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: o.email, replyTo: owner.email, subject: fr ? "Ton programme t'attend" : "Your program is waiting", html, text: [hello, "", ...lines, "", `${cta} : ${link}`].join("\n") });
+  if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
+}
+
+// Quote request from the Clubs page (app/api/clubs), to 6M Lab; replying answers the coach.
+export async function sendClubRequest(r: { name: string; role: string; club: string; email: string; field: string; gk: string; side: string; category: string; level: string; period: string; message: string; src: string; lang: Lang }, eq: { places: string[]; gear: string[]; other: string } = { places: [], gear: [], other: "" }) {
+  const list = (l: string[]) => (l.length ? l.map((x) => `- ${x}`) : ["- rien de coché"]);
+  const lines = [`Nom : ${r.name}`, `Rôle : ${r.role}`, `Club : ${r.club}`, `Email : ${r.email}`, `Joueurs de champ : ${r.field}`, `Gardiens : ${r.gk}`, `Filière : ${r.side}`, `Catégorie : ${r.category}`, ...(r.level ? [`Niveau : ${r.level}`] : []), `Période : ${r.period}`, `Langue : ${r.lang}`, `Origine de la visite : ${r.src}`, "", "Installations :", ...list(eq.places), "", "Matériel :", ...list(eq.gear), ...(eq.other ? [`- Autre : ${eq.other}`] : []), "", r.message || "(pas de message)", "", "À faire : répondre sous 48 heures avec un devis (répondre à cet email écrit directement au club)."];
+  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: MAIL_FROM(), replyTo: r.email, subject: `Demande club : ${r.club}, ${r.category} ${r.side.toLowerCase()} (${r.field} joueurs de champ + ${r.gk} gardien${+r.gk > 1 ? "s" : ""})`, text: lines.join("\n") });
+  if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
+}
+
+// Email at a key moment of the season (lib/season-mail.ts), to a free-session subscriber.
+export async function sendSeasonMail(to: string, lang: Lang, c: Campaign, unsub: string) {
+  const t = c[lang];
+  await leadMail(to, lang, unsub, t.s, t.p, [t.c, `${SITE}/${lang}${c.path}`]);
+}
+
 // The discount code, sent after the final questionnaire so the customer keeps it.
 export async function sendPromoCode(o: { email: string; lang: Lang; firstName: string }, code: string, promoPercent: number) {
   const fr = o.lang === "fr";
@@ -252,7 +293,7 @@ const leadMail = async (to: string, lang: Lang, unsub: string, subject: string, 
 // The session PDF, right after the request.
 export async function sendFreeSession(to: string, lang: Lang, unsub: string) {
   const fr = lang === "fr";
-  const content = await readFile(join(process.cwd(), "programmes", "seance-decouverte.pdf"));
+  const content = await readFile(join(process.cwd(), "programmes", ...(fr ? [] : ["en"]), "seance-decouverte.pdf"));
   await leadMail(to, lang, unsub, fr ? "Ta séance gratuite 6M Lab" : "Your free 6M Lab session",
     fr
       ? ["Salut,", `Voici ta séance découverte en pièce jointe : 15 minutes de prévention des blessures pour le handball, sans matériel. Touche l'œil à côté de chaque exercice pour le voir en mouvement, ou retrouve les 8 animations sur <a href="${SITE}/fr/exercices/seance-gratuite">cette page</a>.`, "Fais-la 2 fois par semaine, en fin d'échauffement ou un jour sans handball. Dans les prochains jours, je t'envoie 3 conseils pour mieux te préparer.", "Raphaël, 6M Lab"]

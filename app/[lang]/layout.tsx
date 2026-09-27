@@ -27,6 +27,8 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const d = dict[lang as Lang];
   return {
     metadataBase: new URL(SITE),
+    // iOS turns the test card number into a phone link otherwise.
+    formatDetection: { telephone: false },
     title: d.title,
     description: d.desc,
     alternates: { canonical: `/${lang}`, languages: { fr: "/fr", en: "/en" } },
@@ -47,6 +49,8 @@ export default async function RootLayout({ children, params }: { children: React
     [`/${lang}`, fr ? "Accueil" : "Home"],
     ...(fr ? [["/fr/conseils", "Conseils"] as [string, string]] : []),
     [fr ? "/fr/a-propos" : "/en/about", fr ? "À propos" : "About"],
+    // Clubs and coaches: whole teams, on quote (app/[lang]/clubs).
+    [`/${lang}/clubs`, "Clubs"],
     [`/${lang}/contact`, "Contact"],
     // Customer area: the exercise animations, opened with the order reference (lib/access.ts).
     [`/${lang}/exercices`, fr ? "Espace client" : "Customer area"],

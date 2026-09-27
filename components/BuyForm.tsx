@@ -2,9 +2,9 @@
 import { useRef, useState } from "react";
 import type { Lang } from "@/lib/dict";
 import { programs, type ProgramSlug } from "@/lib/programs";
-import { buy, fmtPrice, genders, orderTotal, PACK_PRICE, places, prices, RUNNING_PRICE, SECOND_GOAL_PRICE, type Place } from "@/lib/checkout";
+import { buy, fmtPrice, genders, orderTotal, PACK_PRICE, PACK_WEEKS, perWeek, places, prices, RUNNING_PRICE, SECOND_GOAL_PRICE, type Place } from "@/lib/checkout";
 import { Dumbbell, House } from "@/components/PlaceIcons";
-import { goalIds, goals as goalInfo, goalName, goalsTitle, REATH, type GoalId } from "@/lib/goals";
+import { goalIds, goals as goalInfo, goalName, goalsTitle, REATH, REATH_READY, type GoalId } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
 import Suggestions from "@/components/Suggestions";
 import "@/app/buy.css";
@@ -16,9 +16,11 @@ import "@/app/buy.css";
 export default function BuyForm({ lang, slug, goals = [], pack = false, place: chosen, test, error }: { lang: Lang; slug: ProgramSlug; goals?: GoalId[]; pack?: boolean; place?: Place; test: boolean; error?: string }) {
   const t = buy[lang];
   const p = programs[lang][slug];
-  const [sel, setSel] = useState<GoalId[]>(goals);
+  const [sel, setSel] = useState<GoalId[]>(goals.filter((g) => REATH_READY || g !== REATH));
   const [running, setRunning] = useState(false);
   const [place, setPlace] = useState<Place | null>(chosen ?? null);
+  // Language of the PDF: the page's by default, can be changed (an English speaker on the French site).
+  const [plang, setPlang] = useState<Lang>(lang);
   const [err, setErr] = useState(error);
   // Paying without a goal: the page scrolls back up to the goals, which show a red message.
   const [noGoal, setNoGoal] = useState(false);
@@ -38,7 +40,7 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, place: c
       <div className="bprice">
         <strong>{fmtPrice(pack ? PACK_PRICE : prices[slug], lang)}</strong>
         {pack && <s>{fmtPrice(prices["pre-saison"] + prices["maintien-saison"], lang)}</s>}
-        <span>{pack ? `${t.packT} · ${t.packWeeks}` : `${p.name} · ${p.duration}`}</span>
+        <span>{pack ? `${t.packT} · ${t.packWeeks} · ${t.perWeek(perWeek(PACK_PRICE, PACK_WEEKS, lang))}` : `${p.name} · ${p.duration}`}</span>
       </div>
 
       <fieldset className={noGoal && !done ? "bstep bgoals bmiss" : "bstep bgoals"} ref={goalsRef}>
@@ -58,10 +60,17 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, place: c
             );
           })}
         </div>
-        <label className="bcard breath">
-          <input type="checkbox" name="goal" value={REATH} checked={reath} onChange={() => setSel(reath ? [] : [REATH])} />
-          <span><strong>{t.reathQ}</strong> {goalName(REATH, lang)}. {t.reathD}</span>
-        </label>
+        {REATH_READY ? (
+          <label className="bcard breath">
+            <input type="checkbox" name="goal" value={REATH} checked={reath} onChange={() => setSel(reath ? [] : [REATH])} />
+            <span><strong>{t.reathQ}</strong> {goalName(REATH, lang)}. {t.reathD}</span>
+          </label>
+        ) : (
+          <div className="bcard breath bsoon">
+            <span><strong>{t.reathQ}</strong> {goalName(REATH, lang)}. {t.reathSoon}</span>
+            <b className="bsoon-tag">{t.soon}</b>
+          </div>
+        )}
       </fieldset>
 
       <fieldset className="bstep">
@@ -74,6 +83,12 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, place: c
               {pl === "maison" ? <House /> : <Dumbbell />}
               <span><strong>{t.places[pl][0]}</strong> {t.places[pl][1]}</span>
             </label>
+          ))}
+        </div>
+        <div className="blang" role="radiogroup" aria-label={t.plangT}>
+          <span>{t.plangT}</span>
+          {(["fr", "en"] as const).map((l) => (
+            <label key={l}><input type="radio" name="plang" value={l} checked={plang === l} onChange={() => setPlang(l)} />{t.plangs[l]}</label>
           ))}
         </div>
       </fieldset>
@@ -109,10 +124,18 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, place: c
           <div><dt>{pack ? t.packT : p.name}</dt><dd>{fmtPrice(pack ? PACK_PRICE : prices[slug], lang)}</dd></div>
           <div><dt>{t.goalsLb}</dt><dd>{sel.length ? goalsTitle(sel, lang) : t.none}</dd></div>
           <div><dt>{t.placeLb}</dt><dd>{place ? t.places[place][0] : t.none}</dd></div>
+          <div><dt>{t.plangT}</dt><dd>{t.plangs[plang]}</dd></div>
           {sel.length === 2 && <div><dt>{t.second}</dt><dd>{fmtPrice(SECOND_GOAL_PRICE, lang)}</dd></div>}
           {running && <div><dt>{t.runT}</dt><dd>{fmtPrice(RUNNING_PRICE, lang)}</dd></div>}
           <div className="btotal"><dt>{t.total}</dt><dd>{fmtPrice(total, lang)}</dd></div>
         </dl>
+        {/* A single program: the pack is reminded right before paying, with the same goals. */}
+        {!pack && (
+          <a className="bupsell" href={`/${lang}/programmes/saison-complete${sel.length ? `?objectifs=${sel.join(",")}` : ""}#acheter`}>
+            <strong>{t.upsellT}</strong>
+            <span>{t.upsellD(fmtPrice(PACK_PRICE, lang), fmtPrice(prices["pre-saison"] + prices["maintien-saison"], lang), fmtPrice(prices["pre-saison"] + prices["maintien-saison"] - PACK_PRICE, lang), perWeek(PACK_PRICE, PACK_WEEKS, lang))}</span>
+          </a>
+        )}
         <label className="bconsent">
           <input type="checkbox" name="consent" required />
           <span>{t.consent} <a href={legalPaths[lang].cgv} target="_blank">{t.cgv}</a></span>

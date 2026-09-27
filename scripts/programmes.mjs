@@ -6,8 +6,10 @@
 //   option-course-<lieu>.pdf          the running option
 // lieu: maison or salle, chosen at checkout (exercises, drawings and dosages from lieux.mjs).
 //   seance-decouverte.pdf             the free 15-minute prevention session (sent from the home page)
-// Usage: npm run programmes            (all)
+// English: the same files in programmes/en/, texts from source/en.mjs (--en, or --fr for French only).
+// Usage: npm run programmes            (all, French and English)
 //        npm run programmes -- seances-pre-saison-explosivite-muscle-maison   (one, by file name)
+//        npm run programmes -- --en seance-decouverte   (one, in English only)
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { chromium } from "playwright";
@@ -18,6 +20,66 @@ import optionCourse from "../programmes/source/option-course.mjs";
 import { figure, variants } from "../programmes/source/figures.mjs";
 import { LIEUX, doseFor, exoFor, precFor } from "../programmes/source/lieux.mjs";
 import { MARK_VIEWBOX, markSvg, SLOGAN } from "../lib/mark.mjs";
+import { EN } from "../programmes/source/en.mjs";
+import { mkdir } from "node:fs/promises";
+
+// Language of the document being built. T translates a French source text (unchanged in French);
+// dosages built by lieux.mjs ("3-4 × 9-12 · descente en 3 s") are translated part by part.
+let LANG = "fr";
+const missing = new Set();
+const PARTS = [[/(\d) à (\d)/g, "$1 to $2"], [/(^| )à (\d)/g, "$1at $2"], [/ par jambe/g, " per leg"], [/ par côté/g, " per side"], [/ par bras/g, " per arm"], [/descente en 3 s/g, "3 s descent"], [/pause 2 s en haut/g, "2 s pause at the top"], [/ passages/g, " runs"]];
+const T = (s) => {
+  if (LANG === "fr" || s == null || s === "" || !/[A-Za-zÀ-ÿ]/.test(s)) return s;
+  if (EN[s] !== undefined) return EN[s];
+  const parts = String(s).split(" · ").map((x) => EN[x] ?? PARTS.reduce((acc, [re, to]) => acc.replace(re, to), x));
+  const out = parts.join(" · ");
+  if (/[àâçéèêëîïôûùœ]|\b(par|avec|sans|descente|jambe|côté|séries?|haut|bas|les?|la|des?|du|en)\b|\bet\b(?! al)/i.test(out)) missing.add(s);
+  return out;
+};
+// Fixed texts of the documents.
+const UI = {
+  fr: {
+    seeAnim: "Voir l'animation",
+    eyeNote: "<strong>Important : regarde l'animation de chaque exercice avant de le faire.</strong> Touche l'œil à côté de son nom. L'animation montre ce que le texte ne peut pas dire : le placement exact, le sens du mouvement, le rythme et les appuis. Ne te contente pas de lire le programme, surtout pour un exercice que tu ne connais pas : c'est ce qui rend chaque séance efficace et sans risque.",
+    labels: { poids: "Au poids du corps", maison: "À la maison", elastique: "Avec un élastique", materiel: "Avec matériel", salle: "En salle" },
+    band: "Avec un élastique :", cues: "Points clés :", easier: "Plus facile :",
+    disc: "Document réservé à un usage personnel, ne pas diffuser.",
+    health: "Programme destiné aux personnes en bonne santé : en cas de douleur, de blessure ou de doute, arrête et demande l'avis d'un professionnel de santé.",
+    guideTitle: (n) => `${n} : le guide`, guideSub: "Comment fonctionne ton programme : planning, déroulé des séances, progression et règles à connaître.",
+    duration: "Durée", frequency: "Fréquence", session: "Séance", place: "Lieu", formula: "Formule",
+    warmup: "Échauffement", core: "Gainage et prévention", cooldown: "Retour au calme", sessionK: (k) => `Séance ${k}`,
+    bonusIntro: "Semaine après semaine, tu peux ajouter la séance bonus, facultative :", prevMob: "Prévention et mobilité",
+    twoSessions: "Tes deux séances", placement: "<strong>Placement</strong> : la séance 1 au moins 3 jours avant le match, la séance 2 au plus tard 2 jours avant. Jamais la veille d'un match.",
+    s1: "Séance 1 · la plus exigeante, loin du match", s2: "Séance 2 · plus légère",
+    yourGoal: "Ton objectif", yourGoals: "Tes objectifs",
+    soloIntro: "Tu as choisi un seul objectif : chaque séance lui consacre deux blocs, et l'accent change au fil des semaines. Ce que tu as travaillé avant reste dans les séances, avec moins de séries, pour ne pas le perdre.",
+    golden: "Les règles d'or", howRead: "Comment lire tes séances",
+    howReadList: ["Chaque séance est écrite en entier, dans l'ordre : fais les étapes de haut en bas.", "« 2-4 × 8 » : 2 séries au niveau 1, 3 au niveau 2, 4 au niveau 3, de 8 répétitions. « 2-3 × 8 » : 2 séries aux niveaux 1 et 2, 3 au niveau 3.", "Le numéro devant chaque exercice renvoie à sa fiche illustrée, à la fin de ce document.", "Si tu ne connais pas ton niveau, relis le guide, page « Choisir ton niveau »."],
+    exercises: "Les exercices", exOrder: "Dans l'ordre des numéros utilisés dans tes séances.", exOrderFree: "Dans l'ordre des numéros de la séance.",
+    sessionsTitle: "Tes séances",
+  },
+  en: {
+    seeAnim: "See the animation",
+    eyeNote: "<strong>Important: watch each exercise's animation before doing it.</strong> Tap the eye next to its name. The animation shows what the text cannot: the exact position, the direction of the movement, the rhythm and the footwork. Do not just read the program, especially for an exercise you do not know: this is what makes every session effective and safe.",
+    labels: { poids: "Body weight", maison: "At home", elastique: "With a band", materiel: "With equipment", salle: "At the gym" },
+    band: "With a band:", cues: "Key points:", easier: "Easier:",
+    disc: "For personal use only, do not share.",
+    health: "This program is for people in good health: if you feel pain, have an injury or are in doubt, stop and ask a health professional for advice.",
+    guideTitle: (n) => `${n}: the guide`, guideSub: "How your program works: schedule, how the sessions run, progression and the rules to know.",
+    duration: "Duration", frequency: "Frequency", session: "Session", place: "Place", formula: "Program",
+    warmup: "Warm-up", core: "Core and prevention", cooldown: "Cool-down", sessionK: (k) => `Session ${k}`,
+    bonusIntro: "Week after week, you can add the optional bonus session:", prevMob: "Prevention and mobility",
+    twoSessions: "Your two sessions", placement: "<strong>Timing</strong>: session 1 at least 3 days before the match, session 2 no later than 2 days before. Never the day before a match.",
+    s1: "Session 1 · the more demanding one, far from the match", s2: "Session 2 · lighter",
+    yourGoal: "Your goal", yourGoals: "Your goals",
+    soloIntro: "You chose a single goal: every session gives it two blocks, and the focus changes over the weeks. What you worked on before stays in the sessions, with fewer sets, so you do not lose it.",
+    golden: "The golden rules", howRead: "How to read your sessions",
+    howReadList: ["Every session is written out in full, in order: do the steps from top to bottom.", "\"2-4 × 8\": 2 sets at level 1, 3 at level 2, 4 at level 3, of 8 reps. \"2-3 × 8\": 2 sets at levels 1 and 2, 3 at level 3.", "The number in front of each exercise refers to its illustrated sheet, at the end of this document.", "If you do not know your level, read the guide again, page \"Choosing your level\"."],
+    exercises: "The exercises", exOrder: "In the order of the numbers used in your sessions.", exOrderFree: "In the order of the numbers in the session.",
+    sessionsTitle: "Your sessions",
+  },
+};
+const U = () => UI[LANG];
 
 const out = join(import.meta.dirname, "..", "programmes");
 // Website address used by the eye icons (animation of each exercise). The PDFs must be
@@ -32,12 +94,12 @@ const NEUTRAL = { lieu: "maison", sex: "n" };
 // Eye icon linking to the exercise's animation (only for exercises that have one), in the same
 // place and silhouette: /fr/exercices/<id>/<lieu>[-femme|-homme]. Exercises without one get an
 // empty slot of the same width, so the names stay aligned.
-const eye = (id, ctx = NEUTRAL) => (id && variants(id).length ? `<a class="eye" href="${SITE}/fr/exercices/${id}/${ctx.lieu}${SEXES[ctx.sex]}" title="Voir l'animation">${EYE}</a>` : `<span class="eye none"></span>`);
+const eye = (id, ctx = NEUTRAL) => (id && variants(id).length ? `<a class="eye" href="${SITE}/${LANG}/exercices/${id}/${ctx.lieu}${SEXES[ctx.sex]}" title="${U().seeAnim}">${EYE}</a>` : `<span class="eye none"></span>`);
 // Shown at the start of the sessions and of the exercise sheets: the animations carry what the
 // text cannot (placement, direction of the movement, rhythm), so they must be watched.
-const EYE_NOTE = `<div class="eyenote"><span class="eye">${EYE}</span><div><strong>Important : regarde l'animation de chaque exercice avant de le faire.</strong> Touche l'œil à côté de son nom. L'animation montre ce que le texte ne peut pas dire : le placement exact, le sens du mouvement, le rythme et les appuis. Ne te contente pas de lire le programme, surtout pour un exercice que tu ne connais pas : c'est ce qui rend chaque séance efficace et sans risque.</div></div>`;
+const EYE_NOTE = () => `<div class="eyenote"><span class="eye">${EYE}</span><div>${U().eyeNote}</div></div>`;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
-const md = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+const md = (s) => esc(T(s)).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
 
 // Generic content blocks (guides, option course). A block with a lieu only appears in that
 // place's documents.
@@ -57,18 +119,18 @@ const block = (b, lieu) => {
 
 // An exercise card, as it is done in this place: its drawings (this place's version, then the
 // band variant at home), labelled when there are several.
-const LABELS = { poids: "Au poids du corps", maison: "À la maison", elastique: "Avec un élastique", materiel: "Avec matériel" };
+
 const exerciseCard = (n, base, id, ctx = NEUTRAL) => {
   const e = id ? exoFor(base, id, ctx.lieu) : base;
-  const figs = e.figs ?? (id ? variants(id).map((v) => [id, v, LABELS[v]]) : []);
-  const fig = figs.length ? `<div class="figs">${figs.map(([fid, v, lab]) => `<div class="fig">${figs.length > 1 ? `<span class="flab">${lab}</span>` : ""}${figure(fid, v, ctx.sex)}</div>`).join("")}</div>` : "";
-  return `<div class="ex${fig ? " hasfig" : ""}">${fig}<div class="extext"><div class="exname">${n ? `<span class="num">${n}</span>` : ""}${eye(id, ctx)}${md(e.name)}</div><p>${md(e.how)}</p>${e.band ? `<p class="lvl"><strong>Avec un élastique :</strong> ${md(e.band)}</p>` : ""}${e.cues ? `<p class="cues"><strong>Points clés :</strong> ${md(e.cues)}</p>` : ""}${e.easier ? `<p class="lvl"><strong>Plus facile :</strong> ${md(e.easier)}</p>` : ""}</div></div>`;
+  const figs = e.figs ?? (id ? variants(id).map((v) => [id, v, U().labels[v]]) : []);
+  const fig = figs.length ? `<div class="figs">${figs.map(([fid, v, lab]) => `<div class="fig">${figs.length > 1 ? `<span class="flab">${esc(LANG === "fr" ? lab : ({ "À la maison": U().labels.maison, "En salle": U().labels.salle, "Avec un élastique": U().labels.elastique }[lab] ?? T(lab)))}</span>` : ""}${figure(fid, v, ctx.sex)}</div>`).join("")}</div>` : "";
+  return `<div class="ex${fig ? " hasfig" : ""}">${fig}<div class="extext"><div class="exname">${n ? `<span class="num">${n}</span>` : ""}${eye(id, ctx)}${md(e.name)}</div><p>${md(e.how)}</p>${e.band ? `<p class="lvl"><strong>${U().band}</strong> ${md(e.band)}</p>` : ""}${e.cues ? `<p class="cues"><strong>${U().cues}</strong> ${md(e.cues)}</p>` : ""}${e.easier ? `<p class="lvl"><strong>${U().easier}</strong> ${md(e.easier)}</p>` : ""}</div></div>`;
 };
 
 // A session: its steps, each a small table of exercises numbered from the library.
 // Names, dosages and precisions follow the place (lieux.mjs).
 const session = (title, steps, num, ctx = NEUTRAL) => `<section class="session"><div class="stitle">${md(title)}</div>${steps.map((st, i) => `
-  <div class="step"><div class="sname"><span class="snum">${i + 1}</span>${md(st.name)}${st.duree ? `<span class="sdur">${esc(st.duree)}</span>` : ""}</div>
+  <div class="step"><div class="sname"><span class="snum">${i + 1}</span>${md(st.name)}${st.duree ? `<span class="sdur">${esc(T(st.duree))}</span>` : ""}</div>
   ${st.text ? `<p class="stext">${md(st.text)}</p>` : `<table><tbody>${st.rows.map(([id, dose, rest, prec]) => `<tr><td class="c1"><span class="ref">${num(id)}</span>${eye(id, ctx)}${md(exoFor(exercices[id], id, ctx.lieu).name)}${precFor(id, prec, ctx.lieu) ? ` <span class="prec">(${md(precFor(id, prec, ctx.lieu))})</span>` : ""}</td><td class="c2">${md(doseFor(id, dose, ctx.lieu))}</td><td class="c3">${md(rest ?? "")}</td></tr>`).join("")}</tbody></table>`}</div>`).join("")}</section>`;
 
 const css = (color) => `
@@ -110,19 +172,19 @@ tr:nth-child(even) td{background:#F6F5FB}
 
 const cover = (d) => `<section class="cover">
   <div class="brand"><svg viewBox="${MARK_VIEWBOX}">${markSvg()}</svg><b>${SLOGAN}</b></div>
-  <span class="tag">${esc(d.tag)}</span><h1>${esc(d.title)}</h1><p class="sub">${esc(d.subtitle)}</p>
-  <div class="meta">${d.meta.map(([k, v]) => `<div>${esc(k)}<strong>${esc(v)}</strong></div>`).join("")}</div>
-  <p class="disc">${d.disc ?? "Document réservé à un usage personnel, ne pas diffuser."} Programme destiné aux personnes en bonne santé : en cas de douleur, de blessure ou de doute, arrête et demande l'avis d'un professionnel de santé.</p>
+  <span class="tag">${esc(T(d.tag))}</span><h1>${esc(T(d.title))}</h1><p class="sub">${esc(T(d.subtitle))}</p>
+  <div class="meta">${d.meta.map(([k, v]) => `<div>${esc(T(k))}<strong>${esc(T(v))}</strong></div>`).join("")}</div>
+  <p class="disc">${d.disc ?? U().disc} ${U().health}</p>
 </section>`;
 
-const page = (d, fontCss, body) => `<!doctype html><html lang="fr"><head><meta charset="utf-8"><style>${fontCss}${css(d.color)}</style></head><body>${cover(d)}${body}</body></html>`;
+const page = (d, fontCss, body) => `<!doctype html><html lang="${LANG}"><head><meta charset="utf-8"><style>${fontCss}${css(d.color)}</style></head><body>${cover(d)}${body}</body></html>`;
 
 // ---- Documents ----------------------------------------------------------------------------
 
 const guideDoc = (fid, lieu) => {
   const f = formules[fid];
-  const d = { title: `${f.name} : le guide`, tag: f.tag, color: f.color, subtitle: "Comment fonctionne ton programme : planning, déroulé des séances, progression et règles à connaître.", meta: [["Durée", f.duree], ["Fréquence", f.frequence], ["Séance", f.seance]] };
-  return { file: `guide-${fid}-${lieu}`, d: { ...d, meta: [...d.meta, ["Lieu", LIEUX[lieu].short]] }, body: f.guide.map((b) => block(b, lieu)).join("\n") };
+  const d = { title: U().guideTitle(T(f.name)), tag: f.tag, color: f.color, subtitle: U().guideSub, meta: [[U().duration, f.duree], [U().frequency, f.frequence], [U().session, f.seance]] };
+  return { file: `guide-${fid}-${lieu}`, d: { ...d, meta: [...d.meta, [U().place, LIEUX[lieu].short]] }, body: f.guide.map((b) => block(b, lieu)).join("\n") };
 };
 
 // pair: two goals, or a single goal (its two blocks then come from solos). ctx: place and
@@ -131,80 +193,103 @@ const seancesDoc = (fid, pair, ctx) => {
   const f = formules[fid];
   const gs = pair.map((g) => objectifs[g]);
   const solo = pair.length === 1 ? solos[pair[0]] : null;
-  const title = gs.map((g) => g.name).join(" + ");
+  const title = gs.map((g) => T(g.name)).join(" + ");
   // Exercises are numbered in order of first appearance, so the library follows the sessions.
   const nums = new Map();
   const num = (id) => { if (!exercices[id]) throw new Error("Exercice inconnu : " + id); if (!nums.has(id)) nums.set(id, nums.size + 1); return nums.get(id); };
   const dur = (isPre) => (isPre ? "15-20 min" : "10-12 min");
   const goalSteps = (key, isPre) => solo
-    ? (isPre ? solo.pre[isPre][key] : solo.maintien[key]).map((rows, i) => ({ name: `${gs[0].name} · ${solo.names[isPre || "maintien"][i]}`, duree: dur(isPre), rows }))
+    ? (isPre ? solo.pre[isPre][key] : solo.maintien[key]).map((rows, i) => ({ name: `${T(gs[0].name)} · ${T(solo.names[isPre || "maintien"][i])}`, duree: dur(isPre), rows }))
     : gs.map((g) => ({ name: g.name, duree: dur(isPre), rows: isPre ? g.pre[isPre][key] : g.maintien[key] }));
   const steps = (key, gainage, isPre) => [
-    { name: "Échauffement", duree: isPre ? "10-12 min" : "8 min", rows: f.echauffement.rows },
+    { name: U().warmup, duree: isPre ? "10-12 min" : "8 min", rows: f.echauffement.rows },
     ...goalSteps(key, isPre),
-    { name: "Gainage et prévention", duree: "5-8 min", rows: gainage },
-    { name: "Retour au calme", duree: "5 min", text: f.retourAuCalme },
+    { name: U().core, duree: "5-8 min", rows: gainage },
+    { name: U().cooldown, duree: "5 min", text: f.retourAuCalme },
   ];
   let sessions = "";
   if (fid === "pre-saison") {
     for (const ph of f.phases) {
       const notes = solo ? [solo.phaseNotes[ph.id]] : gs.map((g) => g.phaseNotes?.[ph.id]).filter(Boolean);
-      sessions += `<div class="phase"><h2>${esc(ph.title)}</h2><p>${md(ph.texte)}</p>${notes.map((n) => `<div class="note">${md(n)}</div>`).join("")}`;
-      for (const k of ["A", "B", "C"]) sessions += session(`Séance ${k}`, steps(k, f.gainage[k], ph.id), num, ctx);
-      if (ph.id === "bases") sessions += `<p class="stext">Semaine après semaine, tu peux ajouter la séance bonus, facultative :</p>` + session(f.bonus.title, [{ name: "Échauffement", duree: "10 min", rows: f.echauffement.rows }, { name: "Prévention et mobilité", duree: "10 min", rows: f.bonus.rows }], num, ctx);
+      sessions += `<div class="phase"><h2>${esc(T(ph.title))}</h2><p>${md(ph.texte)}</p>${notes.map((n) => `<div class="note">${md(n)}</div>`).join("")}`;
+      for (const k of ["A", "B", "C"]) sessions += session(U().sessionK(k), steps(k, f.gainage[k], ph.id), num, ctx);
+      if (ph.id === "bases") sessions += `<p class="stext">${U().bonusIntro}</p>` + session(f.bonus.title, [{ name: U().warmup, duree: "10 min", rows: f.echauffement.rows }, { name: U().prevMob, duree: "10 min", rows: f.bonus.rows }], num, ctx);
       sessions += `</div>`;
     }
-    const aff = gs.map((g) => g.affutage && `**${g.name}** : ${g.affutage}`).filter(Boolean);
-    sessions += `<h2>${esc(f.affutage.title)}</h2><p>${md(f.affutage.texte)}</p>${aff.length ? `<ul>${aff.map((a) => `<li>${md(a)}</li>`).join("")}</ul>` : ""}`;
+    const aff = gs.map((g) => g.affutage && `<strong>${esc(T(g.name))}</strong>${LANG === "fr" ? " :" : ":"} ${md(g.affutage)}`).filter(Boolean);
+    sessions += `<h2>${esc(T(f.affutage.title))}</h2><p>${md(f.affutage.texte)}</p>${aff.length ? `<ul>${aff.map((a) => `<li>${a}</li>`).join("")}</ul>` : ""}`;
   } else {
-    sessions += `<h2>Tes deux séances</h2><p>${md(f.blocs)}</p><div class="note">**Placement** : la séance 1 au moins 3 jours avant le match, la séance 2 au plus tard 2 jours avant. Jamais la veille d'un match.</div>`.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-    sessions += session("Séance 1 · la plus exigeante, loin du match", steps("s1", f.gainage["1"], null), num, ctx);
-    sessions += session("Séance 2 · plus légère", steps("s2", f.gainage["2"], null), num, ctx);
+    sessions += `<h2>${U().twoSessions}</h2><p>${md(f.blocs)}</p><div class="note">${U().placement}</div>`;
+    sessions += session(U().s1, steps("s1", f.gainage["1"], null), num, ctx);
+    sessions += session(U().s2, steps("s2", f.gainage["2"], null), num, ctx);
   }
-  const goals = `<h2>${solo ? "Ton objectif" : "Tes objectifs"}</h2>${solo ? `<p>Tu as choisi un seul objectif : chaque séance lui consacre deux blocs, et l'accent change au fil des semaines. Ce que tu as travaillé avant reste dans les séances, avec moins de séries, pour ne pas le perdre.</p>` : ""}${gs.map((g) => `<div class="goal" style="--gc:${g.color}"><h3>${esc(g.name)}</h3><p>${md(g.intro)}</p><ul>${g.qualites.map((q) => `<li>${md(q)}</li>`).join("")}</ul><p><strong>Les règles d'or</strong></p><ul>${g.regles.map((q) => `<li>${md(q)}</li>`).join("")}</ul>${(g.notes ?? []).map((b) => block(b, ctx.lieu)).join("")}</div>`).join("")}
-  ${EYE_NOTE}
-  <h2>Comment lire tes séances</h2><ul>
-  <li>Chaque séance est écrite en entier, dans l'ordre : fais les étapes de haut en bas.</li>
-  <li>« 2-4 × 8 » : 2 séries au niveau 1, 3 au niveau 2, 4 au niveau 3, de 8 répétitions. « 2-3 × 8 » : 2 séries aux niveaux 1 et 2, 3 au niveau 3.</li>
-  <li>Le numéro devant chaque exercice renvoie à sa fiche illustrée, à la fin de ce document.</li>
-  <li>Si tu ne connais pas ton niveau, relis le guide, page « Choisir ton niveau ».</li></ul>`;
-  const library = `<div class="pb"></div><h2>Les exercices</h2><p>Dans l'ordre des numéros utilisés dans tes séances.</p>${EYE_NOTE}${[...nums].map(([id, n]) => exerciseCard(n, exercices[id], id, ctx)).join("")}`;
-  const d = { title: "Tes séances", tag: f.name, color: f.color, subtitle: title, meta: [["Formule", f.name], ["Durée", f.duree], ["Séance", f.seance], ["Lieu", LIEUX[ctx.lieu].short]] };
+  const goals = `<h2>${solo ? U().yourGoal : U().yourGoals}</h2>${solo ? `<p>${U().soloIntro}</p>` : ""}${gs.map((g) => `<div class="goal" style="--gc:${g.color}"><h3>${esc(T(g.name))}</h3><p>${md(g.intro)}</p><ul>${g.qualites.map((q) => `<li>${md(q)}</li>`).join("")}</ul><p><strong>${U().golden}</strong></p><ul>${g.regles.map((q) => `<li>${md(q)}</li>`).join("")}</ul>${(g.notes ?? []).map((b) => block(b, ctx.lieu)).join("")}</div>`).join("")}
+  ${EYE_NOTE()}
+  <h2>${U().howRead}</h2><ul>${U().howReadList.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
+  const library = `<div class="pb"></div><h2>${U().exercises}</h2><p>${U().exOrder}</p>${EYE_NOTE()}${[...nums].map(([id, n]) => exerciseCard(n, exercices[id], id, ctx)).join("")}`;
+  const d = { title: U().sessionsTitle, tag: f.name, color: f.color, subtitle: title, meta: [[U().formula, f.name], [U().duration, f.duree], [U().session, f.seance], [U().place, LIEUX[ctx.lieu].short]] };
   return { file: `seances-${fid}-${pair.join("-")}-${ctx.lieu}${SEXES[ctx.sex]}`, d, body: goals + sessions + library };
 };
 
 const courseDoc = (lieu) => ({ file: `option-course-${lieu}`, d: optionCourse, body: optionCourse.blocks.map((b) => block(b, lieu)).join("\n") });
 
 // The free session offered on the home page: 15 minutes of injury prevention, bodyweight only.
-const decouverteDoc = () => {
-  const nums = new Map();
-  const num = (id) => { if (!exercices[id]) throw new Error("Exercice inconnu : " + id); if (!nums.has(id)) nums.set(id, nums.size + 1); return nums.get(id); };
-  const steps = [
-    { name: "Mise en route", duree: "3 min", rows: [["cheville-mur", "10 par côté", ""], ["ouverture-hanche", "8 par côté", ""]] },
-    { name: "Genoux et chevilles", duree: "5 min", rows: [["equilibre", "2 × 20 s par jambe", "15 s"], ["saut-reception", "2 × 5", "20 s"]] },
-    { name: "Ischios et hanches", duree: "4 min", rows: [["pont-fessier", "2 × 10", "15 s"], ["nordic", "2 × 3", "60 s", "descente courte si tu débutes"]] },
-    { name: "Tronc et épaules", duree: "3 min", rows: [["gainage-lateral", "2 × 20 s par côté", "15 s"], ["ytw", "6 de chaque lettre", ""]] },
-  ];
-  const intro = `<h2>Ta séance découverte</h2>
+const FREE = {
+  fr: {
+    steps: [["Mise en route", "3 min"], ["Genoux et chevilles", "5 min"], ["Ischios et hanches", "4 min"], ["Tronc et épaules", "3 min"]],
+    doses: { cheville: "10 par côté", hanche: "8 par côté", equilibre: "2 × 20 s par jambe", nordic: "descente courte si tu débutes", lateral: "2 × 20 s par côté", ytw: "6 de chaque lettre" },
+    intro: `<h2>Ta séance découverte</h2>
   <p>15 minutes, sans matériel, pour protéger les zones qui lâchent le plus souvent au handball : genoux, chevilles, ischios et épaules. C'est un extrait du travail de prévention présent dans chaque séance des programmes 6M Lab.</p>
   <ul><li><strong>Quand ?</strong> 2 fois par semaine : en fin d'échauffement avant l'entraînement, ou un jour sans handball.</li>
   <li><strong>Comment ?</strong> Fais les étapes de haut en bas. « 2 × 10 » : 2 séries de 10 répétitions. La dernière colonne indique le repos entre les séries.</li>
   <li><strong>L'animation ?</strong> Touche l'œil à côté d'un exercice pour le voir en mouvement.</li></ul>
-  <div class="note">La qualité avant tout : un geste propre et contrôlé protège, un geste bâclé ne sert à rien. En cas de douleur, arrête l'exercice.</div>`;
-  const after = `<h2>Et après ?</h2>
+  <div class="note">La qualité avant tout : un geste propre et contrôlé protège, un geste bâclé ne sert à rien. En cas de douleur, arrête l'exercice.</div>`,
+    after: (link) => `<h2>Et après ?</h2>
   <p>Cette séance entretient tes articulations. Pour progresser vraiment (explosivité, puissance, condition physique), il faut un programme construit semaine après semaine : c'est ce que proposent les programmes 6M Lab, avec une séance écrite en entier pour chaque jour et une animation pour chaque exercice.</p>
   <ul><li><strong>Pré-saison</strong> : 8 semaines pour reprendre fort, avant la reprise avec ton club.</li>
   <li><strong>Maintien en saison</strong> : 2 séances de 30 à 40 min par semaine pour garder ton niveau toute la saison.</li></ul>
-  <p>Découvre-les sur <a href="${SITE}/fr/programmes">${esc(SITE.replace(/^https?:\/\//, ""))}</a>.</p>`;
-  const body = intro + session("Séance prévention · 15 min", steps, num) + after
-    + `<div class="pb"></div><h2>Les exercices</h2><p>Dans l'ordre des numéros de la séance.</p>${[...nums].map(([id, n]) => exerciseCard(n, exercices[id], id)).join("")}`;
-  const d = { disc: "Séance offerte par 6M Lab : tu peux la partager avec tes coéquipiers.", title: "Séance découverte", tag: "Offerte", color: "#2EC4B6", subtitle: "15 minutes de prévention des blessures pour le handball, sans matériel.", meta: [["Durée", "15 min"], ["Matériel", "Aucun"], ["Fréquence", "2 fois par semaine"]] };
-  return { file: "seance-decouverte", d, body };
+  <p>Découvre-les sur ${link}.</p>`,
+    session: "Séance prévention · 15 min",
+    d: { disc: "Séance offerte par 6M Lab : tu peux la partager avec tes coéquipiers.", title: "Séance découverte", tag: "Offerte", subtitle: "15 minutes de prévention des blessures pour le handball, sans matériel.", meta: [["Durée", "15 min"], ["Matériel", "Aucun"], ["Fréquence", "2 fois par semaine"]] },
+  },
+  en: {
+    steps: [["Getting going", "3 min"], ["Knees and ankles", "5 min"], ["Hamstrings and hips", "4 min"], ["Trunk and shoulders", "3 min"]],
+    doses: { cheville: "10 per side", hanche: "8 per side", equilibre: "2 × 20 s per leg", nordic: "short descent if you are a beginner", lateral: "2 × 20 s per side", ytw: "6 of each letter" },
+    intro: `<h2>Your free session</h2>
+  <p>15 minutes, no equipment, to protect the areas that most often give way in handball: knees, ankles, hamstrings and shoulders. It is taken from the prevention work found in every session of the 6M Lab programs.</p>
+  <ul><li><strong>When?</strong> Twice a week: at the end of your warm-up before practice, or on a day without handball.</li>
+  <li><strong>How?</strong> Do the steps from top to bottom. "2 × 10": 2 sets of 10 reps. The last column gives the rest between sets.</li>
+  <li><strong>The animation?</strong> Tap the eye next to an exercise to see it in motion.</li></ul>
+  <div class="note">Quality above all: a clean, controlled movement protects you, a sloppy one is useless. If it hurts, stop the exercise.</div>`,
+    after: (link) => `<h2>What next?</h2>
+  <p>This session looks after your joints. To really progress (explosiveness, power, fitness), you need a program built week after week: that is what the 6M Lab programs offer, with every session written out in full and an animation for every exercise.</p>
+  <ul><li><strong>Pre-season</strong>: 8 weeks to come back strong, before training restarts with your club.</li>
+  <li><strong>In-season maintenance</strong>: 2 sessions of 30 to 40 min per week to keep your level all season.</li></ul>
+  <p>Find them on ${link}.</p>`,
+    session: "Prevention session · 15 min",
+    d: { disc: "Free session from 6M Lab: feel free to share it with your teammates.", title: "Free session", tag: "Free", subtitle: "15 minutes of injury prevention for handball, no equipment.", meta: [["Duration", "15 min"], ["Equipment", "None"], ["Frequency", "Twice a week"]] },
+  },
+};
+const decouverteDoc = () => {
+  const F = FREE[LANG], ds = F.doses;
+  const nums = new Map();
+  const num = (id) => { if (!exercices[id]) throw new Error("Exercice inconnu : " + id); if (!nums.has(id)) nums.set(id, nums.size + 1); return nums.get(id); };
+  const rows = [
+    [["cheville-mur", ds.cheville, ""], ["ouverture-hanche", ds.hanche, ""]],
+    [["equilibre", ds.equilibre, "15 s"], ["saut-reception", "2 × 5", "20 s"]],
+    [["pont-fessier", "2 × 10", "15 s"], ["nordic", "2 × 3", "60 s", ds.nordic]],
+    [["gainage-lateral", ds.lateral, "15 s"], ["ytw", ds.ytw, ""]],
+  ];
+  const steps = F.steps.map(([name, duree], i) => ({ name, duree, rows: rows[i] }));
+  const link = `<a href="${SITE}/${LANG}/programmes">${esc(SITE.replace(/^https?:\/\//, ""))}</a>`;
+  const body = F.intro + session(F.session, steps, num) + F.after(link)
+    + `<div class="pb"></div><h2>${U().exercises}</h2><p>${U().exOrderFree}</p>${[...nums].map(([id, n]) => exerciseCard(n, exercices[id], id)).join("")}`;
+  return { file: "seance-decouverte", d: { ...F.d, color: "#2EC4B6" }, body };
 };
 
 const pairs = [...ordre.map((a) => [a]), ...ordre.flatMap((a, i) => ordre.slice(i + 1).map((b) => [a, b]))];
 const lieux = Object.keys(LIEUX);
-const docs = [
+const buildDocs = () => [
   ...Object.keys(formules).flatMap((fid) => lieux.map((lieu) => guideDoc(fid, lieu))),
   ...Object.keys(formules).flatMap((fid) => pairs.flatMap((p) => lieux.flatMap((lieu) => Object.keys(SEXES).map((sex) => seancesDoc(fid, p, { lieu, sex }))))),
   ...lieux.map(courseDoc),
@@ -223,19 +308,29 @@ async function fonts() {
   return res.join("");
 }
 
-const only = process.argv[2];
+const args = process.argv.slice(2);
+const langs = args.includes("--en") ? ["en"] : args.includes("--fr") ? ["fr"] : ["fr", "en"];
+const only = args.find((x) => !x.startsWith("--"));
+// Build every document first, in each language: a text missing from en.mjs stops everything
+// before any PDF is written.
+const todo = [];
+for (const lang of langs) { LANG = lang; for (const doc of buildDocs()) if (!only || doc.file === only) todo.push({ lang, doc }); }
+if (missing.size) { console.error(`Textes sans traduction dans programmes/source/en.mjs (${missing.size}) :\n` + [...missing].map((m) => "  " + JSON.stringify(m)).join("\n")); process.exit(1); }
 const fontCss = await fonts();
 const browser = await chromium.launch();
 const tab = await browser.newPage();
-for (const doc of docs.filter((x) => !only || x.file === only)) {
+for (const { lang, doc } of todo) {
+  LANG = lang;
+  const dir = lang === "fr" ? out : join(out, lang);
+  await mkdir(dir, { recursive: true });
   await tab.setContent(page(doc.d, fontCss, doc.body));
   await tab.evaluate(() => document.fonts.ready);
   const pdf = await tab.pdf({
     format: "A4", printBackground: true, preferCSSPageSize: true, displayHeaderFooter: true,
     headerTemplate: "<span></span>",
-    footerTemplate: `<div style="font:8px Arial;color:#8A84A3;width:100%;padding:0 15mm;display:flex;justify-content:space-between"><span>6M Lab · ${esc(doc.d.title)}${doc.d.subtitle && doc.file.startsWith("seances") ? " · " + esc(doc.d.subtitle) : ""}</span><span><span class="pageNumber"></span> / <span class="totalPages"></span></span></div>`,
+    footerTemplate: `<div style="font:8px Arial;color:#8A84A3;width:100%;padding:0 15mm;display:flex;justify-content:space-between"><span>6M Lab · ${esc(T(doc.d.title))}${doc.d.subtitle && doc.file.startsWith("seances") ? " · " + esc(doc.d.subtitle) : ""}</span><span><span class="pageNumber"></span> / <span class="totalPages"></span></span></div>`,
   });
-  await writeFile(join(out, `${doc.file}.pdf`), pdf);
-  console.log("✓", doc.file);
+  await writeFile(join(dir, `${doc.file}.pdf`), pdf);
+  console.log("✓", lang, doc.file);
 }
 await browser.close();

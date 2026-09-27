@@ -29,7 +29,7 @@ const tapis = (onTreadmill, otherwise) => ({ how: `Sur un **tapis de course incu
 export const parLieu = {
   // ---- Bas du corps --------------------------------------------------------------------------
   squat: {
-    maison: { how: "Pieds largeur d'épaules, descends comme pour t'asseoir, cuisses au moins parallèles au sol, puis remonte. Quand c'est facile : un sac à dos lesté serré contre la poitrine.", figs: [["squat", "poids"]], dose: more(1.5, slow), prec: "",
+    maison: { how: "Pieds largeur d'épaules, bras tendus devant toi, descends comme pour t'asseoir, cuisses au moins parallèles au sol, puis remonte. Quand c'est facile : un sac à dos lesté serré contre la poitrine.", figs: [["squat", "poids"]], dose: more(1.5, slow), prec: "",
       band: { how: "Élastique sous les pieds, tenu aux épaules : il résiste quand tu remontes.", figs: [["squat", "elastique"]] } },
     salle: { how: "Pieds largeur d'épaules, un haltère tenu contre la poitrine (goblet squat), descends cuisses au moins parallèles au sol puis remonte. Plus lourd : barre sur le haut du dos.", figs: [["squat", "materiel"]] },
   },
@@ -49,7 +49,7 @@ export const parLieu = {
     salle: { how: "Pied arrière sur un banc, un haltère dans chaque main, descends sur la jambe avant puis remonte.", figs: [["squat-bulgare", "materiel"]] },
   },
   "sdt-roumain": {
-    maison: { how: "Sur une jambe (l'autre part en arrière), buste penché vers l'avant, dos plat, jusqu'à sentir l'étirement derrière la cuisse, puis redresse-toi. Plus difficile : un sac à la main.", figs: [["sdt-roumain", "poids"]], dose: more(1, " par jambe"),
+    maison: { how: "Pieds largeur de hanches, genoux légèrement fléchis : penche le buste vers l'avant en reculant les fesses, dos plat, jusqu'à sentir l'étirement derrière les cuisses, puis redresse-toi. Plus difficile : sur une jambe (l'autre part en arrière), ou un sac à la main.", figs: [["sdt-roumain", "poids"]], dose: more(1, " par jambe"),
       band: { how: "Sur deux jambes, élastique sous les pieds, tenu à deux mains : bascule le buste, dos plat, et redresse-toi." } },
     salle: { how: "Genoux légèrement fléchis, une barre ou deux haltères en main, penche le buste en reculant les fesses, dos plat, puis redresse-toi.", figs: [["sdt-roumain", "materiel"]] },
   },
@@ -59,7 +59,7 @@ export const parLieu = {
     salle: { how: "Haut du dos appuyé sur un banc, barre (avec protection) ou haltère sur les hanches, monte le bassin jusqu'à aligner épaules, hanches et genoux.", figs: [["hip-thrust", "materiel"]] },
   },
   "hip-thrust-lourd": {
-    maison: { name: "Hip thrust sur une jambe", how: "Haut du dos sur le canapé, une jambe tendue en l'air : monte le bassin avec force et tiens 2 secondes en haut.", figs: [["hip-thrust", "poids"]], dose: more(2, " par jambe · pause 2 s en haut"),
+    maison: { name: "Hip thrust sur une jambe", how: "Haut du dos sur le canapé, une jambe tendue en l'air : monte le bassin avec force et tiens 2 secondes en haut.", figs: [["hip-thrust-lourd", "maison"]], dose: more(2, " par jambe · pause 2 s en haut"),
       band: { how: "Sur deux jambes, élastique fort en travers des hanches, pause en haut." } },
     salle: { how: "Haut du dos sur un banc, barre lourde sur les hanches, monte le bassin avec force.", figs: [["hip-thrust-lourd", "materiel"]] },
   },
@@ -135,12 +135,12 @@ export const parLieu = {
     salle: { how: "De profil au mur, médecine-ball de 2 à 4 kg tenu à la hanche, pivote et lance sur le côté, comme un tir.", figs: [["lancer-rotation", "materiel"]] },
   },
   "lancer-haut": {
-    maison: { how: "Ballon de handball ou de basket au-dessus de la tête, lance-le fort contre le sol ou un mur extérieur.", figs: [["lancer-haut", "materiel"]] },
-    salle: { how: "Médecine-ball (slam ball) au-dessus de la tête, lance-le fort contre le sol.", figs: [["lancer-haut", "materiel"]] },
+    maison: { how: "Ballon de handball ou de basket au-dessus de la tête, lance-le fort contre le sol devant toi en fléchissant les jambes, puis rattrape-le au rebond.", figs: [["lancer-haut", "materiel"]] },
+    salle: { how: "Médecine-ball (slam ball) au-dessus de la tête, lance-le fort contre le sol devant toi en fléchissant les jambes, puis ramasse-le.", figs: [["lancer-haut", "materiel"]] },
   },
   "equilibre-balle": {
-    maison: { how: "Sur une jambe, sur un coussin plié, lance une balle contre un mur et rattrape-la.", figs: [["equilibre-balle", "materiel"]] },
-    salle: { how: "Sur une jambe, sur un bosu ou un plateau instable, lance une balle contre un mur et rattrape-la.", figs: [["equilibre-balle", "materiel"]] },
+    maison: { how: "Sur une jambe, lance une balle contre un mur et rattrape-la. Plus difficile : debout sur un coussin plié.", figs: [["equilibre-balle", "materiel"]] },
+    salle: { how: "Sur une jambe, lance une balle contre un mur et rattrape-la. Plus difficile : debout sur un bosu ou un plateau instable.", figs: [["equilibre-balle", "materiel"]] },
   },
 
   // ---- Circuit : chaque exercice dans sa propre animation --------------------------------------
@@ -154,8 +154,8 @@ export const parLieu = {
     salle: { how: "À genoux sur un tapis, pieds bloqués sous un banc chargé, sous un espalier ou tenus par une autre personne, laisse-toi tomber vers l'avant le plus lentement possible, corps droit. Rattrape-toi avec les mains, puis remonte en t'aidant des mains." },
   },
   copenhague: {
-    maison: { how: "Sur le côté, en appui sur l'avant-bras, jambe du dessus posée sur le canapé ou une chaise (au genou, ou au pied pour plus de difficulté). Monte le bassin et tiens la position." },
-    salle: { how: "Sur le côté, en appui sur l'avant-bras, jambe du dessus posée sur un banc (au genou, ou au pied pour plus de difficulté). Monte le bassin et tiens la position." },
+    maison: { how: "Sur le côté, en appui sur l'avant-bras (coude sous l'épaule), jambe du dessus posée sur le canapé ou une chaise (au genou, ou au pied pour plus de difficulté). Monte le bassin, tends le bras du dessus vers le plafond et tiens la position." },
+    salle: { how: "Sur le côté, en appui sur l'avant-bras (coude sous l'épaule), jambe du dessus posée sur un banc (au genou, ou au pied pour plus de difficulté). Monte le bassin, tends le bras du dessus vers le plafond et tiens la position." },
   },
   "drop-jump": {
     maison: { how: "Laisse-toi tomber d'une marche d'escalier (20-30 cm) et, dès que tes pieds touchent le sol, rebondis le plus haut possible." },

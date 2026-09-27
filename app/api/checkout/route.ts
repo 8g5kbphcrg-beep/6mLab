@@ -18,6 +18,8 @@ export async function POST(req: NextRequest) {
   const age = Number(form.get("age"));
   const gender = String(form.get("gender")) as Gender;
   const lieu = String(form.get("lieu")) as Place;
+  // Language of the program PDF (the page's unless changed in the form).
+  const plang: Lang = form.get("plang") === "en" ? "en" : form.get("plang") === "fr" ? "fr" : lang;
   const profileOk = firstName.length > 0 && Number.isInteger(age) && age >= 10 && age <= 99 && genders.includes(gender);
   const origin = req.nextUrl.origin;
   const page = pack ? "saison-complete" : programSlugs.includes(slug) ? slug : "";
@@ -32,10 +34,15 @@ export async function POST(req: NextRequest) {
   const p = programs[lang][slug];
   // src: where the visit came from (utm link or referring site), for the sales by source in the admin.
   const src = cleanSrc(String(form.get("src") ?? "direct"));
-  const meta = { program: slug, goals: goals.join("+"), running: running ? "oui" : "non", lieu, ...(pack ? { pack: "oui" } : {}), firstName, age: String(age), gender, lang, src };
+  const meta = { program: slug, goals: goals.join("+"), running: running ? "oui" : "non", lieu, plang, ...(pack ? { pack: "oui" } : {}), firstName, age: String(age), gender, lang, src };
   const stripe = stripeClient()!;
   try {
-    const session = await stripe.checkout.sessions.create({
+    // Abandoned carts (app/api/cron): Stripe asks the buyer whether they accept offers by email,
+    // and keeps a link that recreates the same order after the page has expired. If the account
+    // cannot collect that consent, the payment page opens without it.
+    const recovery = { consent_collection: { promotions: "auto" as const }, after_expiration: { recovery: { enabled: true } } };
+    const create = (extra: typeof recovery | object) => stripe.checkout.sessions.create({
+      ...extra,
       mode: "payment",
       locale: lang,
       line_items: [{
@@ -74,6 +81,10 @@ export async function POST(req: NextRequest) {
       },
       success_url: `${origin}/${lang}/merci?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/${lang}/programmes/${page}#acheter`,
+    });
+    const session = await create(recovery).catch((e) => {
+      console.error("[checkout] without recovery:", e?.message);
+      return create({});
     });
     return NextResponse.redirect(session.url!, 303);
   } catch (e) {

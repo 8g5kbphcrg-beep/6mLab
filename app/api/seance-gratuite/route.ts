@@ -6,7 +6,8 @@ import { cleanSrc } from "@/lib/analytics";
 import { mailReady, sendFreeSession } from "@/lib/email";
 
 // Free session form (home page): saves the email as a lead in Stripe and sends the session PDF.
-// The 3 tips follow with the daily cron.
+// The 3 tips follow with the daily cron, then the emails at the key moments of the season (saison=1:
+// asked with this wording of the form, lib/season-mail.ts).
 export async function POST(req: NextRequest) {
   const form = await req.formData();
   const lang = (locales as readonly string[]).includes(String(form.get("lang"))) ? (form.get("lang") as Lang) : "fr";
@@ -18,7 +19,7 @@ export async function POST(req: NextRequest) {
   const s = stripe();
   if (!s || !mailReady()) return page("?erreur=indisponible");
   try {
-    const lead = await addLead(s, email, lang, "seance", { src: cleanSrc(String(form.get("src") ?? "direct")) });
+    const lead = await addLead(s, email, lang, "seance", { src: cleanSrc(String(form.get("src") ?? "direct")), saison: "1" });
     await sendFreeSession(email, lang, unsubUrl(SITE, lang, lead.id));
     return page("");
   } catch (e) {
