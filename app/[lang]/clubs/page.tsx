@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { dict, type Lang } from "@/lib/dict";
 import { owner } from "@/lib/legal";
+import ClubTeam from "@/components/ClubTeam";
 import "@/app/pages.css";
 import "@/app/clubs.css";
 
@@ -14,32 +15,32 @@ const text = {
     title: "Clubs et entraîneurs : la prépa physique pour toute l'équipe | 6M Lab",
     desc: "Un programme de préparation physique handball pour tout ton groupe, calé sur le calendrier du club. Tarif de groupe, devis sous 48 heures.",
     k: "Clubs et entraîneurs", h1: "Toute ton équipe sur le même programme",
-    lead: "Pré-saison, maintien en saison ou toute la saison : chaque joueur et chaque joueuse reçoit son programme, et toi, tu gardes la main sur le planning.",
+    lead: "Des U15 aux seniors, en filière féminine ou masculine. Pré-saison, maintien en saison ou toute la saison : chaque joueur et chaque joueuse reçoit son programme, et toi, tu gardes la main sur le planning.",
     why: [
-      ["Un programme commun", "Les mêmes objectifs pour tout le groupe, avec une version allégée pour ceux qui débutent."],
+      ["Adapté à l'âge et à la filière", "Un U15 ne travaille pas comme un U18 ou un senior : le programme suit la catégorie et le niveau de ton équipe."],
       ["Calé sur ton calendrier", "Dates de reprise, matchs, trêve : on place les semaines de prépa autour de tes entraînements."],
       ["Chaque joueur équipé", "Son PDF à son prénom, et l'accès aux animations de chaque exercice sur son téléphone."],
       ["Tarif de groupe", "Un prix par joueur dégressif selon la taille du groupe, sur devis."],
     ],
     how: ["Tu remplis le formulaire (2 minutes).", "On échange sur ton groupe, ton niveau et ton calendrier.", "Tu reçois un devis sous 48 heures.", "Chaque joueur reçoit son programme par email."],
     howT: "Comment ça se passe", formT: "Demander un devis",
-    f: { name: "Ton prénom et ton nom", role: "Tu es", roles: ["Entraîneur ou entraîneuse", "Préparateur ou préparatrice physique", "Dirigeant ou dirigeante", "Autre"], club: "Club", email: "Ton email", size: "Nombre de joueurs", sizes: ["Moins de 10", "10 à 15", "16 à 25", "Plus de 25"], level: "Niveau", levels: ["Jeunes", "Départemental ou régional", "National", "Plus haut"], period: "Quand ?", periods: ["Avant la saison", "Pendant la saison", "Toute la saison"], msg: "Ton message (facultatif)", send: "Envoyer ma demande", privacy: "Ces informations servent uniquement à te répondre et à préparer ton devis." },
+    f: { name: "Ton prénom et ton nom", role: "Tu es", roles: ["Entraîneur ou entraîneuse", "Préparateur ou préparatrice physique", "Dirigeant ou dirigeante", "Autre"], club: "Club", email: "Ton email", size: "Nombre de joueurs", sizes: ["Moins de 10", "10 à 15", "16 à 25", "Plus de 25"], period: "Quand ?", periods: ["Avant la saison", "Pendant la saison", "Toute la saison"], msg: "Ton message (facultatif)", send: "Envoyer ma demande", privacy: "Ces informations servent uniquement à te répondre et à préparer ton devis." },
     ok: "Merci, ta demande est bien partie ! Je te réponds sous 48 heures par email.", err: "La demande n'a pas pu partir. Vérifie ton email, ou écris-moi directement :",
   },
   en: {
     title: "Clubs and coaches: physical prep for the whole team | 6M Lab",
     desc: "A handball physical preparation program for your whole squad, fitted to your club's calendar. Group pricing, quote within 48 hours.",
     k: "Clubs and coaches", h1: "Your whole team on the same program",
-    lead: "Pre-season, in-season or the whole season: every player gets their program, and you stay in charge of the schedule.",
+    lead: "From U15 to seniors, women's or men's teams. Pre-season, in-season or the whole season: every player gets their program, and you stay in charge of the schedule.",
     why: [
-      ["One shared program", "The same goals for the whole group, with a lighter version for beginners."],
+      ["Fitted to age and team", "A U15 does not train like a U18 or a senior: the program follows your team's age group and level."],
       ["Fitted to your calendar", "Restart dates, games, winter break: the training weeks are placed around your sessions."],
       ["Every player equipped", "Their PDF with their name, and the animation of every exercise on their phone."],
       ["Group pricing", "A price per player that goes down with the size of the group, on quote."],
     ],
     how: ["Fill in the form (2 minutes).", "We talk about your group, level and calendar.", "You get a quote within 48 hours.", "Every player gets their program by email."],
     howT: "How it works", formT: "Ask for a quote",
-    f: { name: "Your name", role: "You are", roles: ["Coach", "Strength and conditioning coach", "Club official", "Other"], club: "Club", email: "Your email", size: "Number of players", sizes: ["Fewer than 10", "10 to 15", "16 to 25", "More than 25"], level: "Level", levels: ["Youth", "Regional", "National", "Higher"], period: "When?", periods: ["Before the season", "During the season", "The whole season"], msg: "Your message (optional)", send: "Send my request", privacy: "This information is only used to reply to you and prepare your quote." },
+    f: { name: "Your name", role: "You are", roles: ["Coach", "Strength and conditioning coach", "Club official", "Other"], club: "Club", email: "Your email", size: "Number of players", sizes: ["Fewer than 10", "10 to 15", "16 to 25", "More than 25"], period: "When?", periods: ["Before the season", "During the season", "The whole season"], msg: "Your message (optional)", send: "Send my request", privacy: "This information is only used to reply to you and prepare your quote." },
     ok: "Thank you, your request has been sent! I'll reply within 48 hours by email.", err: "The request could not be sent. Check your email, or write to me directly:",
   },
 };
@@ -82,9 +83,9 @@ export default async function Clubs({ params, searchParams }: P) {
             <label className="cf-field">{f.club}<input name="club" required maxLength={80} autoComplete="organization" /></label>
             <label className="cf-field">{f.email}<input name="email" type="email" required maxLength={254} autoComplete="email" /></label>
           </div>
-          <div className="cf-row cf-3">
+          <ClubTeam lang={lang as Lang} />
+          <div className="cf-row">
             {select("size", f.size, f.sizes)}
-            {select("level", f.level, f.levels)}
             {select("period", f.period, f.periods)}
           </div>
           <label className="cf-field">{f.msg}<textarea name="message" rows={4} maxLength={2000} /></label>

@@ -13,8 +13,8 @@ export async function POST(req: NextRequest) {
   const get = (k: string, max = 120) => String(form.get(k) ?? "").trim().slice(0, max);
   // "site" is left empty by people and filled in by spam bots.
   if (form.get("site")) return page("envoye=1");
-  const r = { name: get("name"), role: get("role"), club: get("club"), email: get("email", 254).toLowerCase(), size: get("size"), level: get("level"), period: get("period"), message: get("message", 2000), src: cleanSrc(get("src") || "direct"), lang };
-  if (!r.name || !r.club || !validEmail(r.email)) return page("erreur=1");
+  const r = { name: get("name"), role: get("role"), club: get("club"), email: get("email", 254).toLowerCase(), size: get("size"), side: get("side"), category: get("category"), level: get("level"), period: get("period"), message: get("message", 2000), src: cleanSrc(get("src") || "direct"), lang };
+  if (!r.name || !r.club || !r.side || !r.category || !validEmail(r.email)) return page("erreur=1");
   // 5 requests per hour and per connection.
   if (redisReady()) {
     const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "?";
