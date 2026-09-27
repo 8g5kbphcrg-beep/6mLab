@@ -5,6 +5,7 @@ import { buy, genders, PACK_PRICE, places, prices, RUNNING_PRICE, SECOND_GOAL_PR
 import { goalName, goalsTitle, hasSecondGoal, validGoals } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
 import { stripe as stripeClient } from "@/lib/feedback";
+import { cleanSrc } from "@/lib/analytics";
 
 export async function POST(req: NextRequest) {
   const form = await req.formData();
@@ -29,7 +30,9 @@ export async function POST(req: NextRequest) {
   if (!key || (key.startsWith("sk_live_") && process.env.STRIPE_ALLOW_LIVE !== "1")) return back("indisponible");
 
   const p = programs[lang][slug];
-  const meta = { program: slug, goals: goals.join("+"), running: running ? "oui" : "non", lieu, ...(pack ? { pack: "oui" } : {}), firstName, age: String(age), gender, lang };
+  // src: where the visit came from (utm link or referring site), for the sales by source in the admin.
+  const src = cleanSrc(String(form.get("src") ?? "direct"));
+  const meta = { program: slug, goals: goals.join("+"), running: running ? "oui" : "non", lieu, ...(pack ? { pack: "oui" } : {}), firstName, age: String(age), gender, lang, src };
   const stripe = stripeClient()!;
   try {
     const session = await stripe.checkout.sessions.create({

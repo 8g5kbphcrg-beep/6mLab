@@ -10,6 +10,8 @@ import Enhance from "@/components/Enhance";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Splash, Transition } from "@/components/Brand";
 import { splashScript } from "@/lib/brand";
+import { Analytics } from "@vercel/analytics/next";
+import Track from "@/components/Track";
 import "../globals.css";
 
 const display = Anton({ subsets: ["latin"], weight: "400", variable: "--font-display" });
@@ -94,6 +96,10 @@ export default async function RootLayout({ children, params }: { children: React
           <p className="fcopy">© {new Date().getFullYear()} 6M Lab</p>
         </footer>
         <Enhance cta={d.hero.cta} />
+        {/* Audience without cookies: Vercel Web Analytics (visits, pages, sources, devices) and the
+            purchase funnel counted by the site (components/Track.tsx, admin page /admin/audience). */}
+        <Analytics />
+        <Track />
       </body>
     </html>
   );

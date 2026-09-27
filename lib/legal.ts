@@ -61,11 +61,12 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           "Séance gratuite : ton adresse email et ta langue, pour t'envoyer la séance puis 3 emails de conseils de préparation, espacés sur une dizaine de jours (base légale : consentement, en demandant la séance). Chaque email contient un lien de désinscription en un clic.",
           "Liste d'attente du programme Forme & bien-être : ton adresse email et ta langue, pour t'envoyer un seul email le jour du lancement (base légale : consentement). Tu peux te désinscrire à tout moment.",
           "Questionnaire Forme & bien-être : ton prénom, ton âge, tes choix (objectif, niveau, lieu, temps disponible) et, uniquement si tu coches la case prévue, ta silhouette, tes douleurs, ta taille et ton poids. Ces informations servent seulement à préparer ton programme (base légale : consentement explicite). Elles ne sont jamais publiées ni transmises à d'autres fins, et tu peux demander leur suppression à tout moment.",
-          "Le questionnaire : tes réponses restent dans ton navigateur. Elles ne sont ni envoyées ni enregistrées.",
+          "Le questionnaire : tes réponses restent dans ton navigateur. Elles ne sont ni envoyées ni enregistrées ; seul le programme conseillé est compté, de façon anonyme, dans la mesure d'audience ci-dessous.",
           "Données techniques : l'hébergeur enregistre des journaux (adresse IP, pages consultées) nécessaires au fonctionnement et à la sécurité du site (base légale : intérêt légitime).",
+          "Mesure d'audience : pour savoir combien de personnes visitent le site, d'où elles viennent (lien, réseau social, moteur de recherche) et à quelle étape elles s'arrêtent, le site compte les visites de façon anonyme, sans cookie et sans identifiant : seuls des totaux par jour sont conservés (13 mois au plus), jamais rien qui permette de te reconnaître. L'outil Vercel Web Analytics fait de même, sans cookie. La provenance de ta visite (par exemple « instagram ») est aussi enregistrée avec ta commande ou ton inscription. Cette mesure, limitée au fonctionnement du site, ne nécessite pas ton consentement (base légale : intérêt légitime).",
         ]] },
         { h: "Cookies", body: [
-          "Le site n'utilise aucun cookie de mesure d'audience ou de publicité. La page de paiement Stripe peut déposer des cookies strictement nécessaires à la sécurité du paiement et à la lutte contre la fraude, qui ne nécessitent pas ton consentement.",
+          "Le site ne dépose aucun cookie de mesure d'audience ou de publicité. La page de paiement Stripe peut déposer des cookies strictement nécessaires à la sécurité du paiement et à la lutte contre la fraude, qui ne nécessitent pas ton consentement.",
         ] },
         { h: "Destinataires", body: [
           "Tes données ne sont jamais vendues. Elles sont transmises uniquement aux prestataires nécessaires au service :",
@@ -172,11 +173,12 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           "Free session: your email address and language, to send you the session and then 3 training tips emails over about ten days (legal basis: consent, given by asking for the session). Every email has a one-click unsubscribe link.",
           "Fitness & well-being waiting list: your email address and language, to send you a single email on launch day (legal basis: consent). You can unsubscribe at any time.",
           "Fitness & well-being questionnaire: your first name, age, choices (goal, level, place, available time) and, only if you tick the box, your body type, pain, height and weight. This information is used only to prepare your program (legal basis: explicit consent). It is never published or used for anything else, and you can ask for it to be deleted at any time.",
-          "The questionnaire: your answers stay in your browser. They are neither sent nor saved.",
+          "The questionnaire: your answers stay in your browser. They are neither sent nor saved; only the recommended program is counted, anonymously, in the audience measurement below.",
           "Technical data: the host keeps logs (IP address, pages viewed) needed to run and secure the website (legal basis: legitimate interest).",
+          "Audience measurement: to know how many people visit the website, where they come from (link, social network, search engine) and at which step they stop, the website counts visits anonymously, with no cookie and no identifier: only daily totals are kept (13 months at most), never anything that could identify you. Vercel Web Analytics does the same, without cookies. Where your visit came from (for example \"instagram\") is also saved with your order or sign-up. This measurement, limited to running the website, does not require your consent (legal basis: legitimate interest).",
         ]] },
         { h: "Cookies", body: [
-          "The website uses no analytics or advertising cookies. The Stripe payment page may set cookies that are strictly necessary for payment security and fraud prevention, which do not require your consent.",
+          "The website sets no analytics or advertising cookies. The Stripe payment page may set cookies that are strictly necessary for payment security and fraud prevention, which do not require your consent.",
         ] },
         { h: "Recipients", body: [
           "Your data is never sold. It is only shared with the providers needed to run the service:",

@@ -3,6 +3,7 @@ import type Stripe from "stripe";
 import { locales, type Lang } from "@/lib/dict";
 import { stripe } from "@/lib/feedback";
 import { addLead, validEmail, type LeadKind } from "@/lib/leads";
+import { cleanSrc } from "@/lib/analytics";
 
 // Waiting lists (no email now: one email on launch day): Fitness & well-being (questionnaire),
 // football and basketball (home page). Also the sports proposed on the home page (kind=sport,
@@ -22,11 +23,11 @@ function answers(form: FormData): Record<string, string> {
 }
 // Each proposal is counted, even from the same person (one per sport): with an email, it joins
 // that person's proposals; without, it is saved alone.
-async function proposeSport(s: Stripe, email: string, lang: Lang, sport: string) {
+async function proposeSport(s: Stripe, email: string, lang: Lang, sport: string, src: string) {
   const at = new Date().toISOString();
-  if (!email) return s.customers.create({ metadata: { lead: "sport" satisfies LeadKind, lang, lead_at: at, sport } });
+  if (!email) return s.customers.create({ metadata: { lead: "sport" satisfies LeadKind, lang, lead_at: at, sport, src } });
   const c = (await s.customers.list({ email, limit: 20 })).data.find((x) => x.metadata?.lead === "sport" && x.metadata?.sport?.toLowerCase() === sport.toLowerCase());
-  return c ?? s.customers.create({ email, metadata: { lead: "sport" satisfies LeadKind, lang, lead_at: at, sport } });
+  return c ?? s.customers.create({ email, metadata: { lead: "sport" satisfies LeadKind, lang, lead_at: at, sport, src } });
 }
 export async function POST(req: NextRequest) {
   const form = await req.formData();
@@ -40,8 +41,9 @@ export async function POST(req: NextRequest) {
   const s = stripe();
   if (!s) return page("&erreur=indisponible");
   try {
-    if (kind === "sport") await proposeSport(s, email, lang, sport);
-    else await addLead(s, email, lang, kind, kind === "forme" ? answers(form) : {});
+    const src = cleanSrc(String(form.get("src") ?? "direct"));
+    if (kind === "sport") await proposeSport(s, email, lang, sport, src);
+    else await addLead(s, email, lang, kind, { ...(kind === "forme" ? answers(form) : {}), src });
     return page("");
   } catch (e) {
     console.error("[liste-attente]", e);

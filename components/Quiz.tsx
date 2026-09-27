@@ -6,6 +6,7 @@ import { goalIds, goalsTitle, REATH, type GoalId } from "@/lib/goals";
 import { programSlugs } from "@/lib/programs";
 import { fmtPrice, PACK_PRICE, prices } from "@/lib/checkout";
 import BuyForm from "@/components/BuyForm";
+import { track } from "@/components/Track";
 import "@/app/quiz.css";
 
 export default function Quiz({ lang, test }: { lang: Lang; test: boolean }) {
@@ -24,7 +25,11 @@ export default function Quiz({ lang, test }: { lang: Lang; test: boolean }) {
   const back = () => setA(a.slice(0, a[a.length - 1] === -1 ? -2 : -1));
   useEffect(() => {
     if (i > 0) head.current?.focus();
-  }, [i]);
+    // Audience: started at the first answer, finished with the recommended offer (or the advice to
+    // see a doctor first).
+    if (i === 1) track("quiz_debut", "handball", true);
+    if (i >= n) track("quiz_fin", a[6] === 1 ? "blessure" : a[1] === 2 ? "pack" : programSlugs[a[1]], true);
+  }, [i, n, a]);
 
   let body;
   if (i < n) {
