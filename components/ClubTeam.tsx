@@ -50,9 +50,9 @@ export default function ClubTeam({ lang }: { lang: Lang }) {
     return () => window.removeEventListener("keydown", esc);
   }, [info]);
   // Levels open to each age group: U15 up to regional, U17 girls and U18 boys up to national,
-  // seniors up to professional.
+  // seniors from regional to professional (no county-level seniors program).
   const idx = side ? t.cats[side].indexOf(cat) : -1;
-  const levels = t.levels.slice(0, [2, 3, 4][idx] ?? 0);
+  const levels = idx < 0 ? [] : t.levels.slice(idx === 2 ? 1 : 0, [2, 3, 4][idx]);
   // Prerequisites of the chosen side, age group and level (lib/club-prereq.ts).
   const li = t.levels.indexOf(lvl);
   const prereq = side && idx >= 0 && li >= 0 ? CLUB_PREREQ[`${side}-${CAT_KEYS[side][idx]}-${LEVEL_KEYS[li]}`]?.[lang] ?? [] : null;
