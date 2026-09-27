@@ -74,11 +74,14 @@
 .plan-steps strong{font:400 1.35rem var(--font-display),sans-serif;color:var(--Bt)}.plan-steps li>span:last-child{color:var(--muted);font-size:.95rem}
 .plan-n{width:1.8rem;height:1.8rem;border-radius:50%;display:grid;place-items:center;background:var(--Bt);color:var(--bg);font-weight:700}
 .plan-custom{margin:0;padding:.9rem 1.1rem;border-left:4px solid #2EC4B6;background:color-mix(in srgb,var(--B) 10%,var(--card));border-radius:0 12px 12px 0}
-/* "i" next to the level of play. */
-.cf-lvl{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
-.cf-info{font-weight:400}
-.cf-info summary{list-style:none;width:1.3rem;height:1.3rem;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--Bt);color:var(--Bt);font:700 .8rem var(--font-text),serif;font-style:italic;cursor:pointer}
-.cf-info summary::-webkit-details-marker{display:none}
-.cf-info[open] summary{background:var(--Bt);color:var(--bg)}
-.cf-info p{margin:.5rem 0 0;padding:.7rem .9rem;border-radius:10px;background:color-mix(in srgb,var(--B) 12%,var(--card));border:1px solid color-mix(in srgb,var(--B) 50%,var(--line));font-size:.9rem;color:var(--ink);width:100%}
-.cf-lvl .cf-info[open]{flex-basis:100%;order:3}
+/* "i" next to the level of play, and its box over the form. */
+.cf-field{align-content:start}
+.cf-lvl{display:flex;align-items:center;gap:.5rem}
+.cf-i{width:1.35rem;height:1.35rem;padding:0;border-radius:50%;display:inline-grid;place-items:center;border:1.5px solid var(--Bt);background:transparent;color:var(--Bt);font:italic 700 .8rem Georgia,serif;cursor:pointer;flex:none}
+.cf-i[aria-expanded="true"],.cf-i.on{background:var(--Bt);color:var(--bg)}
+.cf-pop{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:16px;background:rgba(16,10,36,.55);animation:cfpop .18s ease-out}
+.cf-pop-box{position:relative;width:min(100%,460px);background:var(--card);color:var(--ink);border-radius:18px;padding:1.4rem 1.4rem 1.3rem;box-shadow:0 20px 50px rgba(0,0,0,.35);border:1.5px solid color-mix(in srgb,var(--B) 55%,var(--line))}
+.cf-pop-box p{margin:0;font-size:.98rem;line-height:1.55}
+.cf-pop-t{display:flex;align-items:center;gap:.55rem;font-weight:700;margin-bottom:.7rem!important;padding-right:2rem}
+.cf-pop-x{position:absolute;top:.6rem;right:.6rem;width:2.2rem;height:2.2rem;border-radius:50%;border:0;background:color-mix(in srgb,var(--ink) 8%,transparent);color:var(--ink);font-size:1.4rem;line-height:1;cursor:pointer}
+@keyframes cfpop{from{opacity:0}to{opacity:1}}

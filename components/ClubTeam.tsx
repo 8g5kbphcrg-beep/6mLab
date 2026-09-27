@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Lang } from "@/lib/dict";
 
 // Team fields of the club quote form (app/[lang]/clubs): the side (girls or boys), then the age
@@ -32,6 +32,15 @@ export default function ClubTeam({ lang }: { lang: Lang }) {
   const t = text[lang];
   const [side, setSide] = useState<"f" | "m" | "">("");
   const [cat, setCat] = useState("");
+  // The "i" next to the level: what the level assumes, in a box over the form (Escape, the cross,
+  // the backdrop or the "i" again close it).
+  const [info, setInfo] = useState(false);
+  useEffect(() => {
+    if (!info) return;
+    const esc = (e: KeyboardEvent) => e.key === "Escape" && setInfo(false);
+    window.addEventListener("keydown", esc);
+    return () => window.removeEventListener("keydown", esc);
+  }, [info]);
   // Levels open to each age group: U15 up to regional, U17 girls and U18 boys up to national,
   // seniors up to professional.
   const idx = side ? t.cats[side].indexOf(cat) : -1;
@@ -55,11 +64,23 @@ export default function ClubTeam({ lang }: { lang: Lang }) {
             </select>
           </label>
           {levels.length > 0 && (
-            <label className="cf-field"><span className="cf-lvl">{t.level}
-              <details className="cf-info"><summary aria-label={t.infoL} title={t.infoL}>i</summary><p>{t.info}</p></details></span>
-              <select key={cat} name="level" required defaultValue=""><option value="" disabled>—</option>{levels.map((l) => <option key={l}>{l}</option>)}</select>
-            </label>
+            <div className="cf-field">
+              <span className="cf-lvl">
+                <label htmlFor="cf-level">{t.level}</label>
+                <button type="button" className="cf-i" aria-label={t.infoL} title={t.infoL} aria-expanded={info} onClick={() => setInfo(!info)}>i</button>
+              </span>
+              <select id="cf-level" key={cat} name="level" required defaultValue=""><option value="" disabled>—</option>{levels.map((l) => <option key={l}>{l}</option>)}</select>
+            </div>
           )}
+        </div>
+      )}
+      {info && (
+        <div className="cf-pop" onClick={() => setInfo(false)}>
+          <div className="cf-pop-box" role="dialog" aria-modal="true" aria-labelledby="cf-pop-t" onClick={(e) => e.stopPropagation()}>
+            <button type="button" className="cf-pop-x" aria-label={lang === "fr" ? "Fermer" : "Close"} onClick={() => setInfo(false)}>×</button>
+            <p className="cf-pop-t" id="cf-pop-t"><span className="cf-i on" aria-hidden="true">i</span>{t.infoL}</p>
+            <p>{t.info}</p>
+          </div>
         </div>
       )}
       {idx === 0 && <p className="cf-warn" role="note">⚠ {t.u15}</p>}
