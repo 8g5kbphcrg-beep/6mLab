@@ -18,6 +18,8 @@ const text = {
     soon: "La liste des acquis attendus pour ce niveau arrive bientôt. En attendant : le programme part du principe que ton équipe a déjà le bagage physique et technique habituel de cette catégorie et de ce niveau.",
     expect: "Acquis attendus", pick: "Choisis une catégorie et un niveau pour voir les acquis attendus.",
     advice: "Ton équipe n'a pas la plupart de ces acquis ? Choisis le niveau en dessous. Si même le premier niveau ne correspond pas, le programme ne sera pas adapté à ton groupe pour l'instant, et mieux vaut ne pas demander de devis.",
+    lead: "Lis bien cette liste avant d'envoyer ta demande : le programme part du principe que la plupart de tes joueurs ont déjà ces acquis.",
+    confirm: "Je confirme que la plupart des joueurs de mon groupe ont ces acquis.",
     lvl: "Le programme est calibré sur ce niveau. Prendre un niveau au-dessus de celui de ton équipe est possible, mais en ayant bien conscience du niveau réel de ton effectif.",
   },
   en: {
@@ -31,6 +33,8 @@ const text = {
     soon: "The list of expected prerequisites for this level is coming soon. Meanwhile: the program assumes your team already has the usual physical and technical background of this age group and level.",
     expect: "Expected prerequisites", pick: "Choose an age group and a level to see the expected prerequisites.",
     advice: "Your team lacks most of these prerequisites? Choose the level below. If even the first level does not fit, the program will not suit your group for now, and it is better not to ask for a quote.",
+    lead: "Read this list before sending your request: the program assumes most of your players already have these prerequisites.",
+    confirm: "I confirm that most players in my group have these prerequisites.",
     lvl: "The program is calibrated on this level. Choosing a level above your team's is possible, but only with a clear view of your squad's real level.",
   },
 };
@@ -40,8 +44,9 @@ export default function ClubTeam({ lang }: { lang: Lang }) {
   const [side, setSide] = useState<"f" | "m" | "">("");
   const [cat, setCat] = useState("");
   const [lvl, setLvl] = useState("");
-  // The "i" next to the level: what the level assumes, in a box over the form (Escape, the cross,
-  // the backdrop or the "i" again close it).
+  // The "i" next to the level: what levels assume in general, in a box over the form (Escape, the
+  // cross, the backdrop or the "i" again close it). The chosen level's own list is shown in the
+  // form itself, with a box to tick, so the coach cannot miss it.
   const [info, setInfo] = useState(false);
   useEffect(() => {
     if (!info) return;
@@ -89,21 +94,19 @@ export default function ClubTeam({ lang }: { lang: Lang }) {
         <div className="cf-pop" onClick={() => setInfo(false)}>
           <div className="cf-pop-box" role="dialog" aria-modal="true" aria-labelledby="cf-pop-t" onClick={(e) => e.stopPropagation()}>
             <button type="button" className="cf-pop-x" aria-label={lang === "fr" ? "Fermer" : "Close"} onClick={() => setInfo(false)}>×</button>
-            {prereq ? (
-              // A level is chosen: its prerequisites (or, until the list is written, a note).
-              <>
-                <p className="cf-pop-t" id="cf-pop-t"><span className="cf-i on" aria-hidden="true">i</span>{t.expect} : {cat}, {lvl}</p>
-                {prereq.length ? <ul className="cf-pop-l">{prereq.map((x) => <li key={x}>{x}</li>)}</ul> : <p className="cf-pop-soon">{t.soon}</p>}
-                <p className="cf-pop-adv">{t.advice}</p>
-              </>
-            ) : (
-              <>
-                <p className="cf-pop-t" id="cf-pop-t"><span className="cf-i on" aria-hidden="true">i</span>{t.infoL}</p>
-                <p>{t.info}</p>
-                <p className="cf-pop-adv">{t.pick}</p>
-              </>
-            )}
+            <p className="cf-pop-t" id="cf-pop-t"><span className="cf-i on" aria-hidden="true">i</span>{t.infoL}</p>
+            <p>{t.info}</p>
+            <p className="cf-pop-adv">{prereq ? t.advice : t.pick}</p>
           </div>
+        </div>
+      )}
+      {prereq && (
+        <div className="cf-pre" aria-live="polite">
+          <p className="cf-pre-t">{t.expect} : {cat}, {lvl}</p>
+          <p className="cf-pre-lead">{t.lead}</p>
+          {prereq.length ? <ul className="cf-pop-l">{prereq.map((x) => <li key={x}>{x}</li>)}</ul> : <p className="cf-pop-soon">{t.soon}</p>}
+          <p className="cf-pop-adv">{t.advice}</p>
+          <label className="cf-pre-ok"><input type="checkbox" name="acquis" value="oui" required />{t.confirm}</label>
         </div>
       )}
       {idx === 0 && <p className="cf-warn" role="note">⚠ {t.u15}</p>}
