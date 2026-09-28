@@ -23,7 +23,7 @@ export default async function Exercice({ params, searchParams }: P) {
   if (!(locales as readonly string[]).includes(lang) || !animatedIds.includes(id)) notFound();
   const g = await searchParams;
   if (!FREE_EXERCISES.includes(id) && !(await accessEnd())) {
-    return <AccessGate lang={lang as Lang} next={`/${lang}/exercices/${id}`} />;
+    return <AccessGate lang={lang as Lang} next={`/${lang}/exercices/${id}`} state={g.acces} />;
   }
   return <ExerciseCard lang={lang as Lang} id={id} back={backPath(g.retour)} />;
 }

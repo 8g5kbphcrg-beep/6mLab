@@ -98,7 +98,7 @@ SECTIONS = [
  ("ok", "Une page dédiée", "Bénéfices, séance type, ce qu'il faut savoir, exemple d'exercice animé."),
  ("ok", "Un devis structuré", "Catégorie, niveau, joueurs de champ et gardiens, installations, matériel ; acquis à confirmer."),
  ("ok", "Tes outils de réponse", "Méthode Clubs, exemple U18, dossier Gardiens et fiche de suivi, dans l'admin."),
- ("todo", "Code d'accès aux animations pour les clubs", "Pour que l'œil des PDF clubs ouvre les animations."),
+ ("ok", "Code d'accès aux animations pour les clubs", "Un code par équipe (CLUB-XXXX-XXXX), créé dans Admin > Clubs avec une date de fin et un nombre d'appareils. L'œil des documents clubs est un lien vers l'exercice sur le site, qui reste cliquable dans le PDF ; le joueur y entre le code une fois. « Libérer » et « Supprimer » coupent l'accès tout de suite."),
  ("todo", "Sortie des programmes clubs en PDF", "Produire les 4 documents d'un devis directement en PDF."),
  ("you", "Un prix indicatif", "« À partir de … € » rassure et filtre les demandes. À décider."),
  ("you", "Un premier club témoin", "Un club qui teste et accepte d'être cité : c'est la meilleure publicité auprès des autres clubs."),

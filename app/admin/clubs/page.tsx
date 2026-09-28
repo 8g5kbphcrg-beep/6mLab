@@ -1,10 +1,13 @@
 import Nav from "../Nav";
 import { DOCS } from "@/lib/admin-docs";
 import { CLUB_PREREQ } from "@/lib/club-prereq";
+import { listClubCodes } from "@/lib/club-access";
 
 // Clubs: how to answer a quote request, the working documents, the follow-up sheet to print, and
-// the rules decided for every club program.
+// the rules decided for every club program, and the access codes that open the animations for a
+// team (lib/club-access.ts).
 export const metadata = { title: "Clubs | Admin 6M Lab" };
+export const dynamic = "force-dynamic";
 
 const RULES = [
   "Niveaux proposés : U15 départemental et régional ; U17 filles et U18 garçons départemental, régional et national ; seniors régional, national et pro (pas de seniors départemental).",
@@ -19,7 +22,11 @@ const RULES = [
   "Postes : pas de différenciation en U15 départemental, plusieurs postes en U15 régional, postes fixes à partir des U17/U18 régionaux et en seniors.",
 ];
 
-export default function Clubs() {
+export default async function Clubs({ searchParams }: { searchParams: Promise<{ code?: string }> }) {
+  const { code: made } = await searchParams;
+  const codes = await listClubCodes();
+  const fmt = (ms: number) => new Date(ms).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" });
+  const season = new Date().getMonth() >= 6 ? new Date().getFullYear() + 1 : new Date().getFullYear();
   const empty = Object.entries(CLUB_PREREQ).filter(([, p]) => p.fr.length === 0).map(([k]) => k);
   return (
     <main>
@@ -34,6 +41,7 @@ export default function Clubs() {
         <li><b>Échange avec le coach</b> : date de reprise, jours d'entraînement, matchs amicaux, premier match, matériel réel (nombre de plots, barres, caisses…).</li>
         <li><b>Envoie le devis</b> sous 48 heures.</li>
         <li><b>Une fois validé</b>, le programme se construit à partir de l'exemple U18 et de la Méthode Clubs, dans une conversation avec Claude : colle la demande et tes échanges avec le coach. Tu relis avant l'envoi.</li>
+        <li><b>Crée le code d'accès aux animations</b> de l'équipe (plus bas) et écris-le dans les documents, à l'emplacement « Code animations ».</li>
         <li><b>Envoie au coach, sur une seule adresse</b>, les 4 documents : document du coach, autonomie joueurs, autonomie gardiens, et la fiche de suivi (à générer ci-dessous avec son effectif).</li>
       </ol></div>
 
@@ -50,6 +58,34 @@ export default function Clubs() {
         <label className="f">Footings mardi et jeudi<select name="footings" defaultValue="oui"><option value="oui">Oui (U17 F / U18 M national, seniors)</option><option value="non">Non</option></select></label>
         <button type="submit">Créer la fiche</button>
       </form>
+
+      <h2 id="codes">Codes d'accès aux animations</h2>
+      <div className="card">
+        <p className="muted">Un code par équipe. Les joueurs le saisissent sur la page d'un exercice (l'œil des documents) : les animations s'ouvrent sur leur téléphone jusqu'à la date de fin, sur le nombre d'appareils prévu. « Libérer » vide la liste des appareils (nouvelle saison, changement de téléphone) ; « Supprimer » coupe l'accès tout de suite.</p>
+        {made && made !== "erreur" && <p className="alerts" style={{ padding: 10, borderRadius: 10 }}>Code créé : <b style={{ fontSize: 18, letterSpacing: 2 }}>{made}</b> (à écrire dans les documents du coach).</p>}
+        {made === "erreur" && <p className="muted"><b>Le code n'a pas pu être créé</b> (nom du club et date de fin dans le futur obligatoires, et Redis branché).</p>}
+        <form className="form" method="post" action="/admin/clubs/codes">
+          <input type="hidden" name="action" value="create" />
+          <label className="f">Club<input name="club" required maxLength={80} placeholder="HBC Exemple" /></label>
+          <label className="f">Équipe<input name="team" maxLength={60} placeholder="U18 garçons national" /></label>
+          <label className="f">Fin de l'accès<input name="end" type="date" required defaultValue={`${season}-06-30`} /></label>
+          <label className="f">Appareils au plus<input name="max" type="number" min={1} max={80} defaultValue={30} required /></label>
+          <button type="submit">Créer le code</button>
+        </form>
+        {codes.length > 0 && <div className="tw"><table>
+          <thead><tr><th>Code</th><th>Club, équipe</th><th>Fin</th><th>Appareils</th><th></th></tr></thead>
+          <tbody>{codes.map((c) => (
+            <tr key={c.code}>
+              <td><b>{c.code}</b></td><td>{c.club}{c.team ? `, ${c.team}` : ""}</td>
+              <td>{fmt(c.end)}{c.end < Date.now() ? " (terminé)" : ""}</td><td>{c.devices.length} / {c.max}</td>
+              <td>
+                <form method="post" action="/admin/clubs/codes"><input type="hidden" name="code" value={c.code} /><button className="ghost" name="action" value="free">Libérer</button></form>{" "}
+                <form method="post" action="/admin/clubs/codes"><input type="hidden" name="code" value={c.code} /><button className="ghost" name="action" value="delete">Supprimer</button></form>
+              </td>
+            </tr>
+          ))}</tbody>
+        </table></div>}
+      </div>
 
       <h2>Les règles décidées</h2>
       <div className="card"><ul>{RULES.map((r) => <li key={r}>{r}</li>)}</ul><p className="muted">Le détail et les sources sont dans la Méthode Clubs.</p></div>
