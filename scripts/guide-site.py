@@ -65,6 +65,7 @@ SECTIONS = [
 ]),
 ("technique", "Technique et performance", "Un site rapide, fiable, et qui envoie ses emails.", [
  ("ok", "Hébergement fiable et HTTPS", "Vercel, avec un aperçu pour chaque modification avant de la valider."),
+ ("ok", "Sécurité du site", "Paiement par Stripe, codes et cookies signés, connexion par code à 6 chiffres limitée en essais. Admin : mot de passe, 10 essais par quart d'heure et par adresse, actions refusées si elles viennent d'un autre site. Protections du navigateur sur toutes les pages (HTTPS obligatoire, site impossible à afficher dans un autre site)."),
  ("ok", "Sauvegarde du site", "Tout le code et les documents sont sur GitHub : rien ne se perd."),
  ("part", "Vitesse", "Mesuré avec Lighthouse (l'outil de PageSpeed Insights), en simulant un téléphone : accueil passé de 74 à 83-93/100, autres pages 95 à 97/100, rien ne bouge au chargement. À refaire sur le vrai site après la mise en ligne, avec PageSpeed Insights et les données réelles des visiteurs."),
  ("part", "Emails envoyés depuis ton domaine", "Préparé : la marche à suivre est dans l'aide-mémoire de l'admin. Avec iCloud+ (déjà utilisé pour les emails du site) : domaine de messagerie personnalisé, réglages SPF, DKIM et DMARC, adresse contact@ton-domaine, puis test sur mail-tester.com. À faire dès que le nom de domaine est choisi."),
@@ -127,7 +128,8 @@ IMPROVE = {
  "Des articles de conseils réguliers": "Les articles s'arrêtent en décembre 2026 : écrire ceux de janvier à mars (reprise après la trêve, phase retour).",
  "Page de remerciement et email de confirmation": "Ajouter sur la page de remerciement un bouton « Mon espace client » pour activer sa bibliothèque tout de suite.",
  "Données structurées": "Ajouter la note moyenne des avis (étoiles dans Google) dès les premiers avis publiés.",
- "Sauvegarde du site": "Le code est sur GitHub, mais pas les données : codes clubs, parrainages et journaux sont dans Redis, les commandes dans Stripe. Prévoir un export régulier.",
+ "Sécurité du site": "Un composant qui sert à construire le site est signalé par npm (sans risque pour les visiteurs) : il partira avec la mise à jour vers Next.js 16. Choisir un mot de passe admin long (16 caractères ou plus).",
+ "Sauvegarde du site":"Le code est sur GitHub, mais pas les données : codes clubs, parrainages et journaux sont dans Redis, les commandes dans Stripe. Prévoir un export régulier.",
  "Surveiller les erreurs": "Ajouter une surveillance externe qui prévient si le site ne répond plus (le système actuel ne voit que les erreurs internes).",
  "Pas de cookie publicitaire": "La page Confidentialité doit citer les cookies de fonctionnement ajoutés (connexion à l'espace client, accès aux animations, appareil) et le journal des connexions.",
  "Une FAQ générale": "Ajouter les questions sur le code club (où le saisir, combien d'appareils) et sur la connexion à l'espace client.",
