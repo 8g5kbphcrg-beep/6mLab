@@ -9,13 +9,13 @@ const text = (f: number, s: number, pp: number, pr: number) => ({
     k: "Parrainage", h: "Entre coéquipiers, tout le monde paie moins cher",
     steps: [["Tu commandes", "Tu reçois ton code de parrainage personnel."], ["Tu le passes à tes coéquipiers", `Ils ont -${f} % sur leur programme.`], ["Tu gagnes des points", `${pp} points par coéquipier qui commande. À ${pr} points, -${s} % sur ton prochain programme.`]],
     tag: [`-${f} %`, "pour eux", `${pp} pts`, "pour toi"],
-    code: "Ton code", sample: "TONPRÉNOM-7MQD", cta: "Voir les programmes", already: "Déjà client ? Ton code est dans ton email de confirmation et dans ta", lib: "bibliothèque d'exercices",
+    code: "Ton code", sample: "TONPRÉNOM-7MQD", cta: "Voir les programmes", already: "Déjà client ? Ton code et tes points sont dans ton", lib: "espace client",
   },
   en: {
     k: "Referral", h: "Between teammates, everyone pays less",
     steps: [["You order", "You get your personal referral code."], ["You pass it to your teammates", `They get ${f}% off their program.`], ["You earn points", `${pp} points per teammate who orders. At ${pr} points, ${s}% off your next program.`]],
     tag: [`${f}%`, "off for them", `${pp} pts`, "for you"],
-    code: "Your code", sample: "YOURNAME-7MQD", cta: "See the programs", already: "Already a customer? Your code is in your confirmation email and in your", lib: "exercise library",
+    code: "Your code", sample: "YOURNAME-7MQD", cta: "See the programs", already: "Already a customer? Your code and points are in your", lib: "customer area",
   },
 });
 
@@ -29,7 +29,7 @@ export default function ReferralBand({ lang }: { lang: Lang }) {
           <h2 id="par-h">{t.h}</h2>
           <ol className="parb-steps">{t.steps.map(([h, p]) => <li key={h}><strong>{h}</strong><span>{p}</span></li>)}</ol>
           <a className="btn parb-btn" href="#formules">{t.cta} →</a>
-          <p className="parb-al">{t.already} <a href={`/${lang}/exercices`}>{t.lib}</a>.</p>
+          <p className="parb-al">{t.already} <a href={`/${lang}/espace-client`}>{t.lib}</a>.</p>
         </div>
         <div className="parb-vis" aria-hidden="true">
           <p className="parb-code"><span>{t.code}</span><b>{t.sample}</b></p>

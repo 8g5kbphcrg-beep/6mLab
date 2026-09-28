@@ -146,8 +146,8 @@ export async function sendConfirmation(o: Order) {
     : [];
   // Referral (lib/referral.ts): the code to share with teammates.
   const par = o.referral ? (fr
-    ? ["Parraine tes coéquipiers", `Donne-leur ton code ${o.referral} : ils ont -${FRIEND_PERCENT} % sur leur programme (à saisir sur la page de paiement). Chaque coéquipier qui commande te rapporte ${POINTS_PER_FRIEND} points ; à ${POINTS_FOR_REWARD} points, tu reçois -${SPONSOR_PERCENT} % sur ton prochain programme.`]
-    : ["Refer your teammates", `Give them your code ${o.referral}: they get ${FRIEND_PERCENT}% off their program (entered on the payment page). Every teammate who orders earns you ${POINTS_PER_FRIEND} points; at ${POINTS_FOR_REWARD} points, you get ${SPONSOR_PERCENT}% off your next program.`]) : null;
+    ? ["Parraine tes coéquipiers", `Donne-leur ton code ${o.referral} : ils ont -${FRIEND_PERCENT} % sur leur programme (à saisir sur la page de paiement). Chaque coéquipier qui commande te rapporte ${POINTS_PER_FRIEND} points ; à ${POINTS_FOR_REWARD} points, tu reçois -${SPONSOR_PERCENT} % sur ton prochain programme. Suis tes points dans ton espace client : ${SITE}/fr/espace-client (avec ta référence de commande).`]
+    : ["Refer your teammates", `Give them your code ${o.referral}: they get ${FRIEND_PERCENT}% off their program (entered on the payment page). Every teammate who orders earns you ${POINTS_PER_FRIEND} points; at ${POINTS_FOR_REWARD} points, you get ${SPONSOR_PERCENT}% off your next program. Follow your points in your customer area: ${SITE}/en/espace-client (with your order reference).`]) : null;
   const health = fr
     ? "Nos programmes sont destinés aux personnes en bonne santé. En cas de doute ou de blessure, demande l'avis d'un professionnel de santé."
     : "Our programs are for healthy people. If you have doubts or an injury, ask a health professional first.";

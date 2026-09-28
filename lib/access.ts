@@ -105,3 +105,21 @@ export function readAccess(cookie: string | undefined, device: string | undefine
   return e > now ? e : null;
 }
 export const newDevice = () => randomBytes(6).toString("base64url");
+
+// Customer area (espace-client): signed cookie "<pi>.<expiry in ms>.<signature>", set once the
+// order reference was checked. It shows the order and the referral without starting the access to
+// the animations, which only starts from the library (above).
+export const CLIENT_COOKIE = "6m_cli";
+export const CLIENT_DAYS = 400;
+export const clientCookie = (pi: string, now = Date.now()) => {
+  const v = `${pi}.${now + CLIENT_DAYS * DAY * 1000}`;
+  return `${v}.${sign(`cli.${v}`)}`;
+};
+export function readClient(cookie: string | undefined, now = Date.now()): string | null {
+  if (!cookie || !secret()) return null;
+  const parts = cookie.split(".");
+  if (parts.length !== 3) return null;
+  const [pi, exp, sig] = parts;
+  const a = Buffer.from(sign(`cli.${pi}.${exp}`)), b = Buffer.from(sig);
+  return a.length === b.length && timingSafeEqual(a, b) && Number(exp) > now ? pi : null;
+}
