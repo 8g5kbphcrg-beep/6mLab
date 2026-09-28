@@ -30,3 +30,4 @@
 .adm dl.vars dt{font-family:ui-monospace,Menlo,monospace;font-size:13px}.adm dl.vars dd{margin:0;color:#3A3452}
 @media(max-width:600px){.adm dl.vars{grid-template-columns:1fr}.adm dl.vars dd{margin-bottom:6px}}
 .adm .kpis>*,.adm .grid>*,.adm .cards>*,.adm .bar>*,.adm .form>*,.adm dl.vars>*{min-width:0;overflow-wrap:anywhere}
+.adm .alerts{border-color:#E0A3A3;background:#FFF4F2}.adm .alerts h2{margin:0 0 4px;color:#9E2A1A;font-size:18px}
