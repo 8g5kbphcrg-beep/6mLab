@@ -18,7 +18,7 @@ SECTIONS = [
  ("ok", "Un pied de page complet", "Mentions légales, CGV, confidentialité, contact, changement de langue."),
  ("ok", "Une recherche dans la bibliothèque d'exercices", "Recherche et familles d'exercices (dont Gardiens de but)."),
  ("ok", "Une page d'erreur 404 utile", "Une adresse fausse affiche une page 6M Lab (« Tir hors cadre ») qui renvoie vers le questionnaire, la séance gratuite et les programmes."),
- ("ok", "Une FAQ générale", "18 questions en 4 thèmes (choisir, commande et accès, clubs, contact), en français et en anglais, lisibles par Google. Lien dans le pied de page."),
+ ("ok", "Une FAQ générale", "19 questions en 4 thèmes (choisir, commande et accès, clubs avec le code club, contact), en français et en anglais, lisibles par Google. Lien dans le pied de page."),
 ]),
 ("design", "Design et mise en page", "Le site doit paraître aussi sérieux que le contenu des programmes.", [
  ("ok", "Une identité cohérente", "Logo, couleurs, typographies et ton identiques sur le site, les PDF, les emails et l'admin."),
@@ -48,7 +48,7 @@ SECTIONS = [
 ("conversion", "Tunnel de vente", "Transformer un visiteur en client, puis en client fidèle.", [
  ("ok", "Questionnaire d'orientation", "Quelques questions, puis le programme recommandé."),
  ("ok", "Formulaire d'achat court", "Objectifs, lieu, silhouette, langue, option course : seulement ce qui sert au programme."),
- ("ok", "Page de remerciement et email de confirmation", "Le client sait tout de suite quoi faire : PDF joint, accès aux animations, rappel avant le début."),
+ ("ok", "Page de remerciement et email de confirmation", "Le client sait tout de suite quoi faire : PDF joint, bouton « Mon espace client » pour activer sa bibliothèque le jour où il commence, rappel avant le début."),
  ("ok", "Relance des paniers abandonnés", "Un email à ceux qui ont commencé un paiement sans le terminer."),
  ("ok", "Vente complémentaire", "Le pack Saison complète est proposé avec l'économie réalisée."),
  ("ok", "Le bon moment de l'année", "« Quand commencer » : le visiteur voit quand démarrer selon sa date de reprise."),
@@ -76,7 +76,7 @@ SECTIONS = [
  ("you", "Compléter les mentions légales", "Nom, SIRET, adresse et médiateur de la consommation. Obligatoire avant de vendre pour de vrai."),
  ("ok", "Droit de rétractation", "L'acheteur accepte les CGV et renonce à la rétractation une fois le programme envoyé, au moment du paiement."),
  ("ok", "Mineurs et santé", "Accord d'un parent pour un mineur, conseil de consulter un médecin, arrêt en cas de douleur : c'est écrit dans les CGV et les programmes."),
- ("ok", "Pas de cookie publicitaire", "La mesure d'audience est anonyme et sans cookie : pas de bandeau à afficher."),
+ ("ok", "Pas de cookie publicitaire", "La mesure d'audience est anonyme et sans cookie : pas de bandeau à afficher. La page Confidentialité liste les 4 cookies de fonctionnement (connexion, code, accès, appareil), le journal des connexions et la base de données Upstash."),
  ("ok", "Mention TVA", "« TVA non applicable, article 293 B du CGI » dans les mentions et les CGV. À vérifier avec ton statut."),
 ]),
 ("marketing", "Marketing et acquisition", "Faire venir les bonnes personnes, régulièrement, sans dépendre de la publicité.", [
@@ -126,13 +126,10 @@ IMPROVE = {
  "Montrer le produit": "Ajouter une courte vidéo (30 s) d'une séance ou d'un feuilletage du PDF sur l'accueil et les pages programme.",
  "Accessibilité": "Refaire l'audit sur les pages ajoutées depuis : espace client, bibliothèque clubs, Contact, codes clubs, admin Réponses types.",
  "Des articles de conseils réguliers": "Les articles s'arrêtent en décembre 2026 : écrire ceux de janvier à mars (reprise après la trêve, phase retour).",
- "Page de remerciement et email de confirmation": "Ajouter sur la page de remerciement un bouton « Mon espace client » pour activer sa bibliothèque tout de suite.",
  "Données structurées": "Ajouter la note moyenne des avis (étoiles dans Google) dès les premiers avis publiés.",
  "Sécurité du site": "Un composant qui sert à construire le site est signalé par npm (sans risque pour les visiteurs) : il partira avec la mise à jour vers Next.js 16.",
  "Sauvegarde du site":"Le code est sur GitHub, mais pas les données : codes clubs, parrainages et journaux sont dans Redis, les commandes dans Stripe. Prévoir un export régulier.",
  "Surveiller les erreurs": "Ajouter une surveillance externe qui prévient si le site ne répond plus (le système actuel ne voit que les erreurs internes).",
- "Pas de cookie publicitaire": "La page Confidentialité doit citer les cookies de fonctionnement ajoutés (connexion à l'espace client, accès aux animations, appareil) et le journal des connexions.",
- "Une FAQ générale": "Ajouter les questions sur le code club (où le saisir, combien d'appareils) et sur la connexion à l'espace client.",
  "Répondre vite": "Envoyer un accusé de réception automatique quand un client écrit, avec le délai de 48 h et les liens utiles.",
  "Sortie des programmes clubs en PDF": "Les PDF sont produits avec Claude : un bouton « Générer les PDF » dans Admin > Clubs rendrait l'outil autonome.",
 }

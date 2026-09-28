@@ -67,11 +67,19 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           "Mesure d'audience : pour savoir combien de personnes visitent le site, d'où elles viennent (lien, réseau social, moteur de recherche) et à quelle étape elles s'arrêtent, le site compte les visites de façon anonyme, sans cookie et sans identifiant : seuls des totaux par jour sont conservés (13 mois au plus), jamais rien qui permette de te reconnaître. L'outil Vercel Web Analytics fait de même, sans cookie. La provenance de ta visite (par exemple « instagram ») est aussi enregistrée avec ta commande ou ton inscription. Cette mesure, limitée au fonctionnement du site, ne nécessite pas ton consentement (base légale : intérêt légitime).",
         ]] },
         { h: "Cookies", body: [
-          "Le site ne dépose aucun cookie de mesure d'audience ou de publicité. La page de paiement Stripe peut déposer des cookies strictement nécessaires à la sécurité du paiement et à la lutte contre la fraude, qui ne nécessitent pas ton consentement.",
+          "Le site ne dépose aucun cookie de mesure d'audience ou de publicité. Il utilise seulement des cookies de fonctionnement, strictement nécessaires au service que tu demandes : ils ne nécessitent pas ton consentement (base légale : exécution du contrat). Ils sont signés, pour qu'on ne puisse pas les fabriquer ou les modifier, et illisibles par les scripts de la page.",
+          [
+            "6m_ses : ta connexion à l'espace client (ton adresse email). Il s'efface à la fermeture du navigateur et n'est plus valable après 1 heure.",
+            "6m_otp : le code à 6 chiffres en cours de vérification, pendant 10 minutes.",
+            "6m_acc : l'accès aux animations sur cet appareil (la commande ou le code club, et la date de fin). Il s'efface à la fin de l'accès.",
+            "6m_dev : un identifiant tiré au hasard pour cet appareil, pour respecter le nombre d'appareils prévu. Conservé 13 mois au plus.",
+          ],
+          "La page de paiement Stripe peut aussi déposer des cookies strictement nécessaires à la sécurité du paiement et à la lutte contre la fraude.",
+          "Sécurité de l'espace client et des codes clubs : les tentatives de connexion sont comptées par adresse IP et par adresse email pendant 1 heure, pour bloquer les essais en série. Les 30 dernières connexions sont gardées, avec l'adresse email masquée (par exemple « ra••••@gmail.com »), pour pouvoir t'aider si tu ne reçois pas ton code (base légale : intérêt légitime).",
         ] },
         { h: "Destinataires", body: [
           "Tes données ne sont jamais vendues. Elles sont transmises uniquement aux prestataires nécessaires au service :",
-          ["Stripe (paiement)", "Vercel (hébergement du site)", "Apple (messagerie iCloud, pour les emails)"],
+          ["Stripe (paiement)", "Vercel (hébergement du site)", "Upstash (base de données du site : codes clubs, sécurité des connexions, statistiques de visite)", "Apple (messagerie iCloud, pour les emails)"],
           "Certains de ces prestataires peuvent traiter des données hors de l'Union européenne, notamment aux États-Unis. Ces transferts sont encadrés par le Data Privacy Framework UE–États-Unis ou par les clauses contractuelles types de la Commission européenne.",
         ] },
         { h: "Durée de conservation", body: [[
@@ -185,11 +193,19 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           "Audience measurement: to know how many people visit the website, where they come from (link, social network, search engine) and at which step they stop, the website counts visits anonymously, with no cookie and no identifier: only daily totals are kept (13 months at most), never anything that could identify you. Vercel Web Analytics does the same, without cookies. Where your visit came from (for example \"instagram\") is also saved with your order or sign-up. This measurement, limited to running the website, does not require your consent (legal basis: legitimate interest).",
         ]] },
         { h: "Cookies", body: [
-          "The website sets no analytics or advertising cookies. The Stripe payment page may set cookies that are strictly necessary for payment security and fraud prevention, which do not require your consent.",
+          "The website sets no analytics or advertising cookies. It only uses functional cookies, strictly necessary for the service you ask for: they do not require your consent (legal basis: performance of the contract). They are signed, so they cannot be forged or changed, and page scripts cannot read them.",
+          [
+            "6m_ses: your login to the customer area (your email address). It is cleared when you close the browser and stops being valid after 1 hour.",
+            "6m_otp: the 6-digit code being checked, for 10 minutes.",
+            "6m_acc: access to the animations on this device (the order or the club code, and the end date). It is cleared when the access ends.",
+            "6m_dev: a random identifier for this device, to keep to the number of devices allowed. Kept for 13 months at most.",
+          ],
+          "The Stripe payment page may also set cookies that are strictly necessary for payment security and fraud prevention.",
+          "Security of the customer area and club codes: login attempts are counted per IP address and per email address for 1 hour, to block repeated guessing. The last 30 logins are kept, with the email address masked (for example \"ra••••@gmail.com\"), so we can help you if your code does not arrive (legal basis: legitimate interest).",
         ] },
         { h: "Recipients", body: [
           "Your data is never sold. It is only shared with the providers needed to run the service:",
-          ["Stripe (payment)", "Vercel (website hosting)", "Apple (iCloud Mail, for emails)"],
+          ["Stripe (payment)", "Vercel (website hosting)", "Upstash (website database: club codes, login security, visit statistics)", "Apple (iCloud Mail, for emails)"],
           "Some of these providers may process data outside the European Union, in particular in the United States. These transfers are covered by the EU–US Data Privacy Framework or by the European Commission's standard contractual clauses.",
         ] },
         { h: "Retention", body: [[
