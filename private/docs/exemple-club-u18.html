@@ -421,14 +421,15 @@ const DR = {
 // ---------- Helpers ----------
 const EYE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.2" fill="currentColor"/></svg>';
 const nameOf = (id) => (EX[id] || DR[id] || TXT[id] || { name: id }).name;
-// The eye of an animated exercise is a link to its page on the site (__SITE__ is filled in by the
-// admin, app/admin/docs), so it still works in the PDF: the player enters the team's club code
-// there once (lib/club-access.ts). Here, a click opens the window of the page instead.
+// The eye is a link to the club library on the site (an exercise's page, or a drill's page in
+// clubs/bibliotheque; __SITE__ is filled in by the admin, app/admin/docs), so it still works in
+// the PDF: the player enters the team's club code there once (lib/club-access.ts). Here, a click
+// opens the window of the page instead.
 const SITE = "__SITE__";
 const onSite = (id) => id.replace(/-club$/, "");
 const eyeHTML = (id) => EX[id]
   ? `<a class="eye" href="${SITE}/fr/exercices/${onSite(id)}" data-ex="${id}" aria-label="Voir : ${nameOf(id).replace(/"/g, "")}">${EYE}</a>`
-  : (DR[id] || TXT[id]) ? `<button type="button" class="eye" data-ex="${id}" aria-label="Voir : ${nameOf(id).replace(/"/g, "")}">${EYE}</button>` : "";
+  : (DR[id] || TXT[id]) ? `<a class="eye" href="${SITE}/fr/clubs/bibliotheque/${id}" data-ex="${id}" aria-label="Voir : ${nameOf(id).replace(/"/g, "")}">${EYE}</a>` : "";
 const COL = { r: "#E4572E", b: "#2B6BE3", g: "#1F9D55", v: "#7B4FD1", o: "#F28C28", y: "#F2A516", k: "#A8A2BA" };
 function drillSVG(d) {
   const it = d.items.map((e) => {

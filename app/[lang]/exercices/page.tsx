@@ -5,25 +5,17 @@ import { locales, type Lang } from "@/lib/dict";
 import { animatedIds, exName } from "@/components/ExerciseCard";
 import AccessGate from "@/components/AccessGate";
 import LibrarySearch from "@/components/LibrarySearch";
-import { accessEnd, type Gate } from "@/lib/access-page";
+import { accessInfo, type Gate } from "@/lib/access-page";
+import { FAMILIES } from "@/lib/library";
+import { redirect } from "next/navigation";
 import "@/app/library.css";
 
-// Exercise library: every animated exercise, by family (the dashboard is in espace-client). For customers only, while their access
+// Individual library: every animated exercise, by family (lib/library.ts), for customers of the
+// individual programs (the dashboard is in espace-client; clubs have their own library). For customers only, while their access
 // lasts (lib/access.ts); each exercise opens its page with every version (home, gym, band).
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Bibliothèque d'exercices | 6M Lab", robots: { index: false } };
 
-const FAMILIES: [string, string, string[]][] = [
-  ["Échauffement et mobilité", "Warm-up and mobility", ["footing-dynamique", "montees-genoux", "fente-rotation", "ouverture-hanche", "hanches-9090", "cheville-mur", "rotation-thoracique"]],
-  ["Sauts et explosivité", "Jumps and power", ["saut-reception", "reception-unipodale", "snap-down", "pogos", "squat-jump", "squat-jump-leste", "skater-hop", "bonds", "box-jump", "drop-jump"]],
-  ["Vitesse et appuis", "Speed and footwork", ["accelerations", "departs-10", "departs-reactifs", "sprint-20", "freinage", "navette-5105"]],
-  ["Force", "Strength", ["squat", "squat-lourd", "fente-arriere", "squat-bulgare", "squat-une-jambe", "sdt-roumain", "hip-thrust", "hip-thrust-lourd", "pompes", "pompes-explosives", "developpe-couche", "developpe-militaire", "rowing", "tirage-lourd", "tractions", "fermier"]],
-  ["Lancers", "Throws", ["lancer-poitrine", "lancer-rotation", "lancer-haut"]],
-  ["Gainage", "Core", ["planche", "gainage-lateral", "dead-bug", "pallof", "copenhague"]],
-  ["Prévention des blessures", "Injury prevention", ["pont-fessier", "pont-une-jambe", "equilibre", "equilibre-balle", "nordic", "mollets-excentrique", "ytw", "rotation-externe", "rotation-externe-haute", "pompes-scapulaires"]],
-  ["Gardiens de but", "Goalkeepers", ["fente-laterale", "cosaque", "adduction"]],
-  ["Condition physique", "Conditioning", ["footing", "intervalles-1515", "intervalles-3030", "sprints-repetes", "navettes-hand", "circuit"]],
-];
 
 type P = { params: Promise<{ lang: string }>; searchParams: Promise<Gate> };
 
@@ -31,8 +23,11 @@ export default async function Library({ params, searchParams }: P) {
   const { lang } = await params;
   if (!(locales as readonly string[]).includes(lang)) notFound();
   const l = lang as Lang, fr = l === "fr";
-  const end = await accessEnd();
-  if (!end) return <AccessGate lang={l} next={`/${l}/exercices`} state={(await searchParams).acces} />;
+  const acc = await accessInfo();
+  // A club code opens the club library, not this one (lib/library.ts).
+  if (acc?.kind === "club") redirect(`/${l}/clubs/bibliotheque`);
+  if (!acc) return <AccessGate lang={l} next={`/${l}/exercices`} state={(await searchParams).acces} />;
+  const end = acc.end;
   const days = Math.ceil((end - Date.now()) / 86400000);
   const endDate = new Date(end).toLocaleDateString(fr ? "fr-FR" : "en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" });
   const listed = new Set(FAMILIES.flatMap((f) => f[2]));

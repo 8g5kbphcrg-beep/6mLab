@@ -6,7 +6,7 @@ import { clubPi, openClub } from "@/lib/club-access";
 // Opens the animations on this device with a club code (lib/club-access.ts), from the page of an
 // exercise or of the library: back to that page with the access cookie, or with ?acces=<reason>
 // (club-inconnu, club-fini, club-plein, trop, indisponible).
-const NEXT = /^\/(fr|en)\/exercices(\/[a-z0-9-]+){0,2}$/;
+const NEXT = /^\/(fr|en)\/(exercices(\/[a-z0-9-]+){0,2}|clubs\/bibliotheque(\/[a-z0-9-]+)?)$/;
 
 export async function POST(req: NextRequest) {
   const form = await req.formData();
