@@ -138,6 +138,8 @@ export default async function AdminAvis() {
                 </>;
               })() : <span className="muted">Pas encore ouvert</span>}
               <br /><span className="muted">Réf. {o.meta.ref ?? "–"}</span>
+              {o.meta.par_code && <><br /><span className="muted">Parrainage {o.meta.par_code}{o.meta.par_n ? ` : ${o.meta.par_n} filleul${+o.meta.par_n > 1 ? "s" : ""}, ${o.meta.par_pts || 0} pts${o.meta.par_r ? `, ${o.meta.par_r} code${+o.meta.par_r > 1 ? "s" : ""} gagné${+o.meta.par_r > 1 ? "s" : ""}` : ""}` : ""}</span></>}
+              {o.meta.par_st && <><br /><span className="muted">Filleul : {({ attente: "points en attente (7 jours)", ok: "points donnés au parrain", doublon: "refusé (email ou carte déjà vus)", rembourse: "refusé (remboursé)" } as Record<string, string>)[o.meta.par_st] ?? o.meta.par_st}</span></>}
             </td>
             {(["mid", "end"] as const).map((st) => {
               const answered = o.meta[st === "mid" ? "m_at" : "f_at"], sent = o.meta[st === "mid" ? "s_mid" : "s_end"];

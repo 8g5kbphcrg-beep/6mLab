@@ -55,7 +55,7 @@ export default async function RootLayout({ children, params }: { children: React
     [`/${lang}/faq`, "FAQ"],
     [`/${lang}/contact`, "Contact"],
     // Customer area: the exercise animations, opened with the order reference (lib/access.ts).
-    [`/${lang}/exercices`, fr ? "Espace client" : "Customer area"],
+    [`/${lang}/espace-client`, fr ? "Espace client" : "Customer area"],
   ];
   return (
     <html lang={lang} className={`${display.variable} ${text.variable} ${slogan.variable}`} suppressHydrationWarning>

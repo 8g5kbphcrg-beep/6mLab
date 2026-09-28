@@ -4,6 +4,7 @@ import type { Lang } from "@/lib/dict";
 import type { ProgramSlug } from "@/lib/programs";
 import type { GoalId } from "@/lib/goals";
 import { mailReady, notifyOwner, sendConfirmation, type Order } from "@/lib/email";
+import { recordReferral, referralCode } from "@/lib/referral";
 import { refOf } from "@/lib/access";
 import { alert, why } from "@/lib/alert";
 import { SITE } from "@/lib/dict";
@@ -33,6 +34,14 @@ export async function POST(req: NextRequest) {
     // customer area: saved on the PaymentIntent so it can be looked up (lib/access.ts).
     if (s.payment_status === "paid" && typeof s.payment_intent === "string") {
       await stripe.paymentIntents.update(s.payment_intent, { metadata: { ref: refOf(s.id).toLowerCase() } }).catch((e) => console.error("[ref]", e));
+      // Referral (lib/referral.ts): if this order used a teammate's code, it is noted; the daily
+      // cron checks it after a week and gives that teammate their points. A failure here must not
+      // hold back the customer's program.
+      try {
+        await recordReferral(stripe, s);
+      } catch (e) {
+        await alert(`par:${s.id}`, "Parrainage : une commande avec un code de parrainage n'a pas pu être notée", [`Commande ${refOf(s.id)} (${m.firstName ?? ""}, ${s.customer_details?.email ?? ""})`, `Erreur : ${why(e)}`, "", "Le parrain ne recevra pas ses 50 points pour ce coéquipier. Dis-le à Claude : il peut les ajouter à la main dans Stripe (par_pts)."]);
+      }
     }
 
     // Stripe retries a webhook until it gets a 2xx (and the event keeps its original metadata),
@@ -56,6 +65,8 @@ export async function POST(req: NextRequest) {
         gender: m.gender ?? "",
         amount: s.amount_total ?? 0,
       };
+      // The buyer's own code to share, shown in the confirmation email.
+      if (typeof s.payment_intent === "string") order.referral = await referralCode(stripe, s.payment_intent, order.firstName).catch((e) => { console.error("[parrainage]", e); return undefined; });
       try {
         const delivered = await sendConfirmation(order);
         await stripe.checkout.sessions.update(s.id, { metadata: { ...m, emailed: delivered ? "programme" : "confirmation" } });

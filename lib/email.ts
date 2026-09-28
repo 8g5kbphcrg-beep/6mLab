@@ -1,3 +1,4 @@
+import { FRIEND_PERCENT, POINTS_FOR_REWARD, POINTS_PER_FRIEND, SPONSOR_PERCENT, type PointsNews } from "@/lib/referral";
 import { access, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import nodemailer from "nodemailer";
@@ -26,6 +27,8 @@ export type Order = {
   age: string;
   gender: string;
   amount: number;
+  // The buyer's code to share with teammates (lib/referral.ts), when it could be created.
+  referral?: string;
 };
 
 // Sent through iCloud Mail by default, with an app-specific password (appleid.apple.com >
@@ -141,6 +144,10 @@ export async function sendConfirmation(o: Order) {
   const when = o.program === "pre-saison"
     ? [fr ? "Quand commencer ta Pré-saison ?" : "When to start your Pre-season?", w.lead, ...w.cases.map((c) => `${c.t} : ${c.d}`)]
     : [];
+  // Referral (lib/referral.ts): the code to share with teammates.
+  const par = o.referral ? (fr
+    ? ["Parraine tes coéquipiers", `Donne-leur ton code ${o.referral} : ils ont -${FRIEND_PERCENT} % sur leur programme (à saisir sur la page de paiement). Chaque coéquipier qui commande te rapporte ${POINTS_PER_FRIEND} points ; à ${POINTS_FOR_REWARD} points, tu reçois -${SPONSOR_PERCENT} % sur ton prochain programme. Suis tes points dans ton espace client : ${SITE}/fr/espace-client (avec ta référence de commande).`]
+    : ["Refer your teammates", `Give them your code ${o.referral}: they get ${FRIEND_PERCENT}% off their program (entered on the payment page). Every teammate who orders earns you ${POINTS_PER_FRIEND} points; at ${POINTS_FOR_REWARD} points, you get ${SPONSOR_PERCENT}% off your next program. Follow your points in your customer area: ${SITE}/en/espace-client (with your order reference).`]) : null;
   const health = fr
     ? "Nos programmes sont destinés aux personnes en bonne santé. En cas de doute ou de blessure, demande l'avis d'un professionnel de santé."
     : "Our programs are for healthy people. If you have doubts or an injury, ask a health professional first.";
@@ -153,11 +160,12 @@ export async function sendConfirmation(o: Order) {
     <p style="font-weight:700">${delivery}</p>
     ${when.length ? `<div style="border-left:4px solid #FF7A59;padding:2px 0 2px 14px;margin:16px 0"><p style="margin:0 0 8px;font-weight:700">${esc(when[0])}</p>${when.slice(1).map((l) => `<p style="margin:0 0 8px">${esc(l)}</p>`).join("")}</div>` : ""}
     <div style="background:#F5F3FB;border-radius:10px;padding:14px 16px;margin:16px 0">${anims.map((l) => `<p style="margin:0 0 8px">${esc(l)}</p>`).join("")}<p style="margin:0"><a href="${lib}" style="color:#C4452A;font-weight:700">${fr ? "Ouvrir la bibliothèque d'exercices" : "Open the exercise library"}</a></p></div>
+    ${par ? `<div style="border:2px dashed #FF7A59;border-radius:10px;padding:14px 16px;margin:16px 0"><p style="margin:0 0 8px;font-weight:700">${esc(par[0])}</p><p style="margin:0 0 10px">${esc(par[1])}</p><p style="margin:0;font:700 20px Arial;letter-spacing:2px;text-align:center">${esc(o.referral!)}</p></div>` : ""}
     <p>${fr ? "Une question ? Réponds simplement à cet email." : "Any question? Just reply to this email."}</p>
     <p style="font-size:12px;color:#5B5673;margin-top:24px">${esc(health)}</p>
     <p style="font-size:12px;color:#5B5673">${esc(legal)}</p>
   </div></div>`;
-  const text = [hello, "", intro, "", ...rows.map(([k, v]) => `${k} : ${v}`), "", delivery, "", ...(when.length ? [...when, ""] : []), ...anims, lib, "", health, "", legal].join("\n");
+  const text = [hello, "", intro, "", ...rows.map(([k, v]) => `${k} : ${v}`), "", delivery, "", ...(when.length ? [...when, ""] : []), ...anims, lib, "", ...(par ? [...par, ""] : []), health, "", legal].join("\n");
 
   const info = await transport().sendMail({
     from: `6M Lab <${MAIL_FROM()}>`,
@@ -279,6 +287,23 @@ export async function sendPromoCode(o: { email: string; lang: Lang; firstName: s
   const l2 = fr ? `Voici ton code de -${promoPercent} % sur ton prochain programme 6M Lab, valable un an, à saisir au moment du paiement :` : `Here is your ${promoPercent}% discount code for your next 6M Lab program, valid for one year, to enter at checkout:`;
   const html = frame(`<p>${esc(hello)}</p><p>${l1}</p><p>${l2}</p><p style="font:700 22px Arial;letter-spacing:2px;background:#F5EDF0;border-radius:10px;padding:14px;text-align:center">${esc(code)}</p>${button(`${SITE}/${o.lang}/programmes`, fr ? "Voir les programmes" : "See the programs")}`);
   const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: o.email, replyTo: owner.email, subject: fr ? `Ton code de -${promoPercent} %` : `Your ${promoPercent}% discount code`, html, text: [hello, "", l1, l2, code].join("\n") });
+  if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
+}
+
+// Referral: to the sponsor, once a teammate's order counted (lib/referral.ts): their points, and
+// their thank-you code when they reach POINTS_FOR_REWARD.
+export async function sendReferralPoints(r: PointsNews) {
+  const fr = r.lang === "fr";
+  const hello = fr ? `Bonjour ${r.firstName},` : `Hi ${r.firstName},`;
+  const who = r.friend || (fr ? "Un coéquipier" : "A teammate");
+  const l1 = fr ? `${who} a commandé son programme 6M Lab avec ton code de parrainage : +${POINTS_PER_FRIEND} points. Merci !` : `${who} ordered a 6M Lab program with your referral code: +${POINTS_PER_FRIEND} points. Thank you!`;
+  const l2 = r.code
+    ? fr ? `Tu as atteint ${POINTS_FOR_REWARD} points : voici ton code de -${SPONSOR_PERCENT} % sur ton prochain programme, valable un an, à saisir au moment du paiement :` : `You reached ${POINTS_FOR_REWARD} points: here is your ${SPONSOR_PERCENT}% discount code for your next program, valid for one year, to enter at checkout:`
+    : fr ? `Tu as ${r.points} points sur ${POINTS_FOR_REWARD}. Encore ${Math.ceil((POINTS_FOR_REWARD - r.points) / POINTS_PER_FRIEND)} coéquipier(s) et tu reçois ton code de -${SPONSOR_PERCENT} % sur ton prochain programme.` : `You have ${r.points} points out of ${POINTS_FOR_REWARD}. ${Math.ceil((POINTS_FOR_REWARD - r.points) / POINTS_PER_FRIEND)} more teammate(s) and you get your ${SPONSOR_PERCENT}% discount code for your next program.`;
+  const l3 = r.code ? (fr ? `Ton compteur repart à ${r.points} points pour le prochain code.` : `Your counter starts again at ${r.points} points for the next code.`) : "";
+  const html = frame(`<p>${esc(hello)}</p><p>${esc(l1)}</p><p>${esc(l2)}</p>${r.code ? `<p style="font:700 22px Arial;letter-spacing:2px;background:#F5EDF0;border-radius:10px;padding:14px;text-align:center">${esc(r.code)}</p><p>${esc(l3)}</p>` : ""}${button(`${SITE}/${r.lang}/programmes`, fr ? "Voir les programmes" : "See the programs")}`);
+  const subject = r.code ? (fr ? `Parrainage : ton code de -${SPONSOR_PERCENT} %` : `Referral: your ${SPONSOR_PERCENT}% discount code`) : fr ? `Parrainage : +${POINTS_PER_FRIEND} points (${r.points}/${POINTS_FOR_REWARD})` : `Referral: +${POINTS_PER_FRIEND} points (${r.points}/${POINTS_FOR_REWARD})`;
+  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: r.email, replyTo: owner.email, subject, html, text: [hello, "", l1, l2, ...(r.code ? [r.code, "", l3] : [])].join("\n") });
   if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
 }
 

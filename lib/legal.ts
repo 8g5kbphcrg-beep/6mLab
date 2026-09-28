@@ -136,7 +136,11 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           "Après son achat, l'acheteur reçoit par email deux questionnaires facultatifs, 2 semaines après l'achat et à la fin du programme. Les avis publiés sur le site proviennent uniquement de ces questionnaires, donc d'acheteurs vérifiés. Pour avoir répondu au questionnaire final, l'acheteur reçoit un code de réduction de 15 % sur un prochain programme, quel que soit le contenu de son avis.",
           "Les avis ne sont pas modifiés. Seuls sont publiés ceux dont l'auteur a accepté la publication, avec son prénom et la date de l'avis. La note moyenne affichée tient compte de toutes les réponses au questionnaire final, y compris les avis non publiés. L'auteur peut demander le retrait de son avis à tout moment.",
         ] },
-        { h: "14. Droit applicable", body: [
+        { h: "14. Parrainage", body: [
+          "Après sa commande, l'acheteur reçoit un code de parrainage personnel. Toute personne qui le saisit sur la page de paiement bénéficie de 15 % de réduction sur sa commande. Chaque commande payée avec son code par une autre personne rapporte 50 points au parrain, 7 jours après le paiement si la commande n'a pas été remboursée. Chaque filleul ne compte qu'une fois : une commande passée avec l'adresse email ou le moyen de paiement du parrain, ou d'un filleul déjà compté, ne rapporte pas de points. À 150 points, le parrain reçoit par email un code de réduction de 15 % sur un prochain programme, à usage unique et valable un an, et 150 points sont déduits de son compteur. Les points n'ont pas de valeur en argent.",
+          "Un seul code de réduction s'applique par commande. Les codes n'ont pas de valeur en argent et ne sont pas échangeables. 6M Lab peut désactiver un code de parrainage utilisé de façon abusive (diffusion publique commerciale, commandes fictives).",
+        ] },
+        { h: "15. Droit applicable", body: [
           "Les présentes conditions sont soumises au droit français. En cas de litige, le consommateur peut saisir la juridiction de son lieu de domicile ou toute autre juridiction compétente.",
         ] },
       ],
@@ -251,7 +255,11 @@ export const legal: Record<Lang, Record<LegalDoc, Doc>> = {
           "After the purchase, the buyer receives two optional questionnaires by email, 2 weeks after the purchase and at the end of the program. The reviews published on the website only come from these questionnaires, so from verified buyers. For answering the final questionnaire, the buyer receives a 15% discount code for a next program, whatever the content of the review.",
           "Reviews are not edited. Only those whose author agreed to publication are shown, with the first name and the date of the review. The average rating shown takes into account every answer to the final questionnaire, including unpublished reviews. The author can ask for their review to be removed at any time.",
         ] },
-        { h: "14. Governing law", body: [
+        { h: "14. Referral", body: [
+          "After their order, the buyer receives a personal referral code. Anyone who enters it on the payment page gets 15% off their order. Each paid order placed with their code by another person earns the referrer 50 points, 7 days after payment if the order was not refunded. Each referred person counts only once: an order placed with the email address or payment method of the referrer, or of a referred person already counted, earns no points. At 150 points, the referrer receives by email a 15% discount code for a next program, single-use and valid for one year, and 150 points are deducted from their counter. Points have no cash value.",
+          "Only one discount code applies per order. Codes have no cash value and cannot be exchanged. 6M Lab may deactivate a referral code used abusively (public commercial distribution, fake orders).",
+        ] },
+        { h: "15. Governing law", body: [
           "These terms are governed by French law. In the event of a dispute, the consumer may bring the matter before the court of their place of residence or any other competent court.",
         ] },
       ],

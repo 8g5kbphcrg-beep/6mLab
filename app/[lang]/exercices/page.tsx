@@ -8,7 +8,7 @@ import LibrarySearch from "@/components/LibrarySearch";
 import { accessEnd, type Gate } from "@/lib/access-page";
 import "@/app/library.css";
 
-// Customer area: every animated exercise, by family. For customers only, while their access
+// Exercise library: every animated exercise, by family (the dashboard is in espace-client). For customers only, while their access
 // lasts (lib/access.ts); each exercise opens its page with every version (home, gym, band).
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Bibliothèque d'exercices | 6M Lab", robots: { index: false } };
@@ -37,19 +37,16 @@ export default async function Library({ params, searchParams }: P) {
     return <AccessGate lang={l} next={`/${l}/exercices`} state={g.acces} code={g.ref} offer={g.offre} />;
   }
   const days = Math.ceil((end - Date.now()) / 86400000);
+  const endDate = new Date(end).toLocaleDateString(fr ? "fr-FR" : "en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" });
   const listed = new Set(FAMILIES.flatMap((f) => f[2]));
   const families = [...FAMILIES, ["Autres", "Others", animatedIds.filter((id) => !listed.has(id))] as [string, string, string[]]]
     .map(([a, b, ids]) => [fr ? a : b, ids.filter((id) => animatedIds.includes(id))] as const)
     .filter(([, ids]) => ids.length);
   return (
     <div className="lib wrap">
-      <p className="lib-k">{fr ? "Espace client" : "Customer area"}</p>
+      <p className="lib-k"><a href={`/${l}/espace-client`}>{fr ? "Espace client" : "Customer area"}</a></p>
       <h1>{fr ? "Bibliothèque d'exercices" : "Exercise library"}</h1>
-      <p className="lib-acc">
-        {fr ? "Ton accès est ouvert jusqu'au " : "Your access is open until "}
-        <strong>{new Date(end).toLocaleDateString(fr ? "fr-FR" : "en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" })}</strong>
-        {fr ? ` (encore ${days} jour${days > 1 ? "s" : ""}).` : ` (${days} day${days > 1 ? "s" : ""} left).`}
-      </p>
+      <p className="lib-acc">{fr ? `Accès ouvert jusqu'au ${endDate} (encore ${days} jour${days > 1 ? "s" : ""}).` : `Access open until ${endDate} (${days} day${days > 1 ? "s" : ""} left).`}</p>
       <LibrarySearch fr={fr} items={families.flatMap(([, ids]) => ids.map((id) => [id, exName(id, fr ? "fr" : "en")] as [string, string]))} />
       {families.map(([name, ids]) => (
         <section key={name}>

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/feedback";
 import { redis, redisReady } from "@/lib/redis";
-import { ACCESS_COOKIE, DEVICE_COOKIE, accessCookie, cleanRef, findOrder, newDevice, openAccess } from "@/lib/access";
+import { ACCESS_COOKIE, CLIENT_COOKIE, CLIENT_DAYS, DEVICE_COOKIE, accessCookie, cleanRef, clientCookie, findOrder, newDevice, openAccess } from "@/lib/access";
 
 // Opens the customer area on this device (see lib/access.ts). Sends back to the page asked for:
 // with the access cookie when it is open, or with ?acces=<reason> (a-confirmer: the confirmation
@@ -35,6 +35,8 @@ export async function POST(req: NextRequest) {
     const opts = { httpOnly: true, secure: req.nextUrl.protocol === "https:", sameSite: "lax" as const, path: "/" };
     res.cookies.set(ACCESS_COOKIE, accessCookie(o!.pi, device, r.end), { ...opts, expires: new Date(r.end) });
     res.cookies.set(DEVICE_COOKIE, device, { ...opts, maxAge: 400 * 86400 });
+    // Opening the animations also opens the customer area on this device.
+    res.cookies.set(CLIENT_COOKIE, clientCookie(o!.pi), { ...opts, maxAge: CLIENT_DAYS * 86400 });
     return res;
   } catch (e) {
     console.error("[acces]", e);

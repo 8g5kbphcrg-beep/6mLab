@@ -36,7 +36,7 @@ export default function LibrarySearch({ items, fr }: { items: [string, string][]
       <label className="sr" htmlFor="lib-q">{fr ? "Rechercher un exercice" : "Search for an exercise"}</label>
       <input id="lib-q" type="search" value={q} enterKeyHint="search" autoCorrect="off" autoCapitalize="none" spellCheck={false}
         placeholder={fr ? "Rechercher un exercice (ex. : squat, nordic, gainage…)" : "Search for an exercise (e.g. squat, nordic, plank…)"}
-        aria-autocomplete="list" aria-controls="lib-sugg" aria-expanded={open && hits.length > 0}
+        role="combobox" aria-autocomplete="list" aria-controls="lib-sugg" aria-expanded={open && hits.length > 0}
         onChange={(e) => { setQ(e.target.value); setOpen(true); setMiss(false); }}
         onFocus={() => setOpen(true)}
         onBlur={() => setTimeout(() => setOpen(false), 150)} />
