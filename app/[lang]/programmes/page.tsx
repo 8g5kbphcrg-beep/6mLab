@@ -29,7 +29,7 @@ export default async function Programmes({ params }: { params: Promise<{ lang: s
           <h1>{d.cmp.title}</h1>
           <p>{d.cmp.sub}</p>
         </header>
-        <ProgramCards lang={lang as Lang} />
+        <ProgramCards lang={lang as Lang} top />
       </div>
       <ClubBand lang={lang as Lang} />
     </>

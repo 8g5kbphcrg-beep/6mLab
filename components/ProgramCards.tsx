@@ -7,7 +7,9 @@ import "@/app/offers.css";
 // Used on the handball page and on /programmes: the questionnaire first, then the "Saison
 // complète" pack as the featured offer (best value), then the two programs side by side, the one
 // that fits the handball calendar first with a badge.
-export default function ProgramCards({ lang, shared = true }: { lang: Lang; shared?: boolean }) {
+// top: the cards sit right under the page title (the programs page), so their titles are h2.
+export default function ProgramCards({ lang, shared = true, top = false }: { lang: Lang; shared?: boolean; top?: boolean }) {
+  const H = top ? "h2" : "h3";
   const d = dict[lang];
   const fr = lang === "fr";
   const now = recommended();
@@ -23,7 +25,7 @@ export default function ProgramCards({ lang, shared = true }: { lang: Lang; shar
         <span className="opack-b">{fr ? "Meilleure offre · la saison entière" : "Best value · the whole season"}</span>
         <div className="opack-main">
           <div>
-            <h3 className="opack-t">{fr ? "Pack Saison complète" : "Full season pack"}</h3>
+            <H className="opack-t">{fr ? "Pack Saison complète" : "Full season pack"}</H>
             <p className="opack-d">{fr ? "Pré-saison + Maintien en saison, avec les mêmes objectifs : tu es prêt dès la reprise et tu le restes jusqu'à la fin de la saison." : "Pre-season + In-season maintenance, same goals: ready from day one and all the way to the end of the season."}</p>
             <ul className="opack-l">
               <li>{fr ? "Pré-saison : 8 semaines pour préparer la reprise" : "Pre-season: 8 weeks to get ready"}</li>
@@ -48,7 +50,7 @@ export default function ProgramCards({ lang, shared = true }: { lang: Lang; shar
             <article key={s} className={`offer ${p.color}${s === now ? " now" : ""}`}>
               {s === now && <span className="onow">{fr ? "Recommandé en ce moment" : "Recommended right now"}</span>}
               <span className={`ptag ${p.color}`}>{p.tag}</span>
-              <h3>{p.name}</h3>
+              <H>{p.name}</H>
               <p className="oprice">{d.cmp.price[p.idx]}</p>
               <p className="ofocus">{d.cmp.rows[0][i + 1]}</p>
               <ul className="ofacts">
