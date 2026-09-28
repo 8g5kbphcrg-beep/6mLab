@@ -18,7 +18,7 @@ SECTIONS = [
  ("ok", "Un pied de page complet", "Mentions légales, CGV, confidentialité, contact, changement de langue."),
  ("ok", "Une recherche dans la bibliothèque d'exercices", "Recherche et familles d'exercices (dont Gardiens de but)."),
  ("ok", "Une page d'erreur 404 utile", "Une adresse fausse affiche une page 6M Lab (« Tir hors cadre ») qui renvoie vers le questionnaire, la séance gratuite et les programmes."),
- ("ok", "Une FAQ générale", "19 questions en 4 thèmes (choisir, commande et accès, clubs avec le code club, contact), en français et en anglais, lisibles par Google. Lien dans le pied de page."),
+ ("ok", "Une FAQ générale", "20 questions en 4 thèmes (choisir, commande et accès, clubs avec le code club, contact), en français et en anglais, lisibles par Google. Lien dans le pied de page."),
 ]),
 ("design", "Design et mise en page", "Le site doit paraître aussi sérieux que le contenu des programmes.", [
  ("ok", "Une identité cohérente", "Logo, couleurs, typographies et ton identiques sur le site, les PDF, les emails et l'admin."),
