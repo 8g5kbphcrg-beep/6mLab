@@ -221,8 +221,9 @@ function Login({ lang, q, next }: { lang: Lang; q: Q; next: string }) {
           </ul>
         </section>
         {!code && <section className="cs-way cs-way-club" aria-labelledby="cs-way-2">
+          <p className="cs-club-k">{fr ? "Joueurs et staff des clubs" : "Club players and staff"}</p>
           <h2 id="cs-way-2"><span>2</span>{fr ? "Je m'entraîne avec mon club" : "I train with my club"}</h2>
-          <p>{fr ? "Joueurs et staff : entre le code de ton équipe, donné par ton coach et écrit dans vos documents. Il ouvre la bibliothèque clubs : situations animées, ateliers des gardiens, tests et exercices de votre programme." : "Players and staff: enter your team's code, given by your coach and written in your documents. It opens the club library: animated drills, goalkeeper drills, tests and the exercises of your program."}</p>
+          <p>{fr ? "Entre le code de ton équipe, donné par ton coach et écrit dans vos documents. Il ouvre la bibliothèque clubs : situations animées, ateliers des gardiens, tests et exercices de votre programme." : "Enter your team's code, given by your coach and written in your documents. It opens the club library: animated drills, goalkeeper drills, tests and the exercises of your program."}</p>
           <form method="post" action="/api/acces-club" className="acc-form">
             <input type="hidden" name="next" value={`/${lang}/clubs/bibliotheque`} />
             <label className="sr" htmlFor="cs-club">{fr ? "Code de l'équipe" : "Team code"}</label>

@@ -118,7 +118,7 @@ export default async function Clubs({ params, searchParams }: P) {
       <form method="post" action="/api/acces-club" className="clubs-code" id="code">
         <input type="hidden" name="next" value={`/${lang}/clubs/bibliotheque`} />
         <p><strong>{fr ? "Ton équipe suit déjà un programme 6M Lab ?" : "Your team already follows a 6M Lab program?"}</strong> {fr ? "Joueurs et staff : entre le code de ton équipe (donné par ton coach, il est aussi dans vos documents) pour ouvrir la bibliothèque clubs, avec les situations animées et les exercices." : "Players and staff: enter your team's code (given by your coach, also in your documents) to open the club library, with the animated drills and exercises."}</p>
-        <label className="sr" htmlFor="club-code">{fr ? "Code de l'équipe" : "Team code"}</label>
+        <label htmlFor="club-code">{fr ? "Code de l'équipe" : "Team code"}</label>
         <input id="club-code" name="code" required autoComplete="off" autoCapitalize="characters" spellCheck={false} placeholder="CLUB-XXXX-XXXX" maxLength={20} />
         <button className="btn" type="submit">{fr ? "Ouvrir la bibliothèque clubs" : "Open the club library"}</button>
       </form>
