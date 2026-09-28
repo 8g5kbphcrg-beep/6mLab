@@ -103,7 +103,7 @@ export default function Quiz({ lang, test }: { lang: Lang; test: boolean }) {
   return (
     <div className="quiz">
       <h1 style={{ fontSize: "1.4rem", color: "var(--muted)" }}>{t.title}</h1>
-      <div className="qbar" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={shown}>
+      <div className="qbar" role="progressbar" aria-label={lang === "fr" ? "Progression du questionnaire" : "Questionnaire progress"} aria-valuemin={0} aria-valuemax={total} aria-valuenow={shown}>
         <span style={{ width: `${(shown / total) * 100}%` }} />
       </div>
       {i === 0 && <p>{t.intro}</p>}

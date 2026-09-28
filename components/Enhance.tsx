@@ -32,5 +32,5 @@ export default function Enhance({ cta }: { cta: string }) {
     addEventListener("scroll", s, { passive: true });
     return () => { removeEventListener("scroll", s); o?.disconnect(); };
   }, []);
-  return <div className={"cta" + (on ? " on" : "")}><a className="btn" href="#formules">{cta}</a></div>;
+  return <aside className={"cta" + (on ? " on" : "")} aria-label={cta}><a className="btn" href="#formules">{cta}</a></aside>;
 }
