@@ -51,6 +51,8 @@ export default async function RootLayout({ children, params }: { children: React
     [fr ? "/fr/a-propos" : "/en/about", fr ? "À propos" : "About"],
     // Clubs and coaches: whole teams, on quote (app/[lang]/clubs).
     [`/${lang}/clubs`, "Clubs"],
+    // General FAQ (app/[lang]/faq).
+    [`/${lang}/faq`, "FAQ"],
     [`/${lang}/contact`, "Contact"],
     // Customer area: the exercise animations, opened with the order reference (lib/access.ts).
     [`/${lang}/exercices`, fr ? "Espace client" : "Customer area"],
@@ -97,7 +99,6 @@ export default async function RootLayout({ children, params }: { children: React
             <nav aria-label={fr ? "Site" : "Site"}>
               <p className="flab">{fr ? "Site" : "Site"}</p>
               {links.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
-              <a href={`/${lang}/faq`}>{fr ? "Questions fréquentes" : "FAQ"}</a>
             </nav>
             <nav aria-label={fr ? "Informations légales" : "Legal"}>
               <p className="flab">{fr ? "Informations légales" : "Legal"}</p>
