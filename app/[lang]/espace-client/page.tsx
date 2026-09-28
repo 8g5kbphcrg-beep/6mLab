@@ -9,6 +9,8 @@ import { programs } from "@/lib/programs";
 import { alert, why } from "@/lib/alert";
 import { FRIEND_PERCENT, POINTS_FOR_REWARD, POINTS_PER_FRIEND, referralCode, SPONSOR_PERCENT, VALIDATION_DAYS } from "@/lib/referral";
 import ShareCode from "@/components/ShareCode";
+import { nextHref, nextStep, programEnd } from "@/lib/next-step";
+import type { GoalId } from "@/lib/goals";
 import "@/app/exercice.css";
 import "@/app/library.css";
 
@@ -119,6 +121,9 @@ function AccessCard({ o, lang, confirm, next }: { o: ClientOrder; lang: Lang; co
   const state = !end ? "todo" : end > now ? "open" : "over";
   const days = end ? Math.max(0, Math.ceil((end - now) / DAY_MS)) : 0, weeks = accessWeeks(o.offer);
   const name = o.offer === "pack" ? (fr ? "Pack Saison complète" : "Full season pack") : programs[lang][o.program as keyof (typeof programs)["fr"]]?.name;
+  // What comes next, from 2 weeks before the end of the program (lib/next-step.ts).
+  const pEnd = o.start ? programEnd(o.offer, o.start) : null;
+  const suite = pEnd && pEnd - now < 14 * DAY_MS ? nextStep(o.offer, pEnd, (o.meta.goals ?? "").split("+").filter(Boolean) as GoalId[], lang) : null;
   const go = (label: string, extra?: React.ReactNode) => (
     <form method="post" action="/api/acces" className="cs-go-f">
       <input type="hidden" name="lang" value={lang} />
@@ -151,6 +156,12 @@ function AccessCard({ o, lang, confirm, next }: { o: ClientOrder; lang: Lang; co
         <p className="cs-muted">{fr ? `Ta bibliothèque était ouverte jusqu'au ${fmt(end!)}. Ton PDF reste à toi.` : `Your library was open until ${fmt(end!)}. Your PDF is yours to keep.`}</p>
         <a className="btn cs-go" href={`/${lang}/programmes`}>{fr ? "Voir les programmes" : "See the programs"}</a>
       </>}
+      {suite && <div className="cs-next">
+        <p className="cs-next-k">{fr ? "Et après ?" : "What's next?"}</p>
+        <p className="cs-next-t">{suite.t}</p>
+        <p className="cs-muted">{suite.p}</p>
+        <a className="cs-next-a" href={nextHref(suite, lang)}>{suite.cta} →</a>
+      </div>}
     </section>
   );
 }

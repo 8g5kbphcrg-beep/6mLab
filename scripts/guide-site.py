@@ -91,7 +91,7 @@ SECTIONS = [
 ("fidelisation", "Après l'achat et fidélisation", "Un client content revient et en parle.", [
  ("ok", "Accès aux animations et PDF gardé à vie", "Le client garde son PDF ; les animations restent accessibles pendant la durée prévue."),
  ("ok", "Questionnaire de forme et avis", "Le client suit sa forme, laisse un avis et reçoit un code de réduction."),
- ("part", "Proposer la suite", "À la fin d'un programme, proposer le suivant : saison après pré-saison, prévention en fin de saison. Les emails de saison le font en partie."),
+ ("ok", "Proposer la suite", "À 2 semaines de la fin d'un programme, l'espace client affiche « Et après ? », repris dans l'email de fin de programme et dans celui de fin d'accès : Maintien après la Pré-saison, nouveau cycle de Maintien en cours de saison, Prévention puis Pré-saison en fin de saison. Le lien ouvre le programme avec les objectifs déjà choisis."),
  ("todo", "Répondre vite", "Un délai de réponse annoncé et tenu (par exemple 48 h), et une réponse type pour les questions fréquentes."),
 ]),
 ("clubs", "Offre Clubs", "Un autre public, qui décide autrement : il faut rassurer et faciliter.", [
