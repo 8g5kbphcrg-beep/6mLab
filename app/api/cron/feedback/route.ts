@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { DAY, formUrl, paidOrders, PROMO_PERCENT, stripe, whenDays, type Stage } from "@/lib/feedback";
 import { mailReady, sendAccessEnding, sendCartReminder, sendFeedbackRequest, sendReferralPoints, sendSeasonMail, sendTip, TIP_DAYS } from "@/lib/email";
 import { settleReferrals } from "@/lib/referral";
+import { nextStep } from "@/lib/next-step";
 import { abandonedCarts } from "@/lib/cart";
 import { dueCampaign } from "@/lib/season-mail";
 import { endOf, offerOf } from "@/lib/access";
@@ -35,7 +36,9 @@ export async function GET(req: NextRequest) {
       const age = (now - o.created) / DAY, due = whenDays(stage, o.program);
       if (o.meta[key] || age < due || age > due + 10) continue;
       try {
-        await sendFeedbackRequest({ email: o.email, lang: o.lang, firstName: o.firstName, program: o.program }, stage, formUrl(SITE, o.lang, o.id, stage), PROMO_PERCENT);
+        // At the end of the program, the email also says what comes next (lib/next-step.ts); not for
+        // the pack, whose questionnaire comes at the end of its pre-season, the Maintien already paid.
+        await sendFeedbackRequest({ email: o.email, lang: o.lang, firstName: o.firstName, program: o.program }, stage, formUrl(SITE, o.lang, o.id, stage), PROMO_PERCENT, stage === "end" && offerOf(o.meta) !== "pack" ? nextStep(offerOf(o.meta), now * 1000, o.goals, o.lang) : undefined);
         await s.paymentIntents.update(o.id, { metadata: { [key]: new Date().toISOString().slice(0, 10) } });
         sent.push(`${o.id}:${stage}`);
       } catch (e) { fail("feedback cron", o.id, e); }
@@ -47,7 +50,7 @@ export async function GET(req: NextRequest) {
     const left = (end - now * 1000) / (DAY * 1000);
     if (left <= 0 || left > 7) continue;
     try {
-      await sendAccessEnding({ email: o.email, lang: o.lang, firstName: o.firstName, offer }, end);
+      await sendAccessEnding({ email: o.email, lang: o.lang, firstName: o.firstName, offer, goals: o.goals }, end);
       await s.paymentIntents.update(o.id, { metadata: { s_acc: new Date().toISOString().slice(0, 10) } });
       sent.push(`${o.id}:acc`);
     } catch (e) { fail("access cron", o.id, e); }

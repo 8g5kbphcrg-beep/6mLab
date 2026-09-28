@@ -70,3 +70,6 @@
 .cs-note{margin:0 0 1rem;padding:.7rem 1rem;border-radius:12px;background:var(--band);color:var(--ink)}
 .lib .acc-err{margin:0 0 1rem}
 .acc-form .cs-otp{font-size:1.4rem;letter-spacing:.4em;text-align:center;font-variant-numeric:tabular-nums}
+.cs-next{display:grid;gap:.35rem;margin-top:.3rem;padding:.9rem 1rem;border-radius:14px;background:var(--band)}
+.cs-next p{margin:0}.cs-next-k{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--At)}
+.cs-next-t{font-weight:700;color:var(--ink)}.cs-next-a{justify-self:start;font-weight:700;color:var(--At)}

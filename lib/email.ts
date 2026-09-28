@@ -1,9 +1,10 @@
+import { nextHref, nextStep, type NextStep } from "@/lib/next-step";
 import { FRIEND_PERCENT, POINTS_FOR_REWARD, POINTS_PER_FRIEND, SPONSOR_PERCENT, type PointsNews } from "@/lib/referral";
 import { access, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import nodemailer from "nodemailer";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
-import { accessWeeks, MAX_DEVICES, offerOf } from "@/lib/access";
+import { accessWeeks, MARGIN_WEEKS, MAX_DEVICES, offerOf } from "@/lib/access";
 import type { Lang } from "@/lib/dict";
 import { programs, whenToStart, type ProgramSlug } from "@/lib/programs";
 import { goalOrder, goalsTitle, type GoalId } from "@/lib/goals";
@@ -216,7 +217,7 @@ const frame = (body: string) => `<div style="font-family:Arial,sans-serif;max-wi
 const button = (href: string, label: string) => `<p style="margin:24px 0"><a href="${href}" style="background:#FF7A59;color:#100A24;text-decoration:none;font-weight:700;padding:14px 24px;border-radius:999px;display:inline-block">${label}</a></p>`;
 
 // Feedback request: "mid" 2 weeks after the purchase, "end" when the program is over.
-export async function sendFeedbackRequest(o: { email: string; lang: Lang; firstName: string; program: ProgramSlug }, stage: "mid" | "end", link: string, promoPercent: number) {
+export async function sendFeedbackRequest(o: { email: string; lang: Lang; firstName: string; program: ProgramSlug }, stage: "mid" | "end", link: string, promoPercent: number, next?: NextStep) {
   const fr = o.lang === "fr";
   const p = programs[o.lang][o.program];
   const hello = fr ? `Bonjour ${o.firstName},` : `Hi ${o.firstName},`;
@@ -229,24 +230,25 @@ export async function sendFeedbackRequest(o: { email: string; lang: Lang; firstN
       : [`Your ${p.name} program is coming to an end: well done!`, `Tell us what you think in 2 minutes. As a thank-you, you will get a ${promoPercent}% discount code for your next program, whatever your feedback.`];
   const cta = stage === "mid" ? (fr ? "Répondre (1 min)" : "Answer (1 min)") : (fr ? "Donner mon avis" : "Give my feedback");
   const subject = stage === "mid" ? (fr ? "Tes 2 premières semaines : comment ça se passe ?" : "Your first 2 weeks: how is it going?") : (fr ? "Ton avis sur ton programme 6M Lab" : "Your feedback on your 6M Lab program");
-  const html = frame(`<p>${esc(hello)}</p>${lines.map((l) => `<p>${esc(l)}</p>`).join("")}${button(link, cta)}<p style="font-size:12px;color:#5B5673">${fr ? "Ce lien est personnel. Tu peux aussi répondre directement à cet email." : "This link is personal. You can also simply reply to this email."}</p>`);
-  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: o.email, replyTo: owner.email, subject, html, text: [hello, "", ...lines, "", `${cta} : ${link}`].join("\n") });
+  // At the end of the program: what comes next (lib/next-step.ts), below the questionnaire.
+  const after = stage === "end" && next ? nextBlock(next, o.lang) : null;
+  const html = frame(`<p>${esc(hello)}</p>${lines.map((l) => `<p>${esc(l)}</p>`).join("")}${button(link, cta)}${after?.html ?? ""}<p style="font-size:12px;color:#5B5673">${fr ? "Ce lien est personnel. Tu peux aussi répondre directement à cet email." : "This link is personal. You can also simply reply to this email."}</p>`);
+  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: o.email, replyTo: owner.email, subject, html, text: [hello, "", ...lines, "", `${cta} : ${link}`, ...(after ? ["", ...after.text] : [])].join("\n") });
   if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
 }
 
 // A week before the access to the animations ends (lib/access.ts): the date, and what to do next.
-export async function sendAccessEnding(o: { email: string; lang: Lang; firstName: string; offer: "pre-saison" | "maintien-saison" | "pack" }, end: number) {
+export async function sendAccessEnding(o: { email: string; lang: Lang; firstName: string; offer: "pre-saison" | "maintien-saison" | "pack"; goals: GoalId[] }, end: number) {
   const fr = o.lang === "fr";
   const date = new Date(end).toLocaleDateString(fr ? "fr-FR" : "en-GB", { day: "numeric", month: "long", timeZone: "Europe/Paris" });
   const hello = fr ? `Bonjour ${o.firstName},` : `Hi ${o.firstName},`;
-  const next = o.offer === "pre-saison"
-    ? fr ? "La saison commence : pour garder ton niveau jusqu'au bout, le Maintien en saison te propose 2 séances courtes par semaine, placées pour arriver frais le jour du match." : "The season is starting: to keep your level all the way, the In-season maintenance gives you 2 short sessions a week, placed so you arrive fresh on game day."
-    : fr ? "Pour ta prochaine saison, la Pré-saison (ou le Pack Saison complète, pré-saison + saison) t'attend." : "For your next season, the Pre-season (or the Full season pack, pre-season + in-season) is ready for you.";
+  // The program ended 2 weeks before the access (lib/access.ts MARGIN_WEEKS): what comes next.
+  const next = nextStep(o.offer, end - MARGIN_WEEKS * 7 * 86400000, o.goals, o.lang);
   const lines = fr
-    ? [`Ton accès aux animations se termine le ${date}. Ton PDF, lui, reste à toi : tu peux continuer à t'en servir.`, next, "Si tu as répondu au questionnaire de fin de programme, pense à ton code de réduction."]
-    : [`Your access to the animations ends on ${date}. Your PDF is yours to keep: you can go on using it.`, next, "If you answered the end-of-program questionnaire, remember your discount code."];
-  const link = `${SITE}/${o.lang}/programmes`;
-  const html = frame(`<p>${esc(hello)}</p>${lines.map((l) => `<p>${esc(l)}</p>`).join("")}${button(link, fr ? "Voir les programmes" : "See the programs")}`);
+    ? [`Ton accès aux animations se termine le ${date}. Ton PDF, lui, reste à toi : tu peux continuer à t'en servir.`, `${next.t}. ${next.p}`, "Si tu as répondu au questionnaire de fin de programme, pense à ton code de réduction."]
+    : [`Your access to the animations ends on ${date}. Your PDF is yours to keep: you can go on using it.`, `${next.t}. ${next.p}`, "If you answered the end-of-program questionnaire, remember your discount code."];
+  const link = nextHref(next, o.lang, true);
+  const html = frame(`<p>${esc(hello)}</p>${lines.map((l) => `<p>${esc(l)}</p>`).join("")}${button(link, next.cta)}`);
   const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: o.email, replyTo: owner.email, subject: fr ? "Ton accès aux animations se termine dans 7 jours" : "Your access to the animations ends in 7 days", html, text: [hello, "", ...lines, "", link].join("\n") });
   if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
 }
@@ -321,6 +323,15 @@ export async function sendLoginCode(to: string, lang: Lang, code: string, minute
   const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to, replyTo: owner.email, subject: fr ? "Ton code de connexion 6M Lab" : "Your 6M Lab login code", html, text: [hello, "", l1, "", code, "", l2, "", l3].join("\n") });
   if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
   return String(info.response ?? "envoyé").slice(0, 120);
+}
+
+// "What's next" box of the end-of-program emails (lib/next-step.ts).
+function nextBlock(n: NextStep, lang: Lang) {
+  const href = nextHref(n, lang, true);
+  return {
+    html: `<div style="background:#F5F3FB;border-radius:10px;padding:14px 16px;margin:20px 0"><p style="margin:0 0 4px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#C4452A">${lang === "fr" ? "Et après ?" : "What's next?"}</p><p style="margin:0 0 6px;font-weight:700">${esc(n.t)}</p><p style="margin:0 0 10px">${esc(n.p)}</p><a href="${href}" style="color:#C4452A;font-weight:700">${esc(n.cta)} →</a></div>`,
+    text: [lang === "fr" ? "Et après ?" : "What's next?", n.t, n.p, `${n.cta} : ${href}`],
+  };
 }
 
 // ---- Free session (home page) -------------------------------------------------------------
