@@ -5,10 +5,10 @@ import { validEmail } from "@/lib/leads";
 import { mailReady, sendLoginCode } from "@/lib/email";
 import { alert, why } from "@/lib/alert";
 import { ACCESS_COOKIE } from "@/lib/access";
-import { checkCode, cleanEmail, CODE_MINUTES, newCode, ordersOf, OTP_COOKIE, otpCookie, readOtpCookie, SESSION_COOKIE, sessionCookie } from "@/lib/client-auth";
+import { checkCode, cleanEmail, CODE_MINUTES, logLogin, newCode, ordersOf, OTP_COOKIE, otpCookie, readOtpCookie, SESSION_COOKIE, sessionCookie } from "@/lib/client-auth";
 
 // Customer area login (lib/client-auth.ts), in two steps: "envoyer" (the email of the order, which
-// gets a 6-digit code) then "verifier" (the code). "sortie" logs out. Sends back to the customer
+// gets a 6-digit code; "renvoyer" sends a new one) then "verifier" (the code). "sortie" logs out. Sends back to the customer
 // area, with ?etape=code between the steps and ?erreur=<reason> when something did not work.
 const NEXT = /^\/(fr|en)\/exercices(\/[a-z0-9-]+){0,2}$/;
 
@@ -41,17 +41,30 @@ export async function POST(req: NextRequest) {
   if (!s || !mailReady()) return page({ erreur: "indisponible" });
 
   try {
-    if (action === "envoyer") {
-      const email = cleanEmail(String(form.get("email") ?? ""));
+    // "renvoyer": a new code to the address of the first step (kept in a short signed cookie).
+    if (action === "envoyer" || action === "renvoyer") {
+      const email = action === "renvoyer" ? readOtpCookie(req.cookies.get(OTP_COOKIE)?.value) : cleanEmail(String(form.get("email") ?? ""));
+      if (!email) return page({ erreur: "expire" });
       if (!validEmail(email)) return page({ erreur: "email" });
       // A code is sent only to an email that has an order; the page says the same either way,
       // so it does not tell who is a customer.
-      if ((await ordersOf(s, email, true)).length) {
+      const orders = await ordersOf(s, email, action === "envoyer");
+      if (!orders.length) await logLogin(email, "aucune commande à cette adresse : pas de code envoyé");
+      else {
         const c = await newCode(email);
-        if ("error" in c) return page({ erreur: c.error });
-        await sendLoginCode(email, lang, c.code, CODE_MINUTES);
+        if ("error" in c) {
+          await logLogin(email, c.error === "trop" ? "trop de codes demandés (5 par heure)" : "codes indisponibles (Redis)");
+          return page({ etape: "code", erreur: c.error });
+        }
+        try {
+          const answer = await sendLoginCode(email, lang, c.code, CODE_MINUTES, orders[orders.length - 1].meta.firstName ?? "");
+          await logLogin(email, `${action === "renvoyer" ? "code renvoyé" : "code envoyé"} (serveur mail : ${answer})`);
+        } catch (e) {
+          await logLogin(email, `erreur d'envoi : ${why(e)}`);
+          throw e;
+        }
       }
-      const res = page({ etape: "code" });
+      const res = page({ etape: "code", ...(action === "renvoyer" ? { renvoye: "1" } : {}) });
       res.cookies.set(OTP_COOKIE, otpCookie(email), { ...opts, maxAge: CODE_MINUTES * 60 });
       return res;
     }
@@ -59,6 +72,7 @@ export async function POST(req: NextRequest) {
       const email = readOtpCookie(req.cookies.get(OTP_COOKIE)?.value);
       if (!email) return page({ erreur: "expire" });
       const r = await checkCode(email, String(form.get("code") ?? "").replace(/\D/g, ""));
+      await logLogin(email, r === "ok" ? "connecté" : r === "faux" ? "mauvais code" : "code expiré ou trop essayé");
       if (r !== "ok") return page(r === "faux" ? { etape: "code", erreur: "faux" } : { erreur: "expire" });
       const res = page();
       res.cookies.set(SESSION_COOKIE, sessionCookie(email), opts);

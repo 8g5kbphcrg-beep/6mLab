@@ -20,7 +20,7 @@ export const metadata: Metadata = { title: "Espace client | 6M Lab", robots: { i
 
 const DAY_MS = 86400000;
 const NEXT = /^\/(fr|en)\/exercices(\/[a-z0-9-]+){0,2}$/;
-type Q = { etape?: string; erreur?: string; acces?: string; activer?: string; next?: string };
+type Q = { etape?: string; erreur?: string; acces?: string; activer?: string; next?: string; renvoye?: string };
 type P = { params: Promise<{ lang: string }>; searchParams: Promise<Q> };
 
 // The orders of the email and the referral, which lives on the order that owns the code.
@@ -174,9 +174,9 @@ function Login({ lang, q, next }: { lang: Lang; q: Q; next: string }) {
         <p>{code
           ? (fr ? "Si cette adresse correspond à une commande, un code à 6 chiffres vient de t'être envoyé par email (pense aux spams). Il est valable 10 minutes." : "If this address matches an order, a 6-digit code has just been sent to you by email (check your spam). It is valid for 10 minutes.")
           : (fr ? "Entre l'adresse email utilisée pour ta commande : tu recevras un code à 6 chiffres pour entrer." : "Enter the email address used for your order: you will receive a 6-digit code to enter.")}</p>
-        <p className="cs-warn">{fr
+        {!code && <p className="cs-warn">{fr
           ? <><strong>Utilise la même adresse email que pour ta commande</strong>, celle qui a reçu l'email de confirmation. Avec une autre adresse, tu ne recevras pas de code et tu ne retrouveras pas tes commandes.</>
-          : <><strong>Use the same email address as for your order</strong>, the one that received the confirmation email. With another address, you will not get a code nor find your orders.</>}</p>
+          : <><strong>Use the same email address as for your order</strong>, the one that received the confirmation email. With another address, you will not get a code nor find your orders.</>}</p>}
         <form method="post" action="/api/espace" className="acc-form">
           <input type="hidden" name="lang" value={lang} />
           {next && <input type="hidden" name="next" value={next} />}
@@ -190,7 +190,16 @@ function Login({ lang, q, next }: { lang: Lang; q: Q; next: string }) {
             <button className="btn" name="action" value="envoyer">{fr ? "Recevoir mon code" : "Get my code"}</button>
           </>}
         </form>
-        {code && <p className="acc-cta"><a href={`/${lang}/espace-client${next ? `?next=${encodeURIComponent(next)}` : ""}`}>{fr ? "Changer d'adresse ou recevoir un nouveau code" : "Change address or get a new code"}</a></p>}
+        {code && <>
+          {q.renvoye && !q.erreur && <p className="cs-sent" role="status">{fr ? "Nouveau code envoyé : utilise celui du dernier email reçu." : "New code sent: use the one from the latest email."}</p>}
+          <form method="post" action="/api/espace" className="cs-resend">
+            <input type="hidden" name="lang" value={lang} />
+            {next && <input type="hidden" name="next" value={next} />}
+            <span>{fr ? "Pas reçu ? Regarde dans les indésirables, puis" : "Nothing received? Check your spam, then"}</span>
+            <button name="action" value="renvoyer">{fr ? "Renvoyer le code" : "Resend the code"}</button>
+          </form>
+          <p className="acc-cta"><a href={`/${lang}/espace-client${next ? `?next=${encodeURIComponent(next)}` : ""}`}>{fr ? "Changer d'adresse email" : "Change email address"}</a></p>
+        </>}
         <ul className="acc-rules">
           <li>{fr ? "Tu y retrouves chacune de tes commandes, l'accès à ta bibliothèque d'exercices, ton code de parrainage et tes points." : "You will find each of your orders, the access to your exercise library, your referral code and your points."}</li>
           <li>{fr ? "Tout est enregistré avec ton adresse email : tu retrouves tout en te reconnectant, sur cet appareil ou sur un autre." : "Everything is saved with your email address: you find it all again when you log back in, on this device or another one."}</li>

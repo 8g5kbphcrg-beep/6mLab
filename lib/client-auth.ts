@@ -99,3 +99,28 @@ export async function checkCode(email: string, given: string): Promise<"ok" | "f
   await redis([["SET", key(email), `${code}:${Number(tries) + 1}`, "KEEPTTL"]]);
   return "faux";
 }
+
+// ---- Login log (admin home page) -----------------------------------------------------------
+// The last 30 login steps, to help a customer who says the code does not arrive: when, which
+// address (partly hidden), and what happened (code sent with the mail server's answer, no order at
+// this address, wrong code…).
+export type LoginEvent = { at: string; email: string; what: string };
+const LOG = "logins";
+export const maskEmail = (email: string) => {
+  const [u, d = ""] = cleanEmail(email).split("@");
+  return `${u.slice(0, 2)}${"•".repeat(Math.max(1, Math.min(6, u.length - 2)))}@${d}`;
+};
+export async function logLogin(email: string, what: string) {
+  if (!redisReady()) return;
+  const e: LoginEvent = { at: new Date().toISOString(), email: maskEmail(email), what: what.slice(0, 160) };
+  await redis([["LPUSH", LOG, JSON.stringify(e)], ["LTRIM", LOG, 0, 29]]).catch(() => {});
+}
+export async function recentLogins(n = 15): Promise<LoginEvent[]> {
+  if (!redisReady()) return [];
+  try {
+    const [list] = await redis([["LRANGE", LOG, 0, n - 1]]);
+    return ((list as string[] | null) ?? []).map((s) => JSON.parse(s) as LoginEvent);
+  } catch {
+    return [];
+  }
+}
