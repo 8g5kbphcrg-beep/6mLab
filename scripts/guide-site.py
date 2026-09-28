@@ -128,7 +128,7 @@ IMPROVE = {
  "Des articles de conseils réguliers": "Les articles s'arrêtent en décembre 2026 : écrire ceux de janvier à mars (reprise après la trêve, phase retour).",
  "Page de remerciement et email de confirmation": "Ajouter sur la page de remerciement un bouton « Mon espace client » pour activer sa bibliothèque tout de suite.",
  "Données structurées": "Ajouter la note moyenne des avis (étoiles dans Google) dès les premiers avis publiés.",
- "Sécurité du site": "Un composant qui sert à construire le site est signalé par npm (sans risque pour les visiteurs) : il partira avec la mise à jour vers Next.js 16. Choisir un mot de passe admin long (16 caractères ou plus).",
+ "Sécurité du site": "Un composant qui sert à construire le site est signalé par npm (sans risque pour les visiteurs) : il partira avec la mise à jour vers Next.js 16.",
  "Sauvegarde du site":"Le code est sur GitHub, mais pas les données : codes clubs, parrainages et journaux sont dans Redis, les commandes dans Stripe. Prévoir un export régulier.",
  "Surveiller les erreurs": "Ajouter une surveillance externe qui prévient si le site ne répond plus (le système actuel ne voit que les erreurs internes).",
  "Pas de cookie publicitaire": "La page Confidentialité doit citer les cookies de fonctionnement ajoutés (connexion à l'espace client, accès aux animations, appareil) et le journal des connexions.",
