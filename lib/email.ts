@@ -307,14 +307,20 @@ export async function sendReferralPoints(r: PointsNews) {
   if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
 }
 
-// Customer area login (lib/client-auth.ts): the 6-digit code.
-export async function sendLoginCode(to: string, lang: Lang, code: string, minutes: number) {
+// Customer area login (lib/client-auth.ts): the 6-digit code. Written like the other emails of
+// the site (greeting, full sentences, no digits at the start of the subject): iCloud's spam filter
+// silently drops short emails that look like a bare code. Returns the mail server's answer, kept in
+// the admin's login log.
+export async function sendLoginCode(to: string, lang: Lang, code: string, minutes: number, firstName = ""): Promise<string> {
   const fr = lang === "fr";
-  const l1 = fr ? "Voici ton code pour entrer dans ton espace client 6M Lab :" : "Here is your code to enter your 6M Lab customer area:";
-  const l2 = fr ? `Il est valable ${minutes} minutes. Si tu n'as rien demandé, ignore cet email : personne ne peut entrer sans ce code.` : `It is valid for ${minutes} minutes. If you did not ask for it, ignore this email: nobody can enter without this code.`;
-  const html = frame(`<p>${l1}</p><p style="font:700 30px Arial;letter-spacing:8px;background:#F5EDF0;border-radius:10px;padding:16px;text-align:center">${code}</p><p style="color:#5B5673">${esc(l2)}</p>`);
-  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to, replyTo: owner.email, subject: fr ? `${code} : ton code 6M Lab` : `${code}: your 6M Lab code`, html, text: [l1, "", code, "", l2].join("\n") });
+  const hello = fr ? `Bonjour${firstName ? ` ${firstName}` : ""},` : `Hi${firstName ? ` ${firstName}` : ""},`;
+  const l1 = fr ? "Tu as demandé à entrer dans ton espace client 6M Lab, où tu retrouves tes commandes, ta bibliothèque d'exercices et ton parrainage. Voici ton code de connexion :" : "You asked to enter your 6M Lab customer area, where you find your orders, your exercise library and your referral. Here is your login code:";
+  const l2 = fr ? `Saisis-le sur la page de connexion. Il est valable ${minutes} minutes et ne sert qu'une fois.` : `Enter it on the login page. It is valid for ${minutes} minutes and works only once.`;
+  const l3 = fr ? "Tu n'as rien demandé ? Ignore simplement cet email : personne ne peut entrer dans ton espace sans ce code." : "You did not ask for it? Just ignore this email: nobody can enter your area without this code.";
+  const html = frame(`<p>${esc(hello)}</p><p>${esc(l1)}</p><p style="font:700 30px Arial;letter-spacing:8px;background:#F5EDF0;border-radius:10px;padding:16px;text-align:center">${code}</p><p>${esc(l2)}</p><p style="color:#5B5673;font-size:13px">${esc(l3)}</p>`);
+  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to, replyTo: owner.email, subject: fr ? "Ton code de connexion 6M Lab" : "Your 6M Lab login code", html, text: [hello, "", l1, "", code, "", l2, "", l3].join("\n") });
   if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
+  return String(info.response ?? "envoyé").slice(0, 120);
 }
 
 // ---- Free session (home page) -------------------------------------------------------------
