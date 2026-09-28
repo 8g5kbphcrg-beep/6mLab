@@ -26,7 +26,7 @@ SECTIONS = [
  ("ok", "Un bouton principal par écran", "Chaque section mène vers une seule action évidente : questionnaire, programme ou devis."),
  ("ok", "Montrer le produit", "PDF qui se feuillette, animations d'exercices, aperçu de la séance gratuite."),
  ("you", "De vraies photos", "Des photos de toi sur le terrain et de joueurs à l'entraînement, avec leur accord. C'est ce qui manque le plus pour que le site paraisse humain et crédible."),
- ("part", "Accessibilité", "Contrastes, tailles de texte et navigation au clavier sont soignés. À faire : un contrôle complet (textes alternatifs, titres, lecteur d'écran) avant la mise en ligne."),
+ ("ok", "Accessibilité", "Audit complet (axe, normes WCAG 2.1 AA) sur 25 pages, en clair et en sombre, sur téléphone et ordinateur : zéro erreur. Navigation au clavier vérifiée, repère visible sur chaque élément, animations coupées si le téléphone le demande. À refaire après chaque grosse modification."),
 ]),
 ("contenu", "Contenu et textes", "Des textes qui parlent de ce que le joueur gagne, avec les mots du handball.", [
  ("ok", "Des bénéfices avant les caractéristiques", "« Arriver prêt à la reprise, sans blessure » plutôt que « 12 séances de renforcement »."),
