@@ -121,6 +121,22 @@ p{max-width:62ch;margin:0 0 1rem}a{color:inherit}:focus-visible{outline:3px soli
 .ticker li::after{content:"";width:.45rem;height:.45rem;border-radius:50%;background:var(--cta);margin-left:2.2rem}
 .ticker li:nth-child(even)::after{background:var(--B)}
 @keyframes tick{to{transform:translateX(-50%)}}
+/* Top bar: tighter with a shadow once the page scrolls (components/Enhance.tsx). */
+.bar{transition:padding .25s ease,box-shadow .25s ease}
+.bar.scrolled{padding-top:.4rem;padding-bottom:.4rem;box-shadow:0 6px 20px rgba(16,10,36,.28)}
+/* FAQ answers slide open. */
+.faq details[open]>:not(summary){animation:faqOpen .3s cubic-bezier(.2,.7,.2,1)}
+@keyframes faqOpen{from{opacity:0;transform:translateY(-6px)}}
+/* Page changes: the page fades in instead of flashing (browsers that support cross-page view
+   transitions; others simply load the page). The top bar stays put. */
+@media(prefers-reduced-motion:no-preference){
+  @view-transition{navigation:auto}
+  .bar{view-transition-name:topbar}
+  ::view-transition-old(root){animation:vtOut .18s ease both}
+  ::view-transition-new(root){animation:vtIn .32s cubic-bezier(.2,.7,.2,1) both}
+}
+@keyframes vtOut{to{opacity:0}}
+@keyframes vtIn{from{opacity:0;transform:translateY(10px)}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}.rise,.rv{opacity:1;transform:none}}
 .offer .ptag{align-self:flex-start}
 .shead.page h1{font-size:clamp(2.4rem,6vw,3.6rem)}

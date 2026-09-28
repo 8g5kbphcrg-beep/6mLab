@@ -18,6 +18,22 @@ export default function Enhance({ cta }: { cta: string }) {
         e.classList.add("rv");
       });
     }
+    // Exercise animations: the ones further down the page start from the beginning when they come
+    // into view, and every animation pauses while it is off screen.
+    let ao: IntersectionObserver | undefined;
+    if ("IntersectionObserver" in window) {
+      const figs = [...document.querySelectorAll<SVGSVGElement>("svg")].filter((v) => !v.classList.contains("scene") && v.querySelector("animate,animateTransform,animateMotion"));
+      ao = new IntersectionObserver((x) => x.forEach((y) => {
+        const v = y.target as SVGSVGElement;
+        if (!y.isIntersecting) return v.pauseAnimations();
+        if (v.dataset.fresh) { v.setCurrentTime(0); delete v.dataset.fresh; }
+        v.unpauseAnimations();
+      }), { rootMargin: "80px 0px" });
+      figs.forEach((v) => {
+        if (v.getBoundingClientRect().top > innerHeight) { v.dataset.fresh = "1"; v.pauseAnimations(); }
+        ao!.observe(v);
+      });
+    }
     const els = document.querySelectorAll(".rv");
     let o: IntersectionObserver | undefined;
     if (rm || !("IntersectionObserver" in window)) {
@@ -43,14 +59,21 @@ export default function Enhance({ cta }: { cta: string }) {
       svg?.pauseAnimations();
     }
     const hero = document.querySelector<HTMLElement>(".hero");
+    // The top bar tightens and casts a shadow once the page scrolls.
+    const bar = document.querySelector<HTMLElement>(".bar");
     let t = false;
     const s = () => {
       if (t) return;
       t = true;
-      requestAnimationFrame(() => { t = false; setOn(!!hero && scrollY > hero.offsetHeight * 0.7); });
+      requestAnimationFrame(() => {
+        t = false;
+        setOn(!!hero && scrollY > hero.offsetHeight * 0.7);
+        bar?.classList.toggle("scrolled", scrollY > 12);
+      });
     };
+    s();
     addEventListener("scroll", s, { passive: true });
-    return () => { removeEventListener("scroll", s); o?.disconnect(); };
+    return () => { removeEventListener("scroll", s); o?.disconnect(); ao?.disconnect(); };
   }, []);
   return <aside className={"cta" + (on ? " on" : "")} aria-label={cta}><a className="btn" href="#formules">{cta}</a></aside>;
 }
