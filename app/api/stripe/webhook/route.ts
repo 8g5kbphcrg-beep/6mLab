@@ -3,8 +3,8 @@ import Stripe from "stripe";
 import type { Lang } from "@/lib/dict";
 import type { ProgramSlug } from "@/lib/programs";
 import type { GoalId } from "@/lib/goals";
-import { mailReady, notifyOwner, sendConfirmation, sendReferralReward, type Order } from "@/lib/email";
-import { referralCode, sponsorReward } from "@/lib/referral";
+import { mailReady, notifyOwner, sendConfirmation, type Order } from "@/lib/email";
+import { recordReferral, referralCode } from "@/lib/referral";
 import { refOf } from "@/lib/access";
 import { alert, why } from "@/lib/alert";
 import { SITE } from "@/lib/dict";
@@ -34,13 +34,13 @@ export async function POST(req: NextRequest) {
     // customer area: saved on the PaymentIntent so it can be looked up (lib/access.ts).
     if (s.payment_status === "paid" && typeof s.payment_intent === "string") {
       await stripe.paymentIntents.update(s.payment_intent, { metadata: { ref: refOf(s.id).toLowerCase() } }).catch((e) => console.error("[ref]", e));
-      // Referral (lib/referral.ts): if this order used a teammate's code, that teammate gets their
-      // thank-you code by email. A failure here must not hold back the customer's program.
+      // Referral (lib/referral.ts): if this order used a teammate's code, it is noted; the daily
+      // cron checks it after a week and gives that teammate their points. A failure here must not
+      // hold back the customer's program.
       try {
-        const r = await sponsorReward(stripe, s);
-        if (r && mailReady()) await sendReferralReward(r);
+        await recordReferral(stripe, s);
       } catch (e) {
-        await alert(`par:${s.id}`, "Parrainage : le code de remerciement du parrain n'a pas pu être envoyé", [`Commande ${refOf(s.id)} (${m.firstName ?? ""}, ${s.customer_details?.email ?? ""})`, `Erreur : ${why(e)}`, "", "Regarde dans Stripe (Catalogue de produits > Coupons > PARRAIN) si le code a été créé, et envoie-le au parrain à la main."]);
+        await alert(`par:${s.id}`, "Parrainage : une commande avec un code de parrainage n'a pas pu être notée", [`Commande ${refOf(s.id)} (${m.firstName ?? ""}, ${s.customer_details?.email ?? ""})`, `Erreur : ${why(e)}`, "", "Le parrain ne recevra pas ses 50 points pour ce coéquipier. Dis-le à Claude : il peut les ajouter à la main dans Stripe (par_pts)."]);
       }
     }
 

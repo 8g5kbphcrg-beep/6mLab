@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { DAY, formUrl, paidOrders, PROMO_PERCENT, stripe, whenDays, type Stage } from "@/lib/feedback";
-import { mailReady, sendAccessEnding, sendCartReminder, sendFeedbackRequest, sendSeasonMail, sendTip, TIP_DAYS } from "@/lib/email";
+import { mailReady, sendAccessEnding, sendCartReminder, sendFeedbackRequest, sendReferralPoints, sendSeasonMail, sendTip, TIP_DAYS } from "@/lib/email";
+import { settleReferrals } from "@/lib/referral";
 import { abandonedCarts } from "@/lib/cart";
 import { dueCampaign } from "@/lib/season-mail";
 import { endOf, offerOf } from "@/lib/access";
@@ -16,7 +17,8 @@ import { alert, why } from "@/lib/alert";
 // before their access to the animations ends (s_acc). And reminds, once, the buyers whose payment
 // page expired in the last 24 hours without an order (lib/cart.ts). And, around the key dates of the
 // season, the email of that moment to the subscribers who accepted it (lib/season-mail.ts), at
-// most 150 a day so a run stays short; the rest go out on the following days of the week.
+// most 150 a day so a run stays short; the rest go out on the following days of the week. And the
+// referral points, once a teammate's order is a week old (lib/referral.ts).
 export async function GET(req: NextRequest) {
   if (!process.env.CRON_SECRET || req.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`) return new NextResponse("Unauthorized", { status: 401 });
   const s = stripe();
@@ -82,6 +84,13 @@ export async function GET(req: NextRequest) {
       await s.checkout.sessions.update(c.id, { metadata: { relance: new Date().toISOString().slice(0, 10) } }).catch(() => {});
       sent.push(`${c.id}:panier`);
     } catch (e) { fail("cart cron", c.id, e); }
+  }
+  // Referral points (lib/referral.ts): teammates' orders checked a week after payment.
+  for (const n of await settleReferrals(s, now, (id, e) => fail("referral cron", id, e))) {
+    try {
+      await sendReferralPoints(n);
+      sent.push(`${n.email.slice(0, 3)}…:points`);
+    } catch (e) { fail("referral mail", n.email, e); }
   }
   if (failed.length) await alert(`cron:${new Date().toISOString().slice(0, 10)}`, `${failed.length} email(s) automatique(s) n'ont pas pu partir`, [...failed.slice(0, 20), "", "Ils seront retentés au prochain passage (chaque jour), tant qu'ils sont dans leur fenêtre d'envoi."]);
   return NextResponse.json({ sent, failed: failed.length });

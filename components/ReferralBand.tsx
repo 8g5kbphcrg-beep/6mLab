@@ -1,26 +1,26 @@
 import type { Lang } from "@/lib/dict";
-import { FRIEND_PERCENT, SPONSOR_PERCENT } from "@/lib/referral";
+import { FRIEND_PERCENT, POINTS_FOR_REWARD, POINTS_PER_FRIEND, SPONSOR_PERCENT } from "@/lib/referral";
 import "@/app/referral.css";
 
 // Referral between teammates (lib/referral.ts), on the home page: a ticket with the 3 steps and
 // a sample code, so buyers know about it before and after ordering.
-const text = (f: number, s: number) => ({
+const text = (f: number, s: number, pp: number, pr: number) => ({
   fr: {
     k: "Parrainage", h: "Entre coéquipiers, tout le monde paie moins cher",
-    steps: [["Tu commandes", "Tu reçois ton code de parrainage personnel."], ["Tu le passes à tes coéquipiers", `Ils ont -${f} % sur leur programme.`], ["Tu es remercié", `-${s} % sur ton prochain programme, pour chaque coéquipier qui commande.`]],
-    tag: [`-${f} %`, "pour eux", `-${s} %`, "pour toi"],
+    steps: [["Tu commandes", "Tu reçois ton code de parrainage personnel."], ["Tu le passes à tes coéquipiers", `Ils ont -${f} % sur leur programme.`], ["Tu gagnes des points", `${pp} points par coéquipier qui commande. À ${pr} points, -${s} % sur ton prochain programme.`]],
+    tag: [`-${f} %`, "pour eux", `${pp} pts`, "pour toi"],
     code: "Ton code", sample: "TONPRÉNOM-7MQD", cta: "Voir les programmes", already: "Déjà client ? Ton code est dans ton email de confirmation et dans ta", lib: "bibliothèque d'exercices",
   },
   en: {
     k: "Referral", h: "Between teammates, everyone pays less",
-    steps: [["You order", "You get your personal referral code."], ["You pass it to your teammates", `They get ${f}% off their program.`], ["You get thanked", `${s}% off your next program for every teammate who orders.`]],
-    tag: [`${f}%`, "off for them", `${s}%`, "off for you"],
+    steps: [["You order", "You get your personal referral code."], ["You pass it to your teammates", `They get ${f}% off their program.`], ["You earn points", `${pp} points per teammate who orders. At ${pr} points, ${s}% off your next program.`]],
+    tag: [`${f}%`, "off for them", `${pp} pts`, "for you"],
     code: "Your code", sample: "YOURNAME-7MQD", cta: "See the programs", already: "Already a customer? Your code is in your confirmation email and in your", lib: "exercise library",
   },
 });
 
 export default function ReferralBand({ lang }: { lang: Lang }) {
-  const t = text(FRIEND_PERCENT, SPONSOR_PERCENT)[lang];
+  const t = text(FRIEND_PERCENT, SPONSOR_PERCENT, POINTS_PER_FRIEND, POINTS_FOR_REWARD)[lang];
   return (
     <section className="sec wrap" aria-labelledby="par-h">
       <div className="parb">

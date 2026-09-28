@@ -2,7 +2,7 @@ import type { Lang } from "@/lib/dict";
 import { fmtPrice, PACK_PRICE, prices, RUNNING_PRICE, SECOND_GOAL_PRICE } from "@/lib/checkout";
 import { accessWeeks, ACTIVATE_WITHIN_DAYS, MAX_DEVICES } from "@/lib/access";
 import { owner } from "@/lib/legal";
-import { FRIEND_PERCENT, SPONSOR_PERCENT } from "@/lib/referral";
+import { FRIEND_PERCENT, POINTS_FOR_REWARD, POINTS_PER_FRIEND, SPONSOR_PERCENT, VALIDATION_DAYS } from "@/lib/referral";
 
 // General FAQ (app/[lang]/faq): the questions asked before buying, grouped by theme. Prices,
 // access lengths and device limits come from the code that applies them, so the answers stay true.
@@ -32,7 +32,7 @@ export function faq(lang: Lang): Faq {
       { q: "Je peux avoir mon programme en anglais ?", a: "Oui : à la commande, tu choisis la langue du programme (français ou anglais)." },
       { q: "Comment se passe le paiement ?", a: "Le paiement est sécurisé par Stripe : carte bancaire, et Apple Pay ou Google Pay selon ton appareil. 6M Lab ne voit jamais tes informations de carte." },
       { q: "Je suis mineur, je peux commander ?", a: "Oui, avec l'accord d'un parent ou d'un représentant légal, qui peut aussi passer la commande pour toi." },
-      { q: "Comment marche le parrainage ?", a: `Après ta commande, tu reçois ton code de parrainage (dans l'email de confirmation et dans ta bibliothèque d'exercices). Donne-le à tes coéquipiers : ils ont -${FRIEND_PERCENT} % sur leur programme en le saisissant sur la page de paiement. Pour chaque coéquipier qui commande avec, tu reçois par email un code de -${SPONSOR_PERCENT} % sur ton prochain programme, valable un an.` },
+      { q: "Comment marche le parrainage ?", a: `Après ta commande, tu reçois ton code de parrainage (dans l'email de confirmation et dans ta bibliothèque d'exercices). Donne-le à tes coéquipiers : ils ont -${FRIEND_PERCENT} % sur leur programme en le saisissant sur la page de paiement. Chaque coéquipier qui commande avec te rapporte ${POINTS_PER_FRIEND} points, validés ${VALIDATION_DAYS} jours après sa commande. À ${POINTS_FOR_REWARD} points, tu reçois par email un code de -${SPONSOR_PERCENT} % sur ton prochain programme, valable un an. Chaque coéquipier compte une fois : il faut des personnes différentes, avec leur propre adresse email et leur propre moyen de paiement.` },
       { q: "Je peux être remboursé ?", a: "Tant que le programme ne t'a pas été envoyé, tu peux te rétracter et être remboursé. Une fois envoyé, le contenu numérique n'est plus remboursable, sauf s'il pose problème (fichier illisible, animation inaccessible) : il est alors corrigé, ou remboursé. Le détail est dans les [CGV](/fr/cgv)." },
     ] },
     { h: "Clubs et entraîneurs", items: [
@@ -61,7 +61,7 @@ export function faq(lang: Lang): Faq {
       { q: "Can I get my program in French?", a: "Yes: when ordering, you choose the language of the program (English or French)." },
       { q: "How does payment work?", a: "Payment is secured by Stripe: card, and Apple Pay or Google Pay depending on your device. 6M Lab never sees your card details." },
       { q: "I'm under 18, can I order?", a: "Yes, with the agreement of a parent or legal guardian, who can also place the order for you." },
-      { q: "How does the referral work?", a: `After your order, you get your referral code (in the confirmation email and in your exercise library). Give it to your teammates: they get ${FRIEND_PERCENT}% off their program by entering it on the payment page. For every teammate who orders with it, you get a ${SPONSOR_PERCENT}% discount code for your next program by email, valid for one year.` },
+      { q: "How does the referral work?", a: `After your order, you get your referral code (in the confirmation email and in your exercise library). Give it to your teammates: they get ${FRIEND_PERCENT}% off their program by entering it on the payment page. Every teammate who orders with it earns you ${POINTS_PER_FRIEND} points, confirmed ${VALIDATION_DAYS} days after their order. At ${POINTS_FOR_REWARD} points, you get a ${SPONSOR_PERCENT}% discount code for your next program by email, valid for one year. Each teammate counts once: they must be different people, with their own email address and their own payment method.` },
       { q: "Can I get a refund?", a: "Until the program has been sent to you, you can withdraw and get a refund. Once sent, digital content can no longer be refunded, unless it has a problem (unreadable file, animation not available): it is then fixed, or refunded. Details are in the [terms of sale](/en/terms)." },
     ] },
     { h: "Clubs and coaches", items: [
