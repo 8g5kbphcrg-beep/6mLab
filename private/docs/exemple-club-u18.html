@@ -253,7 +253,7 @@ tr.bh.org td b{display:block}
           <li><b>Autonomie · joueurs</b> : les semaines 1 à 4, à transmettre aux joueurs de champ.</li>
           <li><b>Autonomie · gardiens</b> : les mêmes semaines, avec les exercices des gardiens déjà à la bonne place.</li>
           <li><b>Fiche de suivi</b> : une ligne par joueur du devis, à imprimer.</li></ul></div>
-        <div class="box"><h3>L'œil, partout</h3><p>À côté de chaque exercice, l'œil ouvre l'animation (exercices individuels) ou un schéma animé avec légende (situations collectives : le point rouge est le joueur, il suit le parcours). En dessous, l'explication pour bien le faire.</p><p class="src">Dans cet exemple, l'œil ouvre une fenêtre sur la page. Dans les vrais PDF, il ouvrira la page de l'exercice sur le site, avec un code d'accès du club.</p></div>
+        <div class="box"><h3>L'œil, partout</h3><p>À côté de chaque exercice, l'œil ouvre l'animation (exercices individuels) ou un schéma animé avec légende (situations collectives : le point rouge est le joueur, il suit le parcours). En dessous, l'explication pour bien le faire.</p><p class="src">Ici, un clic ouvre une fenêtre sur la page. Une fois imprimé en PDF, l'œil est un lien vers la page de l'exercice sur le site : la première fois, le joueur y entre le code de son équipe (Code animations : <b class="clubcode">CLUB-____-____</b>, à créer dans Admin &gt; Clubs et à écrire ici et dans les documents d'autonomie).</p></div>
       </div>
     </section>
     <div id="club" class="doc"></div>
@@ -421,7 +421,14 @@ const DR = {
 // ---------- Helpers ----------
 const EYE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.2" fill="currentColor"/></svg>';
 const nameOf = (id) => (EX[id] || DR[id] || TXT[id] || { name: id }).name;
-const eyeHTML = (id) => (EX[id] || DR[id] || TXT[id]) ? `<button type="button" class="eye" data-ex="${id}" aria-label="Voir : ${nameOf(id).replace(/"/g, "")}">${EYE}</button>` : "";
+// The eye of an animated exercise is a link to its page on the site (__SITE__ is filled in by the
+// admin, app/admin/docs), so it still works in the PDF: the player enters the team's club code
+// there once (lib/club-access.ts). Here, a click opens the window of the page instead.
+const SITE = "__SITE__";
+const onSite = (id) => id.replace(/-club$/, "");
+const eyeHTML = (id) => EX[id]
+  ? `<a class="eye" href="${SITE}/fr/exercices/${onSite(id)}" data-ex="${id}" aria-label="Voir : ${nameOf(id).replace(/"/g, "")}">${EYE}</a>`
+  : (DR[id] || TXT[id]) ? `<button type="button" class="eye" data-ex="${id}" aria-label="Voir : ${nameOf(id).replace(/"/g, "")}">${EYE}</button>` : "";
 const COL = { r: "#E4572E", b: "#2B6BE3", g: "#1F9D55", v: "#7B4FD1", o: "#F28C28", y: "#F2A516", k: "#A8A2BA" };
 function drillSVG(d) {
   const it = d.items.map((e) => {
@@ -483,7 +490,7 @@ function autoDoc(gk) {
         <li><b>Séries</b> : combien de fois tu refais l'exercice. <b>Répétitions</b> : combien de mouvements par série.</li>
         <li>Exemple : 3 séries de 10 = 10 squats, pause, 10 squats, pause, 10 squats.</li>
         <li><b>Récupération</b> : la pause entre deux séries. <b>Repos avant la suite</b> : la pause avant l'exercice suivant.</li>
-        <li><b>L'œil</b> : touche-le pour voir l'exercice en mouvement et comment bien le faire.</li></ul></div>
+        <li><b>L'œil</b> : touche-le pour voir l'exercice en mouvement et comment bien le faire. La première fois, le site te demande le code de ton équipe : <b class="clubcode">CLUB-____-____</b>.</li></ul></div>
     </div>
     <div class="warn"><h3>Les règles</h3><ul>
       <li>La technique d'abord : si la position se dégrade, arrête la série.</li>
@@ -776,7 +783,7 @@ document.getElementById("auto-j").innerHTML = autoDoc(false);
 document.getElementById("auto-g").innerHTML = autoDoc(true);
 document.getElementById("sheet").innerHTML = sheetHTML(16, 2);
 document.addEventListener("click", (e) => {
-  const b = e.target.closest(".eye"); if (b) { openEx(b.dataset.ex); return; }
+  const b = e.target.closest(".eye"); if (b) { e.preventDefault(); openEx(b.dataset.ex); return; }
   if (e.target.closest(".m-close") || e.target.id === "modal") closeEx();
   const t = e.target.closest("[data-tab]");
   if (t) { document.querySelectorAll("[data-tab]").forEach((x) => x.setAttribute("aria-selected", x === t)); document.querySelectorAll("main > .doc").forEach((d) => { d.hidden = d.id !== t.dataset.tab; }); window.scrollTo({ top: 0 }); try { localStorage.setItem("tab", t.dataset.tab); } catch {} }
