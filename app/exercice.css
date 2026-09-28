@@ -37,3 +37,4 @@ body:has(.exo-back){overflow:hidden}
 .cs-resend{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin:.2rem 0 .8rem;color:#3A3452;font-size:.95rem}
 .cs-resend button{font:inherit;font-weight:700;color:#B23C22;background:none;border:0;padding:.3rem 0;text-decoration:underline;cursor:pointer}
 .cs-sent{background:#E7F7F4;border-radius:10px;padding:.6rem .9rem;color:#0B5E55!important}
+.cs-apple{font-size:.93rem;color:#3A3452}.cs-apple a{color:#B23C22;font-weight:700}

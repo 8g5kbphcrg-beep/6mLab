@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { stripe } from "@/lib/feedback";
 import { redis, redisReady } from "@/lib/redis";
 import { validEmail } from "@/lib/leads";
 import { mailReady, sendLoginCode } from "@/lib/email";
 import { alert, why } from "@/lib/alert";
-import { ACCESS_COOKIE } from "@/lib/access";
+import { ACCESS_COOKIE, cleanRef, findOrder } from "@/lib/access";
+import { stripe as stripeClient, toOrder } from "@/lib/feedback";
 import { checkCode, cleanEmail, CODE_MINUTES, logLogin, newCode, ordersOf, OTP_COOKIE, otpCookie, readOtpCookie, SESSION_COOKIE, sessionCookie } from "@/lib/client-auth";
 
 // Customer area login (lib/client-auth.ts), in two steps: "envoyer" (the email of the order, which
@@ -37,13 +37,21 @@ export async function POST(req: NextRequest) {
       if (Number(n) > 10) return page({ erreur: "trop" });
     } catch {}
   }
-  const s = stripe();
+  const s = stripeClient();
   if (!s || !mailReady()) return page({ erreur: "indisponible" });
 
   try {
     // "renvoyer": a new code to the address of the first step (kept in a short signed cookie).
     if (action === "envoyer" || action === "renvoyer") {
-      const email = action === "renvoyer" ? readOtpCookie(req.cookies.get(OTP_COOKIE)?.value) : cleanEmail(String(form.get("email") ?? ""));
+      // With the order reference instead (customers whose email Apple hid at payment, "Hide My
+      // Email"): the code goes to the email of that order, which Apple forwards to them.
+      const ref = cleanRef(String(form.get("ref") ?? ""));
+      const byRef = action === "envoyer" && !form.get("email") && ref.length === 12;
+      const email = action === "renvoyer" ? readOtpCookie(req.cookies.get(OTP_COOKIE)?.value) : byRef ? await orderEmail(s, ref) : cleanEmail(String(form.get("email") ?? ""));
+      if (byRef && !email) {
+        await logLogin(`ref-${ref}@reference`, "référence inconnue : pas de code envoyé");
+        return page({ etape: "code", par: "ref" });
+      }
       if (!email) return page({ erreur: "expire" });
       if (!validEmail(email)) return page({ erreur: "email" });
       // A code is sent only to an email that has an order; the page says the same either way,
@@ -64,7 +72,7 @@ export async function POST(req: NextRequest) {
           throw e;
         }
       }
-      const res = page({ etape: "code", ...(action === "renvoyer" ? { renvoye: "1" } : {}) });
+      const res = page({ etape: "code", ...(action === "renvoyer" ? { renvoye: "1" } : {}), ...(byRef ? { par: "ref" } : {}) });
       res.cookies.set(OTP_COOKIE, otpCookie(email), { ...opts, maxAge: CODE_MINUTES * 60 });
       return res;
     }
@@ -84,4 +92,12 @@ export async function POST(req: NextRequest) {
     await alert("espace-login", "Espace client : la connexion n'a pas fonctionné", [`Étape : ${action}`, `Erreur : ${why(e)}`]);
     return page({ erreur: "indisponible" });
   }
+}
+
+// The email of the order with this reference, or null.
+async function orderEmail(s: NonNullable<ReturnType<typeof stripeClient>>, ref: string): Promise<string | null> {
+  const o = await findOrder(s, ref);
+  if (!o || o.refunded) return null;
+  const e = toOrder(await s.paymentIntents.retrieve(o.pi, { expand: ["latest_charge"] })).email;
+  return e ? cleanEmail(e) : null;
 }

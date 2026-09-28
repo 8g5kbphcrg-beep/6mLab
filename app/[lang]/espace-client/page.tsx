@@ -20,7 +20,7 @@ export const metadata: Metadata = { title: "Espace client | 6M Lab", robots: { i
 
 const DAY_MS = 86400000;
 const NEXT = /^\/(fr|en)\/exercices(\/[a-z0-9-]+){0,2}$/;
-type Q = { etape?: string; erreur?: string; acces?: string; activer?: string; next?: string; renvoye?: string };
+type Q = { etape?: string; erreur?: string; acces?: string; activer?: string; next?: string; renvoye?: string; mode?: string; par?: string };
 type P = { params: Promise<{ lang: string }>; searchParams: Promise<Q> };
 
 // The orders of the email and the referral, which lives on the order that owns the code.
@@ -156,7 +156,8 @@ function AccessCard({ o, lang, confirm, next }: { o: ClientOrder; lang: Lang; co
 
 // Login in two steps: the email of the order, then the 6-digit code sent to it.
 function Login({ lang, q, next }: { lang: Lang; q: Q; next: string }) {
-  const fr = lang === "fr", code = q.etape === "code";
+  const fr = lang === "fr", code = q.etape === "code", byRef = !code && q.mode === "ref";
+  const here = (extra: Record<string, string> = {}) => `/${lang}/espace-client?${new URLSearchParams({ ...extra, ...(next ? { next } : {}) })}`;
   const errors: Record<string, [string, string]> = {
     email: ["Cette adresse email n'est pas valide.", "This email address is not valid."],
     faux: ["Ce code n'est pas le bon. Vérifie le dernier email reçu.", "This code is not the right one. Check the latest email you received."],
@@ -172,9 +173,13 @@ function Login({ lang, q, next }: { lang: Lang; q: Q; next: string }) {
         {q.erreur && errors[q.erreur] && <p className="acc-err" role="alert">{errors[q.erreur][fr ? 0 : 1]}</p>}
         {next && !code && <p>{fr ? "Les animations sont réservées aux clients : connecte-toi pour ouvrir cet exercice." : "The animations are for customers: log in to open this exercise."}</p>}
         <p>{code
-          ? (fr ? "Si cette adresse correspond à une commande, un code à 6 chiffres vient de t'être envoyé par email (pense aux spams). Il est valable 10 minutes." : "If this address matches an order, a 6-digit code has just been sent to you by email (check your spam). It is valid for 10 minutes.")
-          : (fr ? "Entre l'adresse email utilisée pour ta commande : tu recevras un code à 6 chiffres pour entrer." : "Enter the email address used for your order: you will receive a 6-digit code to enter.")}</p>
-        {!code && <p className="cs-warn">{fr
+          ? q.par === "ref"
+            ? (fr ? "Si cette référence correspond à une commande, un code à 6 chiffres vient d'être envoyé à l'adresse email de cette commande. Si Apple l'avait masquée, il arrive dans ta boîte habituelle (pense aux spams). Il est valable 10 minutes." : "If this reference matches an order, a 6-digit code has just been sent to the email of that order. If Apple hid it, it arrives in your usual inbox (check your spam). It is valid for 10 minutes.")
+            : (fr ? "Si cette adresse correspond à une commande, un code à 6 chiffres vient de t'être envoyé par email (pense aux spams). Il est valable 10 minutes." : "If this address matches an order, a 6-digit code has just been sent to you by email (check your spam). It is valid for 10 minutes.")
+          : byRef
+            ? (fr ? "Entre la référence de ta commande (ligne « Référence » de ton email de confirmation, 12 caractères) : le code sera envoyé à l'adresse email de cette commande." : "Enter your order reference (the “Reference” line of your confirmation email, 12 characters): the code will be sent to the email of that order.")
+            : (fr ? "Entre l'adresse email utilisée pour ta commande : tu recevras un code à 6 chiffres pour entrer." : "Enter the email address used for your order: you will receive a 6-digit code to enter.")}</p>
+        {!code && !byRef && <p className="cs-warn">{fr
           ? <><strong>Utilise la même adresse email que pour ta commande</strong>, celle qui a reçu l'email de confirmation. Avec une autre adresse, tu ne recevras pas de code et tu ne retrouveras pas tes commandes.</>
           : <><strong>Use the same email address as for your order</strong>, the one that received the confirmation email. With another address, you will not get a code nor find your orders.</>}</p>}
         <form method="post" action="/api/espace" className="acc-form">
@@ -184,12 +189,19 @@ function Login({ lang, q, next }: { lang: Lang; q: Q; next: string }) {
             <label className="sr" htmlFor="cs-code">{fr ? "Code à 6 chiffres" : "6-digit code"}</label>
             <input id="cs-code" name="code" required inputMode="numeric" autoComplete="one-time-code" pattern="[0-9 ]{6,7}" maxLength={7} placeholder="123456" className="cs-otp" />
             <button className="btn" name="action" value="verifier">{fr ? "Entrer" : "Enter"}</button>
+          </> : byRef ? <>
+            <label className="sr" htmlFor="cs-ref">{fr ? "Référence de commande" : "Order reference"}</label>
+            <input id="cs-ref" name="ref" required autoComplete="off" autoCapitalize="none" spellCheck={false} placeholder={fr ? "Ex. : a1B2c3D4e5F6" : "E.g. a1B2c3D4e5F6"} maxLength={40} />
+            <button className="btn" name="action" value="envoyer">{fr ? "Recevoir mon code" : "Get my code"}</button>
           </> : <>
             <label className="sr" htmlFor="cs-email">Email</label>
             <input id="cs-email" name="email" type="email" required autoComplete="email" placeholder={fr ? "ton@email.fr" : "you@email.com"} maxLength={254} />
             <button className="btn" name="action" value="envoyer">{fr ? "Recevoir mon code" : "Get my code"}</button>
           </>}
         </form>
+        {!code && (byRef
+          ? <p className="acc-cta"><a href={here()}>{fr ? "Me connecter avec mon adresse email" : "Log in with my email address"}</a></p>
+          : <p className="cs-apple">{fr ? "Tu as payé avec Apple Pay ou utilisé « Masquer mon adresse e-mail » ? Ta commande est liée à l'adresse créée par Apple (elle est rappelée dans ton email de confirmation). " : "Paid with Apple Pay or used “Hide My Email”? Your order is linked to the address Apple created (it is given in your confirmation email). "}<a href={here({ mode: "ref" })}>{fr ? "Me connecter avec ma référence de commande" : "Log in with my order reference"}</a></p>)}
         {code && <>
           {q.renvoye && !q.erreur && <p className="cs-sent" role="status">{fr ? "Nouveau code envoyé : utilise celui du dernier email reçu." : "New code sent: use the one from the latest email."}</p>}
           <form method="post" action="/api/espace" className="cs-resend">
