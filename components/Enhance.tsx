@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 // What slides in on scroll: section headers, cards, list items, questions.
-const REVEAL = [".shead", ".uni-c", ".why li", ".offer", ".opack", ".clubb", ".founder", ".free", ".rlist li", ".pc", ".phase", ".faq details", ".clubs-why li", ".clubs-cmp > div", ".plan-steps li", ".clubs-care-g > div", ".clubs-how li", ".nf-card", ".steps li", ".ticker"].join(",");
+const REVEAL = [".shead", ".uni-c", ".why li", ".offer", ".opack", ".clubb", ".founder", ".free", ".rlist li", ".pc", ".phase", ".faq details", ".clubs-why li", ".clubs-cmp > div", ".plan-steps li", ".clubs-care-g > div", ".clubs-how li", ".nf-card", ".steps li", ".ticker", ".bguide"].join(",");
 
 export default function Enhance({ cta }: { cta: string }) {
   const [on, setOn] = useState(false);
