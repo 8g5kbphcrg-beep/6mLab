@@ -60,6 +60,17 @@ export async function referralCode(s: Stripe, pi: string, firstName: string, kno
   return code;
 }
 
+// One code per person: a buyer who already has one (an earlier order with the same email, marked
+// "em" by the webhook, lib/client-auth.ts) keeps it; this order points to it (par_home), and the
+// points stay on the order that owns the code.
+export async function personCode(s: Stripe, pi: string, firstName: string, mark: string): Promise<string> {
+  const earlier = (await s.paymentIntents.search({ query: `metadata['em']:'${mark}'`, limit: 20 }).catch(() => ({ data: [] as Stripe.PaymentIntent[] }))).data
+    .filter((o) => o.id !== pi && o.metadata.par_code && !o.metadata.par_home).sort((a, b) => a.created - b.created)[0];
+  if (!earlier) return referralCode(s, pi, firstName);
+  await s.paymentIntents.update(pi, { metadata: { par_code: earlier.metadata.par_code, par_home: earlier.id } });
+  return earlier.metadata.par_code;
+}
+
 // After a paid order (webhook): if it used a teammate's code, it waits for the check (par_st).
 export async function recordReferral(s: Stripe, session: Stripe.Checkout.Session) {
   const promo = session.discounts?.map((d) => d.promotion_code).find(Boolean);

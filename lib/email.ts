@@ -131,14 +131,14 @@ export async function sendConfirmation(o: Order) {
     : `You accepted the terms of sale (${SITE}${legalPaths.en.cgv}), asked for immediate access to the program and acknowledged losing your right of withdrawal once the program has been sent. Seller: ${owner.name}, sole trader, ${owner.address}, SIRET ${owner.siret}. VAT not applicable, art. 293 B of the French General Tax Code.`;
   const hello = fr ? `Bonjour ${o.firstName},` : `Hi ${o.firstName},`;
   const intro = fr ? "Merci pour ta commande, elle est bien confirmée." : "Thank you for your order, it is confirmed.";
-  // The animations (customer area, lib/access.ts): opened with the reference, from the first time.
+  // The animations: opened from the customer area, with the buyer's email and a 6-digit code.
   const weeks = accessWeeks(offerOf({ program: o.program, pack: o.pack ? "oui" : "" }));
   const anims = fr
-    ? [`Tes animations : touche l'œil à côté de chaque exercice de ton programme, ou ouvre la bibliothèque d'exercices. Il te suffit de ta référence de commande : ${o.id.slice(-12)}.`,
-      `Ton accès démarre la première fois que tu l'ouvres (on te demandera de confirmer) et dure ${weeks} semaines (la durée de ton programme + 2 semaines). Ouvre-le le jour où tu commences, dans les 12 mois, sur ${MAX_DEVICES} appareils au plus. Ton PDF, lui, reste à toi.`]
-    : [`Your animations: tap the eye next to each exercise in your program, or open the exercise library. All you need is your order reference: ${o.id.slice(-12)}.`,
-      `Your access starts the first time you open it (you will be asked to confirm) and lasts ${weeks} weeks (your program + 2 weeks). Open it on the day you start, within 12 months, on ${MAX_DEVICES} devices at most. Your PDF is yours to keep.`];
-  const lib = `${SITE}/${o.lang}/exercices`;
+    ? [`Tes animations : touche l'œil à côté de chaque exercice de ton programme, ou ouvre la bibliothèque d'exercices. Connecte-toi à ton espace client avec cette adresse email : tu reçois un code à 6 chiffres, puis tu actives ta bibliothèque.`,
+      `Ton accès démarre quand tu actives ta bibliothèque (on te demandera de confirmer) et dure ${weeks} semaines (la durée de ton programme + 2 semaines). Ouvre-le le jour où tu commences, dans les 12 mois, sur ${MAX_DEVICES} appareils au plus. Ton PDF, lui, reste à toi.`]
+    : [`Your animations: tap the eye next to each exercise in your program, or open the exercise library. Log in to your customer area with this email address: you get a 6-digit code, then you activate your library.`,
+      `Your access starts when you activate your library (you will be asked to confirm) and lasts ${weeks} weeks (your program + 2 weeks). Open it on the day you start, within 12 months, on ${MAX_DEVICES} devices at most. Your PDF is yours to keep.`];
+  const lib = `${SITE}/${o.lang}/espace-client`;
   // Pré-saison (alone or in the pack): when to do it (lib/programs.ts whenToStart).
   const w = whenToStart[o.lang];
   const when = o.program === "pre-saison"
@@ -146,8 +146,8 @@ export async function sendConfirmation(o: Order) {
     : [];
   // Referral (lib/referral.ts): the code to share with teammates.
   const par = o.referral ? (fr
-    ? ["Parraine tes coéquipiers", `Donne-leur ton code ${o.referral} : ils ont -${FRIEND_PERCENT} % sur leur programme (à saisir sur la page de paiement). Chaque coéquipier qui commande te rapporte ${POINTS_PER_FRIEND} points ; à ${POINTS_FOR_REWARD} points, tu reçois -${SPONSOR_PERCENT} % sur ton prochain programme. Suis tes points dans ton espace client : ${SITE}/fr/espace-client (avec ta référence de commande).`]
-    : ["Refer your teammates", `Give them your code ${o.referral}: they get ${FRIEND_PERCENT}% off their program (entered on the payment page). Every teammate who orders earns you ${POINTS_PER_FRIEND} points; at ${POINTS_FOR_REWARD} points, you get ${SPONSOR_PERCENT}% off your next program. Follow your points in your customer area: ${SITE}/en/espace-client (with your order reference).`]) : null;
+    ? ["Parraine tes coéquipiers", `Donne-leur ton code ${o.referral} : ils ont -${FRIEND_PERCENT} % sur leur programme (à saisir sur la page de paiement). Chaque coéquipier qui commande te rapporte ${POINTS_PER_FRIEND} points ; à ${POINTS_FOR_REWARD} points, tu reçois -${SPONSOR_PERCENT} % sur ton prochain programme. Suis tes points dans ton espace client : ${SITE}/fr/espace-client.`]
+    : ["Refer your teammates", `Give them your code ${o.referral}: they get ${FRIEND_PERCENT}% off their program (entered on the payment page). Every teammate who orders earns you ${POINTS_PER_FRIEND} points; at ${POINTS_FOR_REWARD} points, you get ${SPONSOR_PERCENT}% off your next program. Follow your points in your customer area: ${SITE}/en/espace-client.`]) : null;
   const health = fr
     ? "Nos programmes sont destinés aux personnes en bonne santé. En cas de doute ou de blessure, demande l'avis d'un professionnel de santé."
     : "Our programs are for healthy people. If you have doubts or an injury, ask a health professional first.";
@@ -159,7 +159,7 @@ export async function sendConfirmation(o: Order) {
     <table style="width:100%;border-collapse:collapse;margin:16px 0">${rows.map(([k, v]) => `<tr><td style="padding:8px 0;color:#5B5673;border-bottom:1px solid #E3E0F0">${k}</td><td style="padding:8px 0;text-align:right;font-weight:700;border-bottom:1px solid #E3E0F0">${esc(v)}</td></tr>`).join("")}</table>
     <p style="font-weight:700">${delivery}</p>
     ${when.length ? `<div style="border-left:4px solid #FF7A59;padding:2px 0 2px 14px;margin:16px 0"><p style="margin:0 0 8px;font-weight:700">${esc(when[0])}</p>${when.slice(1).map((l) => `<p style="margin:0 0 8px">${esc(l)}</p>`).join("")}</div>` : ""}
-    <div style="background:#F5F3FB;border-radius:10px;padding:14px 16px;margin:16px 0">${anims.map((l) => `<p style="margin:0 0 8px">${esc(l)}</p>`).join("")}<p style="margin:0"><a href="${lib}" style="color:#C4452A;font-weight:700">${fr ? "Ouvrir la bibliothèque d'exercices" : "Open the exercise library"}</a></p></div>
+    <div style="background:#F5F3FB;border-radius:10px;padding:14px 16px;margin:16px 0">${anims.map((l) => `<p style="margin:0 0 8px">${esc(l)}</p>`).join("")}<p style="margin:0"><a href="${lib}" style="color:#C4452A;font-weight:700">${fr ? "Ouvrir mon espace client" : "Open my customer area"}</a></p></div>
     ${par ? `<div style="border:2px dashed #FF7A59;border-radius:10px;padding:14px 16px;margin:16px 0"><p style="margin:0 0 8px;font-weight:700">${esc(par[0])}</p><p style="margin:0 0 10px">${esc(par[1])}</p><p style="margin:0;font:700 20px Arial;letter-spacing:2px;text-align:center">${esc(o.referral!)}</p></div>` : ""}
     <p>${fr ? "Une question ? Réponds simplement à cet email." : "Any question? Just reply to this email."}</p>
     <p style="font-size:12px;color:#5B5673;margin-top:24px">${esc(health)}</p>
@@ -304,6 +304,16 @@ export async function sendReferralPoints(r: PointsNews) {
   const html = frame(`<p>${esc(hello)}</p><p>${esc(l1)}</p><p>${esc(l2)}</p>${r.code ? `<p style="font:700 22px Arial;letter-spacing:2px;background:#F5EDF0;border-radius:10px;padding:14px;text-align:center">${esc(r.code)}</p><p>${esc(l3)}</p>` : ""}${button(`${SITE}/${r.lang}/programmes`, fr ? "Voir les programmes" : "See the programs")}`);
   const subject = r.code ? (fr ? `Parrainage : ton code de -${SPONSOR_PERCENT} %` : `Referral: your ${SPONSOR_PERCENT}% discount code`) : fr ? `Parrainage : +${POINTS_PER_FRIEND} points (${r.points}/${POINTS_FOR_REWARD})` : `Referral: +${POINTS_PER_FRIEND} points (${r.points}/${POINTS_FOR_REWARD})`;
   const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: r.email, replyTo: owner.email, subject, html, text: [hello, "", l1, l2, ...(r.code ? [r.code, "", l3] : [])].join("\n") });
+  if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
+}
+
+// Customer area login (lib/client-auth.ts): the 6-digit code.
+export async function sendLoginCode(to: string, lang: Lang, code: string, minutes: number) {
+  const fr = lang === "fr";
+  const l1 = fr ? "Voici ton code pour entrer dans ton espace client 6M Lab :" : "Here is your code to enter your 6M Lab customer area:";
+  const l2 = fr ? `Il est valable ${minutes} minutes. Si tu n'as rien demandé, ignore cet email : personne ne peut entrer sans ce code.` : `It is valid for ${minutes} minutes. If you did not ask for it, ignore this email: nobody can enter without this code.`;
+  const html = frame(`<p>${l1}</p><p style="font:700 30px Arial;letter-spacing:8px;background:#F5EDF0;border-radius:10px;padding:16px;text-align:center">${code}</p><p style="color:#5B5673">${esc(l2)}</p>`);
+  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to, replyTo: owner.email, subject: fr ? `${code} : ton code 6M Lab` : `${code}: your 6M Lab code`, html, text: [l1, "", code, "", l2].join("\n") });
   if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
 }
 
