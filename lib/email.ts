@@ -131,12 +131,12 @@ export async function sendConfirmation(o: Order) {
     : `You accepted the terms of sale (${SITE}${legalPaths.en.cgv}), asked for immediate access to the program and acknowledged losing your right of withdrawal once the program has been sent. Seller: ${owner.name}, sole trader, ${owner.address}, SIRET ${owner.siret}. VAT not applicable, art. 293 B of the French General Tax Code.`;
   const hello = fr ? `Bonjour ${o.firstName},` : `Hi ${o.firstName},`;
   const intro = fr ? "Merci pour ta commande, elle est bien confirmée." : "Thank you for your order, it is confirmed.";
-  // The animations: opened from the customer area, with the buyer's email and a 6-digit code.
+  // The animations: opened from the customer area, with the order reference and a 6-digit code.
   const weeks = accessWeeks(offerOf({ program: o.program, pack: o.pack ? "oui" : "" }));
   const anims = fr
-    ? [`Tes animations : touche l'œil à côté de chaque exercice de ton programme, ou ouvre la bibliothèque d'exercices. Connecte-toi à ton espace client avec cette adresse email : tu reçois un code à 6 chiffres, puis tu actives ta bibliothèque.`,
+    ? [`Tes animations : touche l'œil à côté de chaque exercice de ton programme, ou ouvre la bibliothèque d'exercices. Connecte-toi à ton espace client avec ta référence de commande (${o.id.slice(-12)}) : tu reçois un code à 6 chiffres par email, puis tu actives ta bibliothèque.`,
       `Ton accès démarre quand tu actives ta bibliothèque (on te demandera de confirmer) et dure ${weeks} semaines (la durée de ton programme + 2 semaines). Ouvre-le le jour où tu commences, dans les 12 mois, sur ${MAX_DEVICES} appareils au plus. Ton PDF, lui, reste à toi.`]
-    : [`Your animations: tap the eye next to each exercise in your program, or open the exercise library. Log in to your customer area with this email address: you get a 6-digit code, then you activate your library.`,
+    : [`Your animations: tap the eye next to each exercise in your program, or open the exercise library. Log in to your customer area with your order reference (${o.id.slice(-12)}): you get a 6-digit code by email, then you activate your library.`,
       `Your access starts when you activate your library (you will be asked to confirm) and lasts ${weeks} weeks (your program + 2 weeks). Open it on the day you start, within 12 months, on ${MAX_DEVICES} devices at most. Your PDF is yours to keep.`];
   const lib = `${SITE}/${o.lang}/espace-client`;
   // Pré-saison (alone or in the pack): when to do it (lib/programs.ts whenToStart).

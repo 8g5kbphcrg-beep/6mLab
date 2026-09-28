@@ -12,7 +12,8 @@ import ShareCode from "@/components/ShareCode";
 import "@/app/exercice.css";
 import "@/app/library.css";
 
-// Customer area: logged in with the email of the orders and a 6-digit code (lib/client-auth.ts),
+// Customer area: logged in with an order reference and a 6-digit code sent to its email
+// (lib/client-auth.ts), which opens every order of that email,
 // for the visit only. One card per order, to activate its library (after a confirmation: the
 // countdown cannot be paused) or open it; and the referral card (one code per person).
 export const dynamic = "force-dynamic";
@@ -154,11 +155,12 @@ function AccessCard({ o, lang, confirm, next }: { o: ClientOrder; lang: Lang; co
   );
 }
 
-// Login in two steps: the email of the order, then the 6-digit code sent to it.
+// Login in two steps, the same for everyone: the order reference, then the 6-digit code sent to
+// the email of that order (also when Apple hid the address at payment: it forwards the email).
 function Login({ lang, q, next }: { lang: Lang; q: Q; next: string }) {
   const fr = lang === "fr", code = q.etape === "code";
+  const here = `/${lang}/espace-client${next ? `?next=${encodeURIComponent(next)}` : ""}`;
   const errors: Record<string, [string, string]> = {
-    email: ["Cette adresse email n'est pas valide.", "This email address is not valid."],
     faux: ["Ce code n'est pas le bon. Vérifie le dernier email reçu.", "This code is not the right one. Check the latest email you received."],
     expire: ["Ce code a expiré ou a été trop essayé. Demande un nouveau code.", "This code has expired or was tried too many times. Ask for a new code."],
     trop: ["Trop d'essais. Réessaie dans une heure.", "Too many tries. Try again in an hour."],
@@ -172,11 +174,8 @@ function Login({ lang, q, next }: { lang: Lang; q: Q; next: string }) {
         {q.erreur && errors[q.erreur] && <p className="acc-err" role="alert">{errors[q.erreur][fr ? 0 : 1]}</p>}
         {next && !code && <p>{fr ? "Les animations sont réservées aux clients : connecte-toi pour ouvrir cet exercice." : "The animations are for customers: log in to open this exercise."}</p>}
         <p>{code
-          ? (fr ? "Si cette adresse correspond à une commande, un code à 6 chiffres vient de t'être envoyé par email (pense aux spams). Il est valable 10 minutes." : "If this address matches an order, a 6-digit code has just been sent to you by email (check your spam). It is valid for 10 minutes.")
-          : (fr ? "Entre l'adresse email utilisée pour ta commande : tu recevras un code à 6 chiffres pour entrer." : "Enter the email address used for your order: you will receive a 6-digit code to enter.")}</p>
-        {!code && <p className="cs-warn">{fr
-          ? <><strong>Utilise la même adresse email que pour ta commande</strong>, celle qui a reçu l'email de confirmation. Avec une autre adresse, tu ne recevras pas de code et tu ne retrouveras pas tes commandes.</>
-          : <><strong>Use the same email address as for your order</strong>, the one that received the confirmation email. With another address, you will not get a code nor find your orders.</>}</p>}
+          ? (fr ? "Si cette référence correspond à une commande, un code à 6 chiffres vient d'être envoyé à l'adresse email de la commande (pense aux indésirables). Il est valable 10 minutes." : "If this reference matches an order, a 6-digit code has just been sent to the email of the order (check your spam). It is valid for 10 minutes.")
+          : (fr ? "Entre la référence de ta commande : elle est dans ton email de confirmation, ligne « Référence » (12 caractères), et en bas de ton PDF. Tu recevras un code à 6 chiffres par email pour entrer." : "Enter your order reference: it is in your confirmation email, on the “Reference” line (12 characters), and at the foot of your PDF. You will receive a 6-digit code by email to enter.")}</p>
         <form method="post" action="/api/espace" className="acc-form">
           <input type="hidden" name="lang" value={lang} />
           {next && <input type="hidden" name="next" value={next} />}
@@ -185,8 +184,8 @@ function Login({ lang, q, next }: { lang: Lang; q: Q; next: string }) {
             <input id="cs-code" name="code" required inputMode="numeric" autoComplete="one-time-code" pattern="[0-9 ]{6,7}" maxLength={7} placeholder="123456" className="cs-otp" />
             <button className="btn" name="action" value="verifier">{fr ? "Entrer" : "Enter"}</button>
           </> : <>
-            <label className="sr" htmlFor="cs-email">Email</label>
-            <input id="cs-email" name="email" type="email" required autoComplete="email" placeholder={fr ? "ton@email.fr" : "you@email.com"} maxLength={254} />
+            <label className="sr" htmlFor="cs-ref">{fr ? "Référence de commande" : "Order reference"}</label>
+            <input id="cs-ref" name="ref" required autoComplete="off" autoCapitalize="none" spellCheck={false} placeholder={fr ? "Ex. : a1B2c3D4e5F6" : "E.g. a1B2c3D4e5F6"} maxLength={40} />
             <button className="btn" name="action" value="envoyer">{fr ? "Recevoir mon code" : "Get my code"}</button>
           </>}
         </form>
@@ -198,12 +197,12 @@ function Login({ lang, q, next }: { lang: Lang; q: Q; next: string }) {
             <span>{fr ? "Pas reçu ? Regarde dans les indésirables, puis" : "Nothing received? Check your spam, then"}</span>
             <button name="action" value="renvoyer">{fr ? "Renvoyer le code" : "Resend the code"}</button>
           </form>
-          <p className="acc-cta"><a href={`/${lang}/espace-client${next ? `?next=${encodeURIComponent(next)}` : ""}`}>{fr ? "Changer d'adresse email" : "Change email address"}</a></p>
+          <p className="acc-cta"><a href={here}>{fr ? "Changer de référence" : "Change reference"}</a></p>
         </>}
         <ul className="acc-rules">
-          <li>{fr ? "Tu y retrouves chacune de tes commandes, l'accès à ta bibliothèque d'exercices, ton code de parrainage et tes points." : "You will find each of your orders, the access to your exercise library, your referral code and your points."}</li>
-          <li>{fr ? "Tout est enregistré avec ton adresse email : tu retrouves tout en te reconnectant, sur cet appareil ou sur un autre." : "Everything is saved with your email address: you find it all again when you log back in, on this device or another one."}</li>
-          <li>{fr ? "Pour ta sécurité, tu restes connecté le temps de ta visite (1 heure au plus)." : "For your security, you stay logged in for your visit (1 hour at most)."}</li>
+          <li>{fr ? "Tu y retrouves tes commandes, l'accès à ta bibliothèque d'exercices, ton code de parrainage et tes points." : "You will find your orders, the access to your exercise library, your referral code and your points."}</li>
+          <li>{fr ? "Le code est envoyé à l'adresse email de ta commande. Si Apple l'a masquée au paiement, il arrive quand même dans ta boîte habituelle." : "The code is sent to the email of your order. If Apple hid it at payment, it still arrives in your usual inbox."}</li>
+          <li>{fr ? "Tout est enregistré : tu retrouves tout en te reconnectant, sur cet appareil ou sur un autre. Pour ta sécurité, tu restes connecté le temps de ta visite (1 heure au plus)." : "Everything is saved: you find it all again when you log back in, on this device or another one. For your security, you stay logged in for your visit (1 hour at most)."}</li>
         </ul>
         <p className="acc-cta">{fr ? "Pas encore client ?" : "Not a customer yet?"} <a href={`/${lang}/programmes`}>{fr ? "Découvre les programmes" : "See the programs"}</a> · <a href={`/${lang}/exercices/seance-gratuite`}>{fr ? "Animations de la séance gratuite" : "Free session animations"}</a></p>
       </div>

@@ -26,7 +26,7 @@ export function faq(lang: Lang): Faq {
       { q: "Il y a un plan alimentaire ?", a: "Non, les programmes portent sur l'entraînement uniquement." },
     ] },
     { h: "Commande et accès", items: [
-      { q: "Comment je reçois mon programme ?", a: "Par email, en PDF à ton nom. Les animations des exercices s'ouvrent depuis ton [espace client](/fr/espace-client) : tu te connectes avec l'adresse email de ta commande et un code à 6 chiffres reçu par email." },
+      { q: "Comment je reçois mon programme ?", a: "Par email, en PDF à ton nom. Les animations des exercices s'ouvrent depuis ton [espace client](/fr/espace-client) : tu te connectes avec ta référence de commande et un code à 6 chiffres reçu par email." },
       { q: "Je garde le PDF ?", a: "Oui, pour toujours. Seul l'accès en ligne aux animations est limité dans le temps." },
       { q: "Combien de temps ai-je accès aux animations ?", a: `Le temps du programme plus 2 semaines : ${wPre} semaines pour Pré-saison, ${wMain} pour Maintien, ${wPack} pour Saison complète. L'accès démarre quand tu actives ta bibliothèque dans ton espace client, pas le jour de l'achat : tu as ${months} mois pour le lancer. Il fonctionne sur ${MAX_DEVICES} appareils au plus.` },
       { q: "Je peux avoir mon programme en anglais ?", a: "Oui : à la commande, tu choisis la langue du programme (français ou anglais)." },
@@ -55,7 +55,7 @@ export function faq(lang: Lang): Faq {
       { q: "Is there a meal plan?", a: "No, the programs cover training only." },
     ] },
     { h: "Order and access", items: [
-      { q: "How do I get my program?", a: "By email, as a PDF with your name. The exercise animations open from your [customer area](/en/espace-client): you log in with the email of your order and a 6-digit code received by email." },
+      { q: "How do I get my program?", a: "By email, as a PDF with your name. The exercise animations open from your [customer area](/en/espace-client): you log in with your order reference and a 6-digit code received by email." },
       { q: "Do I keep the PDF?", a: "Yes, forever. Only the online access to the animations is time-limited." },
       { q: "How long can I watch the animations?", a: `The length of the program plus 2 weeks: ${wPre} weeks for Pre-season, ${wMain} for Maintenance, ${wPack} for Full season. Access starts when you activate your library in your customer area, not on the day you buy: you have ${months} months to start it. It works on ${MAX_DEVICES} devices at most.` },
       { q: "Can I get my program in French?", a: "Yes: when ordering, you choose the language of the program (English or French)." },
