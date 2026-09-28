@@ -50,7 +50,13 @@ export default async function Merci({ params, searchParams }: P) {
         ? "Ton code de parrainage est aussi dans l'email de confirmation : partage-le à tes coéquipiers, ils ont une réduction sur leur programme, et toi des points pour une réduction sur ton prochain."
         : "Your referral code is in the confirmation email too: share it with your teammates, they get a discount on their program, and you earn points towards a discount on your next one."}</p>}
       <p>{fr ? "Une question d'ici là ?" : "Any question in the meantime?"} <Link href={`/${lang}/contact`}>{fr ? "Contacte-nous" : "Contact us"}</Link>.</p>
-      <p><Link className="btn" href={fr ? "/fr/conseils" : `/${lang}`}>{fr ? "Lire nos conseils" : "Back to home"}</Link></p>
+      {paid && <p>{fr
+        ? "Les animations des exercices s'ouvrent depuis ton espace client : connecte-toi avec ta référence de commande, puis active ta bibliothèque le jour où tu commences (la durée d'accès démarre à ce moment-là)."
+        : "The exercise animations open from your customer area: log in with your order reference, then activate your library on the day you start (your access time starts then)."}</p>}
+      <p className="merci-actions">
+        {paid && <Link className="btn" href={`/${lang}/espace-client`}>{fr ? "Mon espace client" : "My customer area"}</Link>}
+        <Link className={paid ? "btn btn-ghost" : "btn"} href={fr ? "/fr/conseils" : `/${lang}`}>{fr ? "Lire nos conseils" : "Back to home"}</Link>
+      </p>
     </div>
   );
 }

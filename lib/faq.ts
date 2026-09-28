@@ -38,6 +38,7 @@ export function faq(lang: Lang): Faq {
     { h: "Clubs et entraîneurs", items: [
       { q: "Vous faites des programmes pour toute une équipe ?", a: "Oui, à partir des U15 : un programme pour le groupe, calé sur le calendrier du club, le matériel et les installations. Le prix est établi sur devis, sous 48 heures. Tout est sur la [page Clubs](/fr/clubs)." },
       { q: "Mon équipe doit-elle avoir un niveau minimum ?", a: "Chaque catégorie et chaque niveau suppose des acquis physiques. Ils s'affichent dans le formulaire de devis dès que tu choisis le niveau." },
+      { q: "Mon coach m'a donné un code club, où je le mets ?", a: "Le code ressemble à CLUB-XXXX-XXXX et il est écrit sur les documents de ton équipe. Saisis-le sur la [page Clubs](/fr/clubs#code) ou dans l'[espace client](/fr/espace-client), sans créer de compte. Il ouvre la bibliothèque clubs sur ton appareil jusqu'à la fin de la saison prévue par ton club. Le nombre d'appareils est limité (l'effectif et le staff) : si le code est « complet », préviens ton coach." },
     ] },
     { h: "Autres questions", items: [
       { q: "Je n'ai pas trouvé ma réponse", a: `Écris à ${owner.email} ou passe par la [page Contact](/fr/contact). Réponse en général sous 48 heures.` },
@@ -67,6 +68,7 @@ export function faq(lang: Lang): Faq {
     { h: "Clubs and coaches", items: [
       { q: "Do you make programs for a whole team?", a: "Yes, from U15: one program for the group, fitted to the club's calendar, equipment and facilities. The price is set on quote, within 48 hours. Everything is on the [Clubs page](/en/clubs)." },
       { q: "Does my team need a minimum level?", a: "Each age group and level assumes some physical prerequisites. They show up in the quote form as soon as you choose the level." },
+      { q: "My coach gave me a club code, where do I enter it?", a: "The code looks like CLUB-XXXX-XXXX and is written on your team's documents. Enter it on the [Clubs page](/en/clubs#code) or in the [customer area](/en/espace-client), with no account needed. It opens the club library on your device until the end date set by your club. The number of devices is limited (squad and staff): if the code is \"full\", tell your coach." },
     ] },
     { h: "Other questions", items: [
       { q: "I didn't find my answer", a: `Write to ${owner.email} or use the [Contact page](/en/contact). Replies usually within 48 hours.` },
