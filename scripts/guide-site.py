@@ -24,6 +24,7 @@ SECTIONS = [
  ("ok", "Une identité cohérente", "Logo, couleurs, typographies et ton identiques sur le site, les PDF, les emails et l'admin."),
  ("ok", "Pensé d'abord pour le téléphone", "La plupart des joueurs arrivent depuis Instagram ou TikTok, sur mobile. Toutes les pages sont vérifiées à la largeur d'un téléphone."),
  ("ok", "Un bouton principal par écran", "Chaque section mène vers une seule action évidente : questionnaire, programme ou devis."),
+ ("part", "Un site vivant et dynamique (objectif)", "Donner du mouvement sans refaire le site. Fait : blocs qui apparaissent en glissant au défilement, cartes qui se soulèvent au survol, boutons qui réagissent au toucher, bande défilante des objectifs sous l'accueil. À suivre : chiffres qui s'animent (joueurs accompagnés, avis) quand il y en aura, courtes vidéos d'exercices en boucle, transitions entre les pages. Toujours désactivé si le téléphone demande moins d'animations."),
  ("ok", "Montrer le produit", "PDF qui se feuillette, animations d'exercices, aperçu de la séance gratuite."),
  ("you", "De vraies photos", "Des photos de toi sur le terrain et de joueurs à l'entraînement, avec leur accord. C'est ce qui manque le plus pour que le site paraisse humain et crédible."),
  ("ok", "Accessibilité", "Audit complet (axe, normes WCAG 2.1 AA) sur 25 pages, en clair et en sombre, sur téléphone et ordinateur : zéro erreur. Navigation au clavier vérifiée, repère visible sur chaque élément, animations coupées si le téléphone le demande. À refaire après chaque grosse modification."),
@@ -114,6 +115,7 @@ NEXT = [
  ("you", "Décider de la garantie", "offre"),
  ("you", "Faire tester 5 à 10 joueurs et un club pour avoir les premiers avis", "confiance"),
  ("todo", "Mise en ligne : domaine, emails du domaine, ouverture à Google, Search Console, Stripe en mode réel", "seo"),
+ ("part", "Rendre le site plus dynamique, étape par étape", "design"),
  ("you", "Lancer Instagram et TikTok avec les animations d'exercices", "marketing"),
  ("todo", "Ajouter le parrainage", "marketing"),
 ]
