@@ -12,3 +12,14 @@
 .legal ul{padding-left:1.2rem;margin:0 0 1rem;display:grid;gap:.4rem}
 .todo{background:var(--cta);color:#100A24;border-radius:4px;padding:0 .25rem}
 .merci-logo{background:var(--sky);border-radius:20px;padding:1.6rem 2rem 1.2rem;display:inline-flex;margin-bottom:1.5rem}
+/* Page not found (app/[lang]/not-found.tsx). */
+.nf-k{font:600 .8rem var(--font-text),sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+.nf-go{display:grid;gap:.8rem;margin:2rem 0}
+@media(min-width:680px){.nf-go{grid-template-columns:repeat(3,1fr)}}
+.nf-card{display:grid;gap:.35rem;align-content:start;padding:1.1rem 1.2rem;border-radius:16px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none}
+.nf-card span{color:var(--muted);font-size:.95rem}
+.nf-card.main{border-color:var(--cta);background:color-mix(in srgb,var(--cta) 12%,var(--card))}
+.nf-card:hover{border-color:var(--ink)}
+.nf-more{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem}.nf-more a{color:var(--ink)}
+/* General FAQ (app/[lang]/faq). */
+.faqpg section{margin-top:2.4rem}
