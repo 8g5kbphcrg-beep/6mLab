@@ -215,6 +215,7 @@ function Login({ lang, q, next }: { lang: Lang; q: Q; next: string }) {
           <li>{fr ? "Le code est envoyé à l'adresse email de ta commande. Si Apple l'a masquée au paiement, il arrive quand même dans ta boîte habituelle." : "The code is sent to the email of your order. If Apple hid it at payment, it still arrives in your usual inbox."}</li>
           <li>{fr ? "Tout est enregistré : tu retrouves tout en te reconnectant, sur cet appareil ou sur un autre. Pour ta sécurité, tu restes connecté le temps de ta visite (1 heure au plus)." : "Everything is saved: you find it all again when you log back in, on this device or another one. For your security, you stay logged in for your visit (1 hour at most)."}</li>
         </ul>
+        <p className="acc-cta">{fr ? "Tu es joueur ou coach d'un club ?" : "Club player or coach?"} <a href={`/${lang}/clubs/bibliotheque`}>{fr ? "Entre le code de ton équipe" : "Enter your team's code"}</a></p>
         <p className="acc-cta">{fr ? "Pas encore client ?" : "Not a customer yet?"} <a href={`/${lang}/programmes`}>{fr ? "Découvre les programmes" : "See the programs"}</a> · <a href={`/${lang}/exercices/seance-gratuite`}>{fr ? "Animations de la séance gratuite" : "Free session animations"}</a></p>
       </div>
     </div>

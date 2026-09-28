@@ -98,6 +98,7 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
 
 export default async function Clubs({ params, searchParams }: P) {
   const { lang } = await params;
+  const fr = lang === "fr";
   if (!(lang in dict)) notFound();
   const t = text[lang as Lang], f = t.f;
   const q = await searchParams;
@@ -113,6 +114,14 @@ export default async function Clubs({ params, searchParams }: P) {
       <p className="lead2">{t.lead}</p>
       <p className="clubs-time"><strong>{t.time[0]}</strong>{t.time[1]}</p>
       <a className="btn clubs-go" href="#devis">{t.formT} →</a>
+      {/* Teams already following a program: the club library opens with the team's code (lib/club-access.ts). */}
+      <form method="post" action="/api/acces-club" className="clubs-code" id="code">
+        <input type="hidden" name="next" value={`/${lang}/clubs/bibliotheque`} />
+        <p><strong>{fr ? "Ton équipe suit déjà un programme 6M Lab ?" : "Your team already follows a 6M Lab program?"}</strong> {fr ? "Joueurs et staff : entre le code de ton équipe (donné par ton coach, il est aussi dans vos documents) pour ouvrir la bibliothèque clubs, avec les situations animées et les exercices." : "Players and staff: enter your team's code (given by your coach, also in your documents) to open the club library, with the animated drills and exercises."}</p>
+        <label className="sr" htmlFor="club-code">{fr ? "Code de l'équipe" : "Team code"}</label>
+        <input id="club-code" name="code" required autoComplete="off" autoCapitalize="characters" spellCheck={false} placeholder="CLUB-XXXX-XXXX" maxLength={20} />
+        <button className="btn" type="submit">{fr ? "Ouvrir la bibliothèque clubs" : "Open the club library"}</button>
+      </form>
       <ul className="clubs-why">{t.why.map(([h, p]) => <li key={h}><strong>{h}</strong><span>{p}</span></li>)}</ul>
       <section className="clubs-more">
         <h2>{t.more.h}</h2>

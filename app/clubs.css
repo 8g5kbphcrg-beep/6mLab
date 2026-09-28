@@ -93,3 +93,9 @@
 .cf-pre{display:grid;gap:.6rem;padding:1rem 1.1rem;border-radius:14px;background:var(--card);border:1.5px solid color-mix(in srgb,var(--B) 55%,var(--line))}
 .cf-pre p{margin:0}.cf-pre-t{font-weight:700;font-size:1.02rem}.cf-pre-lead{color:var(--muted);font-size:.95rem}
 .cf-pre-ok{display:flex;gap:.6rem;align-items:flex-start;font-weight:600;font-size:.97rem;cursor:pointer}.cf-pre-ok input{width:1.15rem;height:1.15rem;margin:.15rem 0 0;flex:none;accent-color:var(--Bt)}
+/* Teams already following a program: the code that opens the club library. */
+.clubs .clubs-code{display:grid;gap:.6rem;margin:1.4rem 0 .4rem;padding:1.1rem 1.2rem;border:2px dashed var(--B);border-radius:var(--r);background:var(--card)}
+.clubs .clubs-code p{margin:0;color:var(--muted)}.clubs .clubs-code strong{color:var(--ink)}
+.clubs .clubs-code input{font:inherit;font-size:1.05rem;letter-spacing:.08em;padding:.8rem 1rem;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);min-width:0}
+.clubs .clubs-code .btn{justify-self:start}
+@media(min-width:720px){.clubs .clubs-code{grid-template-columns:1fr auto}.clubs .clubs-code p{grid-column:1/-1}}
