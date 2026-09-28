@@ -89,3 +89,7 @@
 .cf-pop-adv{margin-top:.8rem!important;padding:.7rem .9rem;border-radius:10px;background:color-mix(in srgb,#FFC75F 18%,var(--card));border:1px solid #E0A93A;font-size:.93rem!important}
 .cf-pop-soon{padding:.8rem .9rem;border-radius:10px;border:1.5px dashed color-mix(in srgb,var(--B) 60%,var(--line));color:var(--muted)!important;font-size:.93rem!important}
 .cf-hint{font-weight:400;font-size:.8rem;color:var(--muted);margin-top:-.2rem}
+/* The chosen level's prerequisites, in the form, with the box to tick. */
+.cf-pre{display:grid;gap:.6rem;padding:1rem 1.1rem;border-radius:14px;background:var(--card);border:1.5px solid color-mix(in srgb,var(--B) 55%,var(--line))}
+.cf-pre p{margin:0}.cf-pre-t{font-weight:700;font-size:1.02rem}.cf-pre-lead{color:var(--muted);font-size:.95rem}
+.cf-pre-ok{display:flex;gap:.6rem;align-items:flex-start;font-weight:600;font-size:.97rem;cursor:pointer}.cf-pre-ok input{width:1.15rem;height:1.15rem;margin:.15rem 0 0;flex:none;accent-color:var(--Bt)}
