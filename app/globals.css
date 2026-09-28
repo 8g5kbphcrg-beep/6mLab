@@ -109,7 +109,8 @@ p{max-width:62ch;margin:0 0 1rem}a{color:inherit}:focus-visible{outline:3px soli
 @media(hover:hover){
   .offer,.uni-c,.why li,.nf-card,.clubs-why li,.rlist li,.opack{transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s,border-color .25s}
   .offer:hover,.uni-c:hover,.why li:hover,.nf-card:hover,.clubs-why li:hover,.rlist li:hover,.opack:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(16,10,36,.12)}
-  .pc:hover{transform:translateY(-4px)}
+  .pc:hover,.bguide:hover{transform:translateY(-4px)}
+  .bguide{transition:transform .25s cubic-bezier(.2,.7,.2,1)}
 }
 .btn:active{transform:translateY(0) scale(.97)}
 /* Ticker under the home hero: the goals scroll by, pausing under the pointer. */

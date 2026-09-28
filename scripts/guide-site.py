@@ -60,7 +60,7 @@ SECTIONS = [
  ("todo", "Google Search Console", "Après le domaine : déclarer le site et le plan du site, puis suivre les recherches qui amènent des visiteurs."),
  ("ok", "Titres, descriptions et plan du site", "Chaque page a son titre et sa description ; plan du site et fichier robots existent."),
  ("ok", "Données structurées", "Produits (programmes, prix) et articles sont décrits pour Google."),
- ("part", "Des pages pour chaque recherche importante", "Déjà : page Handball, Clubs, bibliothèque d'exercices, conseils. À ajouter : « préparation physique handball pré-saison », « exercices gardien de but handball », « prévention blessures handball »…"),
+ ("ok", "Des pages pour chaque recherche importante", "4 guides complets prêts : préparation physique pré-saison, gardien de but, prévention des blessures, musculation. Chacun avec exercices animés, FAQ lisible par Google, programme conseillé et articles liés. Ils sont en haut de la page Conseils et dans le plan du site ; Google les lira dès l'ouverture du site."),
  ("todo", "Des liens depuis d'autres sites", "Clubs, comités, ligues, kinés, blogs de handball qui parlent de 6M Lab avec un lien. Ça vient avec les partenariats."),
 ]),
 ("technique", "Technique et performance", "Un site rapide, fiable, et qui envoie ses emails.", [

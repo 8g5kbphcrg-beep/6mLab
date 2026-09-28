@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { guides } from "@/lib/guides";
 import { livePosts, readTime, themes, type Post, type Theme } from "@/lib/posts";
 import { Anim, cardTitle } from "@/components/BlogBits";
 import { FreeSessionForm } from "@/components/HomeSections";
@@ -48,6 +49,17 @@ export default async function Blog({ params }: { params: Promise<{ lang: string 
         </div>
       </header>
       <div className="wrap bwrap">
+        <section className="bguides" aria-labelledby="bguides-t">
+          <h2 id="bguides-t">Les guides complets</h2>
+          <div className="bguides-g">
+            {guides.map((g) => (
+              <Link key={g.slug} href={`/fr/guides/${g.slug}`} className={`bguide t-${g.theme}`}>
+                <Anim id={g.exos[0]} className="bguide-fig" />
+                <span><strong>{g.title}</strong><span className="pread">Lire le guide →</span></span>
+              </Link>
+            ))}
+          </div>
+        </section>
         <div className="bfilters" role="radiogroup" aria-label="Filtrer par thème">
           {filters.map(([id, label], i) => (
             <label key={id} className="bchipf"><input type="radio" name="f" id={`f-${id}`} defaultChecked={i === 0} />{label}</label>
