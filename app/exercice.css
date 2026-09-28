@@ -38,3 +38,14 @@ body:has(.exo-back){overflow:hidden}
 .cs-sent{background:#E7F7F4;border-radius:10px;padding:.6rem .9rem;color:#0B5E55!important}
 .acc-club{margin-top:1.2rem;padding-top:1rem;border-top:1px solid #ECE8F4}.acc-club p{margin:0}
 .acc-club.first{margin-top:0;padding-top:0;border-top:0}.acc-err a{color:inherit;font-weight:700}
+.cs-way{display:grid;gap:.4rem;padding:1rem 0 .2rem}.cs-way+.cs-way{border-top:1px solid #ECE8F4;margin-top:.6rem}
+.cs-way h2{display:flex;align-items:center;gap:.55rem;margin:0;font:400 1.35rem/1.1 var(--font-display),sans-serif;color:#100A24}
+.cs-way h2 span{display:grid;place-items:center;width:1.8rem;height:1.8rem;border-radius:50%;background:#FF7A59;color:#100A24;font:700 .95rem Inter,system-ui,sans-serif;flex:none}
+.cs-way-club h2 span{background:#2EC4B6}.cs-way .acc-form{margin:.4rem 0}.cs-way .acc-rules{margin:.3rem 0 0}
+/* The club way in, set apart like the clubs band of the home page (night blue to teal). */
+.cs-way.cs-way-club{border-top:0;margin-top:1rem;padding:1.1rem 1.1rem 1.2rem;border-radius:16px;background:linear-gradient(125deg,#16123F 0%,#123A4F 60%,#0B7A70 100%);color:#F3F1FB;box-shadow:0 0 0 3px #2EC4B6}
+.cs-way.cs-way-club h2{color:#fff;font-size:1.55rem}.cs-way.cs-way-club p{color:#D6E9EE!important}
+.cs-way.cs-way-club h2 span{background:#2EC4B6;color:#100A24}
+.cs-way.cs-way-club .acc-form input{border-color:#2EC4B6}
+.cs-way.cs-way-club .acc-form .btn{background:#2EC4B6;color:#100A24}.cs-way.cs-way-club .acc-form .btn:hover{background:#4FE0D2}
+.cs-way.cs-way-club .cs-club-k{margin:0;font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4FE0D2!important}

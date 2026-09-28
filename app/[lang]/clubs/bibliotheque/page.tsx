@@ -4,6 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import { locales, type Lang } from "@/lib/dict";
 import { animatedIds, exName } from "@/components/ExerciseCard";
 import AccessGate from "@/components/AccessGate";
+import LibrarySearch from "@/components/LibrarySearch";
 import { accessInfo } from "@/lib/access-page";
 import { CLUB_EXERCISES, CLUB_GROUPS, clubItem, FAMILIES } from "@/lib/library";
 import "@/app/library.css";
@@ -31,11 +32,16 @@ export default async function ClubLibrary({ params, searchParams }: P) {
       <p className="lib-k">{fr ? "Programme club" : "Club program"}</p>
       <h1>{fr ? "Bibliothèque clubs" : "Club library"}</h1>
       <p className="lib-acc">{fr ? `Accès de ton équipe ouvert jusqu'au ${endDate}.` : `Your team's access is open until ${endDate}.`}{fr ? "" : " Drill texts are in French."}</p>
+      {/* Same search as the individual library; drills get a "dr-" prefix ("bonds" is both a drill and an exercise). */}
+      <LibrarySearch fr={fr} items={[
+        ...CLUB_GROUPS.flatMap(([, , ids]) => ids.map((id) => [`dr-${id}`, clubItem(id)?.name ?? id] as [string, string])),
+        ...families.flatMap(([, ids]) => ids.map((id) => [id, exName(id, fr ? "fr" : "en")] as [string, string])),
+      ]} />
       {CLUB_GROUPS.map(([a, b, ids]) => (
         <section key={a}>
           <h2>{fr ? a : b}</h2>
           <ul className="lib-grid">
-            {ids.map((id) => <li key={id}><Link href={`/${l}/clubs/bibliotheque/${id}`}>{clubItem(id)?.name}<span aria-hidden="true">→</span></Link></li>)}
+            {ids.map((id) => <li key={id} id={`ex-dr-${id}`}><Link href={`/${l}/clubs/bibliotheque/${id}`}>{clubItem(id)?.name}<span aria-hidden="true">→</span></Link></li>)}
           </ul>
         </section>
       ))}
@@ -43,7 +49,7 @@ export default async function ClubLibrary({ params, searchParams }: P) {
         <section key={name}>
           <h2>{name}</h2>
           <ul className="lib-grid">
-            {ids.map((id) => <li key={id}><Link href={`/${l}/exercices/${id}${back}`}>{exName(id, fr ? "fr" : "en")}<span aria-hidden="true">→</span></Link></li>)}
+            {ids.map((id) => <li key={id} id={`ex-${id}`}><Link href={`/${l}/exercices/${id}${back}`}>{exName(id, fr ? "fr" : "en")}<span aria-hidden="true">→</span></Link></li>)}
           </ul>
         </section>
       ))}

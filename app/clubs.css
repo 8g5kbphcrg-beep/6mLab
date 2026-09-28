@@ -93,3 +93,11 @@
 .cf-pre{display:grid;gap:.6rem;padding:1rem 1.1rem;border-radius:14px;background:var(--card);border:1.5px solid color-mix(in srgb,var(--B) 55%,var(--line))}
 .cf-pre p{margin:0}.cf-pre-t{font-weight:700;font-size:1.02rem}.cf-pre-lead{color:var(--muted);font-size:.95rem}
 .cf-pre-ok{display:flex;gap:.6rem;align-items:flex-start;font-weight:600;font-size:.97rem;cursor:pointer}.cf-pre-ok input{width:1.15rem;height:1.15rem;margin:.15rem 0 0;flex:none;accent-color:var(--Bt)}
+/* Teams already following a program: the code that opens the club library (night blue to teal,
+   like the clubs band of the home page). */
+.clubs .clubs-code{display:grid;gap:.7rem;margin:1.6rem 0 .6rem;padding:1.3rem 1.3rem 1.4rem;border-radius:var(--r);background:linear-gradient(125deg,#16123F 0%,#123A4F 60%,#0B7A70 100%);color:#F3F1FB;box-shadow:0 0 0 3px #2EC4B6,var(--shadow)}
+.clubs .clubs-code p{margin:0;color:#D6E9EE}.clubs .clubs-code strong{display:block;color:#fff;font:400 clamp(1.4rem,4vw,1.8rem)/1.1 var(--font-display),sans-serif;margin-bottom:.35rem}
+.clubs .clubs-code label{color:#fff}
+.clubs .clubs-code input{font:inherit;font-size:1.05rem;letter-spacing:.08em;padding:.8rem 1rem;border:2px solid #2EC4B6;border-radius:12px;background:#fff;color:#100A24;min-width:0}
+.clubs .clubs-code .btn{justify-self:start;background:#2EC4B6;color:#100A24}.clubs .clubs-code .btn:hover{background:#4FE0D2}
+@media(min-width:720px){.clubs .clubs-code{grid-template-columns:1fr auto;align-items:end}.clubs .clubs-code p{grid-column:1/-1}}
