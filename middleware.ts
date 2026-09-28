@@ -16,4 +16,6 @@ export function middleware(req: NextRequest) {
   return NextResponse.redirect(url);
 }
 
-export const config = { matcher: ["/((?!_next|api|apple-icon|.*\\..*).*)"] };
+// Every admin address is checked, files included (the club PDFs end in .pdf, which the first
+// pattern leaves out).
+export const config = { matcher: ["/((?!_next|api|apple-icon|.*\\..*).*)", "/admin/:path*"] };

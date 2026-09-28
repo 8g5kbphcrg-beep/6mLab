@@ -99,7 +99,7 @@ SECTIONS = [
  ("ok", "Un devis structuré", "Catégorie, niveau, joueurs de champ et gardiens, installations, matériel ; acquis à confirmer."),
  ("ok", "Tes outils de réponse", "Méthode Clubs, exemple U18, dossier Gardiens et fiche de suivi, dans l'admin."),
  ("ok", "Code d'accès aux animations pour les clubs", "Deux bibliothèques : l'individuelle pour les acheteurs, la bibliothèque clubs (situations collectives animées, ateliers gardiens, tests, exercices des programmes clubs) ouverte par un code d'équipe créé dans Admin > Clubs (date de fin, nombre d'appareils). L'œil des documents clubs pointe vers la bonne page et reste cliquable dans le PDF."),
- ("todo", "Sortie des programmes clubs en PDF", "Produire les 4 documents d'un devis directement en PDF."),
+ ("ok", "Sortie des programmes clubs en PDF", "Les 4 documents d'un programme club sortent en PDF (npm run clubs-pdf) : document du coach, autonomie joueurs, autonomie gardiens, fiche de suivi en paysage avec une ligne par joueur. Le code de l'équipe y est écrit, l'œil de chaque exercice est un lien cliquable vers la bibliothèque clubs. À télécharger dans Admin > Clubs."),
  ("you", "Un prix indicatif", "« À partir de … € » rassure et filtre les demandes. À décider."),
  ("you", "Un premier club témoin", "Un club qui teste et accepte d'être cité : c'est la meilleure publicité auprès des autres clubs."),
 ]),

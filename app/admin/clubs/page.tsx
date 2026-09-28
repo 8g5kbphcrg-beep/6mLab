@@ -2,6 +2,7 @@ import Nav from "../Nav";
 import { DOCS } from "@/lib/admin-docs";
 import { CLUB_PREREQ } from "@/lib/club-prereq";
 import { listClubCodes } from "@/lib/club-access";
+import { clubPdfs } from "@/lib/club-pdfs";
 
 // Clubs: how to answer a quote request, the working documents, the follow-up sheet to print, and
 // the rules decided for every club program, and the access codes that open the animations for a
@@ -24,7 +25,7 @@ const RULES = [
 
 export default async function Clubs({ searchParams }: { searchParams: Promise<{ code?: string }> }) {
   const { code: made } = await searchParams;
-  const codes = await listClubCodes();
+  const codes = await listClubCodes(), pdfs = await clubPdfs();
   const fmt = (ms: number) => new Date(ms).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" });
   const season = new Date().getMonth() >= 6 ? new Date().getFullYear() + 1 : new Date().getFullYear();
   const empty = Object.entries(CLUB_PREREQ).filter(([, p]) => p.fr.length === 0).map(([k]) => k);
@@ -42,6 +43,7 @@ export default async function Clubs({ searchParams }: { searchParams: Promise<{ 
         <li><b>Envoie le devis</b> sous 48 heures.</li>
         <li><b>Une fois validé</b>, le programme se construit à partir de l'exemple U18 et de la Méthode Clubs, dans une conversation avec Claude : colle la demande et tes échanges avec le coach. Tu relis avant l'envoi.</li>
         <li><b>Crée le code d'accès aux animations</b> de l'équipe (plus bas) et écris-le dans les documents, à l'emplacement « Code animations ».</li>
+        <li><b>Fais produire les 4 PDF</b> par Claude (« sors les PDF du programme de [club] avec le code CLUB-… ») : après la validation de la PR, ils sont à télécharger plus bas, dans « Programmes clubs en PDF ».</li>
         <li><b>Envoie au coach, sur une seule adresse</b>, les 4 documents : document du coach, autonomie joueurs, autonomie gardiens, et la fiche de suivi (à générer ci-dessous avec son effectif).</li>
       </ol></div>
 
@@ -58,6 +60,16 @@ export default async function Clubs({ searchParams }: { searchParams: Promise<{ 
         <label className="f">Footings mardi et jeudi<select name="footings" defaultValue="oui"><option value="oui">Oui (U17 F / U18 M national, seniors)</option><option value="non">Non</option></select></label>
         <button type="submit">Créer la fiche</button>
       </form>
+
+      <h2 id="pdf">Programmes clubs en PDF</h2>
+      <div className="card">
+        <p className="muted">Les 4 documents d'un programme, prêts à envoyer au coach : document du coach, autonomie joueurs, autonomie gardiens, fiche de suivi (une ligne par joueur du devis). L'œil de chaque exercice est un lien vers la bibliothèque clubs, et le code de l'équipe est déjà écrit dedans. Ils sont produits par Claude avec <code>npm run clubs-pdf</code>.</p>
+        {pdfs.length ? <ul className="todo">{pdfs.map((p) => (
+          <li key={p.dossier}><b>{p.titre}</b> <span className="tag">{p.date}{p.code ? ` · ${p.code}` : ""}</span><br />
+            {p.files.map((f) => <a key={f} href={`/admin/clubs/pdf/${p.dossier}/${f}`} style={{ marginRight: 12 }}>{({ "1": "Document du coach", "2": "Autonomie joueurs", "3": "Autonomie gardiens", "4": "Fiche de suivi" } as Record<string, string>)[f[0]] ?? f} (PDF)</a>)}
+          </li>
+        ))}</ul> : <p className="muted">Aucun programme exporté pour l'instant.</p>}
+      </div>
 
       <h2 id="codes">Codes d'accès aux animations</h2>
       <div className="card">

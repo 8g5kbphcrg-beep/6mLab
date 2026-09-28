@@ -253,7 +253,7 @@ tr.bh.org td b{display:block}
           <li><b>Autonomie · joueurs</b> : les semaines 1 à 4, à transmettre aux joueurs de champ.</li>
           <li><b>Autonomie · gardiens</b> : les mêmes semaines, avec les exercices des gardiens déjà à la bonne place.</li>
           <li><b>Fiche de suivi</b> : une ligne par joueur du devis, à imprimer.</li></ul></div>
-        <div class="box"><h3>L'œil, partout</h3><p>À côté de chaque exercice, l'œil ouvre l'animation (exercices individuels) ou un schéma animé avec légende (situations collectives : le point rouge est le joueur, il suit le parcours). En dessous, l'explication pour bien le faire.</p><p class="src">Ici, un clic ouvre une fenêtre sur la page. Une fois imprimé en PDF, l'œil est un lien vers la page de l'exercice sur le site : la première fois, le joueur y entre le code de son équipe (Code animations : <b class="clubcode">CLUB-____-____</b>, à créer dans Admin &gt; Clubs et à écrire ici et dans les documents d'autonomie).</p></div>
+        <div class="box"><h3>L'œil, partout</h3><p>À côté de chaque exercice, l'œil ouvre l'animation (exercices individuels) ou un schéma animé avec légende (situations collectives : le point rouge est le joueur, il suit le parcours). En dessous, l'explication pour bien le faire.</p><p class="src">Dans les PDF, l'œil est un lien vers la page de l'exercice ou de la situation sur le site 6M Lab. La première fois, chaque joueur y entre le code de l'équipe : <b class="clubcode">CLUB-____-____</b>.</p></div>
       </div>
     </section>
     <div id="club" class="doc"></div>
@@ -527,7 +527,7 @@ function clubHTML() {
 function sheetHTML(n, gks) {
   const players = n - gks;
   const rows = (k, cols) => Array.from({ length: k }, (_, i) => `<tr><td class="c">${i + 1}</td>${"<td></td>".repeat(cols)}</tr>`).join("");
-  return `<p class="lead">Le coach reçoit ce PDF avec <b>autant de lignes que de joueurs indiqués dans son devis</b> : ici ${players} joueurs et ${gks} gardiens. Il l'imprime et le remplit à la main, ou le complète à l'écran. Aperçu de la première page ci-dessous ; la fiche complète se crée dans l'Espace 6M Lab, rubrique Clubs, avec l'effectif du devis.</p>
+  return `<p class="lead note6m">Le coach reçoit ce PDF avec <b>autant de lignes que de joueurs indiqués dans son devis</b> : ici ${players} joueurs et ${gks} gardiens. Il l'imprime et le remplit à la main, ou le complète à l'écran. Aperçu de la première page ci-dessous ; la fiche complète se crée dans l'Espace 6M Lab, rubrique Clubs, avec l'effectif du devis.</p>
   <div class="sheet"><h3>Page 1 · Tests de reprise (semaine 5)</h3><div class="tw"><table class="fill"><thead><tr><th>#</th><th>Nom</th><th>Poste</th><th>VIFT 30-15 (km/h)</th><th>Sprint 10 m (s)</th><th>Sprint 20 m (s)</th><th>Saut (cm)</th><th>505 gauche (s)</th><th>505 droite (s)</th><th>Lancer (m)</th><th>Groupe de course</th></tr></thead><tbody>${rows(players, 10)}</tbody></table></div>
   <div class="tw"><table class="fill"><thead><tr><th>#</th><th>Gardien</th><th>Saut (cm)</th><th>Saut latéral G (cm)</th><th>Saut latéral D (cm)</th><th>Adduction : douleur /10</th><th>90/90 : côté limité</th><th>VIFT (repère)</th></tr></thead><tbody>${rows(gks, 7)}</tbody></table></div></div>
   <p class="src">Page 2 : les mêmes tableaux pour les retests de fin de pré-saison (semaine 8 : saut et sprint 10 m) et de la trêve. Page 3 : suivi des 8 séances (présence et effort ressenti sur 10). Page 4 : retour de l'autonomie (séances faites et effort moyen, semaines 1 à 4).</p>`;
