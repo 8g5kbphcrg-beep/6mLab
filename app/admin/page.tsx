@@ -6,6 +6,7 @@ import { SITE } from "@/lib/dict";
 export const dynamic = "force-dynamic";
 
 const CARDS = [
+  ["/admin/docs/guide-site", "Guide du site", "Les 77 points d'un site qui vend bien, de l'offre au marketing, avec leur statut et les prochains chantiers. On le reprend chaque mois."],
   ["/admin/audience", "Audience & ventes", "Visites, parcours d'achat, ventes et chiffre d'affaires sur 7, 30 ou 90 jours, par source."],
   ["/admin/avis", "Commandes & avis", "Chaque commande : accès aux animations, avis des clients, relances. Export des avis."],
   ["/admin/programmes", "Programmes", "Retrouver les PDF d'une commande (déjà personnalisés) pour un envoi à la main, la séance gratuite, et toutes les animations."],
