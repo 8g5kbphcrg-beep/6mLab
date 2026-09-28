@@ -73,3 +73,9 @@
 .cs-next{display:grid;gap:.35rem;margin-top:.3rem;padding:.9rem 1rem;border-radius:14px;background:var(--band)}
 .cs-next p{margin:0}.cs-next-k{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--At)}
 .cs-next-t{font-weight:700;color:var(--ink)}.cs-next-a{justify-self:start;font-weight:700;color:var(--At)}
+/* Club library item (clubs/bibliotheque/[id]): the animated diagram of a drill, on a light pitch in both themes. */
+.drill-page{max-width:760px}.drill-page p{max-width:65ch}
+.drill-fig{background:#F3EFE7;border-radius:14px;padding:.3rem;margin:.4rem 0 .8rem}.drill-fig svg{display:block;width:100%;height:auto;max-height:420px}
+.drill-legend{list-style:none;padding:0;margin:0 0 1rem;display:flex;flex-wrap:wrap;gap:.35rem 1rem;font-size:.92rem;color:var(--muted)}
+.drill-legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:.4rem;vertical-align:-1px}
+.drill-org,.drill-cues{padding:.7rem .9rem;border-radius:12px;background:var(--band)}

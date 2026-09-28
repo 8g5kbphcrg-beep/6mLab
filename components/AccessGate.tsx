@@ -1,12 +1,13 @@
 import type { Lang } from "@/lib/dict";
+import { accessKind } from "@/lib/access-page";
 import "@/app/exercice.css";
 
 // Shown instead of an animation (or the library) when it is not open on this device: the
 // customer logs in to their customer area (order reference and 6-digit code, lib/client-auth.ts),
 // then activates or opens the library of their order, and comes back to this page. A club player
 // enters the code of their team instead (lib/club-access.ts).
-export default function AccessGate({ lang, next, state }: { lang: Lang; next: string; state?: string }) {
-  const fr = lang === "fr";
+export default async function AccessGate({ lang, next, state, club }: { lang: Lang; next: string; state?: string; club?: boolean }) {
+  const fr = lang === "fr", kind = await accessKind();
   const errors: Record<string, [string, string]> = {
     "club-inconnu": ["Ce code club n'existe pas. Vérifie-le auprès de ton coach (format CLUB-XXXX-XXXX).", "This club code does not exist. Check it with your coach (format CLUB-XXXX-XXXX)."],
     "club-fini": ["Ce code club n'est plus valable : la saison prévue est terminée. Parles-en à ton coach.", "This club code is no longer valid: its season has ended. Talk to your coach."],
@@ -18,12 +19,14 @@ export default function AccessGate({ lang, next, state }: { lang: Lang; next: st
     <div className="exo-back">
       <div className="exo-card acc">
         <p className="acc-k">{fr ? "Espace client" : "Customer area"}</p>
-        <h1>{fr ? "Les animations sont réservées aux clients" : "The animations are for customers"}</h1>
-        <p>{fr ? "Connecte-toi à ton espace client avec la référence de ta commande : tu recevras un code à 6 chiffres par email, puis tu ouvriras ta bibliothèque d'exercices." : "Log in to your customer area with your order reference: you will receive a 6-digit code by email, then open your exercise library."}</p>
+        <h1>{club ? (fr ? "Bibliothèque clubs" : "Club library") : fr ? "Les animations sont réservées aux clients" : "The animations are for customers"}</h1>
+        {kind === "club" && !club && <p className="acc-err" role="status">{fr ? "Cet exercice fait partie des programmes individuels : il n'est pas dans ton programme club. " : "This exercise belongs to the individual programs: it is not in your club program. "}<a href={`/${lang}/clubs/bibliotheque`}>{fr ? "Ta bibliothèque clubs" : "Your club library"} →</a></p>}
+        {kind === "client" && club && <p className="acc-err" role="status">{fr ? "Cette bibliothèque est réservée aux équipes qui suivent un programme club. " : "This library is for teams following a club program. "}<a href={`/${lang}/exercices`}>{fr ? "Ta bibliothèque d'exercices" : "Your exercise library"} →</a></p>}
+        {!club && <p>{fr ? "Connecte-toi à ton espace client avec la référence de ta commande : tu recevras un code à 6 chiffres par email, puis tu ouvriras ta bibliothèque d'exercices." : "Log in to your customer area with your order reference: you will receive a 6-digit code by email, then open your exercise library."}</p>}
         {state && errors[state] && <p className="acc-err" role="alert">{errors[state][fr ? 0 : 1]}</p>}
-        <p><a className="btn" href={`/${lang}/espace-client?next=${encodeURIComponent(next)}`}>{fr ? "Me connecter" : "Log in"}</a></p>
-        <div className="acc-club">
-          <p><strong>{fr ? "Tu t'entraînes avec ton club ?" : "Training with your club?"}</strong> {fr ? "Entre le code donné par ton coach." : "Enter the code your coach gave you."}</p>
+        {!club && <p><a className="btn" href={`/${lang}/espace-client?next=${encodeURIComponent(next)}`}>{fr ? "Me connecter" : "Log in"}</a></p>}
+        <div className={club ? "acc-club first" : "acc-club"}>
+          <p>{club ? (fr ? "Les situations, les exercices des gardiens et les exercices de ton programme club. Entre le code de ton équipe, donné par ton coach." : "The drills, goalkeeper drills and exercises of your club program. Enter your team's code, given by your coach.") : <><strong>{fr ? "Tu t'entraînes avec ton club ?" : "Training with your club?"}</strong> {fr ? "Entre le code donné par ton coach." : "Enter the code your coach gave you."}</>}</p>
           <form method="post" action="/api/acces-club" className="acc-form">
             <input type="hidden" name="next" value={next} />
             <label className="sr" htmlFor="acc-club">{fr ? "Code club" : "Club code"}</label>
@@ -31,6 +34,7 @@ export default function AccessGate({ lang, next, state }: { lang: Lang; next: st
             <button className="btn" type="submit">{fr ? "Ouvrir les animations" : "Open the animations"}</button>
           </form>
         </div>
+        {club && <p className="acc-cta">{fr ? "Tu as acheté un programme individuel ?" : "Bought an individual program?"} <a href={`/${lang}/espace-client`}>{fr ? "Ton espace client" : "Your customer area"}</a></p>}
         <p className="acc-cta">{fr ? "Pas encore client ?" : "Not a customer yet?"} <a href={`/${lang}/programmes`}>{fr ? "Découvre les programmes" : "See the programs"}</a> · <a href={`/${lang}/handball#seance-gratuite`}>{fr ? "Essaie la séance gratuite" : "Try the free session"}</a></p>
         <p className="acc-cta">{fr ? "Tu as reçu la séance gratuite ?" : "Got the free session?"} <a href={`/${lang}/exercices/seance-gratuite`}>{fr ? "Voir ses animations" : "See its animations"}</a></p>
       </div>
