@@ -15,6 +15,7 @@ const RULES = [
   "U17 filles et U18 garçons nationaux, seniors : footing le mardi et le jeudi pendant l'autonomie (30 min, puis 10-10-10, 15-15-15 soutenu, 15-15-15 rapide, sans pause).",
   "Tests obligatoires à partir du régional (reprise, fin de pré-saison, trêve), conseillés en départemental.",
   "Gardiens : avec le groupe pour ce qui sert à tous, dans la cage pour les situations avec ballon, ateliers spécifiques en remplacement ; 30 tirs maximum chacun par séance de prépa ; Copenhague 3 fois par semaine en pré-saison.",
+  "Chaque programme rappelle au coach que chaque séance demande une préparation, et que chaque exercice se réadapte (effectif du jour, matériel) en gardant l'idée de base : qualité travaillée, intensité, temps d'effort et de récupération.",
   "Postes : pas de différenciation en U15 départemental, plusieurs postes en U15 régional, postes fixes à partir des U17/U18 régionaux et en seniors.",
 ];
 

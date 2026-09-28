@@ -23,7 +23,8 @@ const text = {
       h: "Ce qu'il faut savoir avant de commencer",
       muscu: ["La musculation chez les jeunes", "Bien menée, la musculation est très bénéfique pour les jeunes, mais elle doit être très bien encadrée. Dans nos programmes club, elle est intégrée à partir des U17 féminines et des U18 masculins. Pour les U15, elle n'est pas recommandée : le travail se fait au poids du corps, avec coordination, gainage, appuis et prévention des blessures."],
       base: ["Les acquis de départ", "Pour chaque catégorie et chaque niveau de jeu, le programme part du principe que certains acquis sont déjà en place : des U15 en départemental n'ont pas le même bagage que des seniors en National. Si, dans le groupe, certains joueurs sont très débutants et loin de ces acquis, le programme ne peut pas combler cet écart à lui seul : c'est à l'entraîneur d'adapter pour eux."],
-      coach: ["Des séances dirigées par le coach", "Le programme ne tourne pas tout seul : la séance doit être managée par l'entraîneur. Il y a des ateliers à installer, des chronos à tenir, des rotations à lancer et des consignes à donner. Tout est écrit pour que ce soit simple, mais c'est toi qui mènes."],
+      coach: ["Des séances dirigées et préparées par le coach", "Le programme ne tourne pas tout seul : la séance doit être managée par l'entraîneur. Il y a des ateliers à installer, des chronos à tenir, des rotations à lancer et des consignes à donner. Et même si chaque séance est quasiment prête, elle demande un temps de préparation : la lire à l'avance, prévoir le matériel et l'installation, former les groupes. Tout est écrit pour que ce soit simple, mais c'est toi qui mènes."],
+      adapt: ["Chaque exercice se réadapte", "Pas assez de joueurs à l'entraînement ce soir-là, du matériel qui manque ? Chaque exercice et chaque situation peuvent être réadaptés. On garde l'idée de base du travail (la qualité travaillée, l'intensité, les temps d'effort et de récupération) et on ajuste le reste aux moyens du moment : moins d'ateliers, des groupes plus petits, des plots à la place d'une échelle."],
       level: ["Le niveau de ton effectif", "Des joueurs de National ont plus d'expérience, plus de physique et une meilleure condition que des joueurs de départemental : le programme est calibré sur le niveau de ton équipe. Utiliser un programme prévu pour le National avec une équipe de région est possible, mais seulement en ayant bien conscience du niveau réel de ton effectif et en adaptant les charges."],
     },
     why: [
@@ -59,7 +60,8 @@ const text = {
       h: "What to know before you start",
       muscu: ["Weight training for young players", "Done well, weight training is very beneficial for young players, but it must be very well supervised. In our club programs, it starts with U17 girls and U18 boys. For U15s, it is not recommended: the work is done with bodyweight, coordination, core, footwork and injury prevention."],
       base: ["Starting prerequisites", "For each age group and level of play, the program assumes some prerequisites are already in place: county-level U15s do not have the same background as national-level seniors. If some players in the group are complete beginners, far from those prerequisites, the program cannot close that gap on its own: the coach has to adapt for them."],
-      coach: ["Sessions run by the coach", "The program does not run itself: the session has to be managed by the coach. There are stations to set up, timers to keep, rotations to launch and instructions to give. Everything is written to make it simple, but you lead."],
+      coach: ["Sessions run and prepared by the coach", "The program does not run itself: the session has to be managed by the coach. There are stations to set up, timers to keep, rotations to launch and instructions to give. And even though every session is almost ready, it still needs some preparation: read it beforehand, plan the equipment and the set-up, form the groups. Everything is written to make it simple, but you lead."],
+      adapt: ["Every exercise can be adapted", "Not enough players at training that evening, some equipment missing? Every exercise and every drill can be adapted. Keep the core idea of the work (the quality trained, the intensity, the work and rest times) and adjust the rest to what you have on the day: fewer stations, smaller groups, cones instead of a ladder."],
       level: ["Your squad's level", "National-level players have more experience, more physical strength and better fitness than county-level players: the program is calibrated on your team's level. Using a program built for national level with a regional team is possible, but only with a clear view of your squad's real level and by adjusting the loads."],
     },
     why: [
@@ -134,6 +136,7 @@ export default async function Clubs({ params, searchParams }: P) {
           <div className="care-level"><strong>{t.care.level[0]}</strong><p>{t.care.level[1]}</p></div>
           <div className="care-level"><strong>{t.care.base[0]}</strong><p>{t.care.base[1]}</p></div>
           <div className="care-level"><strong>{t.care.coach[0]}</strong><p>{t.care.coach[1]}</p></div>
+          <div className="care-level"><strong>{t.care.adapt[0]}</strong><p>{t.care.adapt[1]}</p></div>
         </div>
       </section>
       <h2>{t.howT}</h2>
