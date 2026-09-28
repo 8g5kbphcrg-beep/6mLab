@@ -20,7 +20,8 @@ export default function Enhance({ cta }: { cta: string }) {
     }
     // Exercise animations: the ones further down the page start from the beginning when they come
     // into view, and every animation pauses while it is off screen.
-    let ao: IntersectionObserver | undefined;
+    const root = document.documentElement;
+    let ao: IntersectionObserver | undefined, mo: MutationObserver | undefined;
     if ("IntersectionObserver" in window) {
       const figs = [...document.querySelectorAll<SVGSVGElement>("svg")].filter((v) => !v.classList.contains("scene") && v.querySelector("animate,animateTransform,animateMotion"));
       ao = new IntersectionObserver((x) => x.forEach((y) => {
@@ -29,10 +30,24 @@ export default function Enhance({ cta }: { cta: string }) {
         if (v.dataset.fresh) { v.setCurrentTime(0); delete v.dataset.fresh; }
         v.unpauseAnimations();
       }), { rootMargin: "80px 0px" });
+      // While the opening screen covers the page, the animations under it wait: the phone has less
+      // to draw while the page loads (speed).
+      const splash = !root.classList.contains("splash-seen");
       figs.forEach((v) => {
         if (v.getBoundingClientRect().top > innerHeight) { v.dataset.fresh = "1"; v.pauseAnimations(); }
-        ao!.observe(v);
+        if (splash) v.pauseAnimations();
       });
+      const watch = () => figs.forEach((v) => ao!.observe(v));
+      if (!splash) watch();
+      else {
+        mo = new MutationObserver(() => {
+          if (!root.classList.contains("splash-out") && !root.classList.contains("splash-seen")) return;
+          mo?.disconnect();
+          figs.forEach((v) => { if (!v.dataset.fresh) v.setCurrentTime(0); });
+          watch();
+        });
+        mo.observe(root, { attributes: true, attributeFilter: ["class"] });
+      }
     }
     const els = document.querySelectorAll(".rv");
     let o: IntersectionObserver | undefined;
@@ -73,7 +88,7 @@ export default function Enhance({ cta }: { cta: string }) {
     };
     s();
     addEventListener("scroll", s, { passive: true });
-    return () => { removeEventListener("scroll", s); o?.disconnect(); ao?.disconnect(); };
+    return () => { removeEventListener("scroll", s); o?.disconnect(); ao?.disconnect(); mo?.disconnect(); };
   }, []);
   return <aside className={"cta" + (on ? " on" : "")} aria-label={cta}><a className="btn" href="#formules">{cta}</a></aside>;
 }

@@ -66,7 +66,7 @@ SECTIONS = [
 ("technique", "Technique et performance", "Un site rapide, fiable, et qui envoie ses emails.", [
  ("ok", "Hébergement fiable et HTTPS", "Vercel, avec un aperçu pour chaque modification avant de la valider."),
  ("ok", "Sauvegarde du site", "Tout le code et les documents sont sur GitHub : rien ne se perd."),
- ("part", "Vitesse", "Pages légères et images optimisées. À mesurer sur mobile après la mise en ligne (PageSpeed Insights), puis corriger ce qui ralentit."),
+ ("part", "Vitesse", "Mesuré avec Lighthouse (l'outil de PageSpeed Insights), en simulant un téléphone : accueil passé de 74 à 83-93/100, autres pages 95 à 97/100, rien ne bouge au chargement. À refaire sur le vrai site après la mise en ligne, avec PageSpeed Insights et les données réelles des visiteurs."),
  ("todo", "Emails envoyés depuis ton domaine", "Adresse du type contact@ton-domaine, avec les réglages SPF, DKIM et DMARC pour que les emails n'arrivent pas en spam."),
  ("part", "Surveiller les erreurs", "Les erreurs sont visibles dans les journaux Vercel. À faire : une alerte par email si un paiement ou un envoi de programme échoue."),
 ]),
