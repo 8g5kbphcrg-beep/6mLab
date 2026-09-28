@@ -20,6 +20,7 @@ export const POINTS_PER_FRIEND = 50;
 export const POINTS_FOR_REWARD = 150;
 export const VALIDATION_DAYS = 7;
 
+// Stripe coupon names are 40 characters at most.
 const coupon = async (s: Stripe, id: string, percent: number, name: string) => {
   try { await s.coupons.retrieve(id); } catch { await s.coupons.create({ id, percent_off: percent, duration: "once", name }); }
   return id;
@@ -50,13 +51,24 @@ export async function referralCode(s: Stripe, pi: string, firstName: string, kno
     const found = (await s.promotionCodes.list({ code, limit: 1 })).data[0];
     if (found?.metadata?.sponsor === pi) break;
     if (!found) {
-      const c = await coupon(s, `FILLEUL${FRIEND_PERCENT}`, FRIEND_PERCENT, `Parrainage : -${FRIEND_PERCENT} % offert par un coéquipier`);
+      const c = await coupon(s, `FILLEUL${FRIEND_PERCENT}`, FRIEND_PERCENT, `Parrainage coéquipier (-${FRIEND_PERCENT} %)`);
       await s.promotionCodes.create({ promotion: { type: "coupon", coupon: c }, code, metadata: { sponsor: pi } });
       break;
     }
   }
   await s.paymentIntents.update(pi, { metadata: { par_code: code } });
   return code;
+}
+
+// One code per person: a buyer who already has one (an earlier order with the same email, marked
+// "em" by the webhook, lib/client-auth.ts) keeps it; this order points to it (par_home), and the
+// points stay on the order that owns the code.
+export async function personCode(s: Stripe, pi: string, firstName: string, mark: string): Promise<string> {
+  const earlier = (await s.paymentIntents.search({ query: `metadata['em']:'${mark}'`, limit: 20 }).catch(() => ({ data: [] as Stripe.PaymentIntent[] }))).data
+    .filter((o) => o.id !== pi && o.metadata.par_code && !o.metadata.par_home).sort((a, b) => a.created - b.created)[0];
+  if (!earlier) return referralCode(s, pi, firstName);
+  await s.paymentIntents.update(pi, { metadata: { par_code: earlier.metadata.par_code, par_home: earlier.id } });
+  return earlier.metadata.par_code;
 }
 
 // After a paid order (webhook): if it used a teammate's code, it waits for the check (par_st).

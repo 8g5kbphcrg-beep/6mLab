@@ -53,7 +53,16 @@ export async function findOrder(s: Stripe, raw: string): Promise<Order | null> {
       if (++n >= 5000) break;
     }
   }
-  if (!pi || pi.status !== "succeeded" || !pi.metadata?.program) return null;
+  return pi ? toOrder(pi) : null;
+}
+
+// The order of a PaymentIntent (from the customer area), or null.
+export async function findOrderById(s: Stripe, pi: string): Promise<Order | null> {
+  return /^pi_\w+$/.test(pi) ? toOrder(await s.paymentIntents.retrieve(pi, { expand: ["latest_charge"] })) : null;
+}
+
+function toOrder(pi: Stripe.PaymentIntent): Order | null {
+  if (pi.status !== "succeeded" || !pi.metadata?.program) return null;
   const m = pi.metadata;
   const charge = typeof pi.latest_charge === "object" ? pi.latest_charge : null;
   return {
@@ -106,20 +115,3 @@ export function readAccess(cookie: string | undefined, device: string | undefine
 }
 export const newDevice = () => randomBytes(6).toString("base64url");
 
-// Customer area (espace-client): signed cookie "<pi>.<expiry in ms>.<signature>", set once the
-// order reference was checked. It shows the order and the referral without starting the access to
-// the animations, which only starts from the library (above).
-export const CLIENT_COOKIE = "6m_cli";
-export const CLIENT_DAYS = 400;
-export const clientCookie = (pi: string, now = Date.now()) => {
-  const v = `${pi}.${now + CLIENT_DAYS * DAY * 1000}`;
-  return `${v}.${sign(`cli.${v}`)}`;
-};
-export function readClient(cookie: string | undefined, now = Date.now()): string | null {
-  if (!cookie || !secret()) return null;
-  const parts = cookie.split(".");
-  if (parts.length !== 3) return null;
-  const [pi, exp, sig] = parts;
-  const a = Buffer.from(sign(`cli.${pi}.${exp}`)), b = Buffer.from(sig);
-  return a.length === b.length && timingSafeEqual(a, b) && Number(exp) > now ? pi : null;
-}

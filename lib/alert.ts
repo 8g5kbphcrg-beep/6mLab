@@ -5,7 +5,7 @@ import { SITE } from "@/lib/dict";
 // When something important fails (a paid order whose program did not go out, a checkout that
 // could not open, a form that could not be sent, a scheduled email run), 6M Lab gets an email
 // right away, and the alert is kept for the admin home page: if sending emails is what fails,
-// the admin still shows it. The same alert (same key) is emailed once a day at most.
+// the admin still shows it. The same alert (same key) is listed and emailed once a day at most.
 // Never throws: an alert must not break the page that raised it.
 export type Alert = { at: string; title: string; details: string[] };
 
@@ -17,8 +17,10 @@ export async function alert(key: string, title: string, details: string[]) {
   let email = true;
   try {
     if (redisReady()) {
-      const [, , fresh] = await redis([["LPUSH", LIST, JSON.stringify(a)], ["LTRIM", LIST, 0, 49], ["SET", `alert:${key}`, "1", "NX", "EX", 86400]]);
+      // The same alert (same key) is listed and emailed once a day at most.
+      const [fresh] = await redis([["SET", `alert:${key}`, "1", "NX", "EX", 86400]]);
       email = fresh === "OK";
+      if (email) await redis([["LPUSH", LIST, JSON.stringify(a)], ["LTRIM", LIST, 0, 49]]);
     }
   } catch (e) {
     console.error("[alerte] redis", e);

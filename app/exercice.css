@@ -32,3 +32,4 @@ body:has(.exo-back){overflow:hidden}
 .acc-rules{margin:.4rem 0 1rem;padding-left:1.1rem;color:#3A3452;font-size:.92rem;line-height:1.5;display:grid;gap:.3rem}
 .acc-cta{font-size:.95rem!important}.acc-cta a{color:#C2410C;font-weight:700}
 .acc .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.exo-card{min-width:0}.acc-form input{min-width:0;width:100%;box-sizing:border-box}

@@ -27,15 +27,12 @@ const FAMILIES: [string, string, string[]][] = [
 
 type P = { params: Promise<{ lang: string }>; searchParams: Promise<Gate> };
 
-export default async function Library({ params, searchParams }: P) {
+export default async function Library({ params }: P) {
   const { lang } = await params;
   if (!(locales as readonly string[]).includes(lang)) notFound();
   const l = lang as Lang, fr = l === "fr";
   const end = await accessEnd();
-  if (!end) {
-    const g = await searchParams;
-    return <AccessGate lang={l} next={`/${l}/exercices`} state={g.acces} code={g.ref} offer={g.offre} />;
-  }
+  if (!end) return <AccessGate lang={l} next={`/${l}/exercices`} />;
   const days = Math.ceil((end - Date.now()) / 86400000);
   const endDate = new Date(end).toLocaleDateString(fr ? "fr-FR" : "en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" });
   const listed = new Set(FAMILIES.flatMap((f) => f[2]));

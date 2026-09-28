@@ -62,3 +62,11 @@
 .lib-sugg button{width:100%;text-align:left;font:inherit;font-weight:600;color:var(--ink);background:none;border:0;border-radius:8px;padding:.6rem .8rem;cursor:pointer}
 .lib-sugg button:hover,.lib-sugg button:focus-visible{background:color-mix(in srgb,var(--A) 14%,var(--card))}
 .cs-out{margin-top:1.5rem;text-align:center}.cs-out button{font:inherit;font-size:.9rem;background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;padding:.6rem}
+.cs-col{display:grid;gap:1rem}
+.cs-order{margin:0;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--At)}.cs-order span{color:var(--muted);font-weight:600;text-transform:none;letter-spacing:0}
+.cs-go-f{display:block}
+.cs-confirm{display:grid;gap:.6rem;border-left:4px solid var(--A);padding-left:.8rem}.cs-confirm p{margin:0}
+.cs-cancel{color:var(--muted);font-size:.92rem;justify-self:start}
+.cs-note{margin:0 0 1rem;padding:.7rem 1rem;border-radius:12px;background:var(--band);color:var(--ink)}
+.lib .acc-err{margin:0 0 1rem}
+.acc-form .cs-otp{font-size:1.4rem;letter-spacing:.4em;text-align:center;font-variant-numeric:tabular-nums}
