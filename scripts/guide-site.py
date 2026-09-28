@@ -13,7 +13,7 @@ SECTIONS = [
  ("you", "Ce qui te rend unique, dit en une phrase", "Ton expérience de joueur, de coach, de préparateur, tes diplômes. À écrire en une phrase réutilisée partout : accueil, À propos, réseaux, emails."),
 ]),
 ("structure", "Structure et navigation", "Chaque visiteur doit trouver son chemin sans réfléchir.", [
- ("ok", "Un menu court", "Quelques entrées seulement : Programmes, Exercices, Conseils, Clubs, À propos. Le reste est dans le pied de page."),
+ ("ok", "Un menu court", "7 entrées : Accueil, Conseils, À propos, Clubs, FAQ, Contact, Espace client. Le reste est dans le pied de page."),
  ("ok", "Un parcours d'achat en peu de clics", "Accueil, puis questionnaire ou programme, puis paiement. Le questionnaire oriente vers le bon programme."),
  ("ok", "Un pied de page complet", "Mentions légales, CGV, confidentialité, contact, changement de langue."),
  ("ok", "Une recherche dans la bibliothèque d'exercices", "Recherche et familles d'exercices (dont Gardiens de but)."),
@@ -119,22 +119,38 @@ NEXT = [
  ("you", "Lancer Instagram et TikTok avec les animations d'exercices", "marketing"),
  ("you", "Tester le parcours complet en mode test Stripe (commande, code, parrainage)", "confiance"),
 ]
+# "Fait" points that can still be improved: title -> what to do next (shown as « À améliorer »).
+IMPROVE = {
+ "Un menu court": "Le menu est passé à 7 entrées : garder Programmes, Clubs, Conseils et Espace client en haut, et descendre FAQ, Contact et À propos dans le pied de page.",
+ "Montrer le produit": "Ajouter une courte vidéo (30 s) d'une séance ou d'un feuilletage du PDF sur l'accueil et les pages programme.",
+ "Accessibilité": "Refaire l'audit sur les pages ajoutées depuis : espace client, bibliothèque clubs, Contact, codes clubs, admin Réponses types.",
+ "Des articles de conseils réguliers": "Les articles s'arrêtent en décembre 2026 : écrire ceux de janvier à mars (reprise après la trêve, phase retour).",
+ "Page de remerciement et email de confirmation": "Ajouter sur la page de remerciement un bouton « Mon espace client » pour activer sa bibliothèque tout de suite.",
+ "Données structurées": "Ajouter la note moyenne des avis (étoiles dans Google) dès les premiers avis publiés.",
+ "Sauvegarde du site": "Le code est sur GitHub, mais pas les données : codes clubs, parrainages et journaux sont dans Redis, les commandes dans Stripe. Prévoir un export régulier.",
+ "Surveiller les erreurs": "Ajouter une surveillance externe qui prévient si le site ne répond plus (le système actuel ne voit que les erreurs internes).",
+ "Pas de cookie publicitaire": "La page Confidentialité doit citer les cookies de fonctionnement ajoutés (connexion à l'espace client, accès aux animations, appareil) et le journal des connexions.",
+ "Une FAQ générale": "Ajouter les questions sur le code club (où le saisir, combien d'appareils) et sur la connexion à l'espace client.",
+ "Répondre vite": "Envoyer un accusé de réception automatique quand un client écrit, avec le délai de 48 h et les liens utiles.",
+ "Sortie des programmes clubs en PDF": "Les PDF sont produits avec Claude : un bouton « Générer les PDF » dans Admin > Clubs rendrait l'outil autonome.",
+}
 from collections import Counter
 MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre']
 _d = datetime.date.today(); DATE = f'{_d.day} {MOIS[_d.month-1]} {_d.year}'
 cnt = Counter(s for _, _, _, items in SECTIONS for s, _, _ in items)
 total = sum(cnt.values())
 e = html.escape
+def imp(h): return f'<p class="imp"><span>À améliorer</span>{e(IMPROVE[h])}</p>' if h in IMPROVE else ''
 def pill(s): return f'<span class="st {s}">{S[s]}</span>'
 toc = "".join(f'<a href="#{sid}"><span>{i:02d}</span>{e(t)}</a>' for i, (sid, t, _, _) in enumerate(SECTIONS, 1))
 secs = []
 for i, (sid, t, lead, items) in enumerate(SECTIONS, 1):
     c = Counter(s for s, _, _ in items)
     done = c["ok"]
-    lis = "".join(f'<li data-s="{s}">{pill(s)}<div><b>{e(h)}</b><p>{e(p)}</p></div></li>' for s, h, p in items)
+    lis = "".join(f'<li data-s="{s}"{" data-a" if h in IMPROVE else ""}>{pill(s)}<div><b>{e(h)}</b><p>{e(p)}</p>{imp(h)}</div></li>' for s, h, p in items)
     secs.append(f'<section id="{sid}"><div class="sh"><span class="num">{i:02d}</span><div><h2>{e(t)}</h2><p class="lead">{e(lead)}</p></div><span class="prog">{done}/{len(items)} faits</span></div><ul class="items">{lis}</ul></section>')
 nxt = "".join(f'<li>{pill(s)}<a href="#{sec}">{e(t)}</a></li>' for s, t, sec in NEXT)
-legend = "".join(f'<button type="button" class="chip" data-f="{k}" aria-pressed="false">{pill(k)}<b>{cnt[k]}</b></button>' for k in S)
+legend = "".join(f'<button type="button" class="chip" data-f="{k}" aria-pressed="false">{pill(k)}<b>{cnt[k]}</b></button>' for k in S) + f'<button type="button" class="chip" data-f="a" aria-pressed="false"><span class="st imp">À améliorer</span><b>{len(IMPROVE)}</b></button>'
 out = f'''<title>Guide du site 6M Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -182,6 +198,9 @@ ul.items li{{display:grid;grid-template-columns:6.6rem 1fr;gap:.9rem;padding:.8r
 ul.items li .st{{justify-self:start;margin-top:.15rem}}
 ul.items b{{font-weight:600}}ul.items p{{margin:.15rem 0 0;color:var(--muted);max-width:68ch}}
 @media(max-width:560px){{ul.items li{{grid-template-columns:1fr;gap:.35rem}}}}
+.st.imp,p.imp span{{color:var(--part);background:var(--part-bg)}}
+ul.items p.imp{{margin-top:.5rem;color:var(--ink);border-left:3px solid var(--part);padding:.1rem 0 .1rem .6rem}}
+p.imp span{{display:inline-block;font:600 .68rem var(--body);letter-spacing:.04em;text-transform:uppercase;border-radius:6px;padding:.1rem .4rem;margin-right:.45rem;vertical-align:1px}}
 .hide{{display:none!important}}
 footer{{grid-column:1/-1;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:1rem}}
 @media(prefers-reduced-motion:no-preference){{html{{scroll-behavior:smooth}}}}
@@ -206,11 +225,13 @@ footer{{grid-column:1/-1;color:var(--muted);font-size:.85rem;border-top:1px soli
   chips.forEach(function(c){{c.addEventListener('click',function(){{
     on=on===c.dataset.f?null:c.dataset.f;
     chips.forEach(function(x){{x.setAttribute('aria-pressed',String(x.dataset.f===on))}});
-    document.querySelectorAll('ul.items li').forEach(function(li){{li.classList.toggle('hide',!!on&&li.dataset.s!==on)}});
+    document.querySelectorAll('ul.items li').forEach(function(li){{li.classList.toggle('hide',!!on&&(on==='a'?!li.hasAttribute('data-a'):li.dataset.s!==on))}});
     document.querySelectorAll('main section').forEach(function(s){{s.classList.toggle('hide',!!on&&!s.querySelector('li:not(.hide)'))}});
   }})}});
 }})();
 </script>
 '''
 open(os.path.join(os.path.dirname(__file__), '..', 'private', 'docs', 'guide-site.html'), 'w').write(out)
-print(total, dict(cnt))
+missing = [h for h in IMPROVE if not any(h == t for _, _, _, it in SECTIONS for _, t, _ in it)]
+assert not missing, missing
+print(total, dict(cnt), len(IMPROVE), 'à améliorer')
