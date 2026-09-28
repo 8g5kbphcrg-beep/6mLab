@@ -84,7 +84,7 @@ SECTIONS = [
  ("ok", "Savoir d'où viennent les visiteurs", "Instagram, TikTok, Google, liens de clubs : chaque visite et chaque vente est rattachée à sa source."),
  ("you", "Instagram et TikTok réguliers", "Les animations d'exercices, des conseils courts, des extraits de séances. 3 publications par semaine, chacune avec un lien suivi."),
  ("you", "Un calendrier de communication calé sur la saison", "Juin-juillet : pré-saison. Septembre : reprise. Décembre : trêve. Mai : fin de saison et coupure."),
- ("todo", "Parrainage", "Un code à partager : le filleul a une réduction, le parrain aussi. Idéal entre coéquipiers."),
+ ("ok", "Parrainage", "Chaque acheteur reçoit son code à partager (email de confirmation et bibliothèque d'exercices). Le coéquipier a -15 % avec ; le parrain reçoit alors par email un code de -15 % pour son prochain programme. Expliqué dans la FAQ et les CGV, suivi dans Commandes & avis."),
  ("you", "Partenariats", "Clubs, coachs, kinés, magasins de sport : un lien, un code promo dédié, et le suivi des ventes par partenaire."),
  ("later", "Publicité payante", "Seulement quand le site convertit bien et a des avis. Petits budgets, ciblés sur les parents et les joueurs, en période de reprise."),
 ]),
@@ -117,7 +117,7 @@ NEXT = [
  ("todo", "Mise en ligne : domaine, emails du domaine, ouverture à Google, Search Console, Stripe en mode réel", "seo"),
  ("part", "Rendre le site plus dynamique, étape par étape", "design"),
  ("you", "Lancer Instagram et TikTok avec les animations d'exercices", "marketing"),
- ("todo", "Ajouter le parrainage", "marketing"),
+ ("todo", "Répondre vite : délai annoncé et réponses types", "fidelisation"),
 ]
 from collections import Counter
 MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre']

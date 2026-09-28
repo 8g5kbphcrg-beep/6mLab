@@ -4,6 +4,10 @@
 .lib-k{margin:0;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--At)}
 .lib-acc{margin:0 0 1.5rem;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.8rem 1rem;color:var(--muted)}
 .lib-acc strong{color:var(--ink)}
+.lib-par{margin:-.6rem 0 1.5rem;border:2px dashed var(--A);border-radius:14px;padding:.8rem 1rem;display:grid;gap:.35rem}
+.lib-par p{margin:0;color:var(--muted)}.lib-par .lib-par-t{color:var(--ink);font-weight:700}
+.lib-par .lib-par-code{color:var(--ink);font:700 1.35rem/1.2 var(--display,inherit);letter-spacing:.12em;user-select:all;text-align:center;padding:.3rem 0}
+.lib-par .lib-par-n{font-size:.9rem}
 .lib h2{font-size:1.4rem;margin:2rem 0 .7rem}
 .lib-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,15rem),1fr));gap:.5rem}
 .lib-grid a{display:flex;justify-content:space-between;align-items:center;gap:.6rem;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.8rem 1rem;color:var(--ink);text-decoration:none;font-weight:600}

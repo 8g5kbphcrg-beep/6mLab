@@ -3,7 +3,8 @@ import Stripe from "stripe";
 import type { Lang } from "@/lib/dict";
 import type { ProgramSlug } from "@/lib/programs";
 import type { GoalId } from "@/lib/goals";
-import { mailReady, notifyOwner, sendConfirmation, type Order } from "@/lib/email";
+import { mailReady, notifyOwner, sendConfirmation, sendReferralReward, type Order } from "@/lib/email";
+import { referralCode, sponsorReward } from "@/lib/referral";
 import { refOf } from "@/lib/access";
 import { alert, why } from "@/lib/alert";
 import { SITE } from "@/lib/dict";
@@ -33,6 +34,14 @@ export async function POST(req: NextRequest) {
     // customer area: saved on the PaymentIntent so it can be looked up (lib/access.ts).
     if (s.payment_status === "paid" && typeof s.payment_intent === "string") {
       await stripe.paymentIntents.update(s.payment_intent, { metadata: { ref: refOf(s.id).toLowerCase() } }).catch((e) => console.error("[ref]", e));
+      // Referral (lib/referral.ts): if this order used a teammate's code, that teammate gets their
+      // thank-you code by email. A failure here must not hold back the customer's program.
+      try {
+        const r = await sponsorReward(stripe, s);
+        if (r && mailReady()) await sendReferralReward(r);
+      } catch (e) {
+        await alert(`par:${s.id}`, "Parrainage : le code de remerciement du parrain n'a pas pu être envoyé", [`Commande ${refOf(s.id)} (${m.firstName ?? ""}, ${s.customer_details?.email ?? ""})`, `Erreur : ${why(e)}`, "", "Regarde dans Stripe (Catalogue de produits > Coupons > PARRAIN) si le code a été créé, et envoie-le au parrain à la main."]);
+      }
     }
 
     // Stripe retries a webhook until it gets a 2xx (and the event keeps its original metadata),
@@ -56,6 +65,8 @@ export async function POST(req: NextRequest) {
         gender: m.gender ?? "",
         amount: s.amount_total ?? 0,
       };
+      // The buyer's own code to share, shown in the confirmation email.
+      if (typeof s.payment_intent === "string") order.referral = await referralCode(stripe, s.payment_intent, order.firstName).catch((e) => { console.error("[parrainage]", e); return undefined; });
       try {
         const delivered = await sendConfirmation(order);
         await stripe.checkout.sessions.update(s.id, { metadata: { ...m, emailed: delivered ? "programme" : "confirmation" } });

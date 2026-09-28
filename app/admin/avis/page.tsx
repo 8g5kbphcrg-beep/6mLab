@@ -138,6 +138,7 @@ export default async function AdminAvis() {
                 </>;
               })() : <span className="muted">Pas encore ouvert</span>}
               <br /><span className="muted">Réf. {o.meta.ref ?? "–"}</span>
+              {o.meta.par_code && <><br /><span className="muted">Parrainage {o.meta.par_code}{o.meta.par_n ? ` : ${o.meta.par_n} filleul${+o.meta.par_n > 1 ? "s" : ""}` : ""}</span></>}
             </td>
             {(["mid", "end"] as const).map((st) => {
               const answered = o.meta[st === "mid" ? "m_at" : "f_at"], sent = o.meta[st === "mid" ? "s_mid" : "s_end"];

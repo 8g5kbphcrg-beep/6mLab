@@ -5,7 +5,22 @@ import { locales, type Lang } from "@/lib/dict";
 import { animatedIds, exName } from "@/components/ExerciseCard";
 import AccessGate from "@/components/AccessGate";
 import LibrarySearch from "@/components/LibrarySearch";
-import { accessEnd, type Gate } from "@/lib/access-page";
+import { accessEnd, accessPi, type Gate } from "@/lib/access-page";
+import { stripe } from "@/lib/feedback";
+import { FRIEND_PERCENT, referralCode, SPONSOR_PERCENT } from "@/lib/referral";
+
+// The customer's referral code (lib/referral.ts), created here for orders placed before it existed.
+async function myCode(): Promise<{ code: string; n: number } | null> {
+  const pi = await accessPi(), s = stripe();
+  if (!pi || !s) return null;
+  try {
+    const m = (await s.paymentIntents.retrieve(pi)).metadata ?? {};
+    return { code: await referralCode(s, pi, m.firstName ?? "", m.par_code), n: Number(m.par_n || 0) };
+  } catch (e) {
+    console.error("[parrainage]", e);
+    return null;
+  }
+}
 import "@/app/library.css";
 
 // Customer area: every animated exercise, by family. For customers only, while their access
@@ -37,6 +52,7 @@ export default async function Library({ params, searchParams }: P) {
     return <AccessGate lang={l} next={`/${l}/exercices`} state={g.acces} code={g.ref} offer={g.offre} />;
   }
   const days = Math.ceil((end - Date.now()) / 86400000);
+  const par = await myCode();
   const listed = new Set(FAMILIES.flatMap((f) => f[2]));
   const families = [...FAMILIES, ["Autres", "Others", animatedIds.filter((id) => !listed.has(id))] as [string, string, string[]]]
     .map(([a, b, ids]) => [fr ? a : b, ids.filter((id) => animatedIds.includes(id))] as const)
@@ -50,6 +66,16 @@ export default async function Library({ params, searchParams }: P) {
         <strong>{new Date(end).toLocaleDateString(fr ? "fr-FR" : "en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" })}</strong>
         {fr ? ` (encore ${days} jour${days > 1 ? "s" : ""}).` : ` (${days} day${days > 1 ? "s" : ""} left).`}
       </p>
+      {par && (
+        <aside className="lib-par">
+          <p className="lib-par-t">{fr ? "Parraine tes coéquipiers" : "Refer your teammates"}</p>
+          <p>{fr
+            ? `Ils ont -${FRIEND_PERCENT} % sur leur programme avec ton code, et tu reçois -${SPONSOR_PERCENT} % sur ton prochain pour chaque coéquipier qui commande.`
+            : `They get ${FRIEND_PERCENT}% off their program with your code, and you get ${SPONSOR_PERCENT}% off your next one for every teammate who orders.`}</p>
+          <p className="lib-par-code">{par.code}</p>
+          {par.n > 0 && <p className="lib-par-n">{fr ? `${par.n} coéquipier${par.n > 1 ? "s ont" : " a"} déjà commandé avec ton code.` : `${par.n} teammate${par.n > 1 ? "s have" : " has"} already ordered with your code.`}</p>}
+        </aside>
+      )}
       <LibrarySearch fr={fr} items={families.flatMap(([, ids]) => ids.map((id) => [id, exName(id, fr ? "fr" : "en")] as [string, string]))} />
       {families.map(([name, ids]) => (
         <section key={name}>

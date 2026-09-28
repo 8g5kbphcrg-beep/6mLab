@@ -6,6 +6,11 @@ export async function accessEnd(): Promise<number | null> {
   const c = await cookies();
   return readAccess(c.get(ACCESS_COOKIE)?.value, c.get(DEVICE_COOKIE)?.value);
 }
+// In a page: the order (PaymentIntent id) behind this device's open access, or null.
+export async function accessPi(): Promise<string | null> {
+  const c = await cookies(), v = c.get(ACCESS_COOKIE)?.value;
+  return v && readAccess(v, c.get(DEVICE_COOKIE)?.value) ? v.split(".")[0] : null;
+}
 export type Gate = { acces?: string; ref?: string; offre?: string; retour?: string };
 // ?retour=<page of the site> on the links to an exercise: where its cross goes back to.
 export const backPath = (p?: string) => (p && /^\/(fr|en)(\/[a-z0-9-]+)*$/.test(p) ? p : undefined);

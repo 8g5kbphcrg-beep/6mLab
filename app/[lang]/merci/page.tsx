@@ -46,6 +46,9 @@ export default async function Merci({ params, searchParams }: P) {
           ? "Nous n'avons pas pu confirmer ton paiement sur cette page. Si tu as été débité, pas d'inquiétude : écris-nous et nous vérifions ta commande."
           : "We couldn't confirm your payment on this page. If you were charged, don't worry: contact us and we'll check your order."}</p>
       )}
+      {paid && <p>{fr
+        ? "Ton code de parrainage est aussi dans l'email de confirmation : partage-le à tes coéquipiers, ils ont une réduction sur leur programme et toi sur ton prochain."
+        : "Your referral code is in the confirmation email too: share it with your teammates, they get a discount on their program and you on your next one."}</p>}
       <p>{fr ? "Une question d'ici là ?" : "Any question in the meantime?"} <Link href={`/${lang}/contact`}>{fr ? "Contacte-nous" : "Contact us"}</Link>.</p>
       <p><Link className="btn" href={fr ? "/fr/conseils" : `/${lang}`}>{fr ? "Lire nos conseils" : "Back to home"}</Link></p>
     </div>
