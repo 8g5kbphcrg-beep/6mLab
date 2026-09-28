@@ -6,6 +6,7 @@ import { goalName, goalsTitle, hasSecondGoal, validGoals } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
 import { stripe as stripeClient } from "@/lib/feedback";
 import { cleanSrc } from "@/lib/analytics";
+import { alert, why } from "@/lib/alert";
 
 export async function POST(req: NextRequest) {
   const form = await req.formData();
@@ -89,6 +90,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.redirect(session.url!, 303);
   } catch (e) {
     console.error("[checkout]", e);
+    await alert("checkout", "Un client n'a pas pu accéder à la page de paiement", [`Programme : ${slug}${pack ? " (pack)" : ""}, langue ${lang}`, `Erreur : ${why(e)}`, "", "Le client a vu « paiement indisponible ». Vérifie Stripe (clé STRIPE_SECRET_KEY dans Vercel, compte actif)."]);
     return back("indisponible");
   }
 }

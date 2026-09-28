@@ -6,6 +6,7 @@ import { dueCampaign } from "@/lib/season-mail";
 import { endOf, offerOf } from "@/lib/access";
 import { recentLeads, unsubUrl } from "@/lib/leads";
 import { SITE } from "@/lib/dict";
+import { alert, why } from "@/lib/alert";
 
 // Runs once a day (vercel.json): sends the feedback emails that are due, 2 weeks after the
 // purchase and at the end of the program. Each email goes out once (s_mid / s_end in the order's
@@ -22,6 +23,9 @@ export async function GET(req: NextRequest) {
   if (!s || !mailReady()) return NextResponse.json({ skipped: "not configured" });
   const now = Math.floor(Date.now() / 1000);
   const sent: string[] = [];
+  // Failures of this run, sent as one alert at the end.
+  const failed: string[] = [];
+  const fail = (what: string, id: string, e: unknown) => { console.error(`[${what}]`, id, e); failed.push(`${what} ${id} : ${why(e)}`); };
   for (const o of await paidOrders(s, now - 100 * DAY)) {
     if (!o.email) continue;
     for (const stage of ["mid", "end"] as Stage[]) {
@@ -32,7 +36,7 @@ export async function GET(req: NextRequest) {
         await sendFeedbackRequest({ email: o.email, lang: o.lang, firstName: o.firstName, program: o.program }, stage, formUrl(SITE, o.lang, o.id, stage), PROMO_PERCENT);
         await s.paymentIntents.update(o.id, { metadata: { [key]: new Date().toISOString().slice(0, 10) } });
         sent.push(`${o.id}:${stage}`);
-      } catch (e) { console.error("[feedback cron]", o.id, e); }
+      } catch (e) { fail("feedback cron", o.id, e); }
     }
   }
   for (const o of await paidOrders(s, now - 560 * DAY)) {
@@ -44,7 +48,7 @@ export async function GET(req: NextRequest) {
       await sendAccessEnding({ email: o.email, lang: o.lang, firstName: o.firstName, offer }, end);
       await s.paymentIntents.update(o.id, { metadata: { s_acc: new Date().toISOString().slice(0, 10) } });
       sent.push(`${o.id}:acc`);
-    } catch (e) { console.error("[access cron]", o.id, e); }
+    } catch (e) { fail("access cron", o.id, e); }
   }
   for (const l of await recentLeads(s, now - 20 * DAY)) {
     if (!l.email || l.meta.unsub) continue;
@@ -55,7 +59,7 @@ export async function GET(req: NextRequest) {
       await sendTip(l.email, l.lang, (n + 1) as 1 | 2 | 3, unsubUrl(SITE, l.lang, l.id));
       await s.customers.update(l.id, { metadata: { [`t${n + 1}`]: new Date().toISOString().slice(0, 10) } });
       sent.push(`${l.id}:t${n + 1}`);
-    } catch (e) { console.error("[tips cron]", l.id, e); }
+    } catch (e) { fail("tips cron", l.id, e); }
   }
   const due = dueCampaign();
   if (due) {
@@ -69,7 +73,7 @@ export async function GET(req: NextRequest) {
         await s.customers.update(l.id, { metadata: { [key]: year } });
         sent.push(`${l.id}:${due.c.id}`);
         n++;
-      } catch (e) { console.error("[season cron]", l.id, e); }
+      } catch (e) { fail("season cron", l.id, e); }
     }
   }
   for (const c of await abandonedCarts(s, now)) {
@@ -77,7 +81,8 @@ export async function GET(req: NextRequest) {
       await sendCartReminder(c, c.link);
       await s.checkout.sessions.update(c.id, { metadata: { relance: new Date().toISOString().slice(0, 10) } }).catch(() => {});
       sent.push(`${c.id}:panier`);
-    } catch (e) { console.error("[cart cron]", c.id, e); }
+    } catch (e) { fail("cart cron", c.id, e); }
   }
-  return NextResponse.json({ sent });
+  if (failed.length) await alert(`cron:${new Date().toISOString().slice(0, 10)}`, `${failed.length} email(s) automatique(s) n'ont pas pu partir`, [...failed.slice(0, 20), "", "Ils seront retentés au prochain passage (chaque jour), tant qu'ils sont dans leur fenêtre d'envoi."]);
+  return NextResponse.json({ sent, failed: failed.length });
 }

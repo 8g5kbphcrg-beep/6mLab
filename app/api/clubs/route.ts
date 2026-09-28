@@ -4,6 +4,7 @@ import { validEmail } from "@/lib/leads";
 import { redis, redisReady } from "@/lib/redis";
 import { cleanSrc } from "@/lib/analytics";
 import { mailReady, sendClubRequest } from "@/lib/email";
+import { alert, why } from "@/lib/alert";
 import { CLUB_GEAR, CLUB_PLACES, whenLabel } from "@/lib/club-equipment";
 
 // Quote request from the Clubs page: emailed to 6M Lab (reply goes straight to the coach).
@@ -35,6 +36,7 @@ export async function POST(req: NextRequest) {
     return page("envoye=1");
   } catch (e) {
     console.error("[clubs]", e);
+    await alert("clubs", "Une demande de devis Clubs n'a pas pu être envoyée", [`${r.name} (${r.role}), club ${r.club}`, `Email : ${r.email}`, `${r.side}, ${r.category}, ${r.level || "niveau non précisé"}, ${r.field} joueurs de champ et ${r.gk} gardiens, ${r.period}`, ...(r.message ? [`Message : ${r.message}`] : []), `Erreur : ${why(e)}`, "", "Réponds-lui directement à son adresse : il a vu un message d'erreur."]);
     return page("erreur=1");
   }
 }

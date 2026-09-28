@@ -4,6 +4,7 @@ import { stripe } from "@/lib/feedback";
 import { addLead, unsubUrl, validEmail } from "@/lib/leads";
 import { cleanSrc } from "@/lib/analytics";
 import { mailReady, sendFreeSession } from "@/lib/email";
+import { alert, why } from "@/lib/alert";
 
 // Free session form (home page): saves the email as a lead in Stripe and sends the session PDF.
 // The 3 tips follow with the daily cron, then the emails at the key moments of the season (saison=1:
@@ -24,6 +25,7 @@ export async function POST(req: NextRequest) {
     return page("");
   } catch (e) {
     console.error("[seance-gratuite]", e);
+    await alert("seance", "Une demande de séance gratuite n'a pas pu être traitée", [`Email : ${email} (${lang})`, `Erreur : ${why(e)}`, "", "Tu peux lui envoyer la séance à la main : Admin, Programmes, Séance gratuite."]);
     return page("?erreur=indisponible");
   }
 }

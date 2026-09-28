@@ -42,6 +42,12 @@ const transport = () =>
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
+// Alert to 6M Lab when something fails (lib/alert.ts): plain text, to its own inbox.
+export async function sendAlert(subject: string, text: string) {
+  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: MAIL_FROM(), subject: `⚠ 6M Lab : ${subject}`, text });
+  if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
+}
+
 // The PDFs an order needs, from the programmes/ folder: the guide of the formula, the sessions
 // for its pair of goals (in block order, with the customer's silhouette) and the running option.
 // Returns null unless automatic sending is switched on (PROGRAMMES_ENVOI_AUTO=1, once the

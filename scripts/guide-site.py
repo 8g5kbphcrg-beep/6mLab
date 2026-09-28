@@ -67,8 +67,8 @@ SECTIONS = [
  ("ok", "Hébergement fiable et HTTPS", "Vercel, avec un aperçu pour chaque modification avant de la valider."),
  ("ok", "Sauvegarde du site", "Tout le code et les documents sont sur GitHub : rien ne se perd."),
  ("part", "Vitesse", "Mesuré avec Lighthouse (l'outil de PageSpeed Insights), en simulant un téléphone : accueil passé de 74 à 83-93/100, autres pages 95 à 97/100, rien ne bouge au chargement. À refaire sur le vrai site après la mise en ligne, avec PageSpeed Insights et les données réelles des visiteurs."),
- ("todo", "Emails envoyés depuis ton domaine", "Adresse du type contact@ton-domaine, avec les réglages SPF, DKIM et DMARC pour que les emails n'arrivent pas en spam."),
- ("part", "Surveiller les erreurs", "Les erreurs sont visibles dans les journaux Vercel. À faire : une alerte par email si un paiement ou un envoi de programme échoue."),
+ ("part", "Emails envoyés depuis ton domaine", "Préparé : la marche à suivre est dans l'aide-mémoire de l'admin. Avec iCloud+ (déjà utilisé pour les emails du site) : domaine de messagerie personnalisé, réglages SPF, DKIM et DMARC, adresse contact@ton-domaine, puis test sur mail-tester.com. À faire dès que le nom de domaine est choisi."),
+ ("ok", "Surveiller les erreurs", "Un email « ⚠ 6M Lab » part dès qu'un paiement, un envoi de programme, un formulaire ou les emails automatiques échouent, avec quoi faire. Les alertes s'affichent aussi en haut de l'accueil de l'admin (bouton de test)."),
 ]),
 ("legal", "Légal et conformité", "Vendre en règle, surtout à des mineurs et pour du sport.", [
  ("ok", "CGV, confidentialité, mentions légales", "Les trois pages existent, en français et en anglais."),

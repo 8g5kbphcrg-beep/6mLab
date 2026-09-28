@@ -5,6 +5,8 @@ import type { ProgramSlug } from "@/lib/programs";
 import type { GoalId } from "@/lib/goals";
 import { mailReady, notifyOwner, sendConfirmation, type Order } from "@/lib/email";
 import { refOf } from "@/lib/access";
+import { alert, why } from "@/lib/alert";
+import { SITE } from "@/lib/dict";
 
 // Receives Stripe events. On a paid checkout it emails the customer (confirmation, plus the
 // program PDFs once they exist in programmes/) and sends 6M Lab an order summary.
@@ -60,6 +62,15 @@ export async function POST(req: NextRequest) {
         await notifyOwner(order, delivered).catch((e) => console.error("[notify]", e));
       } catch (e) {
         console.error("[email]", e);
+        await alert(`order:${s.id}`, "Paiement reçu, mais le programme n'est pas parti", [
+          `Client : ${order.firstName} <${order.email}>`,
+          `Commande : ${order.program}${order.pack ? " (pack Saison complète)" : ""}, ${(order.amount / 100).toFixed(2)} €, référence ${refOf(s.id)}`,
+          `Erreur : ${why(e)}`,
+          "",
+          "Stripe va réessayer tout seul pendant 3 jours. Si l'erreur continue, envoie le programme à la main :",
+          `${SITE}/admin/avis (bouton « PDF du programme » à côté de la commande).`,
+          "Si l'erreur parle de connexion ou de mot de passe (535, Invalid login) : le mot de passe pour app iCloud (MAIL_PASSWORD) est à refaire, voir l'aide-mémoire.",
+        ]);
         // The reason (e.g. "Invalid login: 535 ...") shows up in Stripe's webhook log; it never contains the password.
         return NextResponse.json({ error: "email failed", reason: e instanceof Error ? e.message.slice(0, 200) : String(e) }, { status: 500 });
       }

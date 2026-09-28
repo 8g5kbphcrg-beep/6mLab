@@ -40,6 +40,7 @@ export default function Memo() {
         <div className="card"><h3>Paniers abandonnés</h3><p>Un seul rappel, dans les 24 heures, si l'acheteur a coché « recevoir des offres » sur la page de paiement et n'a pas commandé depuis.</p></div>
         <div className="card"><h3>Demandes de devis clubs</h3><p>Chaque demande t'arrive par email (répondre écrit au coach). 5 demandes par heure au plus depuis une même connexion.</p></div>
         <div className="card"><h3>Chaque matin (vers 10-11 h)</h3><p>Une tâche automatique envoie tout ce qui est dû : avis, conseils, fin d'accès, relances, emails de saison.</p></div>
+        <div className="card"><h3>Si quelque chose échoue</h3><p>Paiement, envoi de programme, formulaire ou emails du matin : tu reçois un email « ⚠ 6M Lab » avec quoi faire, et l'alerte s'affiche en haut de l'accueil de l'admin. La même alerte part une fois par jour au plus.</p></div>
       </div>
 
       <h2>Réglages Vercel</h2>
@@ -54,9 +55,24 @@ export default function Memo() {
         <li>Les documents de cet espace (Méthode Clubs, exemple club, Dossier Gardiens) se mettent à jour de la même façon.</li>
       </ol></div>
 
+      <h2>Emails depuis ton domaine (après le choix du domaine)</h2>
+      <div className="card">
+        <p>Aujourd'hui, le site envoie ses emails avec ton compte iCloud. Avec ton domaine, ils partiront de contact@ton-domaine, et trois réglages prouveront aux messageries (Gmail, Outlook…) que c'est bien toi : c'est ce qui évite les spams.</p>
+        <ol className="steps">
+          <li><b>iCloud+</b> : vérifie que ton compte Apple a un abonnement iCloud+ (le plus petit suffit). Réglages iCloud, puis « Domaine de messagerie personnalisé », puis ajoute ton domaine.</li>
+          <li><b>Les réglages DNS</b> : Apple te donne des lignes à copier chez l'hébergeur de ton domaine (ou dans Vercel si le domaine y est géré) : MX (recevoir), TXT « v=spf1 … » (SPF : qui a le droit d'envoyer), CNAME « sig1._domainkey » (DKIM : la signature des emails) et un TXT de vérification. Copie-les exactement.</li>
+          <li><b>DMARC</b>, à ajouter toi-même : une ligne TXT nommée _dmarc, valeur <code>v=DMARC1; p=none; rua=mailto:contact@ton-domaine</code>. Après quelques semaines sans problème, remplace p=none par p=quarantine.</li>
+          <li><b>L'adresse</b> : crée contact@ton-domaine dans iCloud, puis attends la validation d'Apple (souvent moins d'une heure).</li>
+          <li><b>Vercel</b> : MAIL_FROM = contact@ton-domaine. MAIL_USER (ton identifiant Apple) et MAIL_PASSWORD (le mot de passe pour app) ne changent pas.</li>
+          <li><b>Le site</b> : demande à Claude de remplacer l'adresse de contact des mentions légales, de la FAQ et des emails par la nouvelle.</li>
+          <li><b>Le test</b> : envoie un email depuis la séance gratuite du site vers l'adresse donnée par mail-tester.com, et vise au moins 9/10.</li>
+        </ol>
+      </div>
+
       <h2>Mise en ligne (quand tu auras ton nom de domaine)</h2>
       <div className="card"><ol className="steps">
         <li>Compléter les mentions légales (nom, SIRET, adresse, médiateur).</li>
+        <li>Emails depuis le domaine : suivre la marche à suivre ci-dessus.</li>
         <li>Brancher le domaine sur Vercel, puis mettre à jour NEXT_PUBLIC_SITE_URL et PROGRAMMES_SITE_URL.</li>
         <li>Régénérer les PDF pour que l'œil pointe vers le nouveau domaine (à faire avec Claude).</li>
         <li>Stripe en mode réel : clé sk_live, nouveau webhook sur le domaine, STRIPE_ALLOW_LIVE=1.</li>
