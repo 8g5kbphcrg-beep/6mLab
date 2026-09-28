@@ -4,6 +4,7 @@ import { redis, redisReady } from "@/lib/redis";
 import { validEmail } from "@/lib/leads";
 import { mailReady, sendLoginCode } from "@/lib/email";
 import { alert, why } from "@/lib/alert";
+import { ACCESS_COOKIE } from "@/lib/access";
 import { checkCode, cleanEmail, CODE_MINUTES, newCode, ordersOf, OTP_COOKIE, otpCookie, readOtpCookie, SESSION_COOKIE, sessionCookie } from "@/lib/client-auth";
 
 // Customer area login (lib/client-auth.ts), in two steps: "envoyer" (the email of the order, which
@@ -19,9 +20,12 @@ export async function POST(req: NextRequest) {
   const opts = { httpOnly: true, secure: req.nextUrl.protocol === "https:", sameSite: "lax" as const, path: "/" };
   const action = String(form.get("action") ?? "");
 
-  if (action === "sortie") {
+  // Logging out also closes the library on this device (its place among the devices of the
+  // order is kept: the next login reopens it without using another one). "sortie" alone was the
+  // button of an earlier version of the page.
+  if (action === "sortie" || form.get("sortie")) {
     const res = page();
-    res.cookies.set(SESSION_COOKIE, "", { ...opts, maxAge: 0 });
+    for (const c of [SESSION_COOKIE, ACCESS_COOKIE, "6m_cli"]) res.cookies.set(c, "", { ...opts, maxAge: 0 });
     return res;
   }
   // 10 tries per hour and per connection, so emails and codes cannot be guessed.
