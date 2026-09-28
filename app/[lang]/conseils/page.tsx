@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { posts, readTime, themes, type Post, type Theme } from "@/lib/posts";
+import { livePosts, readTime, themes, type Post, type Theme } from "@/lib/posts";
 import { Anim, cardTitle } from "@/components/BlogBits";
 import { FreeSessionForm } from "@/components/HomeSections";
 import "@/app/home.css";
@@ -13,9 +13,12 @@ export const metadata: Metadata = {
   alternates: { canonical: "/fr/conseils" },
 };
 
+// Rebuilt every hour at most, so scheduled articles appear on their date (lib/posts.ts).
+export const revalidate = 3600;
+
 // Newest first; the first one is featured. The theme filters are radio buttons read by CSS
 // (blog.css), so they work without JavaScript.
-const sorted = [...posts].sort((a, b) => b.date.localeCompare(a.date));
+const newest = () => livePosts().sort((a, b) => b.date.localeCompare(a.date));
 const filters: [string, string][] = [["tous", "Tous"], ["etudes", "Études"], ...(Object.entries(themes) as [Theme, string][])];
 
 function Card({ p, big = false }: { p: Post; big?: boolean }) {
@@ -51,7 +54,7 @@ export default async function Blog({ params }: { params: Promise<{ lang: string 
           ))}
         </div>
         <div className="cards">
-          {sorted.map((p, i) => <Card key={p.slug} p={p} big={i === 0} />)}
+          {newest().map((p, i) => <Card key={p.slug} p={p} big={i === 0} />)}
         </div>
         <div className="bfree"><FreeSessionForm lang="fr" title="Passe à la pratique : ta séance gratuite" /></div>
       </div>

@@ -1,6 +1,7 @@
 import Nav from "./Nav";
 import { todos } from "@/lib/admin-todo";
 import { SITE } from "@/lib/dict";
+import { isLive, posts } from "@/lib/posts";
 
 // Home of the admin: every section in one place, and what is still waiting.
 export const dynamic = "force-dynamic";
@@ -28,6 +29,18 @@ export default function Admin() {
       <div className="card">
         <ul className="todo">
           {list.map((x) => <li key={x.t}><b>{x.t}</b> <span className="tag">{x.you ? "de ta part" : "à faire avec Claude"}</span><br /><span className="muted">{x.d}</span></li>)}
+        </ul>
+      </div>
+      <h2>Articles de conseils</h2>
+      <div className="card">
+        <p className="muted">Rythme : 2 articles par mois, calés sur la saison. Un article programmé se publie seul à sa date.</p>
+        <ul className="todo">
+          {[...posts].sort((a, b) => b.date.localeCompare(a.date)).map((p) => (
+            <li key={p.slug}>
+              <b>{new Date(p.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}</b> <span className="tag">{isLive(p) ? "publié" : "programmé"}</span><br />
+              {isLive(p) ? <a href={`/fr/conseils/${p.slug}`}>{p.title}</a> : <a href={`/admin/conseils?a=${p.slug}`}>{p.title} (aperçu)</a>}
+            </li>
+          ))}
         </ul>
       </div>
       <h2>Liens utiles</h2>

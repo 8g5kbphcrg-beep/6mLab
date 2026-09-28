@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { posts, readTime, themes, type Post } from "@/lib/posts";
+import { livePosts, readTime, themes, type Post } from "@/lib/posts";
 import { SITE } from "@/lib/dict";
 import { programs, type ProgramSlug } from "@/lib/programs";
 import { recommended } from "@/lib/season";
@@ -16,11 +16,11 @@ type P = { params: Promise<{ lang: string; slug: string }> };
 // Rebuilt every hour at most, so the suggested formula follows the calendar.
 export const revalidate = 3600;
 
-export const generateStaticParams = () => posts.map((p) => ({ lang: "fr", slug: p.slug }));
+export const generateStaticParams = () => livePosts().map((p) => ({ lang: "fr", slug: p.slug }));
 
 export async function generateMetadata({ params }: P): Promise<Metadata> {
   const { slug } = await params;
-  const post = posts.find((p) => p.slug === slug);
+  const post = livePosts().find((p) => p.slug === slug);
   if (!post) return {};
   return {
     title: `${post.title} | 6M Lab`,
@@ -38,11 +38,11 @@ const fmt = (d: string) => new Date(d).toLocaleDateString("fr-FR", { day: "numer
 const formulaFor = (p: Post): ProgramSlug => (p.theme === "reprise" ? "pre-saison" : p.theme === "saison" ? "maintien-saison" : recommended());
 
 // Two articles to read next: same theme first, then the most recent.
-const related = (p: Post) => [...posts.filter((x) => x !== p && x.theme === p.theme), ...[...posts].sort((a, b) => b.date.localeCompare(a.date)).filter((x) => x !== p && x.theme !== p.theme)].slice(0, 2);
+const related = (p: Post, posts = livePosts()) => [...posts.filter((x) => x !== p && x.theme === p.theme), ...[...posts].sort((a, b) => b.date.localeCompare(a.date)).filter((x) => x !== p && x.theme !== p.theme)].slice(0, 2);
 
 export default async function Article({ params }: P) {
   const { lang, slug } = await params;
-  const post = posts.find((p) => p.slug === slug);
+  const post = livePosts().find((p) => p.slug === slug);
   if (lang !== "fr" || !post) notFound();
   const ld = {
     "@context": "https://schema.org",
