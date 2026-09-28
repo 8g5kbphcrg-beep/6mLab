@@ -84,7 +84,7 @@ SECTIONS = [
  ("ok", "Savoir d'où viennent les visiteurs", "Instagram, TikTok, Google, liens de clubs : chaque visite et chaque vente est rattachée à sa source."),
  ("you", "Instagram et TikTok réguliers", "Les animations d'exercices, des conseils courts, des extraits de séances. 3 publications par semaine, chacune avec un lien suivi."),
  ("you", "Un calendrier de communication calé sur la saison", "Juin-juillet : pré-saison. Septembre : reprise. Décembre : trêve. Mai : fin de saison et coupure."),
- ("ok", "Parrainage", "Chaque acheteur reçoit son code à partager (email de confirmation et bibliothèque d'exercices). Le coéquipier a -15 % avec ; le parrain reçoit alors par email un code de -15 % pour son prochain programme. Expliqué dans la FAQ et les CGV, suivi dans Commandes & avis."),
+ ("ok", "Parrainage", "Encadré sur l'accueil. Chaque acheteur reçoit son code à partager (email de confirmation et bibliothèque d'exercices). Le coéquipier a -15 % avec ; le parrain reçoit alors par email un code de -15 % pour son prochain programme. Expliqué dans la FAQ et les CGV, suivi dans Commandes & avis."),
  ("you", "Partenariats", "Clubs, coachs, kinés, magasins de sport : un lien, un code promo dédié, et le suivi des ventes par partenaire."),
  ("later", "Publicité payante", "Seulement quand le site convertit bien et a des avis. Petits budgets, ciblés sur les parents et les joueurs, en période de reprise."),
 ]),

@@ -10,6 +10,7 @@ import { Anim } from "@/components/BlogBits";
 import { Dumbbell, House } from "@/components/PlaceIcons";
 import SportSlider from "@/components/SportSlider";
 import ClubBand from "@/components/ClubBand";
+import ReferralBand from "@/components/ReferralBand";
 import "@/app/home.css";
 import "@/app/portal.css";
 
@@ -155,6 +156,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       </section>
 
       <ClubBand lang={l} />
+      <ReferralBand lang={l} />
 
       <section className="band">
         <div className="sec wrap">
