@@ -20,6 +20,7 @@ export const POINTS_PER_FRIEND = 50;
 export const POINTS_FOR_REWARD = 150;
 export const VALIDATION_DAYS = 7;
 
+// Stripe coupon names are 40 characters at most.
 const coupon = async (s: Stripe, id: string, percent: number, name: string) => {
   try { await s.coupons.retrieve(id); } catch { await s.coupons.create({ id, percent_off: percent, duration: "once", name }); }
   return id;
@@ -50,7 +51,7 @@ export async function referralCode(s: Stripe, pi: string, firstName: string, kno
     const found = (await s.promotionCodes.list({ code, limit: 1 })).data[0];
     if (found?.metadata?.sponsor === pi) break;
     if (!found) {
-      const c = await coupon(s, `FILLEUL${FRIEND_PERCENT}`, FRIEND_PERCENT, `Parrainage : -${FRIEND_PERCENT} % offert par un coéquipier`);
+      const c = await coupon(s, `FILLEUL${FRIEND_PERCENT}`, FRIEND_PERCENT, `Parrainage coéquipier (-${FRIEND_PERCENT} %)`);
       await s.promotionCodes.create({ promotion: { type: "coupon", coupon: c }, code, metadata: { sponsor: pi } });
       break;
     }
