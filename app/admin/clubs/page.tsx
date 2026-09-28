@@ -39,7 +39,7 @@ export default function Clubs() {
 
       <h2>Documents</h2>
       <div className="cards">
-        {DOCS.map((d) => <a key={d.slug} className="card" href={`/admin/docs/${d.slug}`}><h3>{d.title}</h3><p>{d.what}</p></a>)}
+        {DOCS.filter((d) => d.section === "clubs").map((d) => <a key={d.slug} className="card" href={`/admin/docs/${d.slug}`}><h3>{d.title}</h3><p>{d.what}</p></a>)}
       </div>
 
       <h2>Fiche de suivi à imprimer</h2>
