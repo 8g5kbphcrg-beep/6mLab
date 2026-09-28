@@ -166,8 +166,9 @@ function AccessCard({ o, lang, confirm, next }: { o: ClientOrder; lang: Lang; co
   );
 }
 
-// Login in two steps, the same for everyone: the order reference, then the 6-digit code sent to
-// the email of that order (also when Apple hid the address at payment: it forwards the email).
+// Login. An individual program: the order reference, then the 6-digit code sent to the email of
+// that order (also when Apple hid the address at payment: it forwards the email). A club: the
+// team's code, which opens the club library (lib/club-access.ts).
 function Login({ lang, q, next }: { lang: Lang; q: Q; next: string }) {
   const fr = lang === "fr", code = q.etape === "code";
   const here = `/${lang}/espace-client${next ? `?next=${encodeURIComponent(next)}` : ""}`;
@@ -181,41 +182,54 @@ function Login({ lang, q, next }: { lang: Lang; q: Q; next: string }) {
     <div className="exo-back">
       <div className="exo-card acc">
         <p className="acc-k">{fr ? "Espace client" : "Customer area"}</p>
-        <h1>{code ? (fr ? "Entre ton code" : "Enter your code") : (fr ? "Connecte-toi à ton espace client" : "Log in to your customer area")}</h1>
+        <h1>{code ? (fr ? "Entre ton code" : "Enter your code") : (fr ? "Connecte-toi à ton espace" : "Log in to your area")}</h1>
         {q.erreur && errors[q.erreur] && <p className="acc-err" role="alert">{errors[q.erreur][fr ? 0 : 1]}</p>}
         {next && !code && <p>{fr ? "Les animations sont réservées aux clients : connecte-toi pour ouvrir cet exercice." : "The animations are for customers: log in to open this exercise."}</p>}
-        <p>{code
-          ? (fr ? "Si cette référence correspond à une commande, un code à 6 chiffres vient d'être envoyé à l'adresse email de la commande (pense aux indésirables). Il est valable 10 minutes." : "If this reference matches an order, a 6-digit code has just been sent to the email of the order (check your spam). It is valid for 10 minutes.")
-          : (fr ? "Entre la référence de ta commande : elle est dans ton email de confirmation, ligne « Référence » (12 caractères), et en bas de ton PDF. Tu recevras un code à 6 chiffres par email pour entrer." : "Enter your order reference: it is in your confirmation email, on the “Reference” line (12 characters), and at the foot of your PDF. You will receive a 6-digit code by email to enter.")}</p>
-        <form method="post" action="/api/espace" className="acc-form">
-          <input type="hidden" name="lang" value={lang} />
-          {next && <input type="hidden" name="next" value={next} />}
-          {code ? <>
-            <label className="sr" htmlFor="cs-code">{fr ? "Code à 6 chiffres" : "6-digit code"}</label>
-            <input id="cs-code" name="code" required inputMode="numeric" autoComplete="one-time-code" pattern="[0-9 ]{6,7}" maxLength={7} placeholder="123456" className="cs-otp" />
-            <button className="btn" name="action" value="verifier">{fr ? "Entrer" : "Enter"}</button>
-          </> : <>
-            <label className="sr" htmlFor="cs-ref">{fr ? "Référence de commande" : "Order reference"}</label>
-            <input id="cs-ref" name="ref" required autoComplete="off" autoCapitalize="none" spellCheck={false} placeholder={fr ? "Ex. : a1B2c3D4e5F6" : "E.g. a1B2c3D4e5F6"} maxLength={40} />
-            <button className="btn" name="action" value="envoyer">{fr ? "Recevoir mon code" : "Get my code"}</button>
-          </>}
-        </form>
-        {code && <>
-          {q.renvoye && !q.erreur && <p className="cs-sent" role="status">{fr ? "Nouveau code envoyé : utilise celui du dernier email reçu." : "New code sent: use the one from the latest email."}</p>}
-          <form method="post" action="/api/espace" className="cs-resend">
+        {/* Two ways in: an individual program (order reference, then a code by email), or a club (the team's code). */}
+        <section className="cs-way" aria-labelledby="cs-way-1">
+          {!code && <h2 id="cs-way-1"><span>1</span>{fr ? "J'ai acheté un programme" : "I bought a program"}</h2>}
+          <p>{code
+            ? (fr ? "Si cette référence correspond à une commande, un code à 6 chiffres vient d'être envoyé à l'adresse email de la commande (pense aux indésirables). Il est valable 10 minutes." : "If this reference matches an order, a 6-digit code has just been sent to the email of the order (check your spam). It is valid for 10 minutes.")
+            : (fr ? "Entre la référence de ta commande (dans ton email de confirmation, ligne « Référence », et en bas de ton PDF). Tu reçois un code à 6 chiffres par email pour entrer." : "Enter your order reference (in your confirmation email, on the “Reference” line, and at the foot of your PDF). You get a 6-digit code by email to enter.")}</p>
+          <form method="post" action="/api/espace" className="acc-form">
             <input type="hidden" name="lang" value={lang} />
             {next && <input type="hidden" name="next" value={next} />}
-            <span>{fr ? "Pas reçu ? Regarde dans les indésirables, puis" : "Nothing received? Check your spam, then"}</span>
-            <button name="action" value="renvoyer">{fr ? "Renvoyer le code" : "Resend the code"}</button>
+            {code ? <>
+              <label className="sr" htmlFor="cs-code">{fr ? "Code à 6 chiffres" : "6-digit code"}</label>
+              <input id="cs-code" name="code" required inputMode="numeric" autoComplete="one-time-code" pattern="[0-9 ]{6,7}" maxLength={7} placeholder="123456" className="cs-otp" />
+              <button className="btn" name="action" value="verifier">{fr ? "Entrer" : "Enter"}</button>
+            </> : <>
+              <label className="sr" htmlFor="cs-ref">{fr ? "Référence de commande" : "Order reference"}</label>
+              <input id="cs-ref" name="ref" required autoComplete="off" autoCapitalize="none" spellCheck={false} placeholder={fr ? "Ex. : a1B2c3D4e5F6" : "E.g. a1B2c3D4e5F6"} maxLength={40} />
+              <button className="btn" name="action" value="envoyer">{fr ? "Recevoir mon code" : "Get my code"}</button>
+            </>}
           </form>
-          <p className="acc-cta"><a href={here}>{fr ? "Changer de référence" : "Change reference"}</a></p>
-        </>}
-        <ul className="acc-rules">
-          <li>{fr ? "Tu y retrouves tes commandes, l'accès à ta bibliothèque d'exercices, ton code de parrainage et tes points." : "You will find your orders, the access to your exercise library, your referral code and your points."}</li>
-          <li>{fr ? "Le code est envoyé à l'adresse email de ta commande. Si Apple l'a masquée au paiement, il arrive quand même dans ta boîte habituelle." : "The code is sent to the email of your order. If Apple hid it at payment, it still arrives in your usual inbox."}</li>
-          <li>{fr ? "Tout est enregistré : tu retrouves tout en te reconnectant, sur cet appareil ou sur un autre. Pour ta sécurité, tu restes connecté le temps de ta visite (1 heure au plus)." : "Everything is saved: you find it all again when you log back in, on this device or another one. For your security, you stay logged in for your visit (1 hour at most)."}</li>
-        </ul>
-        <p className="acc-cta">{fr ? "Tu es joueur ou coach d'un club ?" : "Club player or coach?"} <a href={`/${lang}/clubs/bibliotheque`}>{fr ? "Entre le code de ton équipe" : "Enter your team's code"}</a></p>
+          {code && <>
+            {q.renvoye && !q.erreur && <p className="cs-sent" role="status">{fr ? "Nouveau code envoyé : utilise celui du dernier email reçu." : "New code sent: use the one from the latest email."}</p>}
+            <form method="post" action="/api/espace" className="cs-resend">
+              <input type="hidden" name="lang" value={lang} />
+              {next && <input type="hidden" name="next" value={next} />}
+              <span>{fr ? "Pas reçu ? Regarde dans les indésirables, puis" : "Nothing received? Check your spam, then"}</span>
+              <button name="action" value="renvoyer">{fr ? "Renvoyer le code" : "Resend the code"}</button>
+            </form>
+            <p className="acc-cta"><a href={here}>{fr ? "Changer de référence" : "Change reference"}</a></p>
+          </>}
+          <ul className="acc-rules">
+            <li>{fr ? "Tu y retrouves tes commandes, ta bibliothèque d'exercices, ton code de parrainage et tes points." : "You will find your orders, your exercise library, your referral code and your points."}</li>
+            <li>{fr ? "Le code arrive à l'adresse email de ta commande, même si Apple l'a masquée au paiement." : "The code arrives at the email of your order, even if Apple hid it at payment."}</li>
+            <li>{fr ? "Tout est enregistré : tu retrouves tout en te reconnectant, sur n'importe quel appareil. Tu restes connecté le temps de ta visite (1 heure au plus)." : "Everything is saved: you find it all again when you log back in, on any device. You stay logged in for your visit (1 hour at most)."}</li>
+          </ul>
+        </section>
+        {!code && <section className="cs-way cs-way-club" aria-labelledby="cs-way-2">
+          <h2 id="cs-way-2"><span>2</span>{fr ? "Je m'entraîne avec mon club" : "I train with my club"}</h2>
+          <p>{fr ? "Joueurs et staff : entre le code de ton équipe, donné par ton coach et écrit dans vos documents. Il ouvre la bibliothèque clubs : situations animées, ateliers des gardiens, tests et exercices de votre programme." : "Players and staff: enter your team's code, given by your coach and written in your documents. It opens the club library: animated drills, goalkeeper drills, tests and the exercises of your program."}</p>
+          <form method="post" action="/api/acces-club" className="acc-form">
+            <input type="hidden" name="next" value={`/${lang}/clubs/bibliotheque`} />
+            <label className="sr" htmlFor="cs-club">{fr ? "Code de l'équipe" : "Team code"}</label>
+            <input id="cs-club" name="code" required autoComplete="off" autoCapitalize="characters" spellCheck={false} placeholder="CLUB-XXXX-XXXX" maxLength={20} />
+            <button className="btn" type="submit">{fr ? "Ouvrir la bibliothèque clubs" : "Open the club library"}</button>
+          </form>
+        </section>}
         <p className="acc-cta">{fr ? "Pas encore client ?" : "Not a customer yet?"} <a href={`/${lang}/programmes`}>{fr ? "Découvre les programmes" : "See the programs"}</a> · <a href={`/${lang}/exercices/seance-gratuite`}>{fr ? "Animations de la séance gratuite" : "Free session animations"}</a></p>
       </div>
     </div>
