@@ -23,3 +23,6 @@
 .nf-more{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem}.nf-more a{color:var(--ink)}
 /* General FAQ (app/[lang]/faq). */
 .faqpg section{margin-top:2.4rem}
+.contactquick{margin-top:1.6rem;border:2px dashed var(--line);border-radius:var(--r);padding:1.1rem 1.3rem}
+.contactquick-t{margin:0 0 .5rem;font-weight:700;color:var(--ink)}
+.contactquick ul{list-style:none;margin:0;padding:0;display:grid;gap:.45rem}.contactquick a{color:var(--At);font-weight:600;text-decoration:none}.contactquick a:hover{text-decoration:underline}

@@ -31,3 +31,6 @@
 @media(max-width:600px){.adm dl.vars{grid-template-columns:1fr}.adm dl.vars dd{margin-bottom:6px}}
 .adm .kpis>*,.adm .grid>*,.adm .cards>*,.adm .bar>*,.adm .form>*,.adm dl.vars>*{min-width:0;overflow-wrap:anywhere}
 .adm .alerts{border-color:#E0A3A3;background:#FFF4F2}.adm .alerts h2{margin:0 0 4px;color:#9E2A1A;font-size:18px}
+.adm .reply pre{white-space:pre-wrap;font:inherit;font-size:14px;line-height:1.5;background:#FAF6F8;border-radius:10px;padding:10px 12px;margin:6px 0 0}
+.adm .reply summary{cursor:pointer;font-weight:700;display:flex;align-items:center;gap:8px;margin-top:8px}
+.adm .reply h3{margin:0 0 4px}
