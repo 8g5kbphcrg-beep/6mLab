@@ -14,6 +14,7 @@ const CARDS = [
   ["/admin/avis", "Commandes & avis", "Chaque commande : accès aux animations, avis des clients, relances. Export des avis."],
   ["/admin/programmes", "Programmes", "Retrouver les PDF d'une commande (déjà personnalisés) pour un envoi à la main, la séance gratuite, et toutes les animations."],
   ["/admin/clubs", "Clubs", "Répondre à une demande de devis : marche à suivre, Méthode Clubs, exemple U18, Dossier Gardiens, fiche de suivi à imprimer."],
+  ["/admin/reponses", "Réponses types", "Les réponses prêtes à copier pour les questions fréquentes (code, programme, appareils, remboursement…), en français et en anglais."],
   ["/admin/memo", "Aide-mémoire", "Ce que le site fait tout seul, les réglages Vercel et à quoi ils servent, la mise en ligne."],
 ] as const;
 

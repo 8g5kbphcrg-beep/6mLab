@@ -5,6 +5,7 @@ const SECTIONS = [
   ["avis", "/admin/avis", "Commandes & avis"],
   ["programmes", "/admin/programmes", "Programmes"],
   ["clubs", "/admin/clubs", "Clubs"],
+  ["reponses", "/admin/reponses", "Réponses types"],
   ["memo", "/admin/memo", "Aide-mémoire"],
 ] as const;
 export type Section = (typeof SECTIONS)[number][0];

@@ -92,7 +92,7 @@ SECTIONS = [
  ("ok", "Accès aux animations et PDF gardé à vie", "Le client garde son PDF ; les animations restent accessibles pendant la durée prévue."),
  ("ok", "Questionnaire de forme et avis", "Le client suit sa forme, laisse un avis et reçoit un code de réduction."),
  ("ok", "Proposer la suite", "À 2 semaines de la fin d'un programme, l'espace client affiche « Et après ? », repris dans l'email de fin de programme et dans celui de fin d'accès : Maintien après la Pré-saison, nouveau cycle de Maintien en cours de saison, Prévention puis Pré-saison en fin de saison. Le lien ouvre le programme avec les objectifs déjà choisis."),
- ("todo", "Répondre vite", "Un délai de réponse annoncé et tenu (par exemple 48 h), et une réponse type pour les questions fréquentes."),
+ ("ok", "Répondre vite", "Réponse sous 48 h annoncée (Contact, FAQ, emails). La page Contact oriente d'abord vers l'espace client, le questionnaire et la FAQ, et l'email s'ouvre pré-rempli avec la référence de commande. Dans l'admin, 12 réponses types à copier (FR et EN) et 3 règles pour tenir le délai."),
 ]),
 ("clubs", "Offre Clubs", "Un autre public, qui décide autrement : il faut rassurer et faciliter.", [
  ("ok", "Une page dédiée", "Bénéfices, séance type, ce qu'il faut savoir, exemple d'exercice animé."),
@@ -117,7 +117,7 @@ NEXT = [
  ("todo", "Mise en ligne : domaine, emails du domaine, ouverture à Google, Search Console, Stripe en mode réel", "seo"),
  ("part", "Rendre le site plus dynamique, étape par étape", "design"),
  ("you", "Lancer Instagram et TikTok avec les animations d'exercices", "marketing"),
- ("todo", "Répondre vite : délai annoncé et réponses types", "fidelisation"),
+ ("you", "Tester le parcours complet en mode test Stripe (commande, code, parrainage)", "confiance"),
 ]
 from collections import Counter
 MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre']
