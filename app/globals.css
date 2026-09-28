@@ -91,7 +91,7 @@ p{max-width:62ch;margin:0 0 1rem}a{color:inherit}:focus-visible{outline:3px soli
 .fcopy{max-width:1120px;margin:2.5rem auto 0!important;padding-top:1.5rem;border-top:1px solid var(--line);font-size:.85rem}
 
 /* Scroll reveal + mobile sticky CTA */
-.rv{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1);transition-delay:calc(var(--d,0)*90ms)}.rv.in{opacity:1;transform:none}
+.rv.rv{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1);transition-delay:calc(var(--d,0)*90ms)}.rv.rv.in{opacity:1;transform:none}
 .cta{position:fixed;left:0;right:0;bottom:0;z-index:25;padding:.8rem 1.25rem calc(.8rem + env(safe-area-inset-bottom,0px));background:var(--night);transform:translateY(110%);transition:transform .45s cubic-bezier(.2,.7,.2,1)}
 .cta.on{transform:none}.cta .btn{display:flex;width:100%}
 
@@ -104,6 +104,39 @@ p{max-width:62ch;margin:0 0 1rem}a{color:inherit}:focus-visible{outline:3px soli
   .cta{display:none}
 }
 @media(min-width:1120px){.navd{display:flex;margin-left:auto}.menu{display:none}.theme{margin-left:0}}
+/* Motion: cards lift under the pointer, buttons give way when pressed (reduced-motion turns the
+   transitions off, globals rule above). */
+@media(hover:hover){
+  .offer,.uni-c,.why li,.nf-card,.clubs-why li,.rlist li,.opack{transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s,border-color .25s}
+  .offer:hover,.uni-c:hover,.why li:hover,.nf-card:hover,.clubs-why li:hover,.rlist li:hover,.opack:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(16,10,36,.12)}
+  .pc:hover{transform:translateY(-4px)}
+}
+.btn:active{transform:translateY(0) scale(.97)}
+/* Ticker under the home hero: the goals scroll by, pausing under the pointer. */
+.ticker{background:var(--night);color:#F3F1FB;overflow:hidden;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
+.ticker-t{display:flex;width:max-content;animation:tick 38s linear infinite}
+.ticker:hover .ticker-t{animation-play-state:paused}
+.ticker ul{display:flex;list-style:none;margin:0;padding:.85rem 0;gap:0}
+.ticker li{display:flex;align-items:center;font:400 1.35rem/1 var(--font-display),Impact,sans-serif;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;padding:0 1.1rem}
+.ticker li::after{content:"";width:.45rem;height:.45rem;border-radius:50%;background:var(--cta);margin-left:2.2rem}
+.ticker li:nth-child(even)::after{background:var(--B)}
+@keyframes tick{to{transform:translateX(-50%)}}
+/* Top bar: tighter with a shadow once the page scrolls (components/Enhance.tsx). */
+.bar{transition:padding .25s ease,box-shadow .25s ease}
+.bar.scrolled{padding-top:.4rem;padding-bottom:.4rem;box-shadow:0 6px 20px rgba(16,10,36,.28)}
+/* FAQ answers slide open. */
+.faq details[open]>:not(summary){animation:faqOpen .3s cubic-bezier(.2,.7,.2,1)}
+@keyframes faqOpen{from{opacity:0;transform:translateY(-6px)}}
+/* Page changes: the page fades in instead of flashing (browsers that support cross-page view
+   transitions; others simply load the page). The top bar stays put. */
+@media(prefers-reduced-motion:no-preference){
+  @view-transition{navigation:auto}
+  .bar{view-transition-name:topbar}
+  ::view-transition-old(root){animation:vtOut .18s ease both}
+  ::view-transition-new(root){animation:vtIn .32s cubic-bezier(.2,.7,.2,1) both}
+}
+@keyframes vtOut{to{opacity:0}}
+@keyframes vtIn{from{opacity:0;transform:translateY(10px)}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}.rise,.rv{opacity:1;transform:none}}
 .offer .ptag{align-self:flex-start}
 .shead.page h1{font-size:clamp(2.4rem,6vw,3.6rem)}

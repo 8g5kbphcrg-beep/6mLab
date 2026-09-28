@@ -1,3 +1,4 @@
+import Ticker from "@/components/Ticker";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { dict, type Lang } from "@/lib/dict";
@@ -85,6 +86,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           </div>
         </div>
       </section>
+
+      <Ticker lang={l} />
 
       <section id="formules" className="sec wrap">
         <header className="shead">
