@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Reviews from "@/components/Reviews";
 import Link from "next/link";
+import ProductVideo from "@/components/ProductVideo";
 import { notFound, redirect } from "next/navigation";
 import { dict, type Lang } from "@/lib/dict";
 import { programs, programSlugs, type ProgramSlug } from "@/lib/programs";
@@ -55,6 +56,11 @@ export default async function Programme({ params, searchParams }: P) {
           <p className="pquiz">{fr ? "Tu hésites sur tes objectifs ?" : "Not sure about your goals?"} <Link href={`/${lang}/questionnaire`}>{fr ? "Fais le questionnaire" : "Take the questionnaire"}</Link></p>
         </aside>
         <div className="pmain">
+          {/* French only: the video shows the French PDF pages. */}
+          {fr && <section>
+            <h2>Le programme en 30 secondes</h2>
+            <ProductVideo />
+          </section>}
           <section>
             <h2>{fr ? "Le déroulé" : "The breakdown"}</h2>
             {p.phases.map((ph) => (

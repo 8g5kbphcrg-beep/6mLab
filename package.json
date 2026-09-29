@@ -6,7 +6,8 @@
     "build": "next build",
     "start": "next start",
     "programmes": "node scripts/programmes.mjs",
-    "clubs-pdf": "node scripts/clubs-pdf.mjs"
+    "clubs-pdf": "node scripts/clubs-pdf.mjs",
+    "demo-video": "node scripts/demo-video.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

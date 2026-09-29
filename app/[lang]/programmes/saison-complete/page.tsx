@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ProductVideo from "@/components/ProductVideo";
 import { notFound } from "next/navigation";
 import Reviews from "@/components/Reviews";
 import BuyForm from "@/components/BuyForm";
@@ -100,6 +101,11 @@ export default async function SaisonComplete({ params, searchParams }: P) {
           <p className="pquiz">{t.quiz[0]} <Link href={`/${l}/questionnaire`}>{t.quiz[1]}</Link></p>
         </aside>
         <div className="pmain">
+          {/* French only: the video shows the French PDF pages. */}
+          {l === "fr" && <section>
+            <h2>Le programme en 30 secondes</h2>
+            <ProductVideo />
+          </section>}
           <section>
             <h2>{t.breakdown}</h2>
             {t.phases.map((ph, i) => (

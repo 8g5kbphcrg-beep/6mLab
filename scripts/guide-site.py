@@ -25,7 +25,7 @@ SECTIONS = [
  ("ok", "Pensé d'abord pour le téléphone", "La plupart des joueurs arrivent depuis Instagram ou TikTok, sur mobile. Toutes les pages sont vérifiées à la largeur d'un téléphone."),
  ("ok", "Un bouton principal par écran", "Chaque section mène vers une seule action évidente : questionnaire, programme ou devis."),
  ("part", "Un site vivant et dynamique (objectif)", "Donner du mouvement sans refaire le site. Fait : blocs qui apparaissent en glissant au défilement, cartes qui se soulèvent au survol, boutons qui réagissent au toucher, bande défilante des objectifs sous l'accueil, animations d'exercices qui démarrent quand on les voit (et se mettent en pause hors écran), fondu entre les pages, bandeau du haut qui se resserre au défilement, réponses de la FAQ qui s'ouvrent en douceur. À suivre : chiffres qui s'animent (joueurs accompagnés, avis) quand il y en aura, courtes vidéos. Toujours désactivé si le téléphone demande moins d'animations."),
- ("ok", "Montrer le produit", "PDF qui se feuillette, animations d'exercices, aperçu de la séance gratuite."),
+ ("ok", "Montrer le produit", "Vidéo de 30 s en français sur l'accueil et les pages programme : les pages du PDF, l'œil d'un exercice, les animations (lecture muette, seulement quand elle est à l'écran, bouton pause). Au format vertical, elle sert aussi pour Instagram et TikTok (public/video/demo.mp4, refaite avec npm run demo-video). En anglais : le PDF qui se feuillette. Plus les animations d'exercices et l'aperçu de la séance gratuite."),
  ("you", "De vraies photos", "Des photos de toi sur le terrain et de joueurs à l'entraînement, avec leur accord. C'est ce qui manque le plus pour que le site paraisse humain et crédible."),
  ("ok", "Accessibilité", "Audit complet (axe, normes WCAG 2.1 AA) sur 25 pages, en clair et en sombre, sur téléphone et ordinateur : zéro erreur. Navigation au clavier vérifiée, repère visible sur chaque élément, animations coupées si le téléphone le demande. À refaire après chaque grosse modification."),
 ]),
@@ -122,7 +122,6 @@ NEXT = [
 ]
 # "Fait" points that can still be improved: title -> what to do next (shown as « À améliorer »).
 IMPROVE = {
- "Montrer le produit": "Ajouter une courte vidéo (30 s) d'une séance ou d'un feuilletage du PDF sur l'accueil et les pages programme.",
  "Accessibilité": "Refaire l'audit sur les pages ajoutées depuis : espace client, bibliothèque clubs, Contact, codes clubs, admin Réponses types.",
  "Des articles de conseils réguliers": "Les articles s'arrêtent en décembre 2026 : écrire ceux de janvier à mars (reprise après la trêve, phase retour).",
  "Données structurées": "Ajouter la note moyenne des avis (étoiles dans Google) dès les premiers avis publiés.",
