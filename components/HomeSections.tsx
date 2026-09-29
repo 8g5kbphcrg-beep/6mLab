@@ -2,6 +2,7 @@ import type { Lang } from "@/lib/dict";
 import { animatedFigure, variants } from "@/programmes/source/figures.mjs";
 import { exercices } from "@/programmes/source/exercices.mjs";
 import { MARK_VIEWBOX, markSvg } from "@/lib/mark.mjs";
+import ProductVideo from "@/components/ProductVideo";
 
 // Home page sections: what the customer receives, who is behind 6M Lab, the free session and a
 // word for parents.
@@ -18,9 +19,11 @@ export function Product({ lang }: { lang: Lang }) {
         <p>{fr ? "Un vrai programme, pas une liste d'exercices." : "A real program, not a list of exercises."}</p>
       </header>
       <div className="prod">
-        {/* The program as the customer gets it: its real pages, turned one after the other, then the
-            eye of an exercise opening its animation (CSS only, 16 s loop). */}
-        <figure className="flip">
+        {/* The program as the customer gets it. In French, the 30-second video (its pages, the eye of
+            an exercise, the animations; scripts/demo-video.mjs). In English, whose PDF pages differ:
+            the real pages turned one after the other, then the eye opening an animation (CSS only,
+            16 s loop). */}
+        {fr ? <ProductVideo caption="Le programme en 30 secondes" /> : <figure className="flip">
           <div className="flip-dev">
             <div className="flip-scr">
               {[["f1-couverture", fr ? "Couverture du programme Pré-saison" : "Pre-season program cover"],
@@ -45,7 +48,7 @@ export function Product({ lang }: { lang: Lang }) {
               <li className="t3">{fr ? "La fiche de chaque exercice : touche l'œil, il s'anime" : "A sheet for every exercise: tap the eye, it comes to life"}</li>
             </ol>
           </figcaption>
-        </figure>
+        </figure>}
         <div>
           <p className="prod-lab">{fr ? "Chaque exercice est animé" : "Every exercise is animated"}</p>
           <div className="prod-anims">

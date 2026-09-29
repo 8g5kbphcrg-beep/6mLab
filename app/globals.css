@@ -207,3 +207,10 @@ html.splash-seen .splash{display:none}html.splash-out .splash{opacity:0;pointer-
 .backb{flex:none;width:2.25rem;height:2.25rem;border-radius:50%;display:grid;place-items:center;border:1.5px solid rgba(255,255,255,.4);color:#fff;transition:background .2s,border-color .2s}
 .backb:hover,.backb:focus-visible{background:rgba(255,255,255,.12);border-color:#fff}
 .backb svg{width:1.2rem;height:1.2rem;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* Product video (components/ProductVideo.tsx): portrait, in a phone frame, with a play/pause button. */
+.pvid{margin:0;display:grid;gap:.7rem;justify-items:center}
+.pvid-box{position:relative;width:min(100%,300px);padding:9px;border-radius:28px;background:#16123F;box-shadow:0 18px 40px rgba(16,10,36,.28)}
+.pvid video{display:block;width:100%;height:auto;aspect-ratio:9/16;border-radius:19px;background:#16123F}
+.pvid-btn{position:absolute;right:18px;bottom:18px;width:40px;height:40px;border-radius:50%;border:0;display:grid;place-items:center;background:rgba(16,10,36,.7);color:#fff;cursor:pointer}
+.pvid figcaption{color:var(--muted);font-size:.92rem}
