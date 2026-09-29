@@ -85,7 +85,7 @@ export default async function Clubs({ searchParams }: { searchParams: Promise<{ 
           <button type="submit">Créer le code</button>
         </form>
         {codes.length > 0 && <div className="tw"><table>
-          <thead><tr><th>Code</th><th>Club, équipe</th><th>Fin</th><th>Appareils</th><th></th></tr></thead>
+          <thead><tr><th>Code</th><th>Club, équipe</th><th>Fin</th><th>Appareils</th><th><span className="sr">Actions</span></th></tr></thead>
           <tbody>{codes.map((c) => (
             <tr key={c.code}>
               <td><b>{c.code}</b></td><td>{c.club}{c.team ? `, ${c.team}` : ""}</td>
