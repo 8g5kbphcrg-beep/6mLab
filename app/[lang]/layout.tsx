@@ -44,18 +44,22 @@ export default async function RootLayout({ children, params }: { children: React
   const d = dict[lang as Lang];
   const other = lang === "fr" ? "en" : "fr";
   const fr = lang === "fr";
+  // Menu: the 4 main entries only. The home page is the logo; About, FAQ and Contact are in the
+  // footer (and at the bottom of the phone menu).
   const links: [string, string][] = [
-    // Home: the page where one chooses between sport-specific prep and fitness & well-being.
-    [`/${lang}`, fr ? "Accueil" : "Home"],
-    ...(fr ? [["/fr/conseils", "Conseils"] as [string, string]] : []),
-    [fr ? "/fr/a-propos" : "/en/about", fr ? "À propos" : "About"],
+    // The programs compared (app/[lang]/programmes).
+    [`/${lang}/programmes`, fr ? "Programmes" : "Programs"],
     // Clubs and coaches: whole teams, on quote (app/[lang]/clubs).
     [`/${lang}/clubs`, "Clubs"],
+    ...(fr ? [["/fr/conseils", "Conseils"] as [string, string]] : []),
+    // Customer area: the exercise animations, opened with the order reference (lib/access.ts).
+    [`/${lang}/espace-client`, fr ? "Espace client" : "Customer area"],
+  ];
+  const more: [string, string][] = [
+    [fr ? "/fr/a-propos" : "/en/about", fr ? "À propos" : "About"],
     // General FAQ (app/[lang]/faq).
     [`/${lang}/faq`, "FAQ"],
     [`/${lang}/contact`, "Contact"],
-    // Customer area: the exercise animations, opened with the order reference (lib/access.ts).
-    [`/${lang}/espace-client`, fr ? "Espace client" : "Customer area"],
   ];
   return (
     <html lang={lang} className={`${display.variable} ${text.variable} ${slogan.variable}`} suppressHydrationWarning>
@@ -85,7 +89,10 @@ export default async function RootLayout({ children, params }: { children: React
             <summary aria-label="Menu"><span /></summary>
             <nav aria-label="Navigation">
               {links.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
-              <a href={`/${other}`} hrefLang={other} lang={other}>{fr ? "English" : "Français"}</a>
+              <div className="menu-more">
+                {more.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
+                <a href={`/${other}`} hrefLang={other} lang={other}>{fr ? "English" : "Français"}</a>
+              </div>
             </nav>
           </details>
         </header>
@@ -98,7 +105,7 @@ export default async function RootLayout({ children, params }: { children: React
             </div>
             <nav aria-label={fr ? "Site" : "Site"}>
               <p className="flab">{fr ? "Site" : "Site"}</p>
-              {[...links, [`/${lang}/clubs/bibliotheque`, fr ? "Bibliothèque clubs" : "Club library"]].map(([href, label]) => <a key={href} href={href}>{label}</a>)}
+              {[[`/${lang}`, fr ? "Accueil" : "Home"], ...links, [`/${lang}/clubs/bibliotheque`, fr ? "Bibliothèque clubs" : "Club library"], ...more].map(([href, label]) => <a key={href} href={href}>{label}</a>)}
             </nav>
             <nav aria-label={fr ? "Informations légales" : "Legal"}>
               <p className="flab">{fr ? "Informations légales" : "Legal"}</p>
