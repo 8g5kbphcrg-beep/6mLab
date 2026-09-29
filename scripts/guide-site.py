@@ -13,7 +13,7 @@ SECTIONS = [
  ("you", "Ce qui te rend unique, dit en une phrase", "Ton expérience de joueur, de coach, de préparateur, tes diplômes. À écrire en une phrase réutilisée partout : accueil, À propos, réseaux, emails."),
 ]),
 ("structure", "Structure et navigation", "Chaque visiteur doit trouver son chemin sans réfléchir.", [
- ("ok", "Un menu court", "7 entrées : Accueil, Conseils, À propos, Clubs, FAQ, Contact, Espace client. Le reste est dans le pied de page."),
+ ("ok", "Un menu court", "4 entrées : Programmes, Clubs, Conseils, Espace client, plus le bouton « Choisir mon programme ». Le logo ramène à l'accueil ; À propos, FAQ et Contact sont dans le pied de page et en bas du menu du téléphone."),
  ("ok", "Un parcours d'achat en peu de clics", "Accueil, puis questionnaire ou programme, puis paiement. Le questionnaire oriente vers le bon programme."),
  ("ok", "Un pied de page complet", "Mentions légales, CGV, confidentialité, contact, changement de langue."),
  ("ok", "Une recherche dans la bibliothèque d'exercices", "Recherche et familles d'exercices (dont Gardiens de but)."),
@@ -122,7 +122,6 @@ NEXT = [
 ]
 # "Fait" points that can still be improved: title -> what to do next (shown as « À améliorer »).
 IMPROVE = {
- "Un menu court": "Le menu est passé à 7 entrées : garder Programmes, Clubs, Conseils et Espace client en haut, et descendre FAQ, Contact et À propos dans le pied de page.",
  "Montrer le produit": "Ajouter une courte vidéo (30 s) d'une séance ou d'un feuilletage du PDF sur l'accueil et les pages programme.",
  "Accessibilité": "Refaire l'audit sur les pages ajoutées depuis : espace client, bibliothèque clubs, Contact, codes clubs, admin Réponses types.",
  "Des articles de conseils réguliers": "Les articles s'arrêtent en décembre 2026 : écrire ceux de janvier à mars (reprise après la trêve, phase retour).",

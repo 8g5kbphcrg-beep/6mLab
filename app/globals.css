@@ -31,6 +31,7 @@ p{max-width:62ch;margin:0 0 1rem}a{color:inherit}:focus-visible{outline:3px soli
 .menu[open] summary span{background:transparent}.menu[open] summary span::before{transform:translateY(7px) rotate(45deg)}.menu[open] summary span::after{transform:translateY(-7px) rotate(-45deg)}
 .menu nav{position:absolute;left:0;right:0;top:100%;background:var(--night);padding:.5rem 1.25rem 1.25rem;display:grid;border-top:1px solid #2A2347}
 .menu nav a{padding:.85rem 0;text-decoration:none;font-size:1.1rem;border-bottom:1px solid #2A2347}.menu nav a:last-child{border:0;color:#CFC8EE}
+.menu-more{display:flex;flex-wrap:wrap;gap:0 1.4rem;padding-top:.4rem}.menu nav .menu-more a{border:0;font-size:.95rem;color:#CFC8EE;padding:.6rem 0}
 
 /* Section header */
 .shead{margin-bottom:2rem}.shead p{color:var(--muted);font-size:1.1rem;margin:0}.shead h2,.shead h1{margin-bottom:.5rem}
@@ -105,7 +106,7 @@ p{max-width:62ch;margin:0 0 1rem}a{color:inherit}:focus-visible{outline:3px soli
   .fwrap{grid-template-columns:2fr 1fr 1fr}.foot{padding-bottom:3rem}
   .cta{display:none}
 }
-@media(min-width:1120px){.navd{display:flex;margin-left:auto}.menu{display:none}.theme{margin-left:0}}
+@media(min-width:960px){.navd{display:flex;margin-left:auto}.menu{display:none}.theme{margin-left:0}}
 /* Motion: cards lift under the pointer, buttons give way when pressed (reduced-motion turns the
    transitions off, globals rule above). */
 @media(hover:hover){
@@ -167,7 +168,7 @@ p{max-width:62ch;margin:0 0 1rem}a{color:inherit}:focus-visible{outline:3px soli
 .sugg-or::before,.sugg-or::after{content:"";flex:1;height:1px;background:var(--line)}
 
 /* Theme button (header) */
-.theme{position:relative;margin-left:auto}@media(min-width:1120px){.theme{margin-left:0}}.theme summary{list-style:none;cursor:pointer;width:40px;height:40px;display:grid;place-items:center;border-radius:10px;color:#fff}.theme summary::-webkit-details-marker{display:none}
+.theme{position:relative;margin-left:auto}@media(min-width:960px){.theme{margin-left:0}}.theme summary{list-style:none;cursor:pointer;width:40px;height:40px;display:grid;place-items:center;border-radius:10px;color:#fff}.theme summary::-webkit-details-marker{display:none}
 .theme summary svg{width:22px;height:22px}.theme summary:hover{background:rgba(255,255,255,.08)}
 .theme-m{position:absolute;right:0;top:calc(100% + 8px);min-width:15rem;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:.5rem;box-shadow:0 12px 32px rgba(16,10,36,.25);display:grid;gap:.2rem;z-index:30}
 .theme-m p{margin:.2rem .6rem .3rem;font-size:.8rem;font-weight:600;color:var(--muted)}
