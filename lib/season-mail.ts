@@ -45,14 +45,14 @@ export const CAMPAIGNS: Campaign[] = [
     fr: { s: "La trêve : repos, mais pas trop", c: "Voir la 2e partie de saison", p: [
       "Salut,",
       "La trêve arrive. Une semaine de vrai repos fait du bien. Au-delà, 2 à 3 semaines sans rien, et la reprise de janvier fait mal : jambes lourdes, souffle court, et plus de risques de blessure.",
-      "Le bon compromis : <strong>2 séances courtes par semaine</strong> pendant la trêve, sans matériel, pour garder ta force et tes appuis.",
+      "Le bon compromis sur 2 semaines : <strong>la 1re semaine en vrai repos, la 2e en travail</strong>, avec 3 séances courtes sans matériel, pour garder ta force et tes appuis et arriver prêt à la reprise.",
       "La <strong>2e partie de saison</strong> commence le 4 janvier : une reprise progressive, puis 2 séances courtes par semaine jusqu'aux phases finales de juin. C'est le moment idéal pour la commencer et finir la saison fort.",
       "Raphaël, 6M Lab",
     ] },
     en: { s: "Winter break: rest, but not too much", c: "See the second half of the season", p: [
       "Hi,",
       "The winter break is coming. A week of real rest does you good. Beyond that, 2 to 3 weeks of nothing and the January restart hurts: heavy legs, short breath, and a higher risk of injury.",
-      "The right balance: <strong>2 short sessions a week</strong> during the break, no equipment, to keep your strength and footwork.",
+      "The right balance over 2 weeks: <strong>real rest the first week, work the second</strong>, with 3 short sessions and no equipment, to keep your strength and footwork and be ready for the restart.",
       "The <strong>second half of the season</strong> starts on January 4: a gradual restart, then 2 short sessions a week until the June finals. The perfect time to start it and finish the season strong.",
       "Raphaël, 6M Lab",
     ] },

@@ -32,12 +32,12 @@ export const programs = {
       includes: incFr(18),
       phases: [
         { t: "Septembre — Entrer dans la saison", d: "Les matchs reprennent : la charge baisse un peu pour laisser la place au collectif, sans perdre la force et l'explosivité de l'été." },
-        { t: "Octobre à mi-décembre — Entretenir", d: "Deux séances par semaine : la plus exigeante au moins 3 jours avant le match, la plus légère au plus tard 2 jours avant. Prévention des chevilles, genoux et épaules à chaque séance." },
-        { t: "Vacances de Noël — La trêve", d: "Quelques jours de vrai repos, puis 3 séances courtes par semaine, sans matériel, pour reprendre en janvier sans douleur." },
+        { t: "Octobre à mi-décembre — Entretenir", d: "Deux séances par semaine : la plus exigeante au moins 3 jours avant le match, la plus légère au plus tard 2 jours avant. Prévention des chevilles, genoux et épaules à chaque séance. Si ton championnat s'arrête 2 semaines à la Toussaint : la 1re semaine en repos, la 2e en travail pour préparer la reprise." },
+        { t: "Vacances de Noël — La trêve", d: "Une semaine de vrai repos, sans séance. Puis une semaine de travail : 3 séances courtes, sans matériel, pour reprendre en janvier sans douleur." },
       ],
       faq: [
         { q: "Est-ce que ça va me fatiguer avant les matchs ?", a: "Les séances sont courtes et pensées pour se placer loin des matchs. Le programme indique où les positionner dans ta semaine." },
-        { q: "La saison a déjà commencé, je peux encore le prendre ?", a: "Oui. Au moment du paiement, tu choisis : le programme entier au prix plein, ou un programme qui commence à la semaine où on en est, au prix des mois qui restent." },
+        { q: "La saison a déjà commencé, je peux encore le prendre ?", a: "Oui. Au moment du paiement, tu choisis : le programme entier au prix plein, ou un programme qui commence à la semaine où on en est, au prix des semaines qui restent." },
         { q: "Et après Noël ?", a: "La 2e partie de saison prend le relais en janvier, jusqu'aux phases finales de juin : chaque partie prépare la suivante." },
       ],
     },
@@ -48,12 +48,12 @@ export const programs = {
       includes: incFr(23),
       phases: [
         { t: "Janvier — Reprendre après la trêve", d: "Deux semaines pour remonter la charge progressivement, sans la blessure classique de la reprise." },
-        { t: "Février à avril — La phase retour", d: "Entretenir la puissance et la vitesse quand les jambes fatiguent, avec un travail de prévention renforcé." },
+        { t: "Février à avril — La phase retour", d: "Entretenir la puissance et la vitesse quand les jambes fatiguent, avec un travail de prévention renforcé. Pendant les trêves de février et de printemps : la 1re semaine en repos, la 2e en travail pour préparer la reprise." },
         { t: "Mai à mi-juin — Les matchs décisifs", d: "Moins de volume, plus de fraîcheur : un bloc court et intense pour les derniers matchs et les phases finales. Si ta saison s'arrête en mai, ces semaines deviennent de la récupération active avant la coupure." },
       ],
       faq: [
         { q: "Pourquoi jusqu'à mi-juin ?", a: "Des U15 aux seniors, la saison régulière finit en mai, mais les finales régionales et nationales se jouent jusqu'à mi-juin. Le programme t'y amène en forme." },
-        { q: "La saison a déjà commencé, je peux encore le prendre ?", a: "Oui. Au moment du paiement, tu choisis : le programme entier au prix plein, ou un programme qui commence à la semaine où on en est, au prix des mois qui restent." },
+        { q: "La saison a déjà commencé, je peux encore le prendre ?", a: "Oui. Au moment du paiement, tu choisis : le programme entier au prix plein, ou un programme qui commence à la semaine où on en est, au prix des semaines qui restent." },
         { q: "Et après ?", a: "Deux semaines de vraie coupure fin juin, puis la Pré-saison en juillet : la Saison complète enchaîne les 3 parties avec 20 % de remise." },
       ],
     },
@@ -83,12 +83,12 @@ export const programs = {
       includes: incEn(18),
       phases: [
         { t: "September — Into the season", d: "Games start again: the load drops a little to make room for team training, without losing the strength and explosiveness of the summer." },
-        { t: "October to mid-December — Maintain", d: "Two sessions a week: the hardest at least 3 days before the game, the lighter one no later than 2 days before. Ankle, knee and shoulder prevention in every session." },
-        { t: "Christmas holidays — The break", d: "A few days of real rest, then 3 short sessions a week, no equipment, to restart in January without pain." },
+        { t: "October to mid-December — Maintain", d: "Two sessions a week: the hardest at least 3 days before the game, the lighter one no later than 2 days before. Ankle, knee and shoulder prevention in every session. If your league stops for 2 weeks in the autumn holidays: rest the first week, work the second to prepare the restart." },
+        { t: "Christmas holidays — The break", d: "One week of real rest, no sessions. Then one week of work: 3 short sessions, no equipment, to restart in January without pain." },
       ],
       faq: [
         { q: "Will this tire me out before matches?", a: "Sessions are short and designed to sit away from matches. The program shows where to place them in your week." },
-        { q: "The season has started, can I still get it?", a: "Yes. At checkout you choose: the whole program at full price, or a program that starts at the current week, at the price of the months left." },
+        { q: "The season has started, can I still get it?", a: "Yes. At checkout you choose: the whole program at full price, or a program that starts at the current week, at the price of the weeks left." },
         { q: "And after Christmas?", a: "The second half of the season takes over in January, up to the June finals: each part prepares the next." },
       ],
     },
@@ -99,12 +99,12 @@ export const programs = {
       includes: incEn(23),
       phases: [
         { t: "January — Back after the break", d: "Two weeks to raise the load gradually, without the classic restart injury." },
-        { t: "February to April — The second leg", d: "Keep your power and speed as the legs get tired, with more injury prevention work." },
+        { t: "February to April — The second leg", d: "Keep your power and speed as the legs get tired, with more injury prevention work. During the February and spring breaks: rest the first week, work the second to prepare the restart." },
         { t: "May to mid-June — The decisive games", d: "Less volume, more freshness: a short, intense block for the last games and the finals. If your season ends in May, these weeks become active recovery before the break." },
       ],
       faq: [
         { q: "Why until mid-June?", a: "From U15 to seniors, the regular season ends in May, but regional and national finals are played until mid-June. The program gets you there in shape." },
-        { q: "The season has started, can I still get it?", a: "Yes. At checkout you choose: the whole program at full price, or a program that starts at the current week, at the price of the months left." },
+        { q: "The season has started, can I still get it?", a: "Yes. At checkout you choose: the whole program at full price, or a program that starts at the current week, at the price of the weeks left." },
         { q: "And after that?", a: "Two weeks of real break in late June, then the Pre-season in July: the Full season links the 3 parts with 20% off." },
       ],
     },

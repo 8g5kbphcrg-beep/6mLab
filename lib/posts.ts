@@ -235,7 +235,7 @@ export const posts: Post[] = [
     theme: "saison",
     exos: ["squat-jump", "fente-arriere", "planche"],
     title: "Trêve de Noël : garder la forme sans y passer les fêtes",
-    desc: "Deux semaines sans handball, ça se prépare : ce que tu perds vraiment, et trois séances courtes par semaine pour reprendre en janvier sans douleur.",
+    desc: "Deux semaines sans handball, ça se prépare : ce que tu perds vraiment, et le bon rythme : une semaine de repos, puis une semaine de travail pour reprendre en janvier sans douleur.",
     date: "2026-12-07",
     body: [
       { p: "La trêve de fin d'année est bienvenue : le corps et la tête ont besoin de souffler. Mais deux à trois semaines sans rien faire, et la reprise de janvier peut piquer. La bonne nouvelle : il faut très peu pour garder l'essentiel." },
@@ -346,7 +346,8 @@ export const posts: Post[] = [
       { p: "Pendant les vacances d'hiver, beaucoup de clubs ferment le gymnase une semaine ou deux. Ce n'est pas une mauvaise nouvelle : en pleine phase retour, une semaine plus légère fait souvent du bien au corps comme à la tête. Il suffit de ne pas tout couper." },
       { h: "Une semaine : repos actif" },
       { ul: ["Garde 2 séances de 20 à 25 minutes dans la semaine.", "Fais une autre activité que tu aimes : vélo, natation, ski, un autre sport de balle.", "Dors plus : c'est le meilleur moment pour rattraper le sommeil en retard."] },
-      { h: "Deux semaines : un peu plus de rythme" },
+      { h: "Deux semaines : une de repos, une de travail" },
+      { p: "La 1re semaine, repos actif comme ci-dessus. La 2e semaine, on reprend le travail pour préparer le retour au club, avec 3 séances :" },
       { ul: ["Séance A, appuis : pogos, fentes latérales, sauts sur une jambe, 3 séries.", "Séance B, course : 2 fois 6 minutes de 15 secondes rapides et 15 secondes de marche.", "Séance C, gainage : gainage latéral, planche, Pallof press si tu as un élastique."] },
       { h: "Au retour" },
       { p: "Les mêmes règles qu'en janvier, en plus court : un premier entraînement sans tirs à pleine puissance, et un volume qui remonte sur quelques jours plutôt que d'un coup. Une semaine de coupure ne fait presque rien perdre ; c'est le retour trop brutal qui coûte cher." },
