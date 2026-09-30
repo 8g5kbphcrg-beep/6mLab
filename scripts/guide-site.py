@@ -93,7 +93,7 @@ SECTIONS = [
  ("ok", "Accès aux animations et PDF gardé à vie", "Le client garde son PDF ; les animations restent accessibles pendant la durée prévue."),
  ("ok", "Questionnaire de forme et avis", "Le client suit sa forme, laisse un avis et reçoit un code de réduction."),
  ("ok", "Proposer la suite", "À 2 semaines de la fin d'un programme, l'espace client affiche « Et après ? », repris dans l'email de fin de programme et dans celui de fin d'accès : Maintien après la Pré-saison, nouveau cycle de Maintien en cours de saison, Prévention puis Pré-saison en fin de saison. Le lien ouvre le programme avec les objectifs déjà choisis."),
- ("ok", "Répondre vite", "Réponse sous 48 h annoncée (Contact, FAQ, emails). La page Contact oriente d'abord vers l'espace client, le questionnaire et la FAQ, et l'email s'ouvre pré-rempli avec la référence de commande. Dans l'admin, 12 réponses types à copier (FR et EN) et 3 règles pour tenir le délai."),
+ ("ok", "Répondre vite", "Réponse sous 48 h annoncée (Contact, FAQ, emails). La page Contact oriente d'abord vers l'espace client, le questionnaire et la FAQ, et propose un formulaire (email, sujet, référence de commande, message) : le message arrive dans ta boîte, tu réponds directement au client, et il reçoit tout de suite un accusé de réception avec le délai de 48 h, les liens utiles et la copie de son message. Même accusé pour les demandes de devis clubs. L'adresse email reste affichée pour ceux qui préfèrent leur messagerie. Dans l'admin, 12 réponses types à copier (FR et EN) et 3 règles pour tenir le délai."),
 ]),
 ("clubs", "Offre Clubs", "Un autre public, qui décide autrement : il faut rassurer et faciliter.", [
  ("ok", "Une page dédiée", "Bénéfices, séance type, ce qu'il faut savoir, exemple d'exercice animé."),
@@ -122,7 +122,6 @@ NEXT = [
 ]
 # "Fait" points that can still be improved: title -> what to do next (shown as « À améliorer »).
 IMPROVE = {
- "Répondre vite": "Envoyer un accusé de réception automatique quand un client écrit, avec le délai de 48 h et les liens utiles.",
  "Sortie des programmes clubs en PDF": "Les PDF sont produits avec Claude : un bouton « Générer les PDF » dans Admin > Clubs rendrait l'outil autonome.",
 }
 from collections import Counter

@@ -12,6 +12,7 @@ import { buy, fmtPrice, type Place } from "@/lib/checkout";
 import { legalPaths, owner } from "@/lib/legal";
 import { SITE } from "@/lib/dict";
 import type { Campaign } from "@/lib/season-mail";
+import { REPLY_HOURS } from "@/lib/replies";
 
 export type Order = {
   id: string;
@@ -273,6 +274,36 @@ export async function sendCartReminder(o: { email: string; lang: Lang; firstName
   const cta = fr ? "Reprendre ma commande" : "Resume my order";
   const html = frame(`<p>${esc(hello)}</p>${lines.map((l) => `<p>${esc(l)}</p>`).join("")}${button(link, cta)}<p style="font-size:12px;color:#5B5673">${fr ? "Tu reçois cet email parce que tu as accepté de recevoir des offres par email sur la page de paiement." : "You are receiving this email because you agreed to receive offers by email on the payment page."}</p>`);
   const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: o.email, replyTo: owner.email, subject: fr ? "Ton programme t'attend" : "Your program is waiting", html, text: [hello, "", ...lines, "", `${cta} : ${link}`].join("\n") });
+  if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
+}
+
+// Message from the Contact page form (app/api/contact), to 6M Lab; replying answers the customer.
+export type ContactMessage = { email: string; topic: string; ref: string; message: string; lang: Lang; src: string };
+export async function sendContact(m: ContactMessage) {
+  const lines = [`De : ${m.email}`, `Sujet : ${m.topic}`, `Référence de commande : ${m.ref || "non indiquée"}`, `Langue : ${m.lang}`, `Origine de la visite : ${m.src}`, "", m.message, "", `À faire : répondre sous ${REPLY_HOURS} heures (répondre à cet email écrit directement au client). Les réponses types sont dans l'admin > Réponses types. Un accusé de réception lui est déjà parti.`];
+  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: MAIL_FROM(), replyTo: m.email, subject: `Contact : ${m.topic}${m.ref ? ` (commande ${m.ref})` : ""}`, text: lines.join("\n") });
+  if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
+}
+
+// Acknowledgement sent right away to whoever writes (Contact form or Clubs quote): the message is
+// received, the answer comes within REPLY_HOURS, and the links that often answer first. Their
+// message is copied at the bottom, so they know what was sent.
+export async function sendAck(to: string, lang: Lang, kind: "contact" | "club", message: string) {
+  const fr = lang === "fr";
+  const hello = fr ? "Bonjour," : "Hi,";
+  const l1 = kind === "club"
+    ? fr ? "Ta demande de devis pour ton équipe est bien arrivée. Je l'étudie et je te réponds avec une proposition" : "Your quote request for your team has arrived. I'm looking at it and will reply with a proposal"
+    : fr ? "Ton message est bien arrivé. Je te réponds personnellement" : "Your message has arrived. I'll reply to you personally";
+  const when = fr ? `sous ${REPLY_HOURS} heures.` : `within ${REPLY_HOURS} hours.`;
+  const l2 = fr ? "En attendant, la réponse est peut-être déjà ici :" : "In the meantime, the answer may already be here:";
+  const links: [string, string][] = kind === "club"
+    ? [[fr ? "La page Clubs : séance type, ce qu'il faut savoir" : "The Clubs page: sample session, what to know", `${SITE}/${lang}/clubs`], [fr ? "Les questions fréquentes" : "Frequent questions", `${SITE}/${lang}/faq`]]
+    : [[fr ? "Ton espace client : animations, parrainage, points" : "Your customer area: animations, referral, points", `${SITE}/${lang}/espace-client`], [fr ? "Les questions fréquentes : commande, accès, remboursement" : "Frequent questions: order, access, refund", `${SITE}/${lang}/faq`]];
+  const l3 = fr ? "Pour ajouter une précision, réponds simplement à cet email." : "To add anything, just reply to this email.";
+  const copy = fr ? "Ton message :" : "Your message:";
+  const html = frame(`<p>${hello}</p><p>${l1} <strong>${when}</strong></p><p>${l2}</p><ul>${links.map(([t, u]) => `<li style="margin:0 0 8px"><a href="${u}" style="color:#C4452A;font-weight:700">${esc(t)}</a></li>`).join("")}</ul><p>${l3}</p>${message ? `<div style="border-left:4px solid #E3E0F0;padding:2px 0 2px 14px;margin:20px 0;color:#5B5673"><p style="margin:0 0 6px;font-weight:700">${copy}</p><p style="margin:0;white-space:pre-wrap">${esc(message)}</p></div>` : ""}<p>6M Lab</p>`);
+  const text = [hello, "", `${l1} ${when}`, "", l2, ...links.map(([t, u]) => `- ${t} : ${u}`), "", l3, ...(message ? ["", copy, message] : []), "", "6M Lab"].join("\n");
+  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to, replyTo: owner.email, subject: kind === "club" ? (fr ? "Ta demande de devis est bien arrivée" : "Your quote request has arrived") : fr ? "Ton message est bien arrivé" : "Your message has arrived", html, text });
   if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
 }
 

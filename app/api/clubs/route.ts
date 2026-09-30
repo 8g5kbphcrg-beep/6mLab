@@ -3,7 +3,7 @@ import { locales, type Lang } from "@/lib/dict";
 import { validEmail } from "@/lib/leads";
 import { redis, redisReady } from "@/lib/redis";
 import { cleanSrc } from "@/lib/analytics";
-import { mailReady, sendClubRequest } from "@/lib/email";
+import { mailReady, sendAck, sendClubRequest } from "@/lib/email";
 import { alert, why } from "@/lib/alert";
 import { CLUB_GEAR, CLUB_PLACES, whenLabel } from "@/lib/club-equipment";
 
@@ -33,6 +33,8 @@ export async function POST(req: NextRequest) {
   if (!mailReady()) return page("erreur=1");
   try {
     await sendClubRequest(r, equipment);
+    // The acknowledgement is a courtesy: if it fails, the request has still reached 6M Lab.
+    await sendAck(r.email, lang, "club", r.message).catch((e) => console.error("[clubs] accusé", e));
     return page("envoye=1");
   } catch (e) {
     console.error("[clubs]", e);

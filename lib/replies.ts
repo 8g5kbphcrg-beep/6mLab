@@ -8,6 +8,11 @@ import { PROMO_PERCENT } from "@/lib/feedback";
 // adapted in the reply. Figures come from the code, so they stay true when a rule changes.
 // [crochets] = to replace before sending.
 export const REPLY_HOURS = 48;
+// The topics of the Contact page form (app/api/contact): they head the email 6M Lab receives.
+export const TOPICS = {
+  fr: ["Ma commande ou mon accès", "Choisir un programme", "Un programme pour mon équipe", "Autre question"],
+  en: ["My order or my access", "Choosing a program", "A program for my team", "Other question"],
+} as const;
 
 export type Reply = { id: string; t: string; when: string; fr: string; en: string };
 
