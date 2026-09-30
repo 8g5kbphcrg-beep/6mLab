@@ -1,17 +1,23 @@
 import type { Lang } from "@/lib/dict";
 import { programs } from "@/lib/programs";
+import type { Offer } from "@/lib/access";
 import { getReviews } from "@/lib/reviews";
 
 // Customer reviews (verified buyers), with the average of every final questionnaire. Shown only
-// once at least one review has been published from the admin page.
-export default async function Reviews({ lang }: { lang: Lang }) {
-  const { count, average, reviews } = await getReviews();
+// once at least one review has been published from the admin page. offer: on a program page, the
+// average shown is the one of this offer, the same as in the product data of the page (lib/seo.tsx,
+// offerRating), and the reviews do not add their own structured data.
+export default async function Reviews({ lang, offer }: { lang: Lang; offer?: Offer }) {
+  const data = await getReviews();
+  const { reviews } = data;
   if (!reviews.length) return null;
+  const own = offer ? data.ratings[offer] : undefined;
+  const { count, average } = own?.count ? own : data;
   const fr = lang === "fr";
   const avg = average.toFixed(1).replace(".", fr ? "," : ".");
   const ld = {
     "@context": "https://schema.org", "@type": "Product", name: fr ? "Programmes de préparation physique handball 6M Lab" : "6M Lab handball training programs", brand: { "@type": "Brand", name: "6M Lab" },
-    aggregateRating: { "@type": "AggregateRating", ratingValue: average.toFixed(1), reviewCount: count, bestRating: 5, worstRating: 1 },
+    aggregateRating: { "@type": "AggregateRating", ratingValue: average.toFixed(1), ratingCount: count, bestRating: 5, worstRating: 1 },
     review: reviews.slice(0, 10).map((r) => ({ "@type": "Review", author: { "@type": "Person", name: r.firstName }, datePublished: r.date, reviewBody: r.text, reviewRating: { "@type": "Rating", ratingValue: r.stars, bestRating: 5 } })),
   };
   return (
@@ -30,7 +36,7 @@ export default async function Reviews({ lang }: { lang: Lang }) {
         ))}
       </ul>
       <p className="note">{fr ? "Avis recueillis par email auprès des acheteurs, à la fin de leur programme. Un code de réduction est offert pour avoir répondu, quel que soit l'avis. Les avis ne sont pas modifiés ; seuls ceux dont l'auteur a accepté la publication sont affichés." : "Reviews collected by email from buyers at the end of their program. A discount code is offered for answering, whatever the feedback. Reviews are not edited; only those whose author agreed to publication are shown."}</p>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
+      {!offer && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />}
     </section>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { offerRating } from "@/lib/reviews";
 import ProductVideo from "@/components/ProductVideo";
 import { notFound } from "next/navigation";
 import Reviews from "@/components/Reviews";
@@ -85,7 +86,7 @@ export default async function SaisonComplete({ params, searchParams }: P) {
   const goals = sp?.objectifs?.split(",") ?? [];
   return (
     <div className="prog">
-      <Ld data={offerLd(`${t.name} · 6M Lab`, t.pitch, PACK_PRICE, `/${l}/programmes/saison-complete`)} />
+      <Ld data={offerLd(`${t.name} · 6M Lab`, t.pitch, PACK_PRICE, `/${l}/programmes/saison-complete`, await offerRating("pack"))} />
       <Link className="pback" href={`/${l}/programmes`}>← {t.back}</Link>
       <div className="pgrid">
         <header className="phead">
@@ -130,7 +131,7 @@ export default async function SaisonComplete({ params, searchParams }: P) {
           <p className="note">{dict[l].why.note}</p>
         </div>
       </div>
-      <Reviews lang={l} />
+      <Reviews lang={l} offer="pack" />
     </div>
   );
 }
