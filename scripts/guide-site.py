@@ -59,7 +59,7 @@ SECTIONS = [
  ("todo", "Ouvrir le site aux moteurs de recherche", "Le site est volontairement fermé aux moteurs de recherche. À ouvrir le jour de la mise en ligne (réglage SITE_PUBLIC)."),
  ("todo", "Google Search Console", "Après le domaine : déclarer le site et le plan du site, puis suivre les recherches qui amènent des visiteurs."),
  ("ok", "Titres, descriptions et plan du site", "Chaque page a son titre et sa description ; plan du site et fichier robots existent."),
- ("ok", "Données structurées", "Produits (programmes, prix) et articles sont décrits pour Google."),
+ ("ok", "Données structurées", "Produits (programmes, prix) et articles sont décrits pour Google. Dès le premier avis publié, chaque programme reçoit sa propre note moyenne (étoiles dans Google), la même que celle affichée dans le bloc d'avis de sa page."),
  ("ok", "Des pages pour chaque recherche importante", "4 guides complets prêts : préparation physique pré-saison, gardien de but, prévention des blessures, musculation. Chacun avec exercices animés, FAQ lisible par Google, programme conseillé et articles liés. Ils sont en haut de la page Conseils et dans le plan du site ; Google les lira dès l'ouverture du site."),
  ("todo", "Des liens depuis d'autres sites", "Clubs, comités, ligues, kinés, blogs de handball qui parlent de 6M Lab avec un lien. Ça vient avec les partenariats."),
 ]),
@@ -122,7 +122,6 @@ NEXT = [
 ]
 # "Fait" points that can still be improved: title -> what to do next (shown as « À améliorer »).
 IMPROVE = {
- "Données structurées": "Ajouter la note moyenne des avis (étoiles dans Google) dès les premiers avis publiés.",
  "Sécurité du site": "Un composant qui sert à construire le site est signalé par npm (sans risque pour les visiteurs) : il partira avec la mise à jour vers Next.js 16.",
  "Sauvegarde du site":"Le code est sur GitHub, mais pas les données : codes clubs, parrainages et journaux sont dans Redis, les commandes dans Stripe. Prévoir un export régulier.",
  "Surveiller les erreurs": "Ajouter une surveillance externe qui prévient si le site ne répond plus (le système actuel ne voit que les erreurs internes).",

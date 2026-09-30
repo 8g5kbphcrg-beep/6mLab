@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Reviews from "@/components/Reviews";
 import Link from "next/link";
+import { offerOf } from "@/lib/access";
+import { offerRating } from "@/lib/reviews";
 import ProductVideo from "@/components/ProductVideo";
 import { notFound, redirect } from "next/navigation";
 import { dict, type Lang } from "@/lib/dict";
@@ -41,7 +43,7 @@ export default async function Programme({ params, searchParams }: P) {
   const fr = lang === "fr";
   return (
     <div className="prog">
-      <Ld data={offerLd(`${p.name} · 6M Lab`, p.pitch, prices[slug as ProgramSlug], `/${lang}/programmes/${slug}`)} />
+      <Ld data={offerLd(`${p.name} · 6M Lab`, p.pitch, prices[slug as ProgramSlug], `/${lang}/programmes/${slug}`, await offerRating(slug))} />
       <Link className="pback" href={`/${lang}/programmes`}>← {d.cmp.title}</Link>
       <div className="pgrid">
         <header className="phead">
@@ -85,7 +87,7 @@ export default async function Programme({ params, searchParams }: P) {
           <p className="note">{d.why.note}</p>
         </div>
       </div>
-      <Reviews lang={lang as Lang} />
+      <Reviews lang={lang as Lang} offer={offerOf({ program: slug })} />
     </div>
   );
 }
