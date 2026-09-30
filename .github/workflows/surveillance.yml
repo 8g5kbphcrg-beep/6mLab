@@ -1,0 +1,43 @@
+# Outside monitoring of the site: every 15 minutes, GitHub opens the home page and the health
+# check (/api/sante). If the site does not answer, the run fails and GitHub sends an email (on by
+# default: Settings > Notifications > Actions on github.com). The site's own alerts ("⚠ 6M Lab")
+# cannot warn when the whole site is down; this does.
+# The address comes from the repository variable SITE_URL (Settings > Secrets and variables >
+# Actions > Variables), so nothing changes in the code when the domain is chosen. Without it, the
+# check is skipped.
+name: Surveillance du site
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Le site répond
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          if [ -z "$SITE_URL" ]; then
+            echo "::notice::Variable SITE_URL absente : surveillance en pause."
+            exit 0
+          fi
+          url="${SITE_URL%/}"
+          fail=0
+          # Two tries a minute apart, so a single slow answer does not send an email.
+          check() {
+            for i in 1 2; do
+              code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 -L "$1") && [ "$code" = "200" ] && { echo "✓ $1 ($code)"; return 0; }
+              [ "$i" = 1 ] && sleep 60
+            done
+            echo "::error::$1 ne répond pas correctement (code $code)"
+            return 1
+          }
+          check "$url/fr" || fail=1
+          check "$url/api/sante" || fail=1
+          exit $fail
