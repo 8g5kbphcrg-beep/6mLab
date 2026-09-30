@@ -34,7 +34,7 @@ SECTIONS = [
  ("ok", "Des pages programme détaillées", "Pour qui, combien de temps, quel matériel, déroulé d'une semaine, FAQ, aperçu du PDF."),
  ("ok", "Le vocabulaire du handball", "Induction, repli, montée, poste, ligne des 9 m : le lecteur doit se sentir chez lui."),
  ("ok", "Français et anglais", "Site, programmes PDF, emails et animations dans les deux langues."),
- ("ok", "Des articles de conseils réguliers", "2 articles par mois, calés sur la saison, écrits d'avance et publiés seuls à leur date (6 programmés d'octobre à décembre 2026 : sommeil, Nordic, échauffement d'avant-match, récupération, trêve de Noël, genou des joueuses). Le calendrier est sur l'accueil de l'admin, qui prévient quand il reste moins de 2 articles à paraître."),
+ ("ok", "Des articles de conseils réguliers", "2 articles par mois, calés sur la saison, écrits d'avance et publiés seuls à leur date (12 programmés d'octobre 2026 à mars 2027 : sommeil, Nordic, échauffement d'avant-match, récupération, trêve de Noël, genou des joueuses, reprise de janvier, charge et épaule, puissance en phase retour, vacances de février, équilibre et cheville, hanches des gardiens). Le calendrier est sur l'accueil de l'admin, qui prévient quand il reste moins de 2 articles à paraître."),
  ("you", "Une vidéo de présentation", "30 à 60 secondes : qui tu es, ce que contient un programme, pour qui. À mettre sur l'accueil et à réutiliser sur les réseaux."),
 ]),
 ("confiance", "Confiance et preuve sociale", "Avant de payer, le visiteur cherche des raisons de te croire.", [
@@ -122,7 +122,6 @@ NEXT = [
 ]
 # "Fait" points that can still be improved: title -> what to do next (shown as « À améliorer »).
 IMPROVE = {
- "Des articles de conseils réguliers": "Les articles s'arrêtent en décembre 2026 : écrire ceux de janvier à mars (reprise après la trêve, phase retour).",
  "Données structurées": "Ajouter la note moyenne des avis (étoiles dans Google) dès les premiers avis publiés.",
  "Sécurité du site": "Un composant qui sert à construire le site est signalé par npm (sans risque pour les visiteurs) : il partira avec la mise à jour vers Next.js 16.",
  "Sauvegarde du site":"Le code est sur GitHub, mais pas les données : codes clubs, parrainages et journaux sont dans Redis, les commandes dans Stripe. Prévoir un export régulier.",
