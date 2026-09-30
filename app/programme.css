@@ -3,10 +3,10 @@
 .pmeta2{color:var(--muted);margin:0 0 1.5rem}.pprice{font:400 2.4rem var(--font-display),sans-serif}
 .pinc{list-style:none;padding:0;margin:1.5rem 0 0;display:grid;gap:.6rem}
 .pinc li{padding-left:1.6rem;position:relative}.pinc li::before{content:"✓";position:absolute;left:0;color:var(--A)}
-.pinc.b li::before{color:var(--B)}
+.pinc.b li::before{color:var(--B)}.pinc.c li::before{color:var(--C)}
 .phase{border-left:4px solid var(--line);padding:0 0 1.2rem 1.2rem;margin-left:.2rem;position:relative}
 .phase::before{content:"";position:absolute;left:-7px;top:.3rem;width:12px;height:12px;border-radius:50%;background:var(--A)}
-.phase.b::before{background:var(--B)}.phase h3{margin:0 0 .3rem;font-size:1.25rem}.phase p{margin:0;color:var(--muted)}
+.phase.b::before{background:var(--B)}.phase.c::before{background:var(--C)}.phase h3{margin:0 0 .3rem;font-size:1.25rem}.phase p{margin:0;color:var(--muted)}
 .faq{margin-top:1rem}.faq details{border-bottom:1px solid var(--line);padding:1rem 0}
 .faq summary{font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:1rem;min-height:32px}
 .faq summary::-webkit-details-marker{display:none}.faq summary::after{content:"+";font:400 1.4rem var(--font-display),sans-serif;color:var(--muted)}

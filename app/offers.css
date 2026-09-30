@@ -1,6 +1,6 @@
 /* Program cards (home page and /programmes): recommended badge and "Saison complète" pack. */
 .offer{position:relative}
-.offer.now{box-shadow:0 0 0 2px var(--A),var(--shadow)}.offer.b.now{box-shadow:0 0 0 2px var(--B),var(--shadow)}
+.offer.now{box-shadow:0 0 0 2px var(--A),var(--shadow)}.offer.b.now{box-shadow:0 0 0 2px var(--B),var(--shadow)}.offer.c.now{box-shadow:0 0 0 2px var(--C),var(--shadow)}
 .onow{position:absolute;top:-.85rem;right:1rem;background:var(--ink);color:var(--bg);font-size:.8rem;font-weight:700;border-radius:999px;padding:.3rem .8rem}
 .opack{position:relative;display:grid;gap:1rem;padding:2rem 1.4rem 1.5rem;border-radius:var(--r);background:var(--sky);color:#F3F1FB;box-shadow:0 0 0 3px #FFC75F,var(--shadow);margin-top:.8rem}
 .opack-b{position:absolute;top:-.9rem;left:1.2rem;background:#FFC75F;color:#100A24;font-size:.8rem;font-weight:700;border-radius:999px;padding:.3rem .85rem}
