@@ -41,7 +41,7 @@ export default async function Admin() {
         </div>
       )}
       <div className="cards">
-        {CARDS.map(([href, t, d]) => <a key={href} className="card" href={href}><h3>{t}</h3><p>{d}</p></a>)}
+        {CARDS.map(([href, t, d]) => <a key={href} className="card" href={href}><h2 className="ct">{t}</h2><p>{d}</p></a>)}
       </div>
       <h2>En attente</h2>
       <div className="card">

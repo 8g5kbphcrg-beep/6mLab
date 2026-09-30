@@ -21,7 +21,7 @@
 .adm-nav span{background:#16123F;color:#fff}
 .adm .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
 .adm .cards a.card{display:grid;gap:4px;color:inherit;text-decoration:none;margin:0}.adm .cards a.card:hover{border-color:#FF7A59}
-.adm .card h3{margin:0;font-size:16px}.adm .card p{margin:0;color:#5B5673;font-size:14px}
+.adm .card h3,.adm .card h2.ct{margin:0;font-size:16px}.adm .card p{margin:0;color:#5B5673;font-size:14px}
 .adm .todo li{margin:4px 0}.adm ol.steps li{margin:6px 0}
 .adm label.f{display:grid;gap:4px;min-width:0;font-size:13px;font-weight:600}.adm label.f select,.adm label.f input{font:inherit;width:100%;min-width:0;box-sizing:border-box;height:36px;font-weight:400;padding:6px 8px;border:1px solid #ECDFE4;border-radius:8px;background:#fff}
 .adm .form{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;align-items:end;background:#fff;border:1px solid #ECDFE4;border-radius:14px;padding:14px}
@@ -33,4 +33,10 @@
 .adm .alerts{border-color:#E0A3A3;background:#FFF4F2}.adm .alerts h2{margin:0 0 4px;color:#9E2A1A;font-size:18px}
 .adm .reply pre{white-space:pre-wrap;font:inherit;font-size:14px;line-height:1.5;background:#FAF6F8;border-radius:10px;padding:10px 12px;margin:6px 0 0}
 .adm .reply summary{cursor:pointer;font-weight:700;display:flex;align-items:center;gap:8px;margin-top:8px}
-.adm .reply h3{margin:0 0 4px}
+.adm .reply h3,.adm .reply h2.ct{margin:0 0 4px}
+
+/* Text for screen readers only (an empty table header, for example). */
+.adm .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.adm .reply details>button{margin:6px 0}
+/* Keyboard focus: a clear mark on every link, button and field of the admin. */
+.adm :is(a,button,input,select,textarea,summary):focus-visible{outline:3px solid #5B3FB0;outline-offset:2px}
