@@ -73,6 +73,11 @@ export default async function Admin() {
           {logins.map((e) => <li key={e.at + e.what}><span className="tag">{new Date(e.at).toLocaleString("fr-FR", { timeZone: "Europe/Paris", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</span> <b>{e.email}</b> : {e.what}</li>)}
         </ul> : <p className="muted">Aucune connexion pour l'instant.</p>}
       </div>
+      <h2 id="sauvegarde">Sauvegarde</h2>
+      <div className="card">
+        <p className="muted">Le code est sur GitHub. Les données du site (codes clubs, statistiques, journal des connexions) et une copie des commandes et des clients Stripe partent chaque lundi matin par email, dans un fichier « 6mlab-sauvegarde-date.json.gz » à garder. Il contient des adresses de clients : ne le transfère pas.</p>
+        <p><a className="btn" href="/admin/sauvegarde">Télécharger une sauvegarde maintenant</a></p>
+      </div>
       <h2>Liens utiles</h2>
       <div className="card">
         <ul>

@@ -52,6 +52,15 @@ export async function sendAlert(subject: string, text: string) {
   if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
 }
 
+// The weekly backup of the site's data (lib/backup.ts), to 6M Lab's own mailbox, as an attachment.
+export const backupName = (date: string) => `6mlab-sauvegarde-${date}.json.gz`;
+export async function sendBackup(date: string, content: Buffer, summary: string[]) {
+  const filename = backupName(date);
+  const text = ["Sauvegarde hebdomadaire des données du site, en pièce jointe.", "", ...summary, "", "Garde ce fichier : il sert à tout remettre en place si les données du site sont perdues (npm run restaurer -- fichier.json.gz). Il contient des adresses email de clients : ne le transfère pas."].join("\n");
+  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: MAIL_FROM(), subject: `6M Lab : sauvegarde du ${date}`, text, attachments: [{ filename, content }] });
+  if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message).slice(0, 300));
+}
+
 // The PDFs an order needs, from the programmes/ folder: the guide of the formula, the sessions
 // for its pair of goals (in block order, with the customer's silhouette) and the running option.
 // Returns null unless automatic sending is switched on (PROGRAMMES_ENVOI_AUTO=1, once the
