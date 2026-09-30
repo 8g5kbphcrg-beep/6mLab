@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { personal } from "@/lib/email";
 
 // One program PDF, stamped with the customer's first name and order reference like the ones sent
-// by email (lib/email.ts). Behind the admin password (middleware.ts).
+// by email (lib/email.ts). Behind the admin password (proxy.ts).
 export async function GET(req: NextRequest) {
   const q = req.nextUrl.searchParams;
   const f = q.get("f") ?? "", name = q.get("n") ?? "programme.pdf";

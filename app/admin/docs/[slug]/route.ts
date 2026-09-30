@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { DOCS } from "@/lib/admin-docs";
 import { SITE } from "@/lib/dict";
 
-// 6M Lab's working documents (private/docs/), behind the admin password (middleware.ts). Each file
+// 6M Lab's working documents (private/docs/), behind the admin password (proxy.ts). Each file
 // is a page body: it gets its document head here, and a link back to the admin.
 export async function GET(_req: Request, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

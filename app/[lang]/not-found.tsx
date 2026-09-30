@@ -3,7 +3,7 @@ import { usePathname } from "next/navigation";
 import "@/app/pages.css";
 
 // Page not found, with the ways back into the site. The language comes from the address (the
-// middleware always adds /fr or /en).
+// proxy.ts always adds /fr or /en).
 const text = {
   fr: {
     k: "Erreur 404", h: "Tir hors cadre : cette page n'existe pas", p: "L'adresse est peut-être mal écrite, ou la page a changé de place. Voici où reprendre.",

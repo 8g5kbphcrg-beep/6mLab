@@ -6,7 +6,7 @@ import { SITE } from "@/lib/dict";
 import { nextStep } from "@/lib/next-step";
 import { offerOf } from "@/lib/access";
 
-// Admin actions (behind the password in middleware.ts): publish or hide a review, send a
+// Admin actions (behind the password in proxy.ts): publish or hide a review, send a
 // questionnaire now, free the devices of a customer's access.
 export async function POST(req: NextRequest) {
   const form = await req.formData();
@@ -15,7 +15,8 @@ export async function POST(req: NextRequest) {
   if (!s || !/^pi_\w+$/.test(pi)) return new NextResponse("Requête invalide", { status: 400 });
   if (action === "show" || action === "hide") {
     await s.paymentIntents.update(pi, { metadata: { f_show: action === "show" ? "1" : "" } });
-    revalidateTag("reviews");
+    // Expired at once: the review shows (or hides) on the site straight away.
+    revalidateTag("reviews", { expire: 0 });
   } else if (action === "reset-dev") {
     // Frees the devices of a customer's access (new phone…): the next ones can open it again.
     await s.paymentIntents.update(pi, { metadata: { acc_dev: "" } });
