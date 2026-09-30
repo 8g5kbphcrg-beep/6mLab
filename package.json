@@ -7,7 +7,8 @@
     "start": "next start",
     "programmes": "node scripts/programmes.mjs",
     "clubs-pdf": "node scripts/clubs-pdf.mjs",
-    "demo-video": "node scripts/demo-video.mjs"
+    "demo-video": "node scripts/demo-video.mjs",
+    "restaurer": "node scripts/restaurer.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
