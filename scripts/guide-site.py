@@ -65,7 +65,7 @@ SECTIONS = [
 ]),
 ("technique", "Technique et performance", "Un site rapide, fiable, et qui envoie ses emails.", [
  ("ok", "Hébergement fiable et HTTPS", "Vercel, avec un aperçu pour chaque modification avant de la valider."),
- ("ok", "Sécurité du site", "Paiement par Stripe, codes et cookies signés, connexion par code à 6 chiffres limitée en essais. Admin : mot de passe, 10 essais par quart d'heure et par adresse, actions refusées si elles viennent d'un autre site. Protections du navigateur sur toutes les pages (HTTPS obligatoire, site impossible à afficher dans un autre site)."),
+ ("ok", "Sécurité du site", "Paiement par Stripe, codes et cookies signés, connexion par code à 6 chiffres limitée en essais. Admin : mot de passe, 10 essais par quart d'heure et par adresse, actions refusées si elles viennent d'un autre site. Protections du navigateur sur toutes les pages (HTTPS obligatoire, site impossible à afficher dans un autre site). Site sur Next.js 16 : aucune faille connue dans les composants (audit npm à zéro)."),
  ("ok", "Sauvegarde du site", "Tout le code et les documents sont sur GitHub : rien ne se perd."),
  ("part", "Vitesse", "Mesuré avec Lighthouse (l'outil de PageSpeed Insights), en simulant un téléphone : accueil passé de 74 à 83-93/100, autres pages 95 à 97/100, rien ne bouge au chargement. À refaire sur le vrai site après la mise en ligne, avec PageSpeed Insights et les données réelles des visiteurs."),
  ("part", "Emails envoyés depuis ton domaine", "Préparé : la marche à suivre est dans l'aide-mémoire de l'admin. Avec iCloud+ (déjà utilisé pour les emails du site) : domaine de messagerie personnalisé, réglages SPF, DKIM et DMARC, adresse contact@ton-domaine, puis test sur mail-tester.com. À faire dès que le nom de domaine est choisi."),
@@ -122,7 +122,6 @@ NEXT = [
 ]
 # "Fait" points that can still be improved: title -> what to do next (shown as « À améliorer »).
 IMPROVE = {
- "Sécurité du site": "Un composant qui sert à construire le site est signalé par npm (sans risque pour les visiteurs) : il partira avec la mise à jour vers Next.js 16.",
  "Sauvegarde du site":"Le code est sur GitHub, mais pas les données : codes clubs, parrainages et journaux sont dans Redis, les commandes dans Stripe. Prévoir un export régulier.",
  "Surveiller les erreurs": "Ajouter une surveillance externe qui prévient si le site ne répond plus (le système actuel ne voit que les erreurs internes).",
  "Répondre vite": "Envoyer un accusé de réception automatique quand un client écrit, avec le délai de 48 h et les liens utiles.",

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClubCode, deleteClubCode, freeClubDevices } from "@/lib/club-access";
 
-// Admin (behind the password in middleware.ts): create a club access code, free its devices, or
+// Admin (behind the password in proxy.ts): create a club access code, free its devices, or
 // delete it (lib/club-access.ts). Back to the Clubs page, on the codes.
 export async function POST(req: NextRequest) {
   const form = await req.formData();

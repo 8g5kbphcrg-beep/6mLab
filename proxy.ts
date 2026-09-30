@@ -44,7 +44,7 @@ async function admin(req: NextRequest) {
   return ask();
 }
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   // Private admin pages: password prompt (see lib/admin.ts).
   if (pathname === "/admin" || pathname.startsWith("/admin/")) return admin(req);

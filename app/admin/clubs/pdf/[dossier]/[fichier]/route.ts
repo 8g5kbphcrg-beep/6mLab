@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { NextResponse } from "next/server";
 
 // The PDFs of a club program (scripts/clubs-pdf.mjs, private/clubs/<dossier>/), behind the admin
-// password (middleware.ts): downloaded from Admin > Clubs, then sent to the coach.
+// password (proxy.ts): downloaded from Admin > Clubs, then sent to the coach.
 export async function GET(_req: Request, { params }: { params: Promise<{ dossier: string; fichier: string }> }) {
   const { dossier, fichier } = await params;
   if (!/^[a-z0-9-]+$/.test(dossier) || !/^[1-4]-[a-z-]+\.pdf$/.test(fichier)) return new NextResponse("Fichier introuvable", { status: 404 });

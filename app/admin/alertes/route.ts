@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { alert, clearAlerts } from "@/lib/alert";
 
-// Admin actions on the alerts (behind the password in middleware.ts): send a test alert, to check
+// Admin actions on the alerts (behind the password in proxy.ts): send a test alert, to check
 // that the email arrives, or empty the list once everything is handled.
 export async function POST(req: NextRequest) {
   const action = String((await req.formData()).get("action") ?? "");
