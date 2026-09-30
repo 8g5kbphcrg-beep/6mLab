@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { locales, type Lang } from "@/lib/dict";
 import { programs, programSlugs, type ProgramSlug } from "@/lib/programs";
-import { buy, genders, PACK_PRICE, places, prices, RUNNING_PRICE, SECOND_GOAL_PRICE, type Gender, type Place } from "@/lib/checkout";
+import { buy, genders, places, RUNNING_PRICE, SECOND_GOAL_PRICE, type Gender, type Place } from "@/lib/checkout";
+import { quote, today, WEEKS } from "@/lib/season-parts";
 import { goalName, goalsTitle, hasSecondGoal, validGoals } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
 import { stripe as stripeClient } from "@/lib/feedback";
@@ -14,7 +15,7 @@ export async function POST(req: NextRequest) {
   const slug = form.get("program") as ProgramSlug;
   const goals = form.getAll("goal").map(String);
   const running = form.get("running") === "on";
-  const pack = form.get("pack") === "on" && slug === "pre-saison";
+  const pack = form.get("pack") === "on";
   const firstName = String(form.get("firstName") ?? "").trim().slice(0, 50);
   const age = Number(form.get("age"));
   const gender = String(form.get("gender")) as Gender;
@@ -24,6 +25,19 @@ export async function POST(req: NextRequest) {
   const profileOk = firstName.length > 0 && Number.isInteger(age) && age >= 10 && age <= 99 && genders.includes(gender);
   const origin = req.nextUrl.origin;
   const page = pack ? "saison-complete" : programSlugs.includes(slug) ? slug : "";
+  // Today's offer, recomputed here (the form only says which one was chosen): the whole program,
+  // or from the current week when the part is under way (lib/season-parts.ts).
+  const q = quote(pack ? "pack" : programSlugs.includes(slug) ? slug : "pre-saison");
+  const pr = form.get("debut") === "semaine" ? q.pr : null;
+  const amount = pr ? pr.price : q.price;
+  // The parts of the order in order, and the weeks of program it covers (the animations access).
+  const parts = q.slots.map((sl) => sl.part);
+  // A Saison complète counts in calendar weeks, from today (or the start of its first part) to the
+  // end of its last part, so the late-June break is covered too.
+  const last = q.slots[q.slots.length - 1];
+  const weeks = pack
+    ? Math.ceil((last.end - Math.max(today(), q.slots[0].start)) / (7 * 86400000))
+    : pr ? pr.weeks : WEEKS[parts[0]];
   const back = (reason: string) => NextResponse.redirect(`${origin}/${lang}/programmes/${page}?paiement=${reason}#acheter`, 303);
 
   if (!programSlugs.includes(slug) || !validGoals(goals) || !places.includes(lieu) || !profileOk || form.get("consent") !== "on") return back("invalide");
@@ -32,10 +46,10 @@ export async function POST(req: NextRequest) {
   // Live payments stay off until the legal pages are filled in (SIRET, address, mediator).
   if (!key || (key.startsWith("sk_live_") && process.env.STRIPE_ALLOW_LIVE !== "1")) return back("indisponible");
 
-  const p = programs[lang][slug];
+  const p = programs[lang][parts[0]];
   // src: where the visit came from (utm link or referring site), for the sales by source in the admin.
   const src = cleanSrc(String(form.get("src") ?? "direct"));
-  const meta = { program: slug, goals: goals.join("+"), running: running ? "oui" : "non", lieu, plang, ...(pack ? { pack: "oui" } : {}), firstName, age: String(age), gender, lang, src };
+  const meta = { program: parts[0], goals: goals.join("+"), running: running ? "oui" : "non", lieu, plang, ...(pack ? { pack: "oui", parts: parts.join(","), starts: q.slots.map((sl) => new Date(sl.start).toISOString().slice(0, 10)).join(",") } : {}), ...(pr ? { debut: String(pr.week) } : {}), weeks: String(weeks), firstName, age: String(age), gender, lang, src };
   const stripe = stripeClient()!;
   try {
     // Abandoned carts (app/api/cron): Stripe asks the buyer whether they accept offers by email,
@@ -50,10 +64,10 @@ export async function POST(req: NextRequest) {
         quantity: 1,
         price_data: {
           currency: "eur",
-          unit_amount: pack ? PACK_PRICE : prices[slug],
+          unit_amount: amount,
           product_data: pack
-            ? { name: lang === "fr" ? "6M Lab · Pack Saison complète" : "6M Lab · Full season pack", description: `${goalsTitle(goals, lang)} · ${p.name} (${p.duration}) + ${programs[lang]["maintien-saison"].name} (${programs[lang]["maintien-saison"].duration}) · ${buy[lang].places[lieu][0]}` }
-            : { name: `6M Lab · ${p.name}`, description: `${goalsTitle(goals, lang)} · ${p.duration} · ${buy[lang].places[lieu][0]}` },
+            ? { name: lang === "fr" ? "6M Lab · Saison complète" : "6M Lab · Full season", description: `${goalsTitle(goals, lang)} · ${parts.map((x, i) => `${programs[lang][x].name}${i === 0 && pr ? ` (${buy[lang].fromWeek(pr.week).toLowerCase()})` : ""}`).join(" + ")} · ${buy[lang].places[lieu][0]}` }
+            : { name: `6M Lab · ${p.name}`, description: `${goalsTitle(goals, lang)} · ${pr ? buy[lang].fromWeek(pr.week) : p.duration} · ${buy[lang].places[lieu][0]}` },
         },
       }, ...(hasSecondGoal(goals) ? [{
         quantity: 1,

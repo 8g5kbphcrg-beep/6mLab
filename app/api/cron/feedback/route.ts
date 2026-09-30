@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { DAY, formUrl, paidOrders, PROMO_PERCENT, stripe, whenDays, type Stage } from "@/lib/feedback";
-import { mailReady, sendAccessEnding, sendCartReminder, sendFeedbackRequest, sendReferralPoints, sendSeasonMail, sendTip, TIP_DAYS } from "@/lib/email";
+import { mailReady, sendAccessEnding, sendNextPart, sendCartReminder, sendFeedbackRequest, sendReferralPoints, sendSeasonMail, sendTip, TIP_DAYS } from "@/lib/email";
 import { settleReferrals } from "@/lib/referral";
 import { nextStep } from "@/lib/next-step";
 import { abandonedCarts } from "@/lib/cart";
 import { dueCampaign } from "@/lib/season-mail";
-import { endOf, offerOf } from "@/lib/access";
+import { endOf, offerOf, weeksOf, partOf } from "@/lib/access";
 import { recentLeads, unsubUrl } from "@/lib/leads";
 import { SITE } from "@/lib/dict";
+import type { Order } from "@/lib/email";
+import type { ProgramSlug } from "@/lib/programs";
 import { alert, why } from "@/lib/alert";
 
 // Runs once a day (vercel.json): sends the feedback emails that are due, 2 weeks after the
@@ -19,7 +21,8 @@ import { alert, why } from "@/lib/alert";
 // page expired in the last 24 hours without an order (lib/cart.ts). And, around the key dates of the
 // season, the email of that moment to the subscribers who accepted it (lib/season-mail.ts), at
 // most 150 a day so a run stays short; the rest go out on the following days of the week. And the
-// referral points, once a teammate's order is a week old (lib/referral.ts).
+// referral points, once a teammate's order is a week old (lib/referral.ts). And the next parts of a
+// Saison complète, 7 days before each one starts.
 export async function GET(req: NextRequest) {
   if (!process.env.CRON_SECRET || req.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`) return new NextResponse("Unauthorized", { status: 401 });
   const s = stripe();
@@ -29,16 +32,16 @@ export async function GET(req: NextRequest) {
   // Failures of this run, sent as one alert at the end.
   const failed: string[] = [];
   const fail = (what: string, id: string, e: unknown) => { console.error(`[${what}]`, id, e); failed.push(`${what} ${id} : ${why(e)}`); };
-  for (const o of await paidOrders(s, now - 100 * DAY)) {
+  for (const o of await paidOrders(s, now - 180 * DAY)) {
     if (!o.email) continue;
     for (const stage of ["mid", "end"] as Stage[]) {
       const key = stage === "mid" ? "s_mid" : "s_end";
-      const age = (now - o.created) / DAY, due = whenDays(stage, o.program);
+      const age = (now - o.created) / DAY, due = whenDays(stage, o.meta);
       if (o.meta[key] || age < due || age > due + 10) continue;
       try {
         // At the end of the program, the email also says what comes next (lib/next-step.ts); not for
-        // the pack, whose questionnaire comes at the end of its pre-season, the Maintien already paid.
-        await sendFeedbackRequest({ email: o.email, lang: o.lang, firstName: o.firstName, program: o.program }, stage, formUrl(SITE, o.lang, o.id, stage), PROMO_PERCENT, stage === "end" && offerOf(o.meta) !== "pack" ? nextStep(offerOf(o.meta), now * 1000, o.goals, o.lang) : undefined);
+        // the pack, whose questionnaire comes at the end of its first part, the next parts already paid.
+        await sendFeedbackRequest({ email: o.email, lang: o.lang, firstName: o.firstName, program: partOf(o.meta) }, stage, formUrl(SITE, o.lang, o.id, stage), PROMO_PERCENT, stage === "end" && offerOf(o.meta) !== "pack" ? nextStep(offerOf(o.meta), now * 1000, o.goals, o.lang) : undefined);
         await s.paymentIntents.update(o.id, { metadata: { [key]: new Date().toISOString().slice(0, 10) } });
         sent.push(`${o.id}:${stage}`);
       } catch (e) { fail("feedback cron", o.id, e); }
@@ -46,7 +49,7 @@ export async function GET(req: NextRequest) {
   }
   for (const o of await paidOrders(s, now - 560 * DAY)) {
     if (!o.email || !o.meta.acc_start || o.meta.s_acc) continue;
-    const offer = offerOf(o.meta), end = endOf({ offer, start: Date.parse(o.meta.acc_start) });
+    const offer = offerOf(o.meta), end = endOf({ offer, weeks: weeksOf(o.meta), start: Date.parse(o.meta.acc_start) });
     const left = (end - now * 1000) / (DAY * 1000);
     if (left <= 0 || left > 7) continue;
     try {
@@ -54,6 +57,23 @@ export async function GET(req: NextRequest) {
       await s.paymentIntents.update(o.id, { metadata: { s_acc: new Date().toISOString().slice(0, 10) } });
       sent.push(`${o.id}:acc`);
     } catch (e) { fail("access cron", o.id, e); }
+  }
+  // Saison complète: the PDFs of each later part, 7 days before it starts (s_p1, s_p2).
+  for (const o of await paidOrders(s, now - 400 * DAY)) {
+    if (!o.email || o.meta.pack !== "oui" || !o.meta.parts || !o.meta.starts) continue;
+    const parts = o.meta.parts.split(",") as ProgramSlug[], starts = o.meta.starts.split(",").map((d) => Date.parse(d));
+    for (let i = 1; i < parts.length; i++) {
+      const key = `s_p${i}`, left = (starts[i] - now * 1000) / (DAY * 1000);
+      if (o.meta[key] || left > 7 || left < -14) continue;
+      try {
+        // The PDFs carry the order reference of the confirmation email (meta.ref, the end of the
+        // payment page id): Order.id only has to end with it.
+        const order: Order = { id: o.meta.ref || o.id, email: o.email, lang: o.lang, plang: o.meta.plang === "en" ? "en" : "fr", program: parts[0], goals: o.goals, running: o.meta.running === "oui", lieu: o.meta.lieu === "salle" ? "salle" : "maison", pack: true, parts, starts, firstName: o.firstName, age: o.meta.age ?? "", gender: o.meta.gender ?? "", amount: 0 };
+        const auto = await sendNextPart(order, i);
+        await s.paymentIntents.update(o.id, { metadata: { [key]: `${new Date().toISOString().slice(0, 10)}${auto ? "" : " manuel"}` } });
+        sent.push(`${o.id}:${key}`);
+      } catch (e) { fail("pack cron", o.id, e); }
+    }
   }
   for (const l of await recentLeads(s, now - 20 * DAY)) {
     if (!l.email || l.meta.unsub) continue;

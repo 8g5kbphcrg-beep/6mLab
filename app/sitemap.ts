@@ -14,7 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(),
     alternates: { languages: Object.fromEntries(locales.map((x) => [x, `${SITE}/${x}`])) },
   }));
-  const progs = locales.flatMap((l) => ["", "/pre-saison", "/maintien-saison", "/saison-complete"].map((s) => `/${l}/programmes${s}`));
+  const progs = locales.flatMap((l) => ["", "/pre-saison", "/premiere-partie", "/deuxieme-partie", "/saison-complete"].map((s) => `/${l}/programmes${s}`));
   const more = [...locales.flatMap((l) => [`/${l}/handball`, `/${l}/forme/questionnaire`, `/${l}/contact`, `/${l}/faq`, `/${l}/clubs`, `/${l}/exercices/seance-gratuite`]), "/fr/a-propos", "/en/about", ...progs, "/fr/questionnaire", "/en/questionnaire", "/fr/conseils", ...livePosts().map((p) => `/fr/conseils/${p.slug}`), ...guides.map((g) => `/fr/guides/${g.slug}`), ...locales.flatMap((l) => Object.values(legalPaths[l]))]
     .map((u) => ({ url: `${SITE}${u}`, lastModified: new Date() }));
   return [...home, ...more];

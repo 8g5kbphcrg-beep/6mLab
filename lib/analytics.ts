@@ -24,7 +24,7 @@ export function pageKind(path: string): string | null {
   return null;
 }
 // Pages where the offers are shown: the "offres" step of the funnel.
-export const OFFER_PAGES = ["handball", "programmes", "offre-pre-saison", "offre-maintien-saison", "offre-saison-complete"];
+export const OFFER_PAGES = ["handball", "programmes", "offre-pre-saison", "offre-premiere-partie", "offre-deuxieme-partie", "offre-saison-complete"];
 
 // Source names: letters, digits, dash, underscore, dot; 30 characters at most.
 export const cleanSrc = (s: string) => s.toLowerCase().replace(/[^a-z0-9_.-]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 30) || "direct";

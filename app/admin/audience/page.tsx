@@ -17,11 +17,11 @@ type Count = { e: string; d: string; s: string; n: number };
 type Sale = { src: string; paid: boolean; amount: number; offer: string; day: string };
 
 const PAGE_NAMES: Record<string, string> = {
-  accueil: "Accueil", handball: "Handball", programmes: "Programmes", "offre-pre-saison": "Offre Pré-saison", "offre-maintien-saison": "Offre Maintien",
-  "offre-saison-complete": "Offre Pack", questionnaire: "Questionnaire handball", forme: "Forme & bien-être", exercice: "Pages exercices",
+  accueil: "Accueil", handball: "Handball", programmes: "Programmes", "offre-pre-saison": "Offre Pré-saison", "offre-premiere-partie": "Offre 1re partie", "offre-deuxieme-partie": "Offre 2e partie", "offre-maintien-saison": "Offre Maintien (ancienne)",
+  "offre-saison-complete": "Offre Saison complète", questionnaire: "Questionnaire handball", forme: "Forme & bien-être", exercice: "Pages exercices",
   conseils: "Conseils", article: "Articles", "seance-gratuite": "Séance gratuite", merci: "Merci (après paiement)", "a-propos": "À propos", contact: "Contact", autre: "Autre",
 };
-const OFFER_NAMES: Record<string, string> = { "pre-saison": "Pré-saison", "maintien-saison": "Maintien en saison", pack: "Pack Saison complète", blessure: "Avis médical (blessure)" };
+const OFFER_NAMES: Record<string, string> = { "pre-saison": "Pré-saison", "premiere-partie": "1re partie de saison", "deuxieme-partie": "2e partie de saison", "maintien-saison": "Maintien (ancien)", pack: "Saison complète", blessure: "Avis médical (blessure)" };
 const LEAD_NAMES: Record<string, string> = { seance: "Séance gratuite", forme: "Liste d'attente Forme", foot: "Me prévenir Football", basket: "Me prévenir Basketball", sport: "Sport proposé" };
 
 async function counts(days: string[]): Promise<Count[]> {

@@ -4,24 +4,25 @@
 // - 2e partie de saison: January to mid-June, finals included (5.5 months). The regular seasons
 //   end in May from U15 to seniors, but regional finals and national finals run until mid-June.
 // Then 2 weeks of real break in late June before the next Pré-saison.
-// Price: 15 € a month, rounded up to the next 0.99. The Saison complète is the next 3 parts in a
-// row with 20 % off. Buying a part already under way: either the whole PDF at full price, or a
-// PDF that starts at the current week, at the price of the months left (rounded up to half a
-// month).
+// Prices follow the work each part asks for, not only its length: the Pré-saison (3 to 4 hard
+// sessions a week) costs the most per month. The Saison complète is the next 3 parts in a row with
+// 20 % off (199,99 € instead of 249,97 €, or 3 × 66,99 €). Buying a part already under way: either
+// the whole PDF at full price, or a PDF that starts at the current week, at the part's price for
+// the share of weeks left (rounded up to the next ,99).
 import type { ProgramSlug } from "@/lib/programs";
 
 export const PARTS = ["pre-saison", "premiere-partie", "deuxieme-partie"] as const satisfies readonly ProgramSlug[];
 export type Part = (typeof PARTS)[number];
 
-export const MONTHLY = 1500;
 export const PACK_OFF = 0.2;
+export const PRICES: Record<Part, number> = { "pre-saison": 5999, "premiere-partie": 8999, "deuxieme-partie": 9999 };
 export const MONTHS: Record<Part, number> = { "pre-saison": 2, "premiere-partie": 4, "deuxieme-partie": 5.5 };
 // Length of each part in weeks (the PDF plans and the animations access).
 export const WEEKS: Record<Part, number> = { "pre-saison": 8, "premiere-partie": 18, "deuxieme-partie": 23 };
 
-// 15 € a month rounded up to the next ,99: 30 € → 29,99 €, 82,50 € → 82,99 €.
-export const to99 = (cents: number) => Math.ceil(Math.round(cents) / 100) * 100 - 1;
-export const partPrice = (p: Part) => to99(MONTHS[p] * MONTHLY);
+// Rounded up to the next ,99: 52,49 € → 52,99 €; 199,98 € → 199,99 €.
+export const to99 = (cents: number) => Math.ceil((Math.round(cents) + 1) / 100) * 100 - 1;
+export const partPrice = (p: Part) => PRICES[p];
 
 const DAY = 86400000;
 // Dates of a part in the season that starts in July of `year` (UTC midnight, inclusive start,
@@ -78,33 +79,54 @@ export function packSlots(now = Date.now()): Slot[] {
   return out;
 }
 
-// For a part under way: the week it is at (1-based) and the months left, rounded up to half a
-// month. Null when the part has not started or only just started (first week): full price then.
-export function prorata(slot: Slot, now = Date.now()): { week: number; months: number; price: number } | null {
+// For a part under way: the week it is at (1-based), the weeks left and their price (the part's
+// price for the share of weeks left). Null when the part has not started or is in its first week:
+// full price then.
+export function prorata(slot: Slot, now = Date.now()): { week: number; weeks: number; price: number } | null {
   if (!slot.current) return null;
   const t = today(now);
   const week = Math.floor((t - slot.start) / (7 * DAY)) + 1;
   if (week <= 1) return null;
-  const left = (slot.end - t) / (slot.end - slot.start);
-  const months = Math.max(0.5, Math.ceil(left * MONTHS[slot.part] * 2) / 2);
-  if (months >= MONTHS[slot.part]) return null;
-  return { week, months, price: to99(months * MONTHLY) };
+  const weeks = Math.max(1, WEEKS[slot.part] - week + 1);
+  return { week, weeks, price: to99((PRICES[slot.part] * weeks) / WEEKS[slot.part]) };
 }
 
-// The Saison complète price: 20 % off the 3 parts; the first one counts for its months left when
+// The Saison complète price: 20 % off the 3 parts; the first one counts for its weeks left when
 // the buyer takes the pro-rata version.
 export function packPrice(slots: Slot[], useProrata: boolean, now = Date.now()) {
   const pr = useProrata ? prorata(slots[0], now) : null;
-  const months = (pr ? pr.months : MONTHS[slots[0].part]) + MONTHS[slots[1].part] + MONTHS[slots[2].part];
   const full = (pr ? pr.price : partPrice(slots[0].part)) + partPrice(slots[1].part) + partPrice(slots[2].part);
-  return { price: to99(months * MONTHLY * (1 - PACK_OFF)), full, months };
+  return { price: to99(full * (1 - PACK_OFF)), full };
 }
-// The whole season at full price, for the pages (137,99 € instead of 172,97 €).
+// The whole season at full price, for the pages: 199,99 € instead of 249,97 €.
 export const PACK_FULL = PARTS.reduce((a, p) => a + partPrice(p), 0);
-export const PACK_PRICE = to99(PARTS.reduce((a, p) => a + MONTHS[p], 0) * MONTHLY * (1 - PACK_OFF));
-export const PACK_MONTHS = PARTS.reduce((a, p) => a + MONTHS[p], 0);
-// 3 payments: the pack price split in 3, each rounded up to ,99 (3 × 45,99 €).
+export const PACK_PRICE = to99(PACK_FULL * (1 - PACK_OFF));
+export const PACK_WEEKS = PARTS.reduce((a, p) => a + WEEKS[p], 0);
+// 3 payments: the pack price split in 3, each rounded up to ,99 (3 × 66,99 €).
 export const PACK_INSTALMENT = to99(PACK_PRICE / 3);
 
-// "4 janvier" / "January 4", for the pages and emails.
-export const dayLabel = (ms: number, lang: "fr" | "en") => new Date(ms).toLocaleDateString(lang === "fr" ? "fr-FR" : "en-GB", { day: "numeric", month: "long", timeZone: "UTC" });
+// "4 janvier" / "4 January", and "1er juillet" in French, for the pages and emails.
+export const dayLabel = (ms: number, lang: "fr" | "en") => {
+  const s = new Date(ms).toLocaleDateString(lang === "fr" ? "fr-FR" : "en-GB", { day: "numeric", month: "long", timeZone: "UTC" });
+  return lang === "fr" ? s.replace(/^1 /, "1er ") : s;
+};
+
+// What a buyer is offered today, for a part or the Saison complète: the parts and their dates,
+// the price of the whole thing, and (when the first part is under way) the pro-rata option.
+// Shown by the page (BuyForm) and recomputed by the checkout, which never trusts the form.
+export type Quote = {
+  slots: Slot[];
+  price: number;
+  before: number | null;
+  pr: { week: number; weeks: number; price: number; before: number | null } | null;
+};
+export function quote(what: Part | "pack", now = Date.now()): Quote {
+  if (what !== "pack") {
+    const slot = slotOf(what, now);
+    const p = prorata(slot, now);
+    return { slots: [slot], price: PRICES[what], before: null, pr: p && { ...p, before: null } };
+  }
+  const slots = packSlots(now);
+  const whole = packPrice(slots, false, now), p = prorata(slots[0], now), part = p && packPrice(slots, true, now);
+  return { slots, price: whole.price, before: whole.full, pr: p && part ? { ...p, price: part.price, before: part.full } : null };
+}

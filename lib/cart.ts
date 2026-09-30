@@ -23,7 +23,7 @@ export async function abandonedCarts(s: Stripe, now: number): Promise<Cart[]> {
     seen.add(email);
     const m = cs.metadata ?? {}, lang: Lang = m.lang === "en" ? "en" : "fr";
     const slug = (programSlugs as readonly string[]).includes(m.program) ? (m.program as ProgramSlug) : "pre-saison";
-    const name = m.pack === "oui" ? (lang === "fr" ? "Pack Saison complète" : "Full season pack") : programs[lang][slug].name;
+    const name = m.pack === "oui" ? (lang === "fr" ? "Saison complète" : "Full season") : programs[lang][slug].name;
     const g = (m.goals ?? "").split("+"), goals = validGoals(g) ? goalsTitle(g, lang) : "";
     out.push({ id: cs.id, email, lang, firstName: m.firstName ?? "", what: goals ? `${name} (${goals})` : name, total: cs.amount_total ?? 0, link });
   }

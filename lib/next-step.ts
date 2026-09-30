@@ -1,40 +1,39 @@
 import type { Lang } from "@/lib/dict";
 import type { GoalId } from "@/lib/goals";
-import { PROGRAM_WEEKS, type Offer } from "@/lib/access";
+import type { Offer } from "@/lib/access";
+import type { Part } from "@/lib/season-parts";
 import { SITE } from "@/lib/dict";
 
-// What to do after a program, from what was done and when it ends (Paris time):
-// - after the Pré-saison, the season starts: Maintien en saison, same goals;
-// - after a Maintien (or the pack) that ends from September to March, there are months of season
-//   left: another Maintien cycle, same goals;
-// - after one that ends from April to August, the season is over: Prévention & santé, then the
-//   next Pré-saison (or the Full season pack for the whole next year).
+// What to do after a program: the next part of the season (lib/season-parts.ts), same goals.
+// - after the Pré-saison: the 1re partie, as the games start;
+// - after the 1re partie: the 2e partie, from January to the June finals;
+// - after the 2e partie (or a whole Saison complète): two weeks of break, then the next season,
+//   ideally as a Saison complète.
 // Shown in the customer area near the end of a program, and in the end-of-program emails.
-export type NextStep = { slug: "pre-saison" | "maintien-saison"; goals: GoalId[]; t: string; p: string; cta: string };
+export type NextStep = { slug: Part | "saison-complete"; goals: GoalId[]; t: string; p: string; cta: string };
 
 const DAY = 86400000;
-export const programEnd = (offer: Offer, start: number) => start + PROGRAM_WEEKS[offer] * 7 * DAY;
-const monthOf = (ms: number) => Number(new Intl.DateTimeFormat("en", { month: "numeric", timeZone: "Europe/Paris" }).format(new Date(ms)));
+export const programEnd = (weeks: number, start: number) => start + weeks * 7 * DAY;
 
-export function nextStep(offer: Offer, end: number, goals: GoalId[], lang: Lang): NextStep {
-  const fr = lang === "fr", m = monthOf(end);
+export function nextStep(offer: Offer, _end: number, goals: GoalId[], lang: Lang): NextStep {
+  const fr = lang === "fr";
   const same = goals.filter((g) => g !== "reathletisation").slice(0, 2);
   if (offer === "pre-saison") return {
-    slug: "maintien-saison", goals: same,
-    t: fr ? "La saison commence : garde ton niveau" : "The season starts: keep your level",
-    p: fr ? "Le Maintien en saison prend le relais de ta pré-saison : 2 séances courtes par semaine, placées loin des matchs, avec les mêmes objectifs. Tu gardes ce que tu as construit cet été jusqu'aux derniers matchs." : "The In-season maintenance takes over from your pre-season: 2 short sessions a week, placed away from games, with the same goals. You keep what you built this summer until the last games.",
-    cta: fr ? "Voir le Maintien en saison" : "See the In-season maintenance",
+    slug: "premiere-partie", goals: same,
+    t: fr ? "La saison commence : garde ce que tu as construit" : "The season starts: keep what you built",
+    p: fr ? "Sans entretien, la force et l'explosivité de l'été baissent en quelques semaines. La 1re partie de saison prend le relais jusqu'aux vacances de Noël : 2 séances courtes par semaine, placées loin des matchs, avec les mêmes objectifs." : "Without maintenance, the strength and explosiveness of the summer fade within a few weeks. The first half of the season takes over until the Christmas holidays: 2 short sessions a week, placed away from games, with the same goals.",
+    cta: fr ? "Voir la 1re partie de saison" : "See the first half of the season",
   };
-  if (m >= 9 || m <= 3) return {
-    slug: "maintien-saison", goals: same,
-    t: fr ? "La saison continue : enchaîne un nouveau cycle" : "The season goes on: start a new cycle",
-    p: fr ? "Il reste plusieurs mois de matchs. Un nouveau cycle de Maintien (12 semaines) repart de ton niveau actuel pour que tu tiennes jusqu'au bout, sans baisse de forme en fin de saison." : "There are months of games left. A new Maintenance cycle (12 weeks) starts from your current level so you last until the end, without a dip at the end of the season.",
-    cta: fr ? "Lancer un nouveau cycle" : "Start a new cycle",
+  if (offer === "premiere-partie") return {
+    slug: "deuxieme-partie", goals: same,
+    t: fr ? "Après la trêve : la 2e partie de saison" : "After the break: the second half of the season",
+    p: fr ? "La reprise de janvier est le moment où l'on se blesse le plus. La 2e partie de saison te fait repartir progressivement, puis te garde frais jusqu'aux matchs décisifs et aux phases finales de juin." : "The January restart is when most injuries happen. The second half of the season gets you going again gradually, then keeps you fresh until the decisive games and the June finals.",
+    cta: fr ? "Voir la 2e partie de saison" : "See the second half of the season",
   };
   return {
-    slug: "pre-saison", goals: ["prevention"],
-    t: fr ? "Fin de saison : soigne ton corps, puis prépare la reprise" : "End of season: look after your body, then prepare the restart",
-    p: fr ? "Après une saison, les petites douleurs s'installent. Profite de la trêve pour travailler la prévention (chevilles, genoux, épaules), puis lance ta Pré-saison 8 semaines avant la reprise. Le Pack Saison complète couvre toute l'année prochaine." : "After a season, small pains settle in. Use the break to work on prevention (ankles, knees, shoulders), then start your Pre-season 8 weeks before the restart. The Full season pack covers the whole next year.",
+    slug: "saison-complete", goals: same,
+    t: fr ? "Fin de saison : souffle, puis prépare la suivante" : "End of season: rest, then prepare the next one",
+    p: fr ? "Deux semaines de vraie coupure fin juin, puis la Pré-saison en juillet. La Saison complète enchaîne les 3 parties de la saison prochaine avec les mêmes objectifs, 20 % moins cher." : "Two weeks of real break in late June, then the Pre-season in July. The Full season links the 3 parts of next season with the same goals, 20% cheaper.",
     cta: fr ? "Préparer ma prochaine saison" : "Prepare my next season",
   };
 }

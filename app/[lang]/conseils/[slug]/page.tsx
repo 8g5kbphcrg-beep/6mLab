@@ -33,9 +33,12 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
 const names = exercices as Record<string, { name: string }>;
 const fmt = (d: string) => new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
 
-// The formula that matches the article: Pré-saison for the restart, Maintien for the season,
-// otherwise the one that fits the calendar.
-const formulaFor = (p: Post): ProgramSlug => (p.theme === "reprise" ? "pre-saison" : p.theme === "saison" ? "maintien-saison" : recommended());
+// The formula that matches the article: Pré-saison for the restart, the part of the season under
+// way for the season (the 1re partie during the summer), otherwise the one that fits the calendar.
+const formulaFor = (p: Post): ProgramSlug => {
+  const now = recommended();
+  return p.theme === "reprise" ? "pre-saison" : p.theme === "saison" && now === "pre-saison" ? "premiere-partie" : now;
+};
 
 // Two articles to read next: same theme first, then the most recent.
 const related = (p: Post, posts = livePosts()) => [...posts.filter((x) => x !== p && x.theme === p.theme), ...[...posts].sort((a, b) => b.date.localeCompare(a.date)).filter((x) => x !== p && x.theme !== p.theme)].slice(0, 2);

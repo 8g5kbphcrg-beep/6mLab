@@ -6,7 +6,7 @@ import type { GoalId } from "@/lib/goals";
 import { mailReady, notifyOwner, sendConfirmation, type Order } from "@/lib/email";
 import { personCode, recordReferral } from "@/lib/referral";
 import { emailMark } from "@/lib/client-auth";
-import { refOf } from "@/lib/access";
+import { partOf, refOf } from "@/lib/access";
 import { alert, why } from "@/lib/alert";
 import { SITE } from "@/lib/dict";
 
@@ -56,12 +56,16 @@ export async function POST(req: NextRequest) {
         lang: (m.lang === "en" ? "en" : "fr") as Lang,
         // Orders placed before the choice existed got the program in the language of the page.
         plang: (m.plang === "en" || (!m.plang && m.lang === "en") ? "en" : "fr") as Lang,
-        program: m.program as ProgramSlug,
+        program: partOf(m),
         goals: (m.goals ?? "").split("+") as GoalId[],
         running: m.running === "oui",
         // Orders placed before the choice existed got the home version.
         lieu: m.lieu === "salle" ? "salle" : "maison",
         pack: m.pack === "oui",
+        parts: m.parts ? (m.parts.split(",") as ProgramSlug[]) : undefined,
+        starts: m.starts ? m.starts.split(",").map((d) => Date.parse(d)) : undefined,
+        debut: Number(m.debut) > 1 ? Number(m.debut) : undefined,
+        weeks: Number(m.weeks) > 0 ? Number(m.weeks) : undefined,
         firstName: m.firstName ?? "",
         age: m.age ?? "",
         gender: m.gender ?? "",
@@ -77,7 +81,7 @@ export async function POST(req: NextRequest) {
         console.error("[email]", e);
         await alert(`order:${s.id}`, "Paiement reçu, mais le programme n'est pas parti", [
           `Client : ${order.firstName} <${order.email}>`,
-          `Commande : ${order.program}${order.pack ? " (pack Saison complète)" : ""}, ${(order.amount / 100).toFixed(2)} €, référence ${refOf(s.id)}`,
+          `Commande : ${order.program}${order.pack ? " (Saison complète)" : ""}, ${(order.amount / 100).toFixed(2)} €, référence ${refOf(s.id)}`,
           `Erreur : ${why(e)}`,
           "",
           "Stripe va réessayer tout seul pendant 3 jours. Si l'erreur continue, envoie le programme à la main :",

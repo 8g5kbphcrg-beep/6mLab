@@ -1,17 +1,16 @@
 import type { Lang } from "@/lib/dict";
 import type { ProgramSlug } from "@/lib/programs";
+import { PACK_FULL, PACK_INSTALMENT, PACK_PRICE, PACK_WEEKS, PRICES } from "@/lib/season-parts";
 
-// Prices in cents. Source of truth for what Stripe charges: the prices shown in dict.ts must match.
-export const prices: Record<ProgramSlug, number> = { "pre-saison": 3999, "maintien-saison": 2999 };
+// Prices in cents, from the season in 3 parts (lib/season-parts.ts). Source of truth for what
+// Stripe charges.
+export const prices: Record<ProgramSlug, number> = PRICES;
 export const RUNNING_PRICE = 900;
 export const SECOND_GOAL_PRICE = 500;
-// "Saison complète" pack: the Pré-saison plus the Maintien en saison with the same goals,
-// 59,99 € instead of 69,98 €. Its own page (/programmes/saison-complete); orders are stored as
-// Pré-saison with pack=oui.
-export const PACK_EXTRA = 2000;
-export const PACK_PRICE = prices["pre-saison"] + PACK_EXTRA;
-export const orderTotal = (slug: ProgramSlug, goals: readonly string[], running: boolean, pack = false) =>
-  prices[slug] + (goals.length === 2 ? SECOND_GOAL_PRICE : 0) + (running ? RUNNING_PRICE : 0) + (pack && slug === "pre-saison" ? PACK_EXTRA : 0);
+export { PACK_FULL, PACK_INSTALMENT, PACK_PRICE, PACK_WEEKS };
+// The options on top of the program (or the Saison complète) price.
+export const orderTotal = (base: number, goals: readonly string[], running: boolean) =>
+  base + (goals.length === 2 ? SECOND_GOAL_PRICE : 0) + (running ? RUNNING_PRICE : 0);
 
 export const genders = ["femme", "homme", "non-precise"] as const;
 // Where the customer trains: the exercises, drawings and dosages of the program follow it.
@@ -26,12 +25,19 @@ export const fmtPrice = (cents: number, lang: Lang) => {
   return lang === "fr" ? `${n.replace(".", ",")}\u00a0€` : `€${n}`;
 };
 
-// Price per week, rounded to 10 cents: the pack's 59,99 € over 20 weeks is 3 € a week.
+// Price per week, rounded to 10 cents: the Saison complète's 199,99 € over 49 weeks is about 4 € a week.
 export const perWeek = (cents: number, weeks: number, lang: Lang) => fmtPrice(Math.round(cents / weeks / 10) * 10, lang);
-export const PACK_WEEKS = 20;
 
 export const buy = {
   fr: {
+    startT: "Quand commences-tu ?",
+    startHint: (name: string, week: number) => `${name} : la saison en est à la semaine ${week}. Choisis ton programme.`,
+    fromWeek: (w: number) => `À partir de la semaine ${w}`,
+    fromWeekD: (weeks: number) => `Ton PDF commence à la semaine où en est la saison : les ${weeks} semaines qui restent, au prix de ces semaines.`,
+    whole: "Le programme entier",
+    wholeD: (weeks: number) => `Toutes les séances depuis la semaine 1 (${weeks} semaines), au prix plein.`,
+    weeksLeft: (weeks: number) => `${weeks} semaines`,
+    now: "· maintenant", from: (d: string) => `· à partir du ${d}`,
     step1: "Tes objectifs", stepPlace: "Où t'entraînes-tu ?", step2: "Options", step3: "Ton profil", step4: "Récapitulatif",
     placeHint: "Les exercices, leurs animations et les dosages de ton programme sont adaptés à ton lieu d'entraînement.",
     plangT: "Langue du programme", plangs: { fr: "Français", en: "English" },
@@ -50,9 +56,9 @@ export const buy = {
     soon: "En préparation",
     reathSoon: "Ce programme est en préparation : il sera bientôt disponible.",
     runT: "Programme course à pied", runD: "Des séances de 30 à 45 min, en plus de ton programme.",
-    packT: "Pack Saison complète", packWeeks: "20 semaines", perWeek: (w: string) => `soit ${w} par semaine`,
+    packT: "Saison complète", packWeeks: "3 parties, 49 semaines", perWeek: (w: string) => `soit ${w} par semaine`,
     upsellT: "Et si tu prenais toute la saison ?",
-    upsellD: (pack: string, full: string, save: string, w: string) => `Le Pack Saison complète (Pré-saison + Maintien, mêmes objectifs) : ${pack} au lieu de ${full}, tu économises ${save}. Soit ${w} par semaine. Voir le pack →`,
+    upsellD: (pack: string, full: string, save: string, w: string) => `La Saison complète : les 3 parties à la suite (celle-ci et les deux suivantes), mêmes objectifs, ${pack} au lieu de ${full}. Tu économises ${save}, soit ${w} par semaine. Voir la Saison complète →`,
     goalsLb: "Objectifs", none: "À choisir", total: "Total",
     consent: "J'accepte les conditions générales de vente. Je demande l'accès immédiat au programme et je reconnais perdre mon droit de rétractation une fois le programme envoyé.",
     cgv: "Lire les CGV",
@@ -63,6 +69,14 @@ export const buy = {
     invalid: "Choisis au moins 1 objectif, ton lieu d'entraînement, remplis ton profil et accepte les CGV.",
   },
   en: {
+    startT: "When do you start?",
+    startHint: (name: string, week: number) => `${name}: the season is in week ${week}. Choose your program.`,
+    fromWeek: (w: number) => `From week ${w}`,
+    fromWeekD: (weeks: number) => `Your PDF starts at the week the season is at: the ${weeks} weeks left, at the price of those weeks.`,
+    whole: "The whole program",
+    wholeD: (weeks: number) => `Every session from week 1 (${weeks} weeks), at full price.`,
+    weeksLeft: (weeks: number) => `${weeks} weeks`,
+    now: "· now", from: (d: string) => `· from ${d}`,
     step1: "Your goals", stepPlace: "Where do you train?", step2: "Options", step3: "About you", step4: "Summary",
     placeHint: "The exercises, their animations and the dosages of your program are adapted to where you train.",
     plangT: "Program language", plangs: { fr: "Français", en: "English" },
@@ -81,9 +95,9 @@ export const buy = {
     soon: "Coming soon",
     reathSoon: "This program is being prepared and will be available soon.",
     runT: "Running program", runD: "30 to 45 min sessions, on top of your program.",
-    packT: "Full season pack", packWeeks: "20 weeks", perWeek: (w: string) => `just ${w} a week`,
+    packT: "Full season", packWeeks: "3 parts, 49 weeks", perWeek: (w: string) => `just ${w} a week`,
     upsellT: "Why not the whole season?",
-    upsellD: (pack: string, full: string, save: string, w: string) => `The Full season pack (Pre-season + In-season, same goals): ${pack} instead of ${full}, you save ${save}. Just ${w} a week. See the pack →`,
+    upsellD: (pack: string, full: string, save: string, w: string) => `The Full season: the 3 parts in a row (this one and the next two), same goals, ${pack} instead of ${full}. You save ${save}, just ${w} a week. See the Full season →`,
     goalsLb: "Goals", none: "To choose", total: "Total",
     consent: "I accept the terms of sale. I ask for immediate access to the program and acknowledge that I lose my right of withdrawal once the program has been sent.",
     cgv: "Read the terms",

@@ -1,14 +1,16 @@
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import type Stripe from "stripe";
 import { DAY } from "@/lib/feedback";
+import { PACK_WEEKS, PARTS, WEEKS, type Part } from "@/lib/season-parts";
 
 // Customer area: the exercise animations (library and the eye links of the program PDFs) are for
 // paying customers only, while their program lasts.
 // - Key: the order reference from the confirmation email (last 12 characters of the Stripe
 //   Checkout Session id), checked against Stripe: paid, not refunded.
 // - The access starts the first time the customer opens it (after a confirmation screen), not at
-//   purchase, and lasts the program plus 2 weeks: Pré-saison 10 weeks, Maintien 14, Pack 22. It
-//   must be started within 12 months of the purchase and cannot be paused.
+//   purchase, and lasts the program plus 2 weeks: Pré-saison 10 weeks, 1re partie 20, 2e partie
+//   25, Saison complète 51 (fewer when bought from the current week: the weeks bought, saved as
+//   weeks on the order). It must be started within 12 months of the purchase and cannot be paused.
 // - 3 devices at most per order (a random id per browser), reset from the admin page.
 // State is kept on the order's PaymentIntent metadata: ref (lower case), acc_start (ISO date),
 // acc_dev (device ids, comma separated). Each device then gets a signed cookie valid until the
@@ -23,15 +25,24 @@ export const DEVICE_COOKIE = "6m_dev";
 // Exercises of the free session: open to everyone (the session PDF and its emails link to them).
 export const FREE_EXERCISES = ["cheville-mur", "ouverture-hanche", "equilibre", "saut-reception", "pont-fessier", "nordic", "gainage-lateral", "ytw"];
 
-export type Offer = "pre-saison" | "maintien-saison" | "pack";
-export const PROGRAM_WEEKS: Record<Offer, number> = { "pre-saison": 8, "maintien-saison": 12, pack: 20 };
+// What was bought: one part of the season, or the Saison complète (lib/season-parts.ts). Orders
+// from before the season in 3 parts carry program=maintien-saison: the 1re partie now.
+export type Offer = Part | "pack";
+export const PROGRAM_WEEKS: Record<Offer, number> = { ...WEEKS, pack: PACK_WEEKS };
 export const accessWeeks = (o: Offer) => PROGRAM_WEEKS[o] + MARGIN_WEEKS;
-export const offerOf = (m: Record<string, string>): Offer => (m.pack === "oui" ? "pack" : m.program === "maintien-saison" ? "maintien-saison" : "pre-saison");
+export const offerOf = (m: Record<string, string>): Offer =>
+  m.pack === "oui" ? "pack" : m.program === "maintien-saison" ? "premiere-partie" : (PARTS as readonly string[]).includes(m.program) ? (m.program as Part) : "pre-saison";
+// The first (or only) part of an order.
+export const partOf = (m: Record<string, string>): Part =>
+  m.program === "maintien-saison" ? "premiere-partie" : (PARTS as readonly string[]).includes(m.program) ? (m.program as Part) : "pre-saison";
+// The weeks of program an order covers: saved at checkout (pro rata, Saison complète), else the
+// offer's length.
+export const weeksOf = (m: Record<string, string>) => (Number(m.weeks) > 0 ? Number(m.weeks) : PROGRAM_WEEKS[offerOf(m)]);
 export const refOf = (sessionId: string) => sessionId.slice(-12);
 export const cleanRef = (s: string) => s.replace(/[^A-Za-z0-9]/g, "").slice(-12).toLowerCase();
 
-export type Order = { pi: string; created: number; offer: Offer; start: number | null; devices: string[]; refunded: boolean; firstName: string; lang: string };
-export const endOf = (o: Pick<Order, "offer" | "start">, start = o.start) => (start ?? 0) + accessWeeks(o.offer) * 7 * DAY * 1000;
+export type Order = { pi: string; created: number; offer: Offer; weeks: number; start: number | null; devices: string[]; refunded: boolean; firstName: string; lang: string };
+export const endOf = (o: { offer: Offer; weeks?: number; start: number | null }, start = o.start) => (start ?? 0) + ((o.weeks ?? PROGRAM_WEEKS[o.offer]) + MARGIN_WEEKS) * 7 * DAY * 1000;
 
 // The order behind a reference, or null. Looks up the ref saved on the PaymentIntent; orders
 // paid before that existed are found through their Checkout Session, then tagged.
@@ -66,7 +77,7 @@ function toOrder(pi: Stripe.PaymentIntent): Order | null {
   const m = pi.metadata;
   const charge = typeof pi.latest_charge === "object" ? pi.latest_charge : null;
   return {
-    pi: pi.id, created: pi.created * 1000, offer: offerOf(m), start: m.acc_start ? Date.parse(m.acc_start) : null,
+    pi: pi.id, created: pi.created * 1000, offer: offerOf(m), weeks: weeksOf(m), start: m.acc_start ? Date.parse(m.acc_start) : null,
     devices: (m.acc_dev ?? "").split(",").filter(Boolean), refunded: !!charge?.refunded, firstName: m.firstName ?? "", lang: m.lang ?? "fr",
   };
 }

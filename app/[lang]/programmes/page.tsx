@@ -12,8 +12,8 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   if (!(lang in dict)) return {};
   const fr = lang === "fr";
   return {
-    title: fr ? "Programmes de prépa physique handball : pré-saison, maintien, pack | 6M Lab" : "Handball physical prep programs: pre-season, in-season, pack | 6M Lab",
-    description: fr ? "Compare les formules 6M Lab : Pré-saison (8 semaines), Maintien en saison (12 semaines) ou le Pack Saison complète. Chaque exercice est animé." : "Compare the 6M Lab programs: Pre-season (8 weeks), In-season maintenance (12 weeks) or the Full season pack. Every exercise is animated.",
+    title: fr ? "Programmes de prépa physique handball : pré-saison, 1re et 2e partie de saison | 6M Lab" : "Handball physical prep programs: pre-season, first and second half of the season | 6M Lab",
+    description: fr ? "La saison de handball en 3 parties : Pré-saison (juillet-août), 1re partie (septembre à Noël), 2e partie (janvier à juin), ou la Saison complète à -20 %. Chaque exercice est animé." : "The handball season in 3 parts: Pre-season (July-August), first half (September to Christmas), second half (January to June), or the Full season at 20% off. Every exercise is animated.",
     alternates: { canonical: `/${lang}/programmes`, languages: { fr: "/fr/programmes", en: "/en/programmes" } },
   };
 }

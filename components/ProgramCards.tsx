@@ -1,20 +1,21 @@
 import { dict, type Lang } from "@/lib/dict";
 import { programs, programSlugs } from "@/lib/programs";
-import { fmtPrice, PACK_PRICE, PACK_WEEKS, perWeek, prices } from "@/lib/checkout";
+import { fmtPrice, PACK_FULL, PACK_PRICE, PACK_WEEKS, perWeek, prices } from "@/lib/checkout";
 import { recommended } from "@/lib/season";
 import "@/app/offers.css";
 
 // Used on the handball page and on /programmes: the questionnaire first, then the "Saison
-// complète" pack as the featured offer (best value), then the two programs side by side, the one
-// that fits the handball calendar first with a badge.
+// complète" as the featured offer (best value), then the 3 parts of the season, the one under way
+// first with a badge, the others in season order.
 // top: the cards sit right under the page title (the programs page), so their titles are h2.
 export default function ProgramCards({ lang, shared = true, top = false }: { lang: Lang; shared?: boolean; top?: boolean }) {
   const H = top ? "h2" : "h3";
   const d = dict[lang];
   const fr = lang === "fr";
   const now = recommended();
-  const order = [now, ...programSlugs.filter((s) => s !== now)];
-  const full = prices["pre-saison"] + prices["maintien-saison"], save = full - PACK_PRICE;
+  const i0 = programSlugs.indexOf(now);
+  const order = [...programSlugs.slice(i0), ...programSlugs.slice(0, i0)];
+  const full = PACK_FULL, save = full - PACK_PRICE;
   return (
     <>
       <div className="oquiz">
@@ -22,42 +23,42 @@ export default function ProgramCards({ lang, shared = true, top = false }: { lan
         <span>{fr ? "Questionnaire : 7 questions · 1 minute" : "Questionnaire: 7 questions · 1 minute"}</span>
       </div>
       <article className="opack">
-        <span className="opack-b">{fr ? "Meilleure offre · la saison entière" : "Best value · the whole season"}</span>
+        <span className="opack-b">{fr ? "Meilleure offre · toute la saison" : "Best value · the whole season"}</span>
         <div className="opack-main">
           <div>
-            <H className="opack-t">{fr ? "Pack Saison complète" : "Full season pack"}</H>
-            <p className="opack-d">{fr ? "Pré-saison + Maintien en saison, avec les mêmes objectifs : tu es prêt dès la reprise et tu le restes jusqu'à la fin de la saison." : "Pre-season + In-season maintenance, same goals: ready from day one and all the way to the end of the season."}</p>
+            <H className="opack-t">{fr ? "Saison complète" : "Full season"}</H>
+            <p className="opack-d">{fr ? "Une saison ne se gagne pas en 2 mois : les progrès de l'été se gardent si on les entretient. Les 3 parties à la suite, avec les mêmes objectifs, de juillet aux phases finales de juin." : "A season isn't won in 2 months: the progress of the summer only lasts if you maintain it. The 3 parts in a row, same goals, from July to the June finals."}</p>
             <ul className="opack-l">
-              <li>{fr ? "Pré-saison : 8 semaines pour préparer la reprise" : "Pre-season: 8 weeks to get ready"}</li>
-              <li>{fr ? "Maintien en saison : 12 semaines pour tenir jusqu'au bout" : "In-season: 12 weeks to keep your level"}</li>
-              <li>{fr ? "20 semaines planifiées, les mêmes objectifs du début à la fin" : "20 planned weeks, the same goals from start to finish"}</li>
+              <li>{fr ? "Pré-saison : construire, en juillet et en août" : "Pre-season: build, in July and August"}</li>
+              <li>{fr ? "1re partie : entretenir, de septembre à Noël" : "First half: maintain, from September to Christmas"}</li>
+              <li>{fr ? "2e partie : rester frais jusqu'aux matchs décisifs" : "Second half: stay fresh until the decisive games"}</li>
             </ul>
           </div>
           <div className="opack-buy">
             <span className="opack-save">{fr ? `Tu économises ${fmtPrice(save, lang)}` : `You save ${fmtPrice(save, lang)}`}</span>
             <p className="opack-p"><strong>{fmtPrice(PACK_PRICE, lang)}</strong> <s>{fmtPrice(full, lang)}</s></p>
             <p className="opack-w">{fr ? `soit ${perWeek(PACK_PRICE, PACK_WEEKS, lang)} par semaine` : `just ${perWeek(PACK_PRICE, PACK_WEEKS, lang)} a week`}</p>
-            <a className="btn" data-go href={`/${lang}/programmes/saison-complete`}>{fr ? "Choisir le pack" : "Choose the pack"} →</a>
+            <a className="btn" data-go href={`/${lang}/programmes/saison-complete`}>{fr ? "Choisir la Saison complète" : "Choose the Full season"} →</a>
           </div>
         </div>
       </article>
-      <p className="oor">{fr ? "Ou un seul programme" : "Or a single program"}</p>
+      <p className="oor">{fr ? "Ou une seule partie" : "Or a single part"}</p>
       <div className="offers">
         {order.map((s) => {
           const p = programs[lang][s];
           const i = programSlugs.indexOf(s);
           return (
             <article key={s} className={`offer ${p.color}${s === now ? " now" : ""}`}>
-              {s === now && <span className="onow">{fr ? "Recommandé en ce moment" : "Recommended right now"}</span>}
+              {s === now && <span className="onow">{fr ? "En ce moment" : "Right now"}</span>}
               <span className={`ptag ${p.color}`}>{p.tag}</span>
               <H>{p.name}</H>
-              <p className="oprice">{d.cmp.price[p.idx]}</p>
+              <p className="oprice">{fmtPrice(prices[s], lang)}</p>
               <p className="ofocus">{d.cmp.rows[0][i + 1]}</p>
               <ul className="ofacts">
                 <li><span>{d.cmp.rows[1][0]}</span>{p.duration}</li>
                 <li><span>{d.cmp.rows[2][0]}</span>{p.freq}</li>
               </ul>
-              <a className="btn" data-go href={`/${lang}/programmes/${s}#acheter`}>{fr ? "Acheter ce programme" : "Buy this program"}</a>
+              <a className="btn" data-go href={`/${lang}/programmes/${s}#acheter`}>{fr ? "Choisir cette partie" : "Choose this part"}</a>
             </article>
           );
         })}

@@ -24,36 +24,36 @@ export const CAMPAIGNS: Campaign[] = [
     ] },
   },
   {
-    id: "saison", month: 9, day: 5, path: "/programmes/maintien-saison",
-    fr: { s: "Ne perds pas ta prépa en 6 semaines", c: "Voir le Maintien en saison", p: [
+    id: "saison", month: 9, day: 5, path: "/programmes/premiere-partie",
+    fr: { s: "Ne perds pas ta prépa en 6 semaines", c: "Voir la 1re partie de saison", p: [
       "Salut,",
       "La saison démarre. Sans entretien, ce que tu as construit cet été (force, explosivité) commence à baisser en quelques semaines, et c'est souvent là que les blessures arrivent.",
       "La bonne dose en saison : <strong>2 séances courtes par semaine</strong>, la plus dure au moins 3 jours avant le match, la plus légère au plus tard 2 jours avant.",
-      "C'est exactement le <strong>Maintien en saison</strong> : 12 semaines, 30 à 40 minutes par séance, placées pour arriver frais le jour du match.",
+      "C'est exactement la <strong>1re partie de saison</strong> : de septembre aux vacances de Noël, 30 à 40 minutes par séance, placées pour arriver frais le jour du match. Déjà quelques semaines de passées ? Tu peux la prendre à partir de la semaine en cours, au prix des semaines qui restent.",
       "Raphaël, 6M Lab",
     ] },
-    en: { s: "Don't lose your summer work in 6 weeks", c: "See the In-season program", p: [
+    en: { s: "Don't lose your summer work in 6 weeks", c: "See the first half of the season", p: [
       "Hi,",
       "The season is starting. Without maintenance, what you built this summer (strength, explosiveness) starts to fade within a few weeks, and that is often when injuries happen.",
       "The right dose in season: <strong>2 short sessions a week</strong>, the hardest at least 3 days before the game, the lighter one no later than 2 days before.",
-      "That is exactly the <strong>In-season maintenance</strong>: 12 weeks, 30 to 40 minutes per session, placed so you arrive fresh on game day.",
+      "That is exactly the <strong>first half of the season</strong>: from September to the Christmas holidays, 30 to 40 minutes per session, placed so you arrive fresh on game day. A few weeks in already? You can start it from the current week, at the price of the weeks left.",
       "Raphaël, 6M Lab",
     ] },
   },
   {
-    id: "treve", month: 12, day: 15, path: "/programmes/maintien-saison",
-    fr: { s: "La trêve : repos, mais pas trop", c: "Voir le Maintien en saison", p: [
+    id: "treve", month: 12, day: 15, path: "/programmes/deuxieme-partie",
+    fr: { s: "La trêve : repos, mais pas trop", c: "Voir la 2e partie de saison", p: [
       "Salut,",
       "La trêve arrive. Une semaine de vrai repos fait du bien. Au-delà, 2 à 3 semaines sans rien, et la reprise de janvier fait mal : jambes lourdes, souffle court, et plus de risques de blessure.",
       "Le bon compromis : <strong>2 séances courtes par semaine</strong> pendant la trêve, sans matériel, pour garder ta force et tes appuis.",
-      "Le <strong>Maintien en saison</strong> se fait à la maison et s'adapte à ton calendrier : c'est le moment idéal pour le commencer et finir la saison fort.",
+      "La <strong>2e partie de saison</strong> commence le 4 janvier : une reprise progressive, puis 2 séances courtes par semaine jusqu'aux phases finales de juin. C'est le moment idéal pour la commencer et finir la saison fort.",
       "Raphaël, 6M Lab",
     ] },
-    en: { s: "Winter break: rest, but not too much", c: "See the In-season program", p: [
+    en: { s: "Winter break: rest, but not too much", c: "See the second half of the season", p: [
       "Hi,",
       "The winter break is coming. A week of real rest does you good. Beyond that, 2 to 3 weeks of nothing and the January restart hurts: heavy legs, short breath, and a higher risk of injury.",
       "The right balance: <strong>2 short sessions a week</strong> during the break, no equipment, to keep your strength and footwork.",
-      "The <strong>In-season maintenance</strong> is done at home and fits your calendar: the perfect time to start it and finish the season strong.",
+      "The <strong>second half of the season</strong> starts on January 4: a gradual restart, then 2 short sessions a week until the June finals. The perfect time to start it and finish the season strong.",
       "Raphaël, 6M Lab",
     ] },
   },

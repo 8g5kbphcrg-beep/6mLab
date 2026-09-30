@@ -17,7 +17,7 @@ const text = {
     title: "Clubs et entraîneurs : la prépa physique pour toute l'équipe | 6M Lab",
     desc: "Un programme de préparation physique handball pour tout ton groupe, calé sur le calendrier du club. Presque du sur-mesure, sur devis sous 48 heures.",
     k: "Clubs et entraîneurs", h1: "Toute ton équipe sur le même programme",
-    lead: "Des U15 aux seniors, en filière féminine ou masculine. Pré-saison, maintien en saison ou toute la saison : tu reçois tout le programme de ton groupe, et c'est toi qui diriges les séances.",
+    lead: "Des U15 aux seniors, en filière féminine ou masculine. Pré-saison, 1re ou 2e partie de saison, ou toute la saison : tu reçois tout le programme de ton groupe, et c'est toi qui diriges les séances.",
     time: ["Du temps gagné pour toi", "Pas de préparateur physique au club\u00a0? Tu n'as plus à construire les séances de prépa : elles sont écrites, planifiées sur ton calendrier et chaque exercice est animé. Toi, tu gardes ton temps et ton énergie pour le terrain."],
     care: {
       h: "Ce qu'il faut savoir avant de commencer",

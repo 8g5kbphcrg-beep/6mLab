@@ -10,6 +10,10 @@ export default {
   // site (against look-alike pages), no guessing of file types, no full address sent to other
   // sites, no camera, microphone or location. Before the launch (SITE_PUBLIC=oui, see
   // lib/dict.ts), every response also tells search engines not to index it, files included.
+  // The Maintien en saison became the 1re partie de saison (lib/season-parts.ts).
+  async redirects() {
+    return [{ source: "/:lang(fr|en)/programmes/maintien-saison", destination: "/:lang/programmes/premiere-partie", permanent: true }];
+  },
   async headers() {
     const safe = [
       { key: "Strict-Transport-Security", value: "max-age=63072000" },

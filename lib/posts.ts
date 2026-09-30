@@ -134,7 +134,7 @@ export const posts: Post[] = [
       { ul: ["Évite les séances éprouvantes la veille d'un match.", "Place-les après les jours les plus chargés du club, pas avant.", "Garde une séance plus dynamique (sauts, accélérations) et une plus axée sur la force."] },
       { h: "Écoute ta fatigue" },
       { p: "Si tu es plus fatigué que d'habitude, réduis le volume plutôt que de supprimer la séance. Un peu de mobilité et de gainage valent mieux que rien." },
-      { p: "C'est le principe de la formule Maintien en saison de 6M Lab : 12 semaines, 2 séances courtes, pensées pour ne pas te fatiguer avant les matchs." },
+      { p: "C'est le principe de la 1re partie de saison de 6M Lab : de septembre à Noël, 2 séances courtes par semaine, pensées pour ne pas te fatiguer avant les matchs." },
     ],
   },
   // ---- Scheduled: 2 articles a month, published on their date (isLive) ----
@@ -245,7 +245,7 @@ export const posts: Post[] = [
       { ul: ["Semaine 1 : repos, ou activités plaisir (marche, vélo, autre sport).", "Semaine 2 et suivantes : 3 séances de 25 à 30 minutes par semaine.", "Séance A, jambes : squats, fentes arrière, squats sautés, 3 séries.", "Séance B, course : 2 fois 6 minutes de courses rapides de 15 secondes, avec 15 secondes de marche entre chaque.", "Séance C, gainage et épaules : planche, gainage latéral, rotations externes à l'élastique."] },
       { h: "La veille de la reprise" },
       { p: "Pas de grosse séance pour « rattraper » : un footing tranquille et un peu de mobilité suffisent. Le vrai piège de janvier, c'est de vouloir tout reprendre à 100 % dès le premier entraînement." },
-      { p: "Tu préfères un plan déjà écrit ? La formule Maintien en saison de 6M Lab propose deux séances courtes par semaine, faciles à caser pendant les vacances." },
+      { p: "Tu préfères un plan déjà écrit ? La 1re partie de saison de 6M Lab va jusqu'à la fin des vacances de Noël, avec deux séances courtes par semaine faciles à caser, et la 2e partie prend le relais pour la reprise de janvier." },
     ],
   },
   {
@@ -289,7 +289,7 @@ export const posts: Post[] = [
       { ul: ["Reprends les sprints et les changements de direction à pleine vitesse.", "Retrouve ton volume habituel de renforcement.", "Garde au moins un jour de repos complet entre deux grosses séances."] },
       { h: "Les épaules, le point sensible de janvier" },
       { p: "Une épaule qui reprend d'un coup un grand nombre de tirs est une épaule fragile. Ajoute 5 minutes de rotations externes à l'élastique avant chaque entraînement, et augmente le nombre de tirs sur deux semaines plutôt que dès la première séance. On explique pourquoi dans notre prochain article, étude à l'appui." },
-      { p: "Tu veux un plan écrit pour la phase retour ? La formule Maintien en saison de 6M Lab propose deux séances courtes par semaine, placées loin des matchs." },
+      { p: "Tu veux un plan écrit pour la phase retour ? La 2e partie de saison de 6M Lab propose deux séances courtes par semaine, placées loin des matchs, jusqu'aux phases finales de juin." },
     ],
   },
   {
@@ -332,7 +332,7 @@ export const posts: Post[] = [
       { p: "Avec des charges ou sans ? À partir de U17 pour les filles et de U18 pour les garçons, un haltère dans chaque main pour le squat bulgare convient si la technique est parfaite. Plus jeune, le poids du corps suffit largement." },
       { h: "Où la placer dans la semaine" },
       { ul: ["Loin du match : idéalement 3 jours avant, jamais la veille.", "Si tu as deux matchs dans la semaine, une seule séance, très courte.", "Après un match difficile, la priorité reste la récupération."] },
-      { p: "C'est exactement la logique de la formule Maintien en saison : deux séances courtes par semaine pour garder ce que la préparation a construit." },
+      { p: "C'est exactement la logique des 1re et 2e parties de saison : deux séances courtes par semaine pour garder ce que la préparation a construit." },
     ],
   },
   {

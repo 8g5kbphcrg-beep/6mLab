@@ -4,7 +4,7 @@ import { formUrl, paidOrders, questions, stripe, whenDays, DAY, type FeedbackOrd
 import { recentLeads } from "@/lib/leads";
 import { goals as fitGoals, type FitGoal } from "@/lib/forme";
 import Nav from "../Nav";
-import { endOf, MAX_DEVICES, offerOf } from "@/lib/access";
+import { endOf, MAX_DEVICES, offerOf , weeksOf } from "@/lib/access";
 
 // Customer feedback dashboard: response rates, ratings, answers to every question, reviews to
 // publish, and each order's questionnaires (send now, open, export).
@@ -63,7 +63,7 @@ export default async function AdminAvis() {
     <main>
       <Nav here="avis" />
       <h1>Commandes & avis</h1>
-      <p className="sub">{orders.length} commande{orders.length > 1 ? "s" : ""}. Questionnaire 1 envoyé 14 jours après l'achat, questionnaire 2 à la fin du programme (8 ou 12 semaines). Données lues dans Stripe{process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_") ? " (mode test)" : ""}. <a href="/admin/avis/export">Exporter en CSV (Excel)</a></p>
+      <p className="sub">{orders.length} commande{orders.length > 1 ? "s" : ""}. Questionnaire 1 envoyé 14 jours après l'achat, questionnaire 2 à la fin du programme (8, 18 ou 23 semaines, moins les semaines déjà passées pour un achat en cours de partie). Données lues dans Stripe{process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_") ? " (mode test)" : ""}. <a href="/admin/avis/export">Exporter en CSV (Excel)</a></p>
       <div className="kpis">
         <div className="kpi"><b>{avg}{stars.length ? " / 5" : ""}</b><span>Note moyenne ({stars.length} avis)</span></div>
         <div className="kpi"><b>{npsScore ?? "–"}</b><span>Score de recommandation (NPS, de -100 à 100)</span></div>
@@ -126,11 +126,11 @@ export default async function AdminAvis() {
           <tr key={o.id}>
             <td>{new Date(o.created * 1000).toLocaleDateString("fr-FR")}</td>
             <td>{o.firstName}<br /><span className="muted">{o.email}</span></td>
-            <td>{o.meta.pack === "oui" ? "Pack Saison complète" : programs.fr[o.program]?.name}<br /><span className="muted">{o.goals.map((g) => goalName(g, "fr")).join(" + ")}{o.meta.lieu ? ` · ${o.meta.lieu === "salle" ? "Salle" : "Maison"}` : ""}{o.meta.plang === "en" ? " · PDF en anglais" : ""}</span>
+            <td>{o.meta.pack === "oui" ? "Saison complète" : programs.fr[offerOf(o.meta) as keyof typeof programs.fr]?.name}{o.meta.debut ? ` (dès la semaine ${o.meta.debut})` : ""}<br /><span className="muted">{o.goals.map((g) => goalName(g, "fr")).join(" + ")}{o.meta.lieu ? ` · ${o.meta.lieu === "salle" ? "Salle" : "Maison"}` : ""}{o.meta.plang === "en" ? " · PDF en anglais" : ""}</span>
               <br /><a href={`/admin/programmes?${new URLSearchParams({ prog: o.meta.pack === "oui" ? "pack" : o.program, g: o.goals.join(","), lieu: o.meta.lieu ?? "maison", genre: o.meta.gender ?? "", plang: o.meta.plang ?? (o.meta.lang === "en" ? "en" : "fr"), course: o.meta.running === "oui" ? "oui" : "", prenom: o.firstName, ref: o.meta.ref ?? "" })}`}>PDF du programme</a></td>
             <td>
               {o.meta.acc_start ? (() => {
-                const end = endOf({ offer: offerOf(o.meta), start: Date.parse(o.meta.acc_start) }), n = (o.meta.acc_dev ?? "").split(",").filter(Boolean).length;
+                const end = endOf({ offer: offerOf(o.meta), weeks: weeksOf(o.meta), start: Date.parse(o.meta.acc_start) }), n = (o.meta.acc_dev ?? "").split(",").filter(Boolean).length;
                 return <>
                   <span className={`tag${end > Date.now() ? " ok" : ""}`}>{end > Date.now() ? "Jusqu'au" : "Terminé le"} {new Date(end).toLocaleDateString("fr-FR")}</span>
                   <br /><span className="muted">{n} / {MAX_DEVICES} appareils</span>{" "}
@@ -143,10 +143,10 @@ export default async function AdminAvis() {
             </td>
             {(["mid", "end"] as const).map((st) => {
               const answered = o.meta[st === "mid" ? "m_at" : "f_at"], sent = o.meta[st === "mid" ? "s_mid" : "s_end"];
-              const due = new Date((o.created + whenDays(st, o.program) * DAY) * 1000).toLocaleDateString("fr-FR");
+              const due = new Date((o.created + whenDays(st, o.meta) * DAY) * 1000).toLocaleDateString("fr-FR");
               return (
                 <td key={st}>
-                  {answered ? <span className="tag ok">Répondu le {answered.slice(0, 10)}</span> : sent ? <span className="tag">Envoyé le {sent}</span> : <span className="muted">Prévu le {due}{o.created + whenDays(st, o.program) * DAY < now - 10 * DAY ? " (passé)" : ""}</span>}
+                  {answered ? <span className="tag ok">Répondu le {answered.slice(0, 10)}</span> : sent ? <span className="tag">Envoyé le {sent}</span> : <span className="muted">Prévu le {due}{o.created + whenDays(st, o.meta) * DAY < now - 10 * DAY ? " (passé)" : ""}</span>}
                   <br />
                   {!answered && o.email && <form method="post" action="/admin/avis/action"><input type="hidden" name="pi" value={o.id} /><input type="hidden" name="action" value={`send-${st}`} /><button className="ghost">Envoyer maintenant</button></form>}{" "}
                   <a className="muted" href={formUrl(site, o.lang, o.id, st)} target="_blank">Ouvrir</a>

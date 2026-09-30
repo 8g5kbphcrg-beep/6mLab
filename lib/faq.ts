@@ -1,5 +1,5 @@
 import type { Lang } from "@/lib/dict";
-import { fmtPrice, PACK_PRICE, prices, RUNNING_PRICE, SECOND_GOAL_PRICE } from "@/lib/checkout";
+import { fmtPrice, PACK_FULL, PACK_PRICE, prices, RUNNING_PRICE, SECOND_GOAL_PRICE } from "@/lib/checkout";
 import { accessWeeks, ACTIVATE_WITHIN_DAYS, MAX_DEVICES } from "@/lib/access";
 import { owner } from "@/lib/legal";
 import { FRIEND_PERCENT, POINTS_FOR_REWARD, POINTS_PER_FRIEND, SPONSOR_PERCENT, VALIDATION_DAYS } from "@/lib/referral";
@@ -11,12 +11,13 @@ export type Faq = { h: string; items: { q: string; a: string }[] }[];
 
 export function faq(lang: Lang): Faq {
   const p = (c: number) => fmtPrice(c, lang);
-  const pre = p(prices["pre-saison"]), main = p(prices["maintien-saison"]), pack = p(PACK_PRICE);
-  const [wPre, wMain, wPack] = [accessWeeks("pre-saison"), accessWeeks("maintien-saison"), accessWeeks("pack")];
+  const pre = p(prices["pre-saison"]), first = p(prices["premiere-partie"]), second = p(prices["deuxieme-partie"]), pack = p(PACK_PRICE), full = p(PACK_FULL);
+  const [wPre, wFirst, wSecond] = [accessWeeks("pre-saison"), accessWeeks("premiere-partie"), accessWeeks("deuxieme-partie")];
   const months = Math.round(ACTIVATE_WITHIN_DAYS / 30.4);
   if (lang === "fr") return [
     { h: "Choisir son programme", items: [
-      { q: "Quel programme choisir ?", a: `Pré-saison (${pre}) : 8 semaines, 3 à 4 séances par semaine, à faire pendant les 2 mois avant la reprise. Maintien en saison (${main}) : 12 semaines, 2 séances courtes par semaine, placées loin des matchs. Saison complète (${pack}) : les deux à la suite, soit 20 semaines. Tu hésites ? Le [questionnaire](/fr/questionnaire) te recommande le bon programme en une minute.` },
+      { q: "Quel programme choisir ?", a: `La saison est découpée en 3 parties. Pré-saison (${pre}) : juillet et août, 8 semaines, 3 à 4 séances par semaine avant la reprise. 1re partie de saison (${first}) : de septembre à la fin des vacances de Noël, 18 semaines, 2 séances courtes par semaine, placées loin des matchs. 2e partie de saison (${second}) : de janvier à mi-juin, phases finales comprises, 23 semaines. Saison complète (${pack} au lieu de ${full}) : les 3 parties à la suite, à partir de celle en cours. Tu hésites ? Le [questionnaire](/fr/questionnaire) te recommande le bon programme en une minute.` },
+      { q: "La partie a déjà commencé, je peux quand même la prendre ?", a: "Oui, de deux façons, au choix à la commande. Le programme entier, au prix plein : tu reçois toutes les séances depuis la semaine 1. Ou un programme qui commence à la semaine où en est la saison, au prix des semaines qui restent (arrondi à ,99). Pour la Saison complète, la remise de 20 % s'applique dans les deux cas." },
       { q: "Comment fonctionnent les objectifs ?", a: `Tu choisis 1 objectif inclus parmi Développement musculaire, Explosivité, Puissance, Condition physique et Prévention & santé. Tu peux en ajouter un 2e pour ${p(SECOND_GOAL_PRICE)}. La Réathlétisation (retour après blessure) est en préparation.` },
       { q: "Je débute en préparation physique, c'est pour moi ?", a: "Oui. Chaque séance indique une version plus facile, et les premières semaines servent à apprendre les gestes avec un effort modéré." },
       { q: "À la maison ou en salle ?", a: "Tu choisis à la commande. Maison : poids du corps et objets du quotidien, avec des variantes à l'élastique. Salle : haltères, barre et poulies. Le programme est construit pour le lieu choisi." },
@@ -28,7 +29,7 @@ export function faq(lang: Lang): Faq {
     { h: "Commande et accès", items: [
       { q: "Comment je reçois mon programme ?", a: "Par email, en PDF à ton nom. Les animations des exercices s'ouvrent depuis ton [espace client](/fr/espace-client) : tu te connectes avec ta référence de commande et un code à 6 chiffres reçu par email." },
       { q: "Je garde le PDF ?", a: "Oui, pour toujours. Seul l'accès en ligne aux animations est limité dans le temps." },
-      { q: "Combien de temps ai-je accès aux animations ?", a: `Le temps du programme plus 2 semaines : ${wPre} semaines pour Pré-saison, ${wMain} pour Maintien, ${wPack} pour Saison complète. L'accès démarre quand tu actives ta bibliothèque dans ton espace client, pas le jour de l'achat : tu as ${months} mois pour le lancer. Il fonctionne sur ${MAX_DEVICES} appareils au plus.` },
+      { q: "Combien de temps ai-je accès aux animations ?", a: `Le temps du programme plus 2 semaines : ${wPre} semaines pour la Pré-saison, ${wFirst} pour la 1re partie, ${wSecond} pour la 2e partie, jusqu'à la fin de sa 3e partie pour la Saison complète. L'accès démarre quand tu actives ta bibliothèque dans ton espace client, pas le jour de l'achat : tu as ${months} mois pour le lancer. Il fonctionne sur ${MAX_DEVICES} appareils au plus.` },
       { q: "Je peux avoir mon programme en anglais ?", a: "Oui : à la commande, tu choisis la langue du programme (français ou anglais)." },
       { q: "Comment se passe le paiement ?", a: "Le paiement est sécurisé par Stripe : carte bancaire, et Apple Pay ou Google Pay selon ton appareil. 6M Lab ne voit jamais tes informations de carte." },
       { q: "Je suis mineur, je peux commander ?", a: "Oui, avec l'accord d'un parent ou d'un représentant légal, qui peut aussi passer la commande pour toi." },
@@ -46,7 +47,8 @@ export function faq(lang: Lang): Faq {
   ];
   return [
     { h: "Choosing a program", items: [
-      { q: "Which program should I choose?", a: `Pre-season (${pre}): 8 weeks, 3 to 4 sessions a week, for the 2 months before your club restarts. In-season maintenance (${main}): 12 weeks, 2 short sessions a week, placed away from games. Full season (${pack}): both back to back, 20 weeks. Not sure? The [questionnaire](/en/questionnaire) recommends the right program in a minute.` },
+      { q: "Which program should I choose?", a: `The season comes in 3 parts. Pre-season (${pre}): July and August, 8 weeks, 3 to 4 sessions a week before your club restarts. First half of the season (${first}): September to the end of the Christmas holidays, 18 weeks, 2 short sessions a week, placed away from games. Second half of the season (${second}): January to mid-June, finals included, 23 weeks. Full season (${pack} instead of ${full}): the 3 parts in a row, from the one under way. Not sure? The [questionnaire](/en/questionnaire) recommends the right program in a minute.` },
+      { q: "The part has already started, can I still get it?", a: "Yes, in two ways, chosen when you order. The whole program, at full price: you get every session from week 1. Or a program that starts at the week the season is at, at the price of the weeks left (rounded to .99). For the Full season, the 20% discount applies either way." },
       { q: "How do the goals work?", a: `You pick 1 included goal among Muscle development, Explosiveness, Power, Fitness and Prevention & health. You can add a 2nd one for ${p(SECOND_GOAL_PRICE)}. Return to play after injury is coming soon.` },
       { q: "I'm new to physical training, is it for me?", a: "Yes. Every session has an easier version, and the first weeks are for learning the movements at a moderate effort." },
       { q: "At home or at the gym?", a: "You choose when ordering. Home: bodyweight and everyday objects, with resistance band variations. Gym: dumbbells, barbell and cables. The program is built for the place you choose." },
@@ -58,7 +60,7 @@ export function faq(lang: Lang): Faq {
     { h: "Order and access", items: [
       { q: "How do I get my program?", a: "By email, as a PDF with your name. The exercise animations open from your [customer area](/en/espace-client): you log in with your order reference and a 6-digit code received by email." },
       { q: "Do I keep the PDF?", a: "Yes, forever. Only the online access to the animations is time-limited." },
-      { q: "How long can I watch the animations?", a: `The length of the program plus 2 weeks: ${wPre} weeks for Pre-season, ${wMain} for Maintenance, ${wPack} for Full season. Access starts when you activate your library in your customer area, not on the day you buy: you have ${months} months to start it. It works on ${MAX_DEVICES} devices at most.` },
+      { q: "How long can I watch the animations?", a: `The length of the program plus 2 weeks: ${wPre} weeks for the Pre-season, ${wFirst} for the first half, ${wSecond} for the second half, until the end of its third part for the Full season. Access starts when you activate your library in your customer area, not on the day you buy: you have ${months} months to start it. It works on ${MAX_DEVICES} devices at most.` },
       { q: "Can I get my program in French?", a: "Yes: when ordering, you choose the language of the program (English or French)." },
       { q: "How does payment work?", a: "Payment is secured by Stripe: card, and Apple Pay or Google Pay depending on your device. 6M Lab never sees your card details." },
       { q: "I'm under 18, can I order?", a: "Yes, with the agreement of a parent or legal guardian, who can also place the order for you." },
