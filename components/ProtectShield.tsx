@@ -9,10 +9,11 @@ import type { Lang } from "@/lib/dict";
 // - blur it for a moment on the screenshot keys a page can see (Print Screen on Windows; the Mac
 //   shortcuts are usually caught by the system first);
 // - nothing when printed, no right-click menu, no saving or dragging of the drawings;
-// - the buyer's name and order reference written across the content, so a screenshot that
-//   circulates says whose it is (as on the PDFs).
+// - the buyer's name and order reference in a small line at the bottom of the screen, so a
+//   screenshot that circulates says whose it is (as at the foot of the PDF pages).
 export default function ProtectShield({ lang, mark, children }: { lang: Lang; mark: string | null; children: ReactNode }) {
   const [hidden, setHidden] = useState(false);
+  const fr = lang === "fr";
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | undefined;
     const hide = () => setHidden(true);
@@ -55,11 +56,10 @@ export default function ProtectShield({ lang, mark, children }: { lang: Lang; ma
       document.removeEventListener("dragstart", block);
     };
   }, []);
-  const fr = lang === "fr";
   return (
     <div className={hidden ? "prot on" : "prot"}>
       {children}
-      {mark && <div className="prot-mark" aria-hidden="true">{Array.from({ length: 24 }, (_, i) => <span key={i}>{mark}</span>)}</div>}
+      {mark && <p className="prot-mark">{fr ? "Réservé à" : "For"} {mark}</p>}
       <div className="prot-veil" aria-hidden={!hidden} onClick={() => setHidden(false)}>
         <p><strong>{fr ? "Contenu protégé" : "Protected content"}</strong><br />{fr ? "Touche l'écran pour revenir à ton programme." : "Tap the screen to go back to your program."}</p>
       </div>
