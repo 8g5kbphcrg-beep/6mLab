@@ -1,4 +1,4 @@
-import { access } from "node:fs/promises";
+import { programExists } from "@/lib/program-store";
 import Nav from "../Nav";
 import { orderFiles } from "@/lib/email";
 import { goalIds, goalName, validGoals, type GoalId } from "@/lib/goals";
@@ -19,8 +19,8 @@ export default async function Programmes({ searchParams }: { searchParams: Promi
   const ok = !!prog && validGoals(goals);
   const plang: Lang = q.plang === "en" ? "en" : "fr";
   const files = ok ? orderFiles({ program: prog as ProgramSlug, goals: goals as GoalId[], running: q.course === "oui", gender: q.genre ?? "", lieu: q.lieu === "salle" ? "salle" : "maison", plang }) : [];
-  const exists = await Promise.all(files.map((f) => access(f.path).then(() => true, () => false)));
-  const link = (path: string, name: string) => `/admin/programmes/fichier?${new URLSearchParams({ f: path.split("/programmes/")[1] ?? "", n: name, prenom: q.prenom ?? "", ref: q.ref ?? "", lang: plang })}`;
+  const exists = await Promise.all(files.map((f) => programExists(f.path)));
+  const link = (path: string, name: string) => `/admin/programmes/fichier?${new URLSearchParams({ f: path, n: name, prenom: q.prenom ?? "", ref: q.ref ?? "", lang: plang })}`;
   const sel = (name: string, label: string, opts: readonly (readonly [string, string])[], value = "") => (
     <label className="f">{label}<select name={name} defaultValue={value}>{opts.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select></label>
   );

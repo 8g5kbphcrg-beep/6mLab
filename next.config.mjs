@@ -1,11 +1,10 @@
 export default {
   poweredByHeader: false,
-  // The program PDFs (French, and English in programmes/en/) are read from disk by the Stripe
-  // webhook and the free session, never served as pages.
-  outputFileTracingIncludes: { "/api/stripe/webhook": ["./programmes/**/*.pdf"], "/api/seance-gratuite": ["./programmes/seance-decouverte.pdf", "./programmes/en/seance-decouverte.pdf"],
-    // Admin: the working documents, the PDFs of an order for sending by hand, and the club
-    // programs exported as PDFs (scripts/clubs-pdf.mjs).
-    "/admin/docs/[slug]": ["./private/docs/*.html"], "/admin/clubs": ["./private/clubs/**/*"], "/admin/clubs/pdf/[dossier]/[fichier]": ["./private/clubs/**/*.pdf"], "/admin/programmes/fichier": ["./programmes/**/*.pdf"] },
+  // The program PDFs are read from the Vercel Blob store (lib/program-store.ts, copied there at each
+  // build by scripts/blob-sync.mjs): they never travel inside a function. Only the admin's working
+  // documents and the club programs exported as PDFs are kept in theirs.
+  outputFileTracingIncludes: { "/admin/docs/[slug]": ["./private/docs/*.html"], "/admin/clubs": ["./private/clubs/**/*"], "/admin/clubs/pdf/[dossier]/[fichier]": ["./private/clubs/**/*.pdf"] },
+  outputFileTracingExcludes: { "*": ["./programmes/**/*.pdf"] },
   // Browser protections on every response: HTTPS only, no page of the site shown inside another
   // site (against look-alike pages), no guessing of file types, no full address sent to other
   // sites, no camera, microphone or location. Before the launch (SITE_PUBLIC=oui, see
