@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { locales, type Lang } from "@/lib/dict";
 import AccessGate from "@/components/AccessGate";
+import Protected from "@/components/Protected";
 import { accessInfo } from "@/lib/access-page";
 import { clubItem } from "@/lib/library";
 import { COL, DR, drillSVG } from "@/lib/club-drills";
@@ -28,6 +29,7 @@ export default async function ClubItem({ params, searchParams }: P) {
   if ((await accessInfo())?.kind !== "club") return <AccessGate lang={l} next={`/${l}/clubs/bibliotheque/${id}`} state={(await searchParams).acces} club />;
   const d = DR[id];
   return (
+    <Protected lang={l}>
     <div className="lib wrap drill-page">
       <p className="lib-k"><Link href={`/${l}/clubs/bibliotheque`}>← {fr ? "Bibliothèque clubs" : "Club library"}</Link></p>
       <h1>{item.name}</h1>
@@ -39,5 +41,6 @@ export default async function ClubItem({ params, searchParams }: P) {
       {d?.org && <p className="drill-org"><b>{fr ? "Organisation et rotations :" : "Organisation and rotations:"}</b> {d.org}</p>}
       {item.cues && <p className="drill-cues"><b>{fr ? "Points clés :" : "Key points:"}</b> {item.cues}</p>}
     </div>
+    </Protected>
   );
 }

@@ -4,6 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import { locales, type Lang } from "@/lib/dict";
 import { animatedIds, exName } from "@/components/ExerciseCard";
 import AccessGate from "@/components/AccessGate";
+import Protected from "@/components/Protected";
 import LibrarySearch from "@/components/LibrarySearch";
 import { accessInfo } from "@/lib/access-page";
 import { CLUB_EXERCISES, CLUB_GROUPS, clubItem, FAMILIES } from "@/lib/library";
@@ -28,6 +29,7 @@ export default async function ClubLibrary({ params, searchParams }: P) {
   const families = FAMILIES.map(([a, b, ids]) => [fr ? a : b, ids.filter((id) => CLUB_EXERCISES.includes(id) && animatedIds.includes(id))] as const).filter(([, ids]) => ids.length);
   const back = `?retour=/${l}/clubs/bibliotheque`;
   return (
+    <Protected lang={l}>
     <div className="lib wrap">
       <p className="lib-k">{fr ? "Programme club" : "Club program"}</p>
       <h1>{fr ? "Bibliothèque clubs" : "Club library"}</h1>
@@ -54,5 +56,6 @@ export default async function ClubLibrary({ params, searchParams }: P) {
         </section>
       ))}
     </div>
+    </Protected>
   );
 }

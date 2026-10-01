@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { locales, type Lang } from "@/lib/dict";
 import { animatedIds, exName } from "@/components/ExerciseCard";
 import AccessGate from "@/components/AccessGate";
+import Protected from "@/components/Protected";
 import LibrarySearch from "@/components/LibrarySearch";
 import { accessInfo, type Gate } from "@/lib/access-page";
 import { FAMILIES } from "@/lib/library";
@@ -35,6 +36,7 @@ export default async function Library({ params, searchParams }: P) {
     .map(([a, b, ids]) => [fr ? a : b, ids.filter((id) => animatedIds.includes(id))] as const)
     .filter(([, ids]) => ids.length);
   return (
+    <Protected lang={l}>
     <div className="lib wrap">
       <p className="lib-k"><a href={`/${l}/espace-client`}>{fr ? "Espace client" : "Customer area"}</a></p>
       <h1>{fr ? "Bibliothèque d'exercices" : "Exercise library"}</h1>
@@ -51,5 +53,6 @@ export default async function Library({ params, searchParams }: P) {
         </section>
       ))}
     </div>
+    </Protected>
   );
 }
