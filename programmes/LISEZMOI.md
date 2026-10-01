@@ -19,13 +19,13 @@ Les séances existent aussi en 3 silhouettes pour les animations, selon le genre
 suffixe, et l'œil de chaque exercice ouvre l'animation dans le même lieu et la même silhouette
 (`/fr/exercices/<id>/maison-femme`).
 
-Avec le pack Saison complète (Pré-saison + Maintien), le client reçoit le guide et les séances des
-deux formules, avec les mêmes objectifs.
+Avec la Saison complète, le client reçoit le guide et les séances de la partie en cours ; les parties
+suivantes partent par email 7 jours avant leur début (voir `app/api/cron/feedback`).
 
 `seance-decouverte.pdf` est la séance gratuite de 15 min envoyée depuis la page d'accueil, en
 échange d'une adresse email (suivie de 3 emails de conseils, voir `lib/email.ts`).
 
-Formules : `pre-saison`, `maintien-saison`. Objectifs, dans l'ordre des noms de fichiers :
+Formules : `pre-saison`, `premiere-partie` (1re partie de saison, 18 semaines : 4 blocs et la trêve de Noël, dans `source/premiere-partie.mjs`). La `deuxieme-partie` viendra ensuite. Objectifs, dans l'ordre des noms de fichiers :
 `explosivite`, `puissance`, `muscle`, `condition`, `prevention` (10 paires par formule).
 La réathlétisation (`seances-<formule>-reathletisation.pdf`) sera ajoutée plus tard.
 
@@ -52,7 +52,8 @@ changer de méthode.
 Tout est dans `programmes/source/` :
 
 - `exercices.mjs` : la description de chaque exercice ;
-- `objectifs.mjs` : les 5 objectifs et leurs séances ;
+- `objectifs.mjs` : les 5 objectifs et leurs séances de Pré-saison ;
+- `premiere-partie.mjs` : les séances de la 1re partie, bloc par bloc, celles de la trêve et la routine épaules ;
 - `communs.mjs` : échauffement, gainage, retour au calme et contenu des guides ;
 - `figures.mjs` : les illustrations des exercices ;
 - `option-course.mjs` : l'option course.
