@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { locales, type Lang } from "@/lib/dict";
 import ExerciseCard, { animatedIds, exName, exerciseList, options } from "@/components/ExerciseCard";
 import AccessGate from "@/components/AccessGate";
+import Protected from "@/components/Protected";
 import { FREE_EXERCISES } from "@/lib/access";
 import { allowed, backPath, type Gate } from "@/lib/access-page";
 
@@ -25,5 +26,5 @@ export default async function ExerciceOption({ params, searchParams }: P) {
   if (!FREE_EXERCISES.includes(id) && !(await allowed(id))) {
     return <AccessGate lang={lang as Lang} next={`/${lang}/exercices/${id}/${option}`} state={g.acces} />;
   }
-  return <ExerciseCard lang={lang as Lang} id={id} option={option} back={backPath(g.retour)} />;
+  return <Protected lang={lang as Lang}><ExerciseCard lang={lang as Lang} id={id} option={option} back={backPath(g.retour)} /></Protected>;
 }
