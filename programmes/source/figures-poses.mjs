@@ -361,6 +361,17 @@ export const defs = {
       { torso: -2, lift: 26, near: { thigh: 0, shin: -3, foot: ARMED, upper: 156, fore: 164 } },
     ],
   },
+  // Countermovement jump: standing, a quick dip with the arms swung back, then straight up.
+  "saut-cmj": {
+    loop: "restart",
+    pace: [0.5, 0.35, 0.5, 0.5],
+    poids: [
+      { near: { upper: 20, fore: 30 }, far: { upper: 14, fore: 24 } },
+      crouch(),
+      air({ lift: 28 }),
+      landing(),
+    ],
+  },
   "skater-hop": {
     cam: { yaw: 80, pitch: 5 },
     poids: [
@@ -409,6 +420,20 @@ export const defs = {
       { torso: 62, x: 60, near: { thigh: 88, shin: -8, upper: 10, fore: 10, hand: 20 }, far: { thigh: -30, shin: -62, foot: 32, upper: -40, fore: -20 },
         solve: [{ vary: ["near.upper", "near.fore", "near.hand"], a: "near.hand", b: "near.heel", dy: 3 }] },
       stride({ torso: 20, knee: 62, back: -26, arm: 50, x: 40, flip: true }),
+    ],
+  },
+  // Defensive slides: low stance, two side shuffles without crossing the feet, then a sprint
+  // forward. Three-quarter view to see both the side steps and the start.
+  "pas-chasses-depart": {
+    loop: "restart",
+    cam: { yaw: 45, pitch: 8 },
+    poids: [
+      { torso: 28, z: 0, ...legs({ thigh: 42, thighOut: 24, shin: -32, shinOut: 14 }, { upper: 35, upperOut: 35, fore: 85 }) },
+      { torso: 28, z: -22, ...legs({ thigh: 42, thighOut: 4, shin: -32, shinOut: 2 }, { upper: 35, upperOut: 35, fore: 85 }) },
+      { torso: 28, z: -44, ...legs({ thigh: 42, thighOut: 24, shin: -32, shinOut: 14 }, { upper: 35, upperOut: 35, fore: 85 }) },
+      { torso: 28, z: -66, ...legs({ thigh: 42, thighOut: 4, shin: -32, shinOut: 2 }, { upper: 35, upperOut: 35, fore: 85 }) },
+      { ...stride({ torso: 40, knee: 68, back: -30, arm: 55, x: 35, swap: true }), z: -66 },
+      { ...stride({ torso: 30, knee: 64, back: -28, arm: 55, x: 85 }), z: -66 },
     ],
   },
   "drop-jump": {

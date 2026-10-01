@@ -2,6 +2,14 @@
 // (exercices, objectifs, communs, lieux, option-course) with its translation. The generator
 // stops and lists any text missing here, so a changed French text must be translated again.
 export const EN = {
+  "Saut avec contre-mouvement": "Countermovement jump",
+  "Debout, descends vite en demi-squat en lançant les bras en arrière, puis saute le plus haut possible sans marquer de pause. Réception stabilisée.": "Standing, dip quickly into a half squat while swinging your arms back, then jump as high as you can without pausing. Stable landing.",
+  "Descente rapide, remontée explosive : les bras lancés vers le haut aident à monter. En l'air, cheville armée, prête pour la réception.": "Fast dip, explosive drive up: swinging your arms up helps you rise. In the air, ankle armed, ready for the landing.",
+  "Descente moins profonde, sans élan des bras.": "A shallower dip, without the arm swing.",
+  "Pas chassés défensifs + départ": "Defensive slides + start",
+  "En position défensive basse, fais 2 à 3 pas chassés sur le côté sans croiser les pieds, puis démarre en sprint vers l'avant sur 5 m, comme pour une interception.": "In a low defensive stance, take 2 to 3 side shuffles without crossing your feet, then sprint forward over 5 m, as for an interception.",
+  "Reste bas, pieds écartés plus larges que les épaules, buste droit. Pousse avec la jambe extérieure, ne croise jamais les pieds pendant les pas chassés.": "Stay low, feet wider than your shoulders, chest up. Push with the outside leg, never cross your feet during the shuffles.",
+  "Pas chassés seulement, puis départ en trottinant.": "Shuffles only, then start at a jog.",
   "Course légère et gammes": "Light jog and running drills",
   "Course légère en alternant pas chassés, montées de genoux et talons-fesses.": "Light jog, alternating side shuffles, high knees and butt kicks.",
   "Commence doucement, augmente progressivement le rythme.": "Start slowly, then gradually pick up the pace.",
