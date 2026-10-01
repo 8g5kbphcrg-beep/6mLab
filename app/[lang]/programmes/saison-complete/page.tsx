@@ -5,6 +5,7 @@ import ProductVideo from "@/components/ProductVideo";
 import { notFound } from "next/navigation";
 import Reviews from "@/components/Reviews";
 import BuyForm from "@/components/BuyForm";
+import BuyReassure from "@/components/BuyReassure";
 import { dict, type Lang } from "@/lib/dict";
 import { programs } from "@/lib/programs";
 import { fmtPrice, testMode } from "@/lib/checkout";
@@ -134,6 +135,7 @@ export default async function SaisonComplete({ params, searchParams }: P) {
           </section>
           <p className="note">{dict[l].why.note}</p>
         </div>
+        <BuyReassure lang={l} weeks={null} />
       </div>
       <Reviews lang={l} offer="pack" />
     </div>

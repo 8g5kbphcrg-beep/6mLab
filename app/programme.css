@@ -17,9 +17,20 @@
 .plead{font-size:1.15rem}
 .pmain{display:grid;gap:2.5rem}.pmain h2{font-size:clamp(1.8rem,5vw,2.4rem)}.pmain .note{margin:0}
 .pquiz{text-align:center;color:var(--muted);font-size:.95rem;margin:1rem auto 0}.pquiz a{color:var(--ink);font-weight:600}
+/* Large screens only (components/BuyReassure.tsx): fills the left column next to the long order
+   form, and stays in view under the menu bar while the form is filled in. */
+.preass{display:none}
+.preass-in{position:sticky;top:calc(env(safe-area-inset-top,0px) + 6rem);border:1px solid var(--line);border-radius:18px;padding:1.4rem 1.5rem;background:var(--card)}
+.preass h2{font-size:1.35rem;margin:1.2rem 0 .6rem}.preass h2:first-of-type{margin-top:.6rem}
+.preass ul{list-style:none;padding:0;margin:0;display:grid;gap:.55rem}
+.preass li{padding-left:1.6rem;position:relative}.preass li::before{content:"✓";position:absolute;left:0;color:var(--A);font-weight:700}
+.preass-step{margin:0;color:var(--muted);font-size:.95rem}
+.preass-q{margin:1.2rem 0 0;color:var(--muted);font-size:.95rem}.preass-q a{color:var(--ink);font-weight:600}
 @media(min-width:900px){
   .pgrid{grid-template-columns:minmax(0,1fr) 420px;grid-template-areas:"head side" "main side";grid-template-rows:auto 1fr;column-gap:4rem;row-gap:3rem;align-items:start}
   .phead{grid-area:head}.pmain{grid-area:main}.pside{grid-area:side}
+  .pgrid{grid-template-areas:"head side" "main side" "reass side";grid-template-rows:auto auto 1fr}
+  .preass{display:block;grid-area:reass;align-self:stretch}
 }
 .ptag.p{background:var(--sky);color:#fff}
 .pprice2{display:flex;flex-wrap:wrap;align-items:baseline;gap:.4rem .8rem;margin:0 0 1rem}.pprice2>*{white-space:nowrap}.pprice2 strong{font:400 2.6rem/1 var(--font-display),sans-serif}.pprice2 s{color:var(--muted);font-size:1.1rem}.pprice2 span{background:#FFC75F;color:#100A24;font-weight:700;font-size:.85rem;border-radius:999px;padding:.2rem .7rem}
