@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Reviews from "@/components/Reviews";
 import Link from "next/link";
-import { offerOf } from "@/lib/access";
+import { accessWeeks, offerOf } from "@/lib/access";
+import BuyReassure from "@/components/BuyReassure";
 import { offerRating } from "@/lib/reviews";
 import ProductVideo from "@/components/ProductVideo";
 import { notFound, redirect } from "next/navigation";
@@ -87,6 +88,7 @@ export default async function Programme({ params, searchParams }: P) {
           </section>
           <p className="note">{d.why.note}</p>
         </div>
+        <BuyReassure lang={lang as Lang} weeks={accessWeeks(offerOf({ program: slug }))} />
       </div>
       <Reviews lang={lang as Lang} offer={offerOf({ program: slug })} />
     </div>
