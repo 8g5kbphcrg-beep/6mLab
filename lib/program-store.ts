@@ -8,17 +8,21 @@ import manifest from "@/lib/pdf-manifest.json";
 // computer. rel: the path inside programmes/ ("guide-pre-saison-salle.pdf", "en/…").
 const files = manifest.files as Record<string, string>;
 const local = (rel: string) => readFile(join(process.cwd(), "programmes", rel));
+// BLOB_READ_WRITE_TOKEN, or <PREFIX>_READ_WRITE_TOKEN when the store was connected with a prefix;
+// newer stores use BLOB_STORE_ID with Vercel's OIDC token, found by the Blob library itself.
+const token = () => process.env.BLOB_READ_WRITE_TOKEN ?? Object.entries(process.env).find(([k]) => k.endsWith("_READ_WRITE_TOKEN"))?.[1];
+const connected = () => !!(token() || process.env.BLOB_STORE_ID);
 
 export async function readProgram(rel: string): Promise<Buffer | null> {
   const pathname = files[rel];
-  if (!pathname || !process.env.BLOB_READ_WRITE_TOKEN) return local(rel).catch(() => null);
+  if (!pathname || !connected()) return local(rel).catch(() => null);
   for (const access of manifest.access ? [manifest.access as "private" | "public"] : (["private", "public"] as const)) {
     try {
-      const r = await get(pathname, { access });
+      const t = token(), r = await get(pathname, { access, ...(t ? { token: t } : {}) });
       if (r?.statusCode === 200) return Buffer.from(await new Response(r.stream).arrayBuffer());
     } catch {}
   }
   return null;
 }
 // Whether a PDF exists, without downloading it (admin pages).
-export const programExists = async (rel: string) => (files[rel] && process.env.BLOB_READ_WRITE_TOKEN ? true : (await local(rel).then(() => true, () => false)));
+export const programExists = async (rel: string) => (files[rel] && connected() ? true : (await local(rel).then(() => true, () => false)));
