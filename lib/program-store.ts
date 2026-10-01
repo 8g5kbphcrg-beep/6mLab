@@ -8,17 +8,19 @@ import manifest from "@/lib/pdf-manifest.json";
 // computer. rel: the path inside programmes/ ("guide-pre-saison-salle.pdf", "en/…").
 const files = manifest.files as Record<string, string>;
 const local = (rel: string) => readFile(join(process.cwd(), "programmes", rel));
+// BLOB_READ_WRITE_TOKEN, or <PREFIX>_READ_WRITE_TOKEN when the store was connected with a prefix.
+const token = () => process.env.BLOB_READ_WRITE_TOKEN ?? Object.entries(process.env).find(([k]) => k.endsWith("_READ_WRITE_TOKEN"))?.[1];
 
 export async function readProgram(rel: string): Promise<Buffer | null> {
   const pathname = files[rel];
-  if (!pathname || !process.env.BLOB_READ_WRITE_TOKEN) return local(rel).catch(() => null);
+  if (!pathname || !token()) return local(rel).catch(() => null);
   for (const access of manifest.access ? [manifest.access as "private" | "public"] : (["private", "public"] as const)) {
     try {
-      const r = await get(pathname, { access });
+      const r = await get(pathname, { access, token: token() });
       if (r?.statusCode === 200) return Buffer.from(await new Response(r.stream).arrayBuffer());
     } catch {}
   }
   return null;
 }
 // Whether a PDF exists, without downloading it (admin pages).
-export const programExists = async (rel: string) => (files[rel] && process.env.BLOB_READ_WRITE_TOKEN ? true : (await local(rel).then(() => true, () => false)));
+export const programExists = async (rel: string) => (files[rel] && token() ? true : (await local(rel).then(() => true, () => false)));

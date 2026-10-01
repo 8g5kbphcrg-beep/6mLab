@@ -13,10 +13,15 @@ import { list, put } from "@vercel/blob";
 
 const root = join(import.meta.dirname, "..", "programmes");
 const manifestPath = join(import.meta.dirname, "..", "lib", "pdf-manifest.json");
-if (!process.env.BLOB_READ_WRITE_TOKEN) {
-  console.log("[blob] pas de BLOB_READ_WRITE_TOKEN : PDF lus depuis le dossier programmes/");
+// The key Vercel adds when the store is connected: BLOB_READ_WRITE_TOKEN, or <PREFIX>_READ_WRITE_TOKEN
+// when a custom prefix was chosen.
+const tokenName = Object.keys(process.env).find((k) => k === "BLOB_READ_WRITE_TOKEN") ?? Object.keys(process.env).find((k) => k.endsWith("_READ_WRITE_TOKEN"));
+const token = tokenName && process.env[tokenName];
+if (!token) {
+  console.log(`[blob] pas de clé *_READ_WRITE_TOKEN (environnement ${process.env.VERCEL_ENV ?? "local"}) : PDF lus depuis le dossier programmes/`);
   process.exit(0);
 }
+console.log(`[blob] clé trouvée : ${tokenName}`);
 
 const files = [];
 for (const e of await readdir(root, { recursive: true, withFileTypes: true })) {
@@ -25,7 +30,7 @@ for (const e of await readdir(root, { recursive: true, withFileTypes: true })) {
 const existing = new Set();
 let cursor;
 do {
-  const page = await list({ prefix: "programmes/", cursor, limit: 1000 });
+  const page = await list({ prefix: "programmes/", cursor, limit: 1000, token });
   for (const b of page.blobs) existing.add(b.pathname);
   cursor = page.hasMore ? page.cursor : undefined;
 } while (cursor);
@@ -34,11 +39,11 @@ do {
 let access = "private";
 const send = async (pathname, body) => {
   try {
-    await put(pathname, body, { access, contentType: "application/pdf", addRandomSuffix: false, allowOverwrite: true });
+    await put(pathname, body, { access, contentType: "application/pdf", addRandomSuffix: false, allowOverwrite: true, token });
   } catch (e) {
     if (access !== "private") throw e;
     access = "public";
-    await put(pathname, body, { access, contentType: "application/pdf", addRandomSuffix: false, allowOverwrite: true });
+    await put(pathname, body, { access, contentType: "application/pdf", addRandomSuffix: false, allowOverwrite: true, token });
   }
 };
 
