@@ -22,6 +22,14 @@ const more = (k, note = "") => (dose) => {
 };
 const slow = " · descente en 3 s";
 
+// At the gym, for the youngest (below U17 for girls, U18 for boys, lib/checkout.ts YOUTH): the
+// loaded exercises keep their load, adapted to the age (NSCA youth resistance training position):
+// no heavy sets of 1 to 5, a reserve of repetitions, technique before load. Shown on the exercise
+// card of the gym documents.
+const HEAVY = "Pas de séries lourdes : 6 à 8 répétitions avec une charge que tu pourrais soulever 10 à 12 fois, jamais de série à fond. La barre seulement avec un adulte qui connaît le mouvement.";
+const MOD = "Charge légère à modérée : garde au moins 3 répétitions en réserve à chaque série, et n'ajoute du poids que si la technique reste parfaite.";
+const LEST = "Haltères de 5 % de ton poids au plus, ou sans charge.";
+
 // Running exercises at the gym: a curved (non-motorised) treadmill if the gym has one,
 // otherwise the alternative.
 const tapis = (onTreadmill, otherwise) => ({ how: `Sur un **tapis de course incurvé** (non motorisé, en forme de courbe : c'est toi qui fais tourner la bande), si ta salle en a un : ${onTreadmill} Sinon : ${otherwise}` });
@@ -31,41 +39,41 @@ export const parLieu = {
   squat: {
     maison: { how: "Pieds largeur d'épaules, bras tendus devant toi, descends comme pour t'asseoir, cuisses au moins parallèles au sol, puis remonte. Quand c'est facile : un sac à dos lesté serré contre la poitrine.", figs: [["squat", "poids"]], dose: more(1.5, slow), prec: "",
       band: { how: "Élastique sous les pieds, tenu aux épaules : il résiste quand tu remontes.", figs: [["squat", "elastique"]] } },
-    salle: { how: "Pieds largeur d'épaules, un haltère tenu contre la poitrine (goblet squat), descends cuisses au moins parallèles au sol puis remonte. Plus lourd : barre sur le haut du dos.", figs: [["squat", "materiel"]] },
+    salle: { jeune: MOD, how: "Pieds largeur d'épaules, un haltère tenu contre la poitrine (goblet squat), descends cuisses au moins parallèles au sol puis remonte. Plus lourd : barre sur le haut du dos.", figs: [["squat", "materiel"]] },
   },
   "squat-lourd": {
     maison: { name: "Squat bulgare lesté", how: "Pied arrière posé sur le canapé ou une chaise, sac à dos lesté sur le dos : descends sur la jambe avant en 3 secondes, puis remonte le plus vite possible.", figs: [["squat-lourd", "poids"]], dose: more(2, " par jambe · descente en 3 s"),
       band: { how: "Squat avec un élastique fort sous les pieds, tenu aux épaules, pause de 2 secondes en bas.", figs: [["squat", "elastique"]] } },
-    salle: { how: "Squat avec une barre sur le haut du dos (ou des haltères lourds), 3 à 5 répétitions.", figs: [["squat-lourd", "materiel"]] },
+    salle: { jeune: HEAVY, how: "Squat avec une barre sur le haut du dos (ou des haltères lourds), 3 à 5 répétitions.", figs: [["squat-lourd", "materiel"]] },
   },
   "fente-arriere": {
     maison: { how: "Recule une jambe et descends jusqu'à ce que le genou arrière frôle le sol. Reviens en poussant sur la jambe avant, puis change de jambe (le pied avant reste fixe). Quand c'est facile : un sac à dos lesté.", figs: [["fente-arriere", "poids"]], dose: more(1.5, slow),
       band: { how: "Élastique sous le pied avant, tenu aux épaules." } },
-    salle: { how: "Un haltère dans chaque main, recule une jambe et descends jusqu'à ce que le genou arrière frôle le sol, puis reviens en poussant sur la jambe avant et change de jambe (le pied avant reste fixe).", figs: [["fente-arriere", "materiel"]] },
+    salle: { jeune: MOD, how: "Un haltère dans chaque main, recule une jambe et descends jusqu'à ce que le genou arrière frôle le sol, puis reviens en poussant sur la jambe avant et change de jambe (le pied avant reste fixe).", figs: [["fente-arriere", "materiel"]] },
   },
   "squat-bulgare": {
     maison: { how: "Pied arrière posé sur le canapé ou une chaise, descends sur la jambe avant puis remonte. Quand c'est facile : un sac à dos lesté.", figs: [["squat-bulgare", "poids"]], dose: more(1.25, slow), prec: "avec sac à dos",
       band: { how: "Élastique sous le pied avant, tenu aux épaules." } },
-    salle: { how: "Pied arrière sur un banc, un haltère dans chaque main, descends sur la jambe avant puis remonte.", figs: [["squat-bulgare", "materiel"]] },
+    salle: { jeune: MOD, how: "Pied arrière sur un banc, un haltère dans chaque main, descends sur la jambe avant puis remonte.", figs: [["squat-bulgare", "materiel"]] },
   },
   "sdt-roumain": {
     maison: { how: "Pieds largeur de hanches, genoux légèrement fléchis : penche le buste vers l'avant en reculant les fesses, dos plat, jusqu'à sentir l'étirement derrière les cuisses, puis redresse-toi. Plus difficile : sur une jambe (l'autre part en arrière), ou un sac à la main.", figs: [["sdt-roumain", "poids"]], dose: more(1, " par jambe"),
       band: { how: "Sur deux jambes, élastique sous les pieds, tenu à deux mains : bascule le buste, dos plat, et redresse-toi." } },
-    salle: { how: "Genoux légèrement fléchis, une barre ou deux haltères en main, penche le buste en reculant les fesses, dos plat, puis redresse-toi.", figs: [["sdt-roumain", "materiel"]] },
+    salle: { jeune: MOD, how: "Genoux légèrement fléchis, une barre ou deux haltères en main, penche le buste en reculant les fesses, dos plat, puis redresse-toi.", figs: [["sdt-roumain", "materiel"]] },
   },
   "hip-thrust": {
     maison: { how: "Haut du dos appuyé sur le canapé, pieds au sol, monte le bassin jusqu'à aligner épaules, hanches et genoux. Quand c'est facile : sur une jambe.", figs: [["hip-thrust", "poids"]], dose: more(1.5),
       band: { how: "Élastique en travers des hanches, tenu au sol par les mains de chaque côté." } },
-    salle: { how: "Haut du dos appuyé sur un banc, barre (avec protection) ou haltère sur les hanches, monte le bassin jusqu'à aligner épaules, hanches et genoux.", figs: [["hip-thrust", "materiel"]] },
+    salle: { jeune: MOD, how: "Haut du dos appuyé sur un banc, barre (avec protection) ou haltère sur les hanches, monte le bassin jusqu'à aligner épaules, hanches et genoux.", figs: [["hip-thrust", "materiel"]] },
   },
   "hip-thrust-lourd": {
     maison: { name: "Hip thrust sur une jambe", how: "Haut du dos sur le canapé, une jambe tendue en l'air : monte le bassin avec force et tiens 2 secondes en haut.", figs: [["hip-thrust-lourd", "maison"]], dose: more(2, " par jambe · pause 2 s en haut"),
       band: { how: "Sur deux jambes, élastique fort en travers des hanches, pause en haut." } },
-    salle: { how: "Haut du dos sur un banc, barre lourde sur les hanches, monte le bassin avec force.", figs: [["hip-thrust-lourd", "materiel"]] },
+    salle: { jeune: HEAVY, how: "Haut du dos sur un banc, barre lourde sur les hanches, monte le bassin avec force.", figs: [["hip-thrust-lourd", "materiel"]] },
   },
   "squat-jump-leste": {
     maison: { how: "Squat jump avec un sac à dos léger (3 à 5 kg). Sans sac : squat jump normal.", figs: [["squat-jump-leste", "maison"]] },
-    salle: { how: "Squat jump avec deux haltères légers le long du corps (10 à 20 % de ton poids).", figs: [["squat-jump-leste", "materiel"]] },
+    salle: { jeune: LEST, how: "Squat jump avec deux haltères légers le long du corps (10 à 20 % de ton poids).", figs: [["squat-jump-leste", "materiel"]] },
   },
   "box-jump": {
     maison: { how: "Saute sur une marche d'escalier ou un banc bien stable, réception en douceur, redescends en marchant. Sans support stable : squat jump.", figs: [["box-jump", "poids"]] },
@@ -76,27 +84,27 @@ export const parLieu = {
   pompes: {
     maison: { how: "Mains un peu plus larges que les épaules, corps gainé, descends la poitrine près du sol puis pousse. Plus difficile : pieds surélevés sur une chaise.", figs: [["pompes", "poids"]], prec: "",
       band: { how: "Élastique passé dans le dos, tenu sous chaque main : il résiste quand tu pousses." } },
-    salle: { name: "Développé couché haltères", how: "Allongé sur un banc, un haltère dans chaque main, descends les haltères au niveau de la poitrine, coudes à 45°, puis pousse.", easier: "Pompes, mains sur un banc.", figs: [["pompes", "materiel"]], prec: "" },
+    salle: { jeune: MOD, name: "Développé couché haltères", how: "Allongé sur un banc, un haltère dans chaque main, descends les haltères au niveau de la poitrine, coudes à 45°, puis pousse.", easier: "Pompes, mains sur un banc.", figs: [["pompes", "materiel"]], prec: "" },
   },
   "developpe-couche": {
     maison: { name: "Pompes lestées", how: "Pompes avec un sac à dos lesté. Sans sac : pieds surélevés, descente en 3 secondes.", figs: [["developpe-couche", "poids"]], dose: more(2), prec: "",
       band: { how: "Pompes avec un élastique fort passé dans le dos." } },
-    salle: { name: "Développé couché", how: "Développé couché avec une barre (ou des haltères lourds), pieds au sol, omoplates serrées.", figs: [["developpe-couche", "materiel"]], prec: "" },
+    salle: { jeune: HEAVY, name: "Développé couché", how: "Développé couché avec une barre (ou des haltères lourds), pieds au sol, omoplates serrées.", figs: [["developpe-couche", "materiel"]], prec: "" },
   },
   "developpe-militaire": {
     maison: { name: "Pompes piquées", how: "Mains au sol, fesses en l'air (corps en V) : plie les coudes pour amener le haut de la tête vers le sol, puis pousse.", easier: "Pieds plus proches des mains, amplitude plus courte.", figs: [["developpe-militaire", "poids"]],
       band: { how: "Debout sur l'élastique, pousse-le au-dessus de la tête, puis redescends aux épaules.", figs: [["developpe-militaire", "elastique"]] } },
-    salle: { how: "Assis sur un banc, dossier incliné à 70°, le dos bien appuyé : pousse les haltères au-dessus de la tête, puis redescends aux épaules.", figs: [["developpe-militaire", "materiel"]] },
+    salle: { jeune: MOD, how: "Assis sur un banc, dossier incliné à 70°, le dos bien appuyé : pousse les haltères au-dessus de la tête, puis redescends aux épaules.", figs: [["developpe-militaire", "materiel"]] },
   },
   rowing: {
     maison: { name: "Rowing inversé", how: "Allongé sous une table solide, mains sur le bord, corps droit : tire la poitrine vers la table, puis redescends. Autre option : rowing à un bras avec un sac à dos lesté.", figs: [["rowing", "poids"]], dose: more(1.25),
       band: { how: "Élastique accroché à une porte à hauteur de poitrine : tire les coudes vers l'arrière.", figs: [["rowing", "elastique"]] } },
-    salle: { how: "Buste penché, dos plat, main libre sur un banc : tire un haltère vers la hanche. Autre option : tirage horizontal à la poulie.", figs: [["rowing", "materiel"]] },
+    salle: { jeune: MOD, how: "Buste penché, dos plat, main libre sur un banc : tire un haltère vers la hanche. Autre option : tirage horizontal à la poulie.", figs: [["rowing", "materiel"]] },
   },
   "tirage-lourd": {
     maison: { name: "Rowing inversé, pieds surélevés", how: "Sous une table solide, pieds posés sur une chaise : tire vite la poitrine vers la table, redescends en 3 secondes.", figs: [["rowing", "poids"]], dose: more(1.5),
       band: { how: "Tirage avec un élastique fort accroché à une porte, pause d'1 seconde coudes en arrière.", figs: [["rowing", "elastique"]] } },
-    salle: { how: "Rowing lourd à un bras avec un haltère, ou tractions lestées.", figs: [["tirage-lourd", "materiel"]] },
+    salle: { jeune: HEAVY, how: "Rowing lourd à un bras avec un haltère, ou tractions lestées.", figs: [["tirage-lourd", "materiel"]] },
   },
   tractions: {
     maison: { how: "Sur une barre de porte : en suspension, tire jusqu'à passer le menton au-dessus, puis redescends. Sans barre : rowing inversé sous une table.", figs: [["tractions", "poids"]],
@@ -122,7 +130,7 @@ export const parLieu = {
   },
   fermier: {
     maison: { how: "Marche avec une charge lourde dans chaque main : sacs de courses, packs d'eau ou bidons. Si c'est trop léger, double la distance.", figs: [["fermier", "materiel"]] },
-    salle: { how: "Marche 20 m avec un haltère ou un kettlebell lourd dans chaque main.", figs: [["fermier", "materiel"]] },
+    salle: { jeune: MOD, how: "Marche 20 m avec un haltère ou un kettlebell lourd dans chaque main.", figs: [["fermier", "materiel"]] },
   },
   "lancer-poitrine": {
     maison: { how: "Face à un mur extérieur, ballon de handball ou de basket à la poitrine, lance le plus fort possible. Sans ballon : pompes explosives.", figs: [["lancer-poitrine", "materiel"]],
@@ -186,7 +194,7 @@ export function exoFor(base, id, lieu) {
   const label = lieu === "maison" ? "À la maison" : "En salle";
   // Drawings of this place, then of the band variant; null keeps the exercise's usual drawings.
   const figs = l.figs ? [...l.figs.map(([fid, v, lab]) => [fid, v, lab ?? label]), ...(l.band?.figs ?? []).map(([fid, v]) => [fid, v, "Avec un élastique"])] : null;
-  return { ...base, name: l.name ?? base.name, how: l.how ?? base.how, cues: l.cues ?? base.cues, easier: l.easier ?? (l.name ? undefined : base.easier), band: l.band?.how, figs };
+  return { ...base, name: l.name ?? base.name, how: l.how ?? base.how, cues: l.cues ?? base.cues, easier: l.easier ?? (l.name ? undefined : base.easier), band: l.band?.how, jeune: l.jeune, figs };
 }
 export const doseFor = (id, dose, lieu) => parLieu[id]?.[lieu]?.dose?.(dose) ?? dose;
 export const precFor = (id, prec, lieu) => { const p = parLieu[id]?.[lieu]?.prec; return p === undefined ? prec : p || undefined; };

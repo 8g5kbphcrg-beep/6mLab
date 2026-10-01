@@ -37,6 +37,8 @@ export type Order = {
   firstName: string;
   age: string;
   gender: string;
+  // Under 18: the parent or legal guardian who placed the order (terms of sale).
+  parent?: string;
   amount: number;
   // The buyer's code to share with teammates (lib/referral.ts), when it could be created.
   referral?: string;
@@ -140,6 +142,7 @@ export async function sendConfirmation(o: Order) {
       : `${p.name} (${o.debut ? buy[o.lang].fromWeek(o.debut).toLowerCase() : p.duration})`],
     [fr ? "Objectifs" : "Goals", goalsTitle(o.goals, o.lang)],
     [fr ? "Lieu" : "Place", buy[o.lang].places[o.lieu][0]],
+    ...(o.parent ? [[fr ? "Commandé par (parent ou représentant légal)" : "Ordered by (parent or legal guardian)", o.parent] as [string, string]] : []),
     [buy[o.lang].plangT, buy[o.lang].plangs[o.plang]],
     ...(o.running ? [[fr ? "Option" : "Option", fr ? "Programme course à pied" : "Running program"] as [string, string]] : []),
     [fr ? "Total payé" : "Total paid", fmtPrice(o.amount, o.lang)],
@@ -214,6 +217,7 @@ export async function notifyOwner(o: Order, delivered: boolean) {
     `Option course : ${o.running ? "oui" : "non"}`,
     `Prénom : ${o.firstName}`,
     `Âge : ${o.age}`,
+    ...(o.parent ? [`Mineur : commande passée par ${o.parent} (parent ou représentant légal, accord coché)`] : []),
     `Genre : ${o.gender}`,
     `Email : ${o.email}`,
     `Langue : ${o.lang}`,

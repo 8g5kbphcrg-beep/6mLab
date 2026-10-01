@@ -16,6 +16,9 @@ const niveaux = [
     ["9", "Très difficile", "Plus qu'une répétition possible"],
     ["10", "Maximal", "À éviter dans ce programme"],
   ] } },
+  { h3: "Moins de 15 ans (filles) ou de 16 ans (garçons)" },
+  { p: "Le programme est le même, avec quelques règles pour que les charges restent adaptées à ton âge :" },
+  { ul: ["**Pas de séries lourdes** de 1 à 5 répétitions : prends une charge que tu pourrais soulever 10 à 12 fois, et fais-en 6 à 8.", "**Garde toujours au moins 3 répétitions en réserve** : jamais de série jusqu'à l'échec.", "**La technique avant le poids** : tu n'ajoutes de la charge que si le mouvement reste parfait du début à la fin de la série.", "**La barre seulement avec un adulte** qui connaît le mouvement (coach, préparateur, parent formé).", "Les sauts, les sprints et la prévention ne changent pas.", "En salle, chaque exercice avec charge indique sa version pour ton âge, sous « Moins de 15 ans (filles) ou de 16 ans (garçons) »."] },
   { warn: "Douleur vive, articulation qui lâche, vertige : arrête l'exercice. Une gêne qui dure plus de 48 heures ou qui revient à chaque séance doit être vue par un professionnel de santé." },
 ];
 

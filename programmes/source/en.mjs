@@ -2,6 +2,17 @@
 // (exercices, objectifs, communs, lieux, option-course) with its translation. The generator
 // stops and lists any text missing here, so a changed French text must be translated again.
 export const EN = {
+  "Pas de séries lourdes : 6 à 8 répétitions avec une charge que tu pourrais soulever 10 à 12 fois, jamais de série à fond. La barre seulement avec un adulte qui connaît le mouvement.": "No heavy sets: 6 to 8 reps with a load you could lift 10 to 12 times, never a set to failure. Use the barbell only with an adult who knows the movement.",
+  "Charge légère à modérée : garde au moins 3 répétitions en réserve à chaque série, et n'ajoute du poids que si la technique reste parfaite.": "Light to moderate load: keep at least 3 reps in reserve on every set, and only add weight if your technique stays perfect.",
+  "Haltères de 5 % de ton poids au plus, ou sans charge.": "Dumbbells of 5% of your body weight at most, or no load.",
+  "Moins de 15 ans (filles) ou de 16 ans (garçons)": "Under 15 (girls) or 16 (boys)",
+  "Le programme est le même, avec quelques règles pour que les charges restent adaptées à ton âge :": "The program is the same, with a few rules so that the loads stay suited to your age:",
+  "**Pas de séries lourdes** de 1 à 5 répétitions : prends une charge que tu pourrais soulever 10 à 12 fois, et fais-en 6 à 8.": "**No heavy sets** of 1 to 5 reps: take a load you could lift 10 to 12 times, and do 6 to 8.",
+  "**Garde toujours au moins 3 répétitions en réserve** : jamais de série jusqu'à l'échec.": "**Always keep at least 3 reps in reserve**: never a set to failure.",
+  "**La technique avant le poids** : tu n'ajoutes de la charge que si le mouvement reste parfait du début à la fin de la série.": "**Technique before weight**: only add load if the movement stays perfect from the start to the end of the set.",
+  "**La barre seulement avec un adulte** qui connaît le mouvement (coach, préparateur, parent formé).": "**The barbell only with an adult** who knows the movement (coach, trainer, trained parent).",
+  "Les sauts, les sprints et la prévention ne changent pas.": "Jumps, sprints and prevention do not change.",
+  "En salle, chaque exercice avec charge indique sa version pour ton âge, sous « Moins de 15 ans (filles) ou de 16 ans (garçons) ».": "At the gym, every loaded exercise shows its version for your age, under \"Under 15 (girls) or 16 (boys)\".",
   "Saut avec contre-mouvement": "Countermovement jump",
   "Debout, descends vite en demi-squat en lançant les bras en arrière, puis saute le plus haut possible sans marquer de pause. Réception stabilisée.": "Standing, dip quickly into a half squat while swinging your arms back, then jump as high as you can without pausing. Stable landing.",
   "Descente rapide, remontée explosive : les bras lancés vers le haut aident à monter. En l'air, cheville armée, prête pour la réception.": "Fast dip, explosive drive up: swinging your arms up helps you rise. In the air, ankle armed, ready for the landing.",

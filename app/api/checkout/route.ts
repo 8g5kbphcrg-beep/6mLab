@@ -22,7 +22,11 @@ export async function POST(req: NextRequest) {
   const lieu = String(form.get("lieu")) as Place;
   // Language of the program PDF (the page's unless changed in the form).
   const plang: Lang = form.get("plang") === "en" ? "en" : form.get("plang") === "fr" ? "fr" : lang;
-  const profileOk = firstName.length > 0 && Number.isInteger(age) && age >= 10 && age <= 99 && genders.includes(gender);
+  // Under 18: placed by a parent or legal guardian, who gives their name and ticks their consent
+  // (terms of sale, lib/legal.ts); both are kept on the order.
+  const parentName = String(form.get("parentName") ?? "").trim().slice(0, 80);
+  const parentOk = age >= 18 || (form.get("parent") === "on" && parentName.length >= 3);
+  const profileOk = firstName.length > 0 && Number.isInteger(age) && age >= 10 && age <= 99 && genders.includes(gender) && parentOk;
   const origin = req.nextUrl.origin;
   const page = pack ? "saison-complete" : programSlugs.includes(slug) ? slug : "";
   // Today's offer, recomputed here (the form only says which one was chosen): the whole program,
@@ -49,7 +53,7 @@ export async function POST(req: NextRequest) {
   const p = programs[lang][parts[0]];
   // src: where the visit came from (utm link or referring site), for the sales by source in the admin.
   const src = cleanSrc(String(form.get("src") ?? "direct"));
-  const meta = { program: parts[0], goals: goals.join("+"), running: running ? "oui" : "non", lieu, plang, ...(pack ? { pack: "oui", parts: parts.join(","), starts: q.slots.map((sl) => new Date(sl.start).toISOString().slice(0, 10)).join(",") } : {}), ...(pr ? { debut: String(pr.week) } : {}), weeks: String(weeks), firstName, age: String(age), gender, lang, src };
+  const meta = { program: parts[0], goals: goals.join("+"), running: running ? "oui" : "non", lieu, plang, ...(pack ? { pack: "oui", parts: parts.join(","), starts: q.slots.map((sl) => new Date(sl.start).toISOString().slice(0, 10)).join(",") } : {}), ...(pr ? { debut: String(pr.week) } : {}), weeks: String(weeks), firstName, age: String(age), ...(age < 18 ? { parent: parentName } : {}), gender, lang, src };
   const stripe = stripeClient()!;
   try {
     // Abandoned carts (app/api/cron): Stripe asks the buyer whether they accept offers by email,

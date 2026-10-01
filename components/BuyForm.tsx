@@ -21,6 +21,9 @@ export default function BuyForm({ lang, slug, q, goals = [], pack = false, place
   const p = programs[lang][slug];
   const [sel, setSel] = useState<GoalId[]>(goals.filter((g) => REATH_READY || g !== REATH));
   const [running, setRunning] = useState(false);
+  // Under 18: the order is placed by a parent or legal guardian, who gives their name and consent.
+  const [age, setAge] = useState("");
+  const minor = age !== "" && Number(age) < 18;
   const [place, setPlace] = useState<Place | null>(chosen ?? null);
   // Language of the PDF: the page's by default, can be changed (an English speaker on the French site).
   const [plang, setPlang] = useState<Lang>(lang);
@@ -142,7 +145,7 @@ export default function BuyForm({ lang, slug, q, goals = [], pack = false, place
         <p className="bhint">{t.profileHint}</p>
         <div className="bfields">
           <label className="bfield">{t.firstName}<input name="firstName" required maxLength={50} autoComplete="given-name" /></label>
-          <label className="bfield bage">{t.age}<input name="age" type="number" required min={10} max={99} inputMode="numeric" /></label>
+          <label className="bfield bage">{t.age}<input name="age" type="number" required min={10} max={99} inputMode="numeric" value={age} onChange={(e) => setAge(e.target.value)} /></label>
         </div>
         <div className="bgender" role="radiogroup" aria-label={t.gender}>
           <span className="lab">{t.gender}</span>
@@ -151,6 +154,15 @@ export default function BuyForm({ lang, slug, q, goals = [], pack = false, place
           ))}
         </div>
         <p className="note" style={{ margin: 0 }}>{t.minor}</p>
+        {minor && (
+          <div className="bparent">
+            <label className="bfield">{t.parentName}<input name="parentName" required minLength={3} maxLength={80} autoComplete="name" /></label>
+            <label className="bconsent">
+              <input type="checkbox" name="parent" required />
+              <span>{t.parentOk}</span>
+            </label>
+          </div>
+        )}
       </fieldset>
 
       <div className="bstep">

@@ -42,7 +42,7 @@ const UI = {
     seeAnim: "Voir l'animation",
     eyeNote: "<strong>Important : regarde l'animation de chaque exercice avant de le faire.</strong> Touche l'œil à côté de son nom. L'animation montre ce que le texte ne peut pas dire : le placement exact, le sens du mouvement, le rythme et les appuis. Ne te contente pas de lire le programme, surtout pour un exercice que tu ne connais pas : c'est ce qui rend chaque séance efficace et sans risque.",
     labels: { poids: "Au poids du corps", maison: "À la maison", elastique: "Avec un élastique", materiel: "Avec matériel", salle: "En salle" },
-    band: "Avec un élastique :", cues: "Points clés :", easier: "Plus facile :",
+    band: "Avec un élastique :", cues: "Points clés :", easier: "Plus facile :", young: "Moins de 15 ans (filles) ou de 16 ans (garçons) :",
     disc: "Document réservé à un usage personnel, ne pas diffuser.",
     health: "Programme destiné aux personnes en bonne santé : en cas de douleur, de blessure ou de doute, arrête et demande l'avis d'un professionnel de santé.",
     guideTitle: (n) => `${n} : le guide`, guideSub: "Comment fonctionne ton programme : planning, déroulé des séances, progression et règles à connaître.",
@@ -62,7 +62,7 @@ const UI = {
     seeAnim: "See the animation",
     eyeNote: "<strong>Important: watch each exercise's animation before doing it.</strong> Tap the eye next to its name. The animation shows what the text cannot: the exact position, the direction of the movement, the rhythm and the footwork. Do not just read the program, especially for an exercise you do not know: this is what makes every session effective and safe.",
     labels: { poids: "Body weight", maison: "At home", elastique: "With a band", materiel: "With equipment", salle: "At the gym" },
-    band: "With a band:", cues: "Key points:", easier: "Easier:",
+    band: "With a band:", cues: "Key points:", easier: "Easier:", young: "Under 15 (girls) or 16 (boys):",
     disc: "For personal use only, do not share.",
     health: "This program is for people in good health: if you feel pain, have an injury or are in doubt, stop and ask a health professional for advice.",
     guideTitle: (n) => `${n}: the guide`, guideSub: "How your program works: schedule, how the sessions run, progression and the rules to know.",
@@ -124,7 +124,7 @@ const exerciseCard = (n, base, id, ctx = NEUTRAL) => {
   const e = id ? exoFor(base, id, ctx.lieu) : base;
   const figs = e.figs ?? (id ? variants(id).map((v) => [id, v, U().labels[v]]) : []);
   const fig = figs.length ? `<div class="figs">${figs.map(([fid, v, lab]) => `<div class="fig">${figs.length > 1 ? `<span class="flab">${esc(LANG === "fr" ? lab : ({ "À la maison": U().labels.maison, "En salle": U().labels.salle, "Avec un élastique": U().labels.elastique }[lab] ?? T(lab)))}</span>` : ""}${figure(fid, v, ctx.sex)}</div>`).join("")}</div>` : "";
-  return `<div class="ex${fig ? " hasfig" : ""}">${fig}<div class="extext"><div class="exname">${n ? `<span class="num">${n}</span>` : ""}${eye(id, ctx)}${md(e.name)}</div><p>${md(e.how)}</p>${e.band ? `<p class="lvl"><strong>${U().band}</strong> ${md(e.band)}</p>` : ""}${e.cues ? `<p class="cues"><strong>${U().cues}</strong> ${md(e.cues)}</p>` : ""}${e.easier ? `<p class="lvl"><strong>${U().easier}</strong> ${md(e.easier)}</p>` : ""}</div></div>`;
+  return `<div class="ex${fig ? " hasfig" : ""}">${fig}<div class="extext"><div class="exname">${n ? `<span class="num">${n}</span>` : ""}${eye(id, ctx)}${md(e.name)}</div><p>${md(e.how)}</p>${e.band ? `<p class="lvl"><strong>${U().band}</strong> ${md(e.band)}</p>` : ""}${e.cues ? `<p class="cues"><strong>${U().cues}</strong> ${md(e.cues)}</p>` : ""}${e.easier ? `<p class="lvl"><strong>${U().easier}</strong> ${md(e.easier)}</p>` : ""}${e.jeune ? `<p class="lvl young"><strong>${U().young}</strong> ${md(e.jeune)}</p>` : ""}</div></div>`;
 };
 
 // A session: its steps, each a small table of exercises numbered from the library.
