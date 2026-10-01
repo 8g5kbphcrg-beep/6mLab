@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import type { Lang } from "@/lib/dict";
 import { goalName, type GoalId } from "@/lib/goals";
 import type { ProgramSlug } from "@/lib/programs";
+import { partOf } from "@/lib/access";
 
 // Customer feedback, asked twice by email: 2 weeks after the purchase ("mid") and at the end of
 // the program ("end"). No database: answers are stored in the metadata of the order's Stripe
@@ -10,8 +11,12 @@ import type { ProgramSlug } from "@/lib/programs";
 
 export type Stage = "mid" | "end";
 export const DAY = 86400;
-// When each email goes out, in days after the purchase.
-export const whenDays = (stage: Stage, program: ProgramSlug) => (stage === "mid" ? 14 : program === "pre-saison" ? 56 : 84);
+// When each email goes out, in days after the purchase: 2 weeks in, then at the end of the first
+// part bought (from the week it started at, for a pro-rata order; the first part of a Saison
+// complète). Orders from before the season in 3 parts: 8 or 12 weeks.
+const PART_WEEKS: Record<string, number> = { "pre-saison": 8, "maintien-saison": 12, "premiere-partie": 18, "deuxieme-partie": 23 };
+export const whenDays = (stage: Stage, meta: Record<string, string>) =>
+  stage === "mid" ? 14 : 7 * Math.max(2, (PART_WEEKS[meta.program] ?? 8) - (Number(meta.debut) > 1 ? Number(meta.debut) - 1 : 0));
 export const PROMO_PERCENT = 15;
 
 // STRIPE_API_HOST (e.g. "localhost:12111") points to a local Stripe mock, for tests only.
@@ -75,7 +80,7 @@ export const toOrder = (pi: Stripe.PaymentIntent): FeedbackOrder => {
   const m = pi.metadata ?? {};
   const charge = typeof pi.latest_charge === "object" ? pi.latest_charge : null;
   return {
-    id: pi.id, created: pi.created, lang: m.lang === "en" ? "en" : "fr", program: m.program as ProgramSlug,
+    id: pi.id, created: pi.created, lang: m.lang === "en" ? "en" : "fr", program: partOf(m),
     goals: (m.goals ?? "").split("+").filter(Boolean) as GoalId[], firstName: m.firstName ?? "", email: charge?.billing_details?.email ?? pi.receipt_email ?? null, meta: m,
   };
 };
@@ -84,7 +89,7 @@ export const toOrder = (pi: Stripe.PaymentIntent): FeedbackOrder => {
 // and OR in one query, so each program is searched separately.
 export async function paidOrders(s: Stripe, since?: number): Promise<FeedbackOrder[]> {
   const out: FeedbackOrder[] = [];
-  for (const program of ["pre-saison", "maintien-saison"]) {
+  for (const program of ["pre-saison", "premiere-partie", "deuxieme-partie", "maintien-saison"]) {
     const query = `status:'succeeded' AND metadata['program']:'${program}'${since ? ` AND created>${since}` : ""}`;
     let page: string | undefined;
     do {

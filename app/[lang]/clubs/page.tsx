@@ -17,7 +17,7 @@ const text = {
     title: "Clubs et entraîneurs : la prépa physique pour toute l'équipe | 6M Lab",
     desc: "Un programme de préparation physique handball pour tout ton groupe, calé sur le calendrier du club. Presque du sur-mesure, sur devis sous 48 heures.",
     k: "Clubs et entraîneurs", h1: "Toute ton équipe sur le même programme",
-    lead: "Des U15 aux seniors, en filière féminine ou masculine. Pré-saison, maintien en saison ou toute la saison : tu reçois tout le programme de ton groupe, et c'est toi qui diriges les séances.",
+    lead: "Des U15 aux seniors, en filière féminine ou masculine. Pré-saison, 1re ou 2e partie de saison, ou toute la saison : tu reçois tout le programme de ton groupe, et c'est toi qui diriges les séances.",
     time: ["Du temps gagné pour toi", "Pas de préparateur physique au club\u00a0? Tu n'as plus à construire les séances de prépa : elles sont écrites, planifiées sur ton calendrier et chaque exercice est animé. Toi, tu gardes ton temps et ton énergie pour le terrain."],
     care: {
       h: "Ce qu'il faut savoir avant de commencer",
@@ -48,7 +48,7 @@ const text = {
     how: ["Tu remplis le formulaire (2 minutes), avec ton matériel et tes installations.", "On échange sur ton groupe, ton niveau, ton calendrier et ton matériel.", "Tu reçois un devis sous 48 heures.", "Une fois validé, tu reçois tout le programme par email, sur une seule adresse."],
     howT: "Comment ça se passe", formT: "Demander un devis",
     f: { name: "Ton prénom et ton nom", role: "Tu es", roles: ["Entraîneur ou entraîneuse", "Préparateur ou préparatrice physique", "Dirigeant ou dirigeante", "Autre"], club: "Club", email: "Ton email", field: "Joueurs de champ", fieldHint: "Arrières, ailiers, demi-centres et pivots", gk: "Gardiens", period: "Quand ?", periods: ["Avant la saison", "Pendant la saison", "Toute la saison"], msg: "Ton message (facultatif)", send: "Envoyer ma demande", privacy: "Ces informations servent uniquement à te répondre et à préparer ton devis." },
-    ok: "Merci, ta demande est bien partie ! Je te réponds sous 48 heures par email.", err: "La demande n'a pas pu partir. Vérifie ton email, ou écris-moi directement :",
+    ok: "Merci, ta demande est bien partie ! Un accusé de réception vient de t'être envoyé par email, et je te réponds sous 48 heures avec une proposition.", err: "La demande n'a pas pu partir. Vérifie ton email, ou écris-moi directement :",
   },
   en: {
     title: "Clubs and coaches: physical prep for the whole team | 6M Lab",
@@ -85,7 +85,7 @@ const text = {
     how: ["Fill in the form (2 minutes), with your equipment and facilities.", "We talk about your group, level, calendar and equipment.", "You get a quote within 48 hours.", "Once approved, you get the whole program by email, to a single address."],
     howT: "How it works", formT: "Ask for a quote",
     f: { name: "Your name", role: "You are", roles: ["Coach", "Strength and conditioning coach", "Club official", "Other"], club: "Club", email: "Your email", field: "Court players", fieldHint: "Backs, wings, centre backs and pivots", gk: "Goalkeepers", period: "When?", periods: ["Before the season", "During the season", "The whole season"], msg: "Your message (optional)", send: "Send my request", privacy: "This information is only used to reply to you and prepare your quote." },
-    ok: "Thank you, your request has been sent! I'll reply within 48 hours by email.", err: "The request could not be sent. Check your email, or write to me directly:",
+    ok: "Thank you, your request has been sent! An acknowledgement has just been emailed to you, and I'll reply within 48 hours with a proposal.", err: "The request could not be sent. Check your email, or write to me directly:",
   },
 };
 

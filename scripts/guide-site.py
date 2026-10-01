@@ -9,8 +9,18 @@ SECTIONS = [
  ("ok", "Des cibles claires", "Joueurs et joueuses à partir de 13 ans, parents qui achètent pour leur enfant, coachs et clubs. Chaque cible a son chemin : questionnaire, programmes, page Clubs."),
  ("ok", "Une gamme simple à comprendre", "Programmes par objectif (pré-saison, saison, performance, prévention), pack Saison complète, offre Clubs sur devis. Réathlétisation affichée « en préparation »."),
  ("ok", "Des prix affichés et comparables", "Prix par programme, prix ramené à la semaine, économie du pack rappelée au paiement."),
- ("you", "Une garantie claire", "« Satisfait ou remboursé » ou pas, et sur combien de jours. Le PDF reste au client ; seul l'accès aux animations s'arrête. C'est un des leviers de confiance les plus forts avant un premier achat."),
+ ("ok", "Une règle de remboursement claire", "Décidé : pas de remboursement une fois le programme envoyé, puisque le client garde les PDF (c'est dans les CGV, accepté au paiement). Seul un fichier illisible ou une animation inaccessible est corrigé ou remboursé."),
  ("you", "Ce qui te rend unique, dit en une phrase", "Ton expérience de joueur, de coach, de préparateur, tes diplômes. À écrire en une phrase réutilisée partout : accueil, À propos, réseaux, emails."),
+]),
+("saison", "La saison en 3 parties", "Le chantier en cours : vendre toute la saison, de juillet à mi-juin, en 3 parties qui s'enchaînent. Chaque partie a son rôle, et la continuité du travail est l'argument de vente.", [
+ ("ok", "Le découpage et les prix décidés", "Prix en ,99, fixés selon le travail demandé et pas seulement la durée. Pré-saison (juillet-août, 8 semaines) : 59,99 €. 1re partie de saison (septembre à la fin des vacances de Noël, 18 semaines) : 89,99 €. 2e partie de saison (4 janvier à mi-juin, phases finales comprises, 23 semaines) : 99,99 €. Saison complète (les 3 parties à la suite à partir de celle en cours) : 199,99 € au lieu de 249,97 € (-20 %), ou 3 × 66,99 € plus tard. Achat en cours de partie : le PDF entier au prix plein, ou un PDF qui démarre à la semaine en cours, au prix des semaines restantes (arrondi à ,99). Pas de remboursement."),
+ ("ok", "La nouvelle offre sur le site", "Les 3 parties et la Saison complète sur l'accueil, les pages programme, le questionnaire, la FAQ et les CGV ; le choix « à partir de la semaine en cours » au paiement ; l'accès aux animations selon les semaines achetées ; les emails ; « Et après ? » d'une partie à l'autre. Les parties suivantes du pack partent seules par email 7 jours avant leur début (ou tu reçois un rappel pour les envoyer). L'ancienne page Maintien renvoie vers la 1re partie. Tant que les PDF de la 1re et de la 2e partie (et ceux « à partir de la semaine X ») ne sont pas faits, tu reçois la commande pour l'envoyer à la main."),
+ ("todo", "Le pack payable en 3 fois", "Un premier paiement à l'achat puis un par mois pendant 2 mois ; chaque partie est envoyée à sa date de début si les paiements sont à jour. Les CGV précisent l'engagement sur les 3 échéances."),
+ ("todo", "Le contenu de la 1re partie (18 semaines)", "Garder ce que la pré-saison a construit avec les matchs en plus, et gérer les trêves (Toussaint si le championnat s'arrête, Noël) avec la règle décidée : sur une trêve de 2 semaines, la 1re en repos, la 2e en travail pour préparer la reprise. Base : le Maintien actuel, allongé et complété, exercices choisis et groupés d'après les études (prévention, charge en saison, maintien de la force)."),
+ ("todo", "Le contenu de la 2e partie (23 semaines)", "Reprise après la trêve, trêves de février et de printemps (1re semaine repos, 2e semaine travail), fraîcheur, prévention, être au top pour les matchs décisifs de fin de saison. À finir avant décembre pour une vente en janvier."),
+ ("todo", "Les clubs en 3 phases", "Devis et documents clubs découpés en pré-saison, 1re et 2e partie, avec une option pour toute la saison."),
+ ("later", "Forme & bien-être en trimestres", "Pour les programmes accessibles à tous, un découpage en trimestres, au moment du lancement."),
+ ("you", "Tes décisions et tes idées d'exercices", "À trancher : le Maintien devient-il la 1re partie ? Un joueur qui achète en cours de partie paie-t-il le prix plein ou au prorata ? Par quoi on commence ? Et envoie les liens ou captures des exercices Instagram qui te plaisent : ils sont vérifiés dans les études, puis ajoutés avec nos propres animations."),
 ]),
 ("structure", "Structure et navigation", "Chaque visiteur doit trouver son chemin sans réfléchir.", [
  ("ok", "Un menu court", "4 entrées : Programmes, Clubs, Conseils, Espace client, plus le bouton « Choisir mon programme ». Le logo ramène à l'accueil ; À propos, FAQ et Contact sont dans le pied de page et en bas du menu du téléphone."),
@@ -93,7 +103,7 @@ SECTIONS = [
  ("ok", "Accès aux animations et PDF gardé à vie", "Le client garde son PDF ; les animations restent accessibles pendant la durée prévue."),
  ("ok", "Questionnaire de forme et avis", "Le client suit sa forme, laisse un avis et reçoit un code de réduction."),
  ("ok", "Proposer la suite", "À 2 semaines de la fin d'un programme, l'espace client affiche « Et après ? », repris dans l'email de fin de programme et dans celui de fin d'accès : Maintien après la Pré-saison, nouveau cycle de Maintien en cours de saison, Prévention puis Pré-saison en fin de saison. Le lien ouvre le programme avec les objectifs déjà choisis."),
- ("ok", "Répondre vite", "Réponse sous 48 h annoncée (Contact, FAQ, emails). La page Contact oriente d'abord vers l'espace client, le questionnaire et la FAQ, et l'email s'ouvre pré-rempli avec la référence de commande. Dans l'admin, 12 réponses types à copier (FR et EN) et 3 règles pour tenir le délai."),
+ ("ok", "Répondre vite", "Réponse sous 48 h annoncée (Contact, FAQ, emails). La page Contact oriente d'abord vers l'espace client, le questionnaire et la FAQ, et propose un formulaire (email, sujet, référence de commande, message) : le message arrive dans ta boîte, tu réponds directement au client, et il reçoit tout de suite un accusé de réception avec le délai de 48 h, les liens utiles et la copie de son message. Même accusé pour les demandes de devis clubs. L'adresse email reste affichée pour ceux qui préfèrent leur messagerie. Dans l'admin, 12 réponses types à copier (FR et EN) et 3 règles pour tenir le délai."),
 ]),
 ("clubs", "Offre Clubs", "Un autre public, qui décide autrement : il faut rassurer et faciliter.", [
  ("ok", "Une page dédiée", "Bénéfices, séance type, ce qu'il faut savoir, exemple d'exercice animé."),
@@ -113,7 +123,8 @@ SECTIONS = [
 NEXT = [
  ("you", "Compléter les mentions légales, puis choisir le nom de domaine", "legal"),
  ("you", "Écrire la page À propos avec ta photo et ton parcours", "confiance"),
- ("you", "Décider de la garantie", "offre"),
+ ("todo", "La saison en 3 parties : nouvelle offre, pack en 3 fois, contenu de la 1re puis de la 2e partie", "saison"),
+ ("you", "Trancher les 3 questions de la saison en 3 parties et envoyer tes idées d'exercices", "saison"),
  ("you", "Faire tester 5 à 10 joueurs et un club pour avoir les premiers avis", "confiance"),
  ("todo", "Mise en ligne : domaine, emails du domaine, ouverture à Google, Search Console, Stripe en mode réel", "seo"),
  ("part", "Rendre le site plus dynamique, étape par étape", "design"),
@@ -122,7 +133,6 @@ NEXT = [
 ]
 # "Fait" points that can still be improved: title -> what to do next (shown as « À améliorer »).
 IMPROVE = {
- "Répondre vite": "Envoyer un accusé de réception automatique quand un client écrit, avec le délai de 48 h et les liens utiles.",
  "Sortie des programmes clubs en PDF": "Les PDF sont produits avec Claude : un bouton « Générer les PDF » dans Admin > Clubs rendrait l'outil autonome.",
 }
 from collections import Counter

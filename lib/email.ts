@@ -4,7 +4,8 @@ import { access, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import nodemailer from "nodemailer";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
-import { accessWeeks, MARGIN_WEEKS, MAX_DEVICES, offerOf } from "@/lib/access";
+import { accessWeeks, MARGIN_WEEKS, MAX_DEVICES, offerOf, PROGRAM_WEEKS, type Offer } from "@/lib/access";
+import { dayLabel } from "@/lib/season-parts";
 import type { Lang } from "@/lib/dict";
 import { programs, whenToStart, type ProgramSlug } from "@/lib/programs";
 import { goalOrder, goalsTitle, type GoalId } from "@/lib/goals";
@@ -12,6 +13,7 @@ import { buy, fmtPrice, type Place } from "@/lib/checkout";
 import { legalPaths, owner } from "@/lib/legal";
 import { SITE } from "@/lib/dict";
 import type { Campaign } from "@/lib/season-mail";
+import { REPLY_HOURS } from "@/lib/replies";
 
 export type Order = {
   id: string;
@@ -19,11 +21,19 @@ export type Order = {
   lang: Lang;
   // Language of the program PDF (programmes/ or programmes/en/).
   plang: Lang;
+  // The first (or only) part of the order.
   program: ProgramSlug;
   goals: GoalId[];
   running: boolean;
   lieu: Place;
+  // Saison complète: its 3 parts in order and the day each one starts (lib/season-parts.ts).
   pack?: boolean;
+  parts?: ProgramSlug[];
+  starts?: number[];
+  // Bought from the current week (pro rata): the week the first part starts at.
+  debut?: number;
+  // Weeks of program the order covers (the animations access).
+  weeks?: number;
   firstName: string;
   age: string;
   gender: string;
@@ -70,14 +80,13 @@ export async function sendBackup(date: string, content: Buffer, summary: string[
 // réathlétisation, whose program is not written yet).
 export const deliversNow = (goals: string[]) => process.env.PROGRAMMES_ENVOI_AUTO === "1" && !goals.includes("reathletisation");
 
-// The files of an order: the name the customer gets, and where the PDF is on disk. Also used by the
-// admin page that finds an order's PDFs for sending by hand.
-export type OrderFilesInput = Pick<Order, "program" | "goals" | "pack" | "running" | "gender" | "lieu" | "plang">;
+// The files of one part of an order: the name the customer gets, and where the PDF is on disk.
+// Also used by the admin page that finds an order's PDFs for sending by hand. The 1re and 2e
+// partie have no PDF yet (their content is being written): they are sent by hand until then.
+export type OrderFilesInput = Pick<Order, "program" | "goals" | "running" | "gender" | "lieu" | "plang">;
 export function orderFiles(o: OrderFilesInput) {
   const goals = [...o.goals].sort((a, b) => goalOrder.indexOf(a) - goalOrder.indexOf(b));
-  // The "Saison complète" pack adds the Maintien en saison with the same goals.
-  const formulas = o.pack ? [o.program, "maintien-saison"] : [o.program];
-  const names = [...formulas.flatMap((f) => [`guide-${f}.pdf`, `seances-${f}-${goals.join("-")}.pdf`]), ...(o.running ? ["option-course.pdf"] : [])];
+  const names = [`guide-${o.program}.pdf`, `seances-${o.program}-${goals.join("-")}.pdf`, ...(o.running ? ["option-course.pdf"] : [])];
   // Each file exists for the place chosen at checkout (maison, salle), and the sessions also with
   // the silhouette matching the gender (femme, homme). The customer gets them under the names
   // above.
@@ -86,9 +95,12 @@ export function orderFiles(o: OrderFilesInput) {
   return names.map((filename) => ({ filename, path: join(dir, filename.replace(/\.pdf$/, `-${o.lieu}${filename.startsWith("seances-") ? sil : ""}.pdf`)) }));
 }
 
-export async function programFiles(o: Order) {
-  if (!deliversNow(o.goals)) return null;
-  const files = orderFiles(o), names = files.map((f) => f.filename), paths = files.map((f) => f.path);
+// The PDFs of one part of an order (the first by default), or null when they cannot go out
+// automatically: not switched on, not written yet, or bought from the current week (that PDF,
+// starting at a given week, is not produced yet either).
+export async function programFiles(o: Order, part: ProgramSlug = o.program) {
+  if (!deliversNow(o.goals) || (o.debut && part === o.program)) return null;
+  const files = orderFiles({ ...o, program: part }), names = files.map((f) => f.filename), paths = files.map((f) => f.path);
   try {
     await Promise.all(paths.map((p) => access(p)));
   } catch {
@@ -124,8 +136,8 @@ export async function sendConfirmation(o: Order) {
   const files = await programFiles(o);
   const rows: [string, string][] = [
     [fr ? "Programme" : "Program", o.pack
-      ? `${fr ? "Pack Saison complète" : "Full season pack"} : ${p.name} (${p.duration}) + ${programs[o.lang]["maintien-saison"].name} (${programs[o.lang]["maintien-saison"].duration})`
-      : `${p.name} (${p.duration})`],
+      ? `${fr ? "Saison complète" : "Full season"} : ${(o.parts ?? [o.program]).map((x, i) => `${programs[o.lang][x].name} (${i === 0 ? (o.debut ? buy[o.lang].fromWeek(o.debut).toLowerCase() : fr ? "maintenant" : "now") : `${fr ? "à partir du" : "from"} ${o.starts?.[i] ? dayLabel(o.starts[i], o.lang) : ""}`})`).join(", ")}`
+      : `${p.name} (${o.debut ? buy[o.lang].fromWeek(o.debut).toLowerCase() : p.duration})`],
     [fr ? "Objectifs" : "Goals", goalsTitle(o.goals, o.lang)],
     [fr ? "Lieu" : "Place", buy[o.lang].places[o.lieu][0]],
     [buy[o.lang].plangT, buy[o.lang].plangs[o.plang]],
@@ -133,16 +145,17 @@ export async function sendConfirmation(o: Order) {
     [fr ? "Total payé" : "Total paid", fmtPrice(o.amount, o.lang)],
     [fr ? "Référence" : "Reference", o.id.slice(-12)],
   ];
-  const delivery = files
+  const delivery = (files
     ? fr ? "Ton programme est joint à cet email. Bonne préparation !" : "Your program is attached to this email. Enjoy your training!"
-    : fr ? "Ton programme te sera envoyé à cette adresse sous 48 heures." : "Your program will be sent to this address within 48 hours.";
+    : fr ? "Ton programme te sera envoyé à cette adresse sous 48 heures." : "Your program will be sent to this address within 48 hours.")
+    + (o.pack ? (fr ? " Les parties suivantes t'arriveront par email une semaine avant leur début." : " The next parts will reach you by email a week before they start.") : "");
   const legal = fr
     ? `Tu as accepté les conditions générales de vente (${SITE}${legalPaths.fr.cgv}), demandé l'accès immédiat au programme et reconnu perdre ton droit de rétractation une fois le programme envoyé. Vendeur : ${owner.name}, entrepreneur individuel, ${owner.address}, SIRET ${owner.siret}. TVA non applicable, art. 293 B du CGI.`
     : `You accepted the terms of sale (${SITE}${legalPaths.en.cgv}), asked for immediate access to the program and acknowledged losing your right of withdrawal once the program has been sent. Seller: ${owner.name}, sole trader, ${owner.address}, SIRET ${owner.siret}. VAT not applicable, art. 293 B of the French General Tax Code.`;
   const hello = fr ? `Bonjour ${o.firstName},` : `Hi ${o.firstName},`;
   const intro = fr ? "Merci pour ta commande, elle est bien confirmée." : "Thank you for your order, it is confirmed.";
   // The animations: opened from the customer area, with the order reference and a 6-digit code.
-  const weeks = accessWeeks(offerOf({ program: o.program, pack: o.pack ? "oui" : "" }));
+  const weeks = (o.weeks ?? PROGRAM_WEEKS[o.pack ? "pack" : offerOf({ program: o.program })]) + MARGIN_WEEKS;
   const anims = fr
     ? [`Tes animations : touche l'œil à côté de chaque exercice de ton programme, ou ouvre la bibliothèque d'exercices. Connecte-toi à ton espace client avec ta référence de commande (${o.id.slice(-12)}) : tu reçois un code à 6 chiffres par email, puis tu actives ta bibliothèque.`,
       `Ton accès démarre quand tu actives ta bibliothèque (on te demandera de confirmer) et dure ${weeks} semaines (la durée de ton programme + 2 semaines). Ouvre-le le jour où tu commences, dans les 12 mois, sur ${MAX_DEVICES} appareils au plus. Ton PDF, lui, reste à toi.`]
@@ -193,11 +206,11 @@ export async function sendConfirmation(o: Order) {
 // Heads-up to 6M Lab with everything needed to prepare and send the program by hand.
 export async function notifyOwner(o: Order, delivered: boolean) {
   const lines = [
-    `Programme : ${programs.fr[o.program].name}`,
+    `Programme : ${o.pack ? `Saison complète : ${(o.parts ?? [o.program]).map((x, i) => `${programs.fr[x].name}${i && o.starts?.[i] ? ` (à envoyer avant le ${dayLabel(o.starts[i], "fr")})` : ""}`).join(", ")}` : programs.fr[o.program].name}`,
+    ...(o.debut ? [`Début : semaine ${o.debut} de la ${programs.fr[o.program].name} (prorata, ${o.weeks ?? "?"} semaines de programme au total) : PDF à préparer à partir de cette semaine`] : []),
     `Objectifs : ${goalsTitle(o.goals, "fr")}`,
     `Lieu : ${buy.fr.places[o.lieu][0]}`,
     `Langue du programme : ${o.plang === "en" ? "ANGLAIS (dossier programmes/en)" : "français"}`,
-    `Pack Saison complète (+ Maintien) : ${o.pack ? "oui" : "non"}`,
     `Option course : ${o.running ? "oui" : "non"}`,
     `Prénom : ${o.firstName}`,
     `Âge : ${o.age}`,
@@ -208,12 +221,13 @@ export async function notifyOwner(o: Order, delivered: boolean) {
     `Référence Stripe : ${o.id}`,
     "",
     delivered ? "Programme envoyé automatiquement en pièce jointe." : "À FAIRE : envoyer le programme sous 48 heures (répondre au client à cette adresse).",
+    ...(o.pack ? ["Les parties suivantes partent automatiquement par email 7 jours avant leur début quand leurs PDF existent ; sinon tu reçois un rappel pour les envoyer."] : []),
   ];
   const info = await transport().sendMail({
     from: `6M Lab <${MAIL_FROM()}>`,
     to: MAIL_FROM(),
     replyTo: o.email,
-    subject: `${delivered ? "Nouvelle commande" : "Nouvelle commande à envoyer"} : ${o.firstName}, ${programs.fr[o.program].name}`,
+    subject: `${delivered ? "Nouvelle commande" : "Nouvelle commande à envoyer"} : ${o.firstName}, ${o.pack ? "Saison complète" : programs.fr[o.program].name}${o.debut ? ` (dès la semaine ${o.debut})` : ""}`,
     text: lines.join("\n"),
   });
   if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
@@ -247,7 +261,7 @@ export async function sendFeedbackRequest(o: { email: string; lang: Lang; firstN
 }
 
 // A week before the access to the animations ends (lib/access.ts): the date, and what to do next.
-export async function sendAccessEnding(o: { email: string; lang: Lang; firstName: string; offer: "pre-saison" | "maintien-saison" | "pack"; goals: GoalId[] }, end: number) {
+export async function sendAccessEnding(o: { email: string; lang: Lang; firstName: string; offer: Offer; goals: GoalId[] }, end: number) {
   const fr = o.lang === "fr";
   const date = new Date(end).toLocaleDateString(fr ? "fr-FR" : "en-GB", { day: "numeric", month: "long", timeZone: "Europe/Paris" });
   const hello = fr ? `Bonjour ${o.firstName},` : `Hi ${o.firstName},`;
@@ -262,6 +276,29 @@ export async function sendAccessEnding(o: { email: string; lang: Lang; firstName
   if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
 }
 
+// Saison complète (app/api/cron): 7 days before a later part starts, its PDFs go out to the
+// customer. When they cannot go out automatically (not written yet), 6M Lab is asked to send them
+// by hand and the customer is told they are coming. Returns whether the PDFs were attached.
+export async function sendNextPart(o: Order, i: number) {
+  const fr = o.lang === "fr", part = o.parts?.[i] ?? o.program, p = programs[o.lang][part];
+  const date = o.starts?.[i] ? dayLabel(o.starts[i], o.lang) : "";
+  const files = await programFiles({ ...o, debut: undefined }, part);
+  const hello = fr ? `Bonjour ${o.firstName},` : `Hi ${o.firstName},`;
+  const lines = fr
+    ? [`La suite de ta Saison complète arrive : ta ${p.name} commence le ${date}.`, files ? "Ton programme est joint à cet email, avec les mêmes objectifs et le même lieu d'entraînement." : "Ton programme t'est envoyé à cette adresse sous 48 heures, avec les mêmes objectifs et le même lieu d'entraînement.", "Tes animations restent dans ton espace client, avec ta référence de commande."]
+    : [`The next part of your Full season is here: your ${p.name} starts on ${date}.`, files ? "Your program is attached to this email, with the same goals and the same training place." : "Your program will be sent to this address within 48 hours, with the same goals and the same training place.", "Your animations are still in your customer area, with your order reference."];
+  const lib = `${SITE}/${o.lang}/espace-client`;
+  const html = frame(`<p>${esc(hello)}</p>${lines.map((l) => `<p>${esc(l)}</p>`).join("")}${button(lib, fr ? "Ouvrir mon espace client" : "Open my customer area")}`);
+  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: o.email, replyTo: owner.email, subject: fr ? `Ta ${p.name} commence le ${date}` : `Your ${p.name} starts on ${date}`, html, text: [hello, "", ...lines, "", lib].join("\n"), attachments: files ?? undefined });
+  if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
+  if (!files) {
+    const todo = [`Saison complète : la ${programs.fr[part].name} commence le ${dayLabel(o.starts?.[i] ?? 0, "fr")}.`, `À FAIRE : envoyer ses PDF sous 48 heures (répondre au client à cette adresse). Le client a été prévenu.`, "", `Objectifs : ${goalsTitle(o.goals, "fr")}`, `Lieu : ${buy.fr.places[o.lieu][0]}`, `Langue du programme : ${o.plang === "en" ? "ANGLAIS" : "français"}`, `Option course : ${o.running ? "oui" : "non"}`, `Prénom : ${o.firstName}`, `Genre : ${o.gender}`, `Email : ${o.email}`, `Référence : ${o.id.slice(-12)}`];
+    const n = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: MAIL_FROM(), replyTo: o.email, subject: `Partie suivante à envoyer : ${o.firstName}, ${programs.fr[part].name}`, text: todo.join("\n") });
+    if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(n.message));
+  }
+  return !!files;
+}
+
 // Abandoned cart (app/api/cron): a single reminder, only to buyers who accepted offers by email on
 // the payment page. The link recreates the same order.
 export async function sendCartReminder(o: { email: string; lang: Lang; firstName: string; what: string; total: number }, link: string) {
@@ -273,6 +310,36 @@ export async function sendCartReminder(o: { email: string; lang: Lang; firstName
   const cta = fr ? "Reprendre ma commande" : "Resume my order";
   const html = frame(`<p>${esc(hello)}</p>${lines.map((l) => `<p>${esc(l)}</p>`).join("")}${button(link, cta)}<p style="font-size:12px;color:#5B5673">${fr ? "Tu reçois cet email parce que tu as accepté de recevoir des offres par email sur la page de paiement." : "You are receiving this email because you agreed to receive offers by email on the payment page."}</p>`);
   const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: o.email, replyTo: owner.email, subject: fr ? "Ton programme t'attend" : "Your program is waiting", html, text: [hello, "", ...lines, "", `${cta} : ${link}`].join("\n") });
+  if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
+}
+
+// Message from the Contact page form (app/api/contact), to 6M Lab; replying answers the customer.
+export type ContactMessage = { email: string; topic: string; ref: string; message: string; lang: Lang; src: string };
+export async function sendContact(m: ContactMessage) {
+  const lines = [`De : ${m.email}`, `Sujet : ${m.topic}`, `Référence de commande : ${m.ref || "non indiquée"}`, `Langue : ${m.lang}`, `Origine de la visite : ${m.src}`, "", m.message, "", `À faire : répondre sous ${REPLY_HOURS} heures (répondre à cet email écrit directement au client). Les réponses types sont dans l'admin > Réponses types. Un accusé de réception lui est déjà parti.`];
+  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to: MAIL_FROM(), replyTo: m.email, subject: `Contact : ${m.topic}${m.ref ? ` (commande ${m.ref})` : ""}`, text: lines.join("\n") });
+  if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
+}
+
+// Acknowledgement sent right away to whoever writes (Contact form or Clubs quote): the message is
+// received, the answer comes within REPLY_HOURS, and the links that often answer first. Their
+// message is copied at the bottom, so they know what was sent.
+export async function sendAck(to: string, lang: Lang, kind: "contact" | "club", message: string) {
+  const fr = lang === "fr";
+  const hello = fr ? "Bonjour," : "Hi,";
+  const l1 = kind === "club"
+    ? fr ? "Ta demande de devis pour ton équipe est bien arrivée. Je l'étudie et je te réponds avec une proposition" : "Your quote request for your team has arrived. I'm looking at it and will reply with a proposal"
+    : fr ? "Ton message est bien arrivé. Je te réponds personnellement" : "Your message has arrived. I'll reply to you personally";
+  const when = fr ? `sous ${REPLY_HOURS} heures.` : `within ${REPLY_HOURS} hours.`;
+  const l2 = fr ? "En attendant, la réponse est peut-être déjà ici :" : "In the meantime, the answer may already be here:";
+  const links: [string, string][] = kind === "club"
+    ? [[fr ? "La page Clubs : séance type, ce qu'il faut savoir" : "The Clubs page: sample session, what to know", `${SITE}/${lang}/clubs`], [fr ? "Les questions fréquentes" : "Frequent questions", `${SITE}/${lang}/faq`]]
+    : [[fr ? "Ton espace client : animations, parrainage, points" : "Your customer area: animations, referral, points", `${SITE}/${lang}/espace-client`], [fr ? "Les questions fréquentes : commande, accès, remboursement" : "Frequent questions: order, access, refund", `${SITE}/${lang}/faq`]];
+  const l3 = fr ? "Pour ajouter une précision, réponds simplement à cet email." : "To add anything, just reply to this email.";
+  const copy = fr ? "Ton message :" : "Your message:";
+  const html = frame(`<p>${hello}</p><p>${l1} <strong>${when}</strong></p><p>${l2}</p><ul>${links.map(([t, u]) => `<li style="margin:0 0 8px"><a href="${u}" style="color:#C4452A;font-weight:700">${esc(t)}</a></li>`).join("")}</ul><p>${l3}</p>${message ? `<div style="border-left:4px solid #E3E0F0;padding:2px 0 2px 14px;margin:20px 0;color:#5B5673"><p style="margin:0 0 6px;font-weight:700">${copy}</p><p style="margin:0;white-space:pre-wrap">${esc(message)}</p></div>` : ""}<p>6M Lab</p>`);
+  const text = [hello, "", `${l1} ${when}`, "", l2, ...links.map(([t, u]) => `- ${t} : ${u}`), "", l3, ...(message ? ["", copy, message] : []), "", "6M Lab"].join("\n");
+  const info = await transport().sendMail({ from: `6M Lab <${MAIL_FROM()}>`, to, replyTo: owner.email, subject: kind === "club" ? (fr ? "Ta demande de devis est bien arrivée" : "Your quote request has arrived") : fr ? "Ton message est bien arrivé" : "Your message has arrived", html, text });
   if (process.env.MAIL_DRY_RUN === "1") console.log("[mail]", String(info.message));
 }
 

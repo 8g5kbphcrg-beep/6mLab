@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { locales, SITE, type Lang } from "@/lib/dict";
 import { sessionEmail } from "@/lib/access-page";
-import { accessWeeks, endOf, MAX_DEVICES } from "@/lib/access";
+import { endOf, MARGIN_WEEKS, MAX_DEVICES, weeksOf } from "@/lib/access";
 import { ordersOf, type ClientOrder } from "@/lib/client-auth";
 import { stripe } from "@/lib/feedback";
 import { programs } from "@/lib/programs";
@@ -117,12 +117,13 @@ export default async function CustomerArea({ params, searchParams }: P) {
 function AccessCard({ o, lang, confirm, next }: { o: ClientOrder; lang: Lang; confirm: boolean; next: string }) {
   const fr = lang === "fr", now = Date.now();
   const fmt = (ms: number) => new Date(ms).toLocaleDateString(fr ? "fr-FR" : "en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" });
-  const end = o.start ? endOf({ offer: o.offer, start: o.start }) : null;
+  const weeksBought = weeksOf(o.meta);
+  const end = o.start ? endOf({ offer: o.offer, weeks: weeksBought, start: o.start }) : null;
   const state = !end ? "todo" : end > now ? "open" : "over";
-  const days = end ? Math.max(0, Math.ceil((end - now) / DAY_MS)) : 0, weeks = accessWeeks(o.offer);
-  const name = o.offer === "pack" ? (fr ? "Pack Saison complète" : "Full season pack") : programs[lang][o.program as keyof (typeof programs)["fr"]]?.name;
+  const days = end ? Math.max(0, Math.ceil((end - now) / DAY_MS)) : 0, weeks = weeksBought + MARGIN_WEEKS;
+  const name = o.offer === "pack" ? (fr ? "Saison complète" : "Full season") : programs[lang][o.offer].name;
   // What comes next, from 2 weeks before the end of the program (lib/next-step.ts).
-  const pEnd = o.start ? programEnd(o.offer, o.start) : null;
+  const pEnd = o.start ? programEnd(weeksBought, o.start) : null;
   const suite = pEnd && pEnd - now < 14 * DAY_MS ? nextStep(o.offer, pEnd, (o.meta.goals ?? "").split("+").filter(Boolean) as GoalId[], lang) : null;
   const go = (label: string, extra?: React.ReactNode) => (
     <form method="post" action="/api/acces" className="cs-go-f">

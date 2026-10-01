@@ -2,7 +2,8 @@
 import { useRef, useState } from "react";
 import type { Lang } from "@/lib/dict";
 import { programs, type ProgramSlug } from "@/lib/programs";
-import { buy, fmtPrice, genders, orderTotal, PACK_PRICE, PACK_WEEKS, perWeek, places, prices, RUNNING_PRICE, SECOND_GOAL_PRICE, type Place } from "@/lib/checkout";
+import { buy, fmtPrice, genders, orderTotal, PACK_WEEKS, perWeek, places, RUNNING_PRICE, SECOND_GOAL_PRICE, type Place } from "@/lib/checkout";
+import { dayLabel, PACK_FULL, PACK_PRICE, WEEKS, type Quote } from "@/lib/season-parts";
 import { Dumbbell, House } from "@/components/PlaceIcons";
 import { goalIds, goals as goalInfo, goalName, goalsTitle, REATH, REATH_READY, type GoalId } from "@/lib/goals";
 import { legalPaths } from "@/lib/legal";
@@ -10,10 +11,12 @@ import Suggestions from "@/components/Suggestions";
 import "@/app/buy.css";
 
 // Posts to /api/checkout. The goal checkboxes are real form fields, so the form still submits
-// without JavaScript; the server checks the count. pack: the "Saison complète" page (Pré-saison
-// then Maintien, same goals, one price).
+// without JavaScript; the server checks the count. pack: the "Saison complète" page (the next 3
+// parts of the season, same goals, one price). q: today's offer (lib/season-parts.ts quote), with
+// the choice between the whole program and the pro-rata one when the part is under way; the
+// checkout recomputes it.
 // place: already chosen in the questionnaire (home or gym), then pre-selected.
-export default function BuyForm({ lang, slug, goals = [], pack = false, place: chosen, test, error }: { lang: Lang; slug: ProgramSlug; goals?: GoalId[]; pack?: boolean; place?: Place; test: boolean; error?: string }) {
+export default function BuyForm({ lang, slug, q, goals = [], pack = false, place: chosen, test, error }: { lang: Lang; slug: ProgramSlug; q: Quote; goals?: GoalId[]; pack?: boolean; place?: Place; test: boolean; error?: string }) {
   const t = buy[lang];
   const p = programs[lang][slug];
   const [sel, setSel] = useState<GoalId[]>(goals.filter((g) => REATH_READY || g !== REATH));
@@ -28,23 +31,55 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, place: c
   const reath = sel.includes(REATH);
   const toggle = (g: GoalId) => setSel(sel.includes(g) ? sel.filter((x) => x !== g) : [...sel.filter((x) => x !== REATH), g]);
   const done = sel.length > 0;
-  const total = orderTotal(slug, sel, running, pack);
+  // Whole program, or from the current week (pro rata), when the part is under way.
+  const [from, setFrom] = useState<"entier" | "semaine">("entier");
+  const pr = from === "semaine" && q.pr ? q.pr : null;
+  const base = pr ? pr.price : q.price, before = pr ? pr.before : q.before;
+  const total = orderTotal(base, sel, running);
+  const first = programs[lang][q.slots[0].part];
+  const n = q.pr ? 1 : 0;
 
   return (
-    <form className={`buy ${pack ? "p" : slug === "maintien-saison" ? "b" : "a"}`} id="acheter" method="post" action="/api/checkout" data-go
+    <form className={`buy ${pack ? "p" : p.color}`} id="acheter" method="post" action="/api/checkout" data-go
       onSubmit={(e) => { if (!done) { e.preventDefault(); setNoGoal(true); goalsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }); } }}>
       <input type="hidden" name="lang" value={lang} />
       <input type="hidden" name="program" value={slug} />
       {pack && <input type="hidden" name="pack" value="on" />}
 
       <div className="bprice">
-        <strong>{fmtPrice(pack ? PACK_PRICE : prices[slug], lang)}</strong>
-        {pack && <s>{fmtPrice(prices["pre-saison"] + prices["maintien-saison"], lang)}</s>}
-        <span>{pack ? `${t.packT} · ${t.packWeeks} · ${t.perWeek(perWeek(PACK_PRICE, PACK_WEEKS, lang))}` : `${p.name} · ${p.duration}`}</span>
+        <strong>{fmtPrice(base, lang)}</strong>
+        {before && <s>{fmtPrice(before, lang)}</s>}
+        <span>{pack ? `${t.packT} · ${t.packWeeks} · ${t.perWeek(perWeek(PACK_PRICE, PACK_WEEKS, lang))}` : `${p.name} · ${pr ? t.weeksLeft(pr.weeks) : p.duration}`}</span>
       </div>
+      {pack && (
+        <ol className="bparts">
+          {q.slots.map((sl, i) => (
+            <li key={sl.part}><strong>{programs[lang][sl.part].name}</strong> {sl.current ? t.now : t.from(dayLabel(sl.start, lang) + (i && sl.start > q.slots[0].start + 200 * 86400000 ? ` ${new Date(sl.start).getUTCFullYear()}` : ""))}</li>
+          ))}
+        </ol>
+      )}
+
+      {q.pr && (
+        <fieldset className="bstep">
+          <legend><span className="bnum">1</span>{t.startT}</legend>
+          <p className="bhint">{t.startHint(first.name, q.pr.week)}</p>
+          <div className="bplaces">
+            <label className="bcard bplace">
+              <input type="radio" name="debut" value="semaine" checked={from === "semaine"} onChange={() => setFrom("semaine")} />
+              <span><strong>{t.fromWeek(q.pr.week)}</strong> {t.fromWeekD(q.pr.weeks)}</span>
+              <b>{fmtPrice(q.pr.price, lang)}</b>
+            </label>
+            <label className="bcard bplace">
+              <input type="radio" name="debut" value="entier" checked={from === "entier"} onChange={() => setFrom("entier")} />
+              <span><strong>{t.whole}</strong> {t.wholeD(pack ? WEEKS[q.slots[0].part] : WEEKS[slug as keyof typeof WEEKS])}</span>
+              <b>{fmtPrice(q.price, lang)}</b>
+            </label>
+          </div>
+        </fieldset>
+      )}
 
       <fieldset className={noGoal && !done ? "bstep bgoals bmiss" : "bstep bgoals"} ref={goalsRef}>
-        <legend><span className="bnum">1</span>{t.step1}{!reath && <span className={done ? "bbadge ok" : "bbadge"}>{t.count(sel.length)}</span>}</legend>
+        <legend><span className="bnum">{1 + n}</span>{t.step1}{!reath && <span className={done ? "bbadge ok" : "bbadge"}>{t.count(sel.length)}</span>}</legend>
         {noGoal && !done && <p className="bmissmsg" role="alert">{t.noGoal}</p>}
         <p className="bhint">{t.hint}</p>
         <Suggestions lang={lang} sel={sel} onPick={setSel} extra={`${lang === "fr" ? "2 objectifs" : "2 goals"} +${fmtPrice(SECOND_GOAL_PRICE, lang)}`} />
@@ -74,7 +109,7 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, place: c
       </fieldset>
 
       <fieldset className="bstep">
-        <legend><span className="bnum">2</span>{t.stepPlace}</legend>
+        <legend><span className="bnum">{2 + n}</span>{t.stepPlace}</legend>
         <p className="bhint">{t.placeHint}</p>
         <div className="bplaces">
           {places.map((pl) => (
@@ -94,7 +129,7 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, place: c
       </fieldset>
 
       <fieldset className="bstep">
-        <legend><span className="bnum">3</span>{t.step2}</legend>
+        <legend><span className="bnum">{3 + n}</span>{t.step2}</legend>
         <label className="bcard brun">
           <input type="checkbox" name="running" checked={running} onChange={() => setRunning(!running)} />
           <span><strong>{t.runT}</strong> {t.runD}</span>
@@ -103,7 +138,7 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, place: c
       </fieldset>
 
       <fieldset className="bstep">
-        <legend><span className="bnum">4</span>{t.step3}</legend>
+        <legend><span className="bnum">{4 + n}</span>{t.step3}</legend>
         <p className="bhint">{t.profileHint}</p>
         <div className="bfields">
           <label className="bfield">{t.firstName}<input name="firstName" required maxLength={50} autoComplete="given-name" /></label>
@@ -119,9 +154,9 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, place: c
       </fieldset>
 
       <div className="bstep">
-        <p className="blegend"><span className="bnum">5</span>{t.step4}</p>
+        <p className="blegend"><span className="bnum">{5 + n}</span>{t.step4}</p>
         <dl className="bsum">
-          <div><dt>{pack ? t.packT : p.name}</dt><dd>{fmtPrice(pack ? PACK_PRICE : prices[slug], lang)}</dd></div>
+          <div><dt>{pack ? t.packT : p.name}{pr ? ` · ${t.fromWeek(pr.week)}` : ""}</dt><dd>{fmtPrice(base, lang)}</dd></div>
           <div><dt>{t.goalsLb}</dt><dd>{sel.length ? goalsTitle(sel, lang) : t.none}</dd></div>
           <div><dt>{t.placeLb}</dt><dd>{place ? t.places[place][0] : t.none}</dd></div>
           <div><dt>{t.plangT}</dt><dd>{t.plangs[plang]}</dd></div>
@@ -133,7 +168,7 @@ export default function BuyForm({ lang, slug, goals = [], pack = false, place: c
         {!pack && (
           <a className="bupsell" href={`/${lang}/programmes/saison-complete${sel.length ? `?objectifs=${sel.join(",")}` : ""}#acheter`}>
             <strong>{t.upsellT}</strong>
-            <span>{t.upsellD(fmtPrice(PACK_PRICE, lang), fmtPrice(prices["pre-saison"] + prices["maintien-saison"], lang), fmtPrice(prices["pre-saison"] + prices["maintien-saison"] - PACK_PRICE, lang), perWeek(PACK_PRICE, PACK_WEEKS, lang))}</span>
+            <span>{t.upsellD(fmtPrice(PACK_PRICE, lang), fmtPrice(PACK_FULL, lang), fmtPrice(PACK_FULL - PACK_PRICE, lang), perWeek(PACK_PRICE, PACK_WEEKS, lang))}</span>
           </a>
         )}
         <label className="bconsent">

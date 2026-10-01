@@ -10,7 +10,7 @@ import type { Lang } from "@/lib/dict";
 export const dynamic = "force-dynamic";
 
 type Q = Record<string, string | undefined>;
-const PROGS = [["pre-saison", "Pré-saison"], ["maintien-saison", "Maintien en saison"], ["pack", "Pack Saison complète"]] as const;
+const PROGS = [["pre-saison", "Pré-saison"], ["premiere-partie", "1re partie de saison"], ["deuxieme-partie", "2e partie de saison"]] as const;
 
 export default async function Programmes({ searchParams }: { searchParams: Promise<Q> }) {
   const q = await searchParams;
@@ -18,7 +18,7 @@ export default async function Programmes({ searchParams }: { searchParams: Promi
   const prog = PROGS.some(([v]) => v === q.prog) ? q.prog! : "";
   const ok = !!prog && validGoals(goals);
   const plang: Lang = q.plang === "en" ? "en" : "fr";
-  const files = ok ? orderFiles({ program: (prog === "pack" ? "pre-saison" : prog) as ProgramSlug, pack: prog === "pack", goals: goals as GoalId[], running: q.course === "oui", gender: q.genre ?? "", lieu: q.lieu === "salle" ? "salle" : "maison", plang }) : [];
+  const files = ok ? orderFiles({ program: prog as ProgramSlug, goals: goals as GoalId[], running: q.course === "oui", gender: q.genre ?? "", lieu: q.lieu === "salle" ? "salle" : "maison", plang }) : [];
   const exists = await Promise.all(files.map((f) => access(f.path).then(() => true, () => false)));
   const link = (path: string, name: string) => `/admin/programmes/fichier?${new URLSearchParams({ f: path.split("/programmes/")[1] ?? "", n: name, prenom: q.prenom ?? "", ref: q.ref ?? "", lang: plang })}`;
   const sel = (name: string, label: string, opts: readonly (readonly [string, string])[], value = "") => (
@@ -46,7 +46,7 @@ export default async function Programmes({ searchParams }: { searchParams: Promi
       </form>
       {ok ? (
         <div className="card" style={{ marginTop: 10 }}>
-          <b>{prog === "pack" ? "Pack Saison complète" : programs.fr[prog as ProgramSlug].name} · {goals.map((g) => goalName(g as GoalId, "fr")).join(" + ")}</b>
+          <b>{programs.fr[prog as ProgramSlug].name} · {goals.map((g) => goalName(g as GoalId, "fr")).join(" + ")}</b>
           <ul>{files.map((f, i) => <li key={f.path}>{exists[i] ? <a href={link(f.path, f.filename)} target="_blank">{f.filename}</a> : <span className="muted">{f.filename} (pas encore disponible)</span>}</li>)}</ul>
           <p className="muted">Ouvre chaque fichier, puis enregistre-le et joins-le à ta réponse au client.</p>
         </div>

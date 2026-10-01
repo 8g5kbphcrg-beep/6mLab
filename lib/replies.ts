@@ -1,4 +1,4 @@
-import { accessWeeks, MAX_DEVICES } from "@/lib/access";
+import { accessWeeks, MAX_DEVICES, type Offer } from "@/lib/access";
 import { SITE } from "@/lib/dict";
 import { CODE_MINUTES } from "@/lib/client-auth";
 import { FRIEND_PERCENT, POINTS_FOR_REWARD, POINTS_PER_FRIEND, SPONSOR_PERCENT, VALIDATION_DAYS } from "@/lib/referral";
@@ -8,11 +8,16 @@ import { PROMO_PERCENT } from "@/lib/feedback";
 // adapted in the reply. Figures come from the code, so they stay true when a rule changes.
 // [crochets] = to replace before sending.
 export const REPLY_HOURS = 48;
+// The topics of the Contact page form (app/api/contact): they head the email 6M Lab receives.
+export const TOPICS = {
+  fr: ["Ma commande ou mon accès", "Choisir un programme", "Un programme pour mon équipe", "Autre question"],
+  en: ["My order or my access", "Choosing a program", "A program for my team", "Other question"],
+} as const;
 
 export type Reply = { id: string; t: string; when: string; fr: string; en: string };
 
 const sign = { fr: "Bonne séance,\nRaphaël, 6M Lab", en: "Enjoy your training,\nRaphaël, 6M Lab" };
-const w = (o: "pre-saison" | "maintien-saison" | "pack") => accessWeeks(o);
+const w = (o: Offer) => accessWeeks(o);
 
 export const REPLIES: Reply[] = [
   {
@@ -32,8 +37,8 @@ export const REPLIES: Reply[] = [
   },
   {
     id: "fin-acces", t: "Mon accès aux animations est terminé", when: "Accès expiré. Le PDF reste au client ; tu peux proposer la suite.",
-    fr: `Bonjour [Prénom],\n\nTon accès aux animations couvrait la durée de ton programme plus 2 semaines (${w("pre-saison")} semaines pour la Pré-saison, ${w("maintien-saison")} pour le Maintien, ${w("pack")} pour le Pack) : il s'est terminé le [date]. Ton PDF, lui, reste à toi et tu peux continuer à t'en servir.\n\nPour la suite de ta saison, [le Maintien en saison / un nouveau cycle / la Pré-saison] te redonne l'accès aux animations pendant tout le programme : ${SITE}/fr/programmes\n\n${sign.fr}`,
-    en: `Hi [Name],\n\nYour access to the animations covered your program plus 2 weeks (${w("pre-saison")} weeks for the Pre-season, ${w("maintien-saison")} for the Maintenance, ${w("pack")} for the Pack): it ended on [date]. Your PDF is yours to keep and you can go on using it.\n\nFor the rest of your season, [the In-season maintenance / a new cycle / the Pre-season] gives you the animations again for the whole program: ${SITE}/en/programmes\n\n${sign.en}`,
+    fr: `Bonjour [Prénom],\n\nTon accès aux animations couvrait la durée de ton programme plus 2 semaines (${w("pre-saison")} semaines pour la Pré-saison, ${w("premiere-partie")} pour la 1re partie, ${w("deuxieme-partie")} pour la 2e partie, ${w("pack")} pour la Saison complète) : il s'est terminé le [date]. Ton PDF, lui, reste à toi et tu peux continuer à t'en servir.\n\nPour la suite de ta saison, [la partie suivante de la saison / la Saison complète] te redonne l'accès aux animations pendant tout le programme : ${SITE}/fr/programmes\n\n${sign.fr}`,
+    en: `Hi [Name],\n\nYour access to the animations covered your program plus 2 weeks (${w("pre-saison")} weeks for the Pre-season, ${w("premiere-partie")} for the first half, ${w("deuxieme-partie")} for the second half, ${w("pack")} for the Full season): it ended on [date]. Your PDF is yours to keep and you can go on using it.\n\nFor the rest of your season, [the next part of the season / the Full season] gives you the animations again for the whole program: ${SITE}/en/programmes\n\n${sign.en}`,
   },
   {
     id: "rembourser", t: "Je veux être remboursé", when: "Avant l'envoi du programme : rembourser dans Stripe. Après : seulement si le contenu pose problème (CGV).",
@@ -42,8 +47,8 @@ export const REPLIES: Reply[] = [
   },
   {
     id: "choisir", t: "Quel programme choisir ?", when: "Avant l'achat.",
-    fr: `Bonjour [Prénom],\n\nMerci pour ton message. Pour choisir :\n- avant la reprise (été), la Pré-saison : 8 semaines, 3 à 4 séances par semaine ;\n- pendant la saison, le Maintien : 12 semaines, 2 séances courtes par semaine, placées loin des matchs ;\n- pour toute l'année, le Pack Saison complète.\n\nLe questionnaire (1 minute) te recommande le bon programme et les bons objectifs : ${SITE}/fr/questionnaire\n\nDis-moi ton âge, ton poste et ce que tu veux améliorer si tu veux un avis plus précis.\n\n${sign.fr}`,
-    en: `Hi [Name],\n\nThanks for your message. To choose:\n- before the restart (summer), the Pre-season: 8 weeks, 3 to 4 sessions a week;\n- during the season, the Maintenance: 12 weeks, 2 short sessions a week, placed away from games;\n- for the whole year, the Full season pack.\n\nThe questionnaire (1 minute) recommends the right program and goals: ${SITE}/en/questionnaire\n\nTell me your age, position and what you want to improve if you'd like more precise advice.\n\n${sign.en}`,
+    fr: `Bonjour [Prénom],\n\nMerci pour ton message. Pour choisir :\n- en juillet et août, la Pré-saison : 8 semaines, 3 à 4 séances par semaine ;\n- de septembre à Noël, la 1re partie de saison : 18 semaines, 2 séances courtes par semaine, placées loin des matchs ;\n- de janvier à mi-juin, la 2e partie de saison : 23 semaines, jusqu'aux phases finales ;\n- pour toute l'année, la Saison complète : les 3 parties à la suite, 20 % moins cher.\n\nSi la partie a déjà commencé, tu peux prendre le programme entier, ou un programme qui démarre à la semaine en cours, au prix des semaines restantes.\n\nLe questionnaire (1 minute) te recommande le bon programme et les bons objectifs : ${SITE}/fr/questionnaire\n\nDis-moi ton âge, ton poste et ce que tu veux améliorer si tu veux un avis plus précis.\n\n${sign.fr}`,
+    en: `Hi [Name],\n\nThanks for your message. To choose:\n- in July and August, the Pre-season: 8 weeks, 3 to 4 sessions a week;\n- from September to Christmas, the first half of the season: 18 weeks, 2 short sessions a week, placed away from games;\n- from January to mid-June, the second half of the season: 23 weeks, up to the finals;\n- for the whole year, the Full season: the 3 parts in a row, 20% cheaper.\n\nIf the part has already started, you can take the whole program, or one that starts at the current week, at the price of the weeks left.\n\nThe questionnaire (1 minute) recommends the right program and goals: ${SITE}/en/questionnaire\n\nTell me your age, position and what you want to improve if you'd like more precise advice.\n\n${sign.en}`,
   },
   {
     id: "blessure", t: "J'ai une douleur ou une blessure", when: "Ne jamais donner d'avis médical.",

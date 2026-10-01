@@ -5,64 +5,63 @@ import ProductVideo from "@/components/ProductVideo";
 import { notFound } from "next/navigation";
 import Reviews from "@/components/Reviews";
 import BuyForm from "@/components/BuyForm";
-import WhenToStart from "@/components/WhenToStart";
 import { dict, type Lang } from "@/lib/dict";
 import { programs } from "@/lib/programs";
-import { fmtPrice, PACK_PRICE, prices, testMode } from "@/lib/checkout";
+import { fmtPrice, testMode } from "@/lib/checkout";
+import { dayLabel, PACK_FULL, PACK_PRICE, quote } from "@/lib/season-parts";
 import { validGoals } from "@/lib/goals";
 import { Ld, offerLd } from "@/lib/seo";
 import "@/app/programme.css";
 
-// The "Saison complète" pack: the Pré-saison, then the Maintien en saison, same goals, one price.
+// The "Saison complète": the next 3 parts of the season in a row (lib/season-parts.ts), same
+// goals, 20 % off. It starts with the part under way (or the next one during the June break).
 type P = { params: Promise<{ lang: string }>; searchParams?: Promise<{ paiement?: string; objectifs?: string }> };
 
-// Rebuilt every hour at most, to show newly published reviews.
+// Rebuilt every hour at most, to show newly published reviews and today's offer.
 export const revalidate = 3600;
 
 const text = {
   fr: {
-    tag: "Toute la saison", name: "Pack Saison complète", meta: "20 semaines · Pré-saison puis Maintien en saison",
-    pitch: "Prépare ta reprise, puis garde ton niveau jusqu'à la fin de la saison : les deux programmes, avec les mêmes objectifs, pour un seul prix.",
+    tag: "Toute la saison", name: "Saison complète", meta: "3 parties à la suite · 49 semaines · juillet à mi-juin",
+    pitch: "Une saison ne se gagne pas en 2 mois : les progrès de l'été se gardent si on les entretient, et chaque partie prépare la suivante. Les 3 parties à la suite, avec les mêmes objectifs, 20 % moins cher.",
     save: (s: string) => `${s} d'économie`,
-    includes: (pre: string, main: string) => [
-      `La Pré-saison : ${pre}`,
-      `Le Maintien en saison : ${main}`,
-      "Les mêmes objectifs sur les deux programmes : 1 au choix, +5 € pour un 2e",
-      "Une animation pour chaque exercice, en ligne pendant 22 semaines (à lancer quand tu commences)",
+    includes: [
+      "Les 3 parties de la saison, dans l'ordre : celle qui est en cours (ou la prochaine) et les deux suivantes",
+      "Les mêmes objectifs du début à la fin : 1 au choix, +5 € pour un 2e",
+      "Une animation pour chaque exercice, en ligne pendant toute ta saison + 2 semaines",
       "En option : un programme de course à pied (+9 €)",
     ],
-    phases: [
-      { t: "Semaines 1 à 8 : Pré-saison", d: "Mise en route, montée en charge, intensité, puis une semaine d'affûtage : tu arrives prêt au premier entraînement collectif." },
-      { t: "Semaines 9 à 20 : Maintien en saison", d: "Deux séances courtes par semaine, placées loin des matchs, pour entretenir le travail sur tes objectifs sans te fatiguer." },
-    ],
+    why: "Pourquoi les 3 parties ?",
+    whyD: "La pré-saison construit, la 1re partie entretient avec les matchs en plus, la 2e partie te garde frais jusqu'aux matchs décisifs. S'arrêter après 2 ou 4 mois, c'est perdre en quelques semaines une bonne partie de ce que tu as construit.",
     faq: [
-      { q: "Je reçois les deux programmes en même temps ?", a: "Oui, les deux arrivent ensemble par email. Tu commences par la Pré-saison et tu enchaînes avec le Maintien quand les matchs reprennent." },
-      { q: "Quand faut-il commencer ?", a: "Idéalement 8 semaines avant la reprise avec ton club. Si la saison a déjà commencé, choisis plutôt le Maintien en saison seul." },
-      { q: "Combien j'économise ?", a: (s: string, full: string, pack: string) => `${pack} au lieu de ${full} en achetant les deux séparément, soit ${s} d'économie.` },
+      { q: "La saison a déjà commencé, ça marche quand même ?", a: "Oui : la Saison complète commence par la partie en cours. Au paiement, tu choisis de la prendre en entier ou à partir de la semaine où on en est, au prix des semaines qui restent. Les deux parties suivantes s'enchaînent ensuite." },
+      { q: "Je reçois tout d'un coup ?", a: "Tu reçois la partie en cours tout de suite. Les parties suivantes arrivent par email avant leur début, pour que tu gardes le bon document au bon moment." },
+      { q: "Combien j'économise ?", a: (s: string, full: string, pack: string) => `${pack} au lieu de ${full} en achetant les 3 parties séparément, soit ${s} d'économie.` },
+      { q: "Je peux être remboursé ?", a: "Non, une fois un programme envoyé : tu gardes les PDF. Le détail est dans les CGV." },
     ],
-    breakdown: "Le déroulé", back: "Comparer les formules", quiz: ["Tu hésites sur tes objectifs ?", "Fais le questionnaire"],
+    breakdown: "Tes 3 parties", back: "Comparer les formules", quiz: ["Tu hésites sur tes objectifs ?", "Fais le questionnaire"],
+    now: "En cours", from: (d: string) => `À partir du ${d}`,
   },
   en: {
-    tag: "The whole season", name: "Full season pack", meta: "20 weeks · Pre-season then In-season maintenance",
-    pitch: "Get ready for the restart, then keep your level until the end of the season: both programs, with the same goals, for one price.",
+    tag: "The whole season", name: "Full season", meta: "3 parts in a row · 49 weeks · July to mid-June",
+    pitch: "A season isn't won in 2 months: the progress of the summer only lasts if you maintain it, and each part prepares the next. The 3 parts in a row, same goals, 20% cheaper.",
     save: (s: string) => `save ${s}`,
-    includes: (pre: string, main: string) => [
-      `Pre-season: ${pre}`,
-      `In-season maintenance: ${main}`,
-      "The same goals in both programs: pick 1, +€5 for a 2nd",
-      "An animation for every exercise, online for 22 weeks (start it when you begin)",
+    includes: [
+      "The 3 parts of the season, in order: the one under way (or the next one) and the two after it",
+      "The same goals from start to finish: pick 1, +€5 for a 2nd",
+      "An animation for every exercise, online for your whole season + 2 weeks",
       "Optional: a running program (+€9)",
     ],
-    phases: [
-      { t: "Weeks 1 to 8: Pre-season", d: "Getting started, building up, intensity, then a taper week: you arrive ready for the first team training." },
-      { t: "Weeks 9 to 20: In-season maintenance", d: "Two short sessions a week, placed away from games, to maintain the work on your goals without getting tired." },
-    ],
+    why: "Why the 3 parts?",
+    whyD: "The pre-season builds, the first half maintains with games on top, the second half keeps you fresh until the decisive games. Stopping after 2 or 4 months means losing much of what you built within a few weeks.",
     faq: [
-      { q: "Do I get both programs at once?", a: "Yes, both arrive together by email. Start with the Pre-season and move on to the maintenance program when games start." },
-      { q: "When should I start?", a: "Ideally 8 weeks before your club's restart. If the season has already started, pick the In-season maintenance program alone." },
-      { q: "How much do I save?", a: (s: string, full: string, pack: string) => `${pack} instead of ${full} when buying both separately: you save ${s}.` },
+      { q: "The season has already started, does it still work?", a: "Yes: the Full season starts with the part under way. At checkout you choose to take it whole or from the current week, at the price of the weeks left. The next two parts then follow." },
+      { q: "Do I get everything at once?", a: "You get the current part straight away. The next parts arrive by email before they start, so you have the right document at the right time." },
+      { q: "How much do I save?", a: (s: string, full: string, pack: string) => `${pack} instead of ${full} when buying the 3 parts separately: you save ${s}.` },
+      { q: "Can I get a refund?", a: "No, once a program has been sent: you keep the PDFs. The details are in the terms of sale." },
     ],
-    breakdown: "The breakdown", back: "Compare the programs", quiz: ["Not sure about your goals?", "Take the questionnaire"],
+    breakdown: "Your 3 parts", back: "Compare the programs", quiz: ["Not sure about your goals?", "Take the questionnaire"],
+    now: "Under way", from: (d: string) => `From ${d}`,
   },
 };
 
@@ -70,7 +69,7 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
   const { lang } = await params;
   if (!(lang in dict)) return {};
   const t = text[lang as Lang];
-  const title = lang === "fr" ? `${t.name} handball : pré-saison + maintien, 20 semaines | 6M Lab` : `Handball ${t.name.toLowerCase()}: pre-season + in-season, 20 weeks | 6M Lab`;
+  const title = lang === "fr" ? `${t.name} handball : les 3 parties de la saison | 6M Lab` : `Handball ${t.name.toLowerCase()}: the 3 parts of the season | 6M Lab`;
   return { title, description: t.pitch, alternates: { canonical: `/${lang}/programmes/saison-complete`, languages: { fr: "/fr/programmes/saison-complete", en: "/en/programmes/saison-complete" } } };
 }
 
@@ -79,9 +78,8 @@ export default async function SaisonComplete({ params, searchParams }: P) {
   if (!(lang in dict)) notFound();
   const l = lang as Lang;
   const t = text[l];
-  const pre = programs[l]["pre-saison"], main = programs[l]["maintien-saison"];
-  const full = prices["pre-saison"] + prices["maintien-saison"];
-  const [full$, pack$, save$] = [fmtPrice(full, l), fmtPrice(PACK_PRICE, l), fmtPrice(full - PACK_PRICE, l)];
+  const q = quote("pack");
+  const [full$, pack$, save$] = [fmtPrice(PACK_FULL, l), fmtPrice(PACK_PRICE, l), fmtPrice(PACK_FULL - PACK_PRICE, l)];
   const sp = await searchParams;
   const goals = sp?.objectifs?.split(",") ?? [];
   return (
@@ -95,10 +93,10 @@ export default async function SaisonComplete({ params, searchParams }: P) {
           <p className="pmeta2">{t.meta}</p>
           <p className="pprice2"><strong>{pack$}</strong><s>{full$}</s><span>{t.save(save$)}</span></p>
           <p className="plead">{t.pitch}</p>
-          <ul className="pinc p">{t.includes(`${pre.duration}, ${pre.freq}`, `${main.duration}, ${main.freq}`).map((i) => <li key={i}>{i}</li>)}</ul>
+          <ul className="pinc p">{t.includes.map((i) => <li key={i}>{i}</li>)}</ul>
         </header>
         <aside className="pside">
-          <BuyForm lang={l} slug="pre-saison" pack goals={validGoals(goals) ? goals : []} test={testMode} error={sp?.paiement} />
+          <BuyForm lang={l} slug={q.slots[0].part} q={q} pack goals={validGoals(goals) ? goals : []} test={testMode} error={sp?.paiement} />
           <p className="pquiz">{t.quiz[0]} <Link href={`/${l}/questionnaire`}>{t.quiz[1]}</Link></p>
         </aside>
         <div className="pmain">
@@ -109,14 +107,20 @@ export default async function SaisonComplete({ params, searchParams }: P) {
           </section>}
           <section>
             <h2>{t.breakdown}</h2>
-            {t.phases.map((ph, i) => (
-              <div key={ph.t} className={i ? "phase b" : "phase"}>
-                <h3>{ph.t}</h3>
-                <p>{ph.d}</p>
-              </div>
-            ))}
+            {q.slots.map((sl) => {
+              const p = programs[l][sl.part];
+              return (
+                <div key={sl.part} className={p.color === "a" ? "phase" : `phase ${p.color}`}>
+                  <h3>{p.name} · {sl.current ? t.now : t.from(`${dayLabel(sl.start, l)} ${new Date(sl.start).getUTCFullYear()}`)}</h3>
+                  <p>{p.duration} · {p.freq}. {p.pitch}</p>
+                </div>
+              );
+            })}
           </section>
-          <WhenToStart lang={l} />
+          <section>
+            <h2>{t.why}</h2>
+            <p>{t.whyD}</p>
+          </section>
           <section>
             <h2>FAQ</h2>
             <div className="faq">

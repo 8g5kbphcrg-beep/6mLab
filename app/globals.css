@@ -1,4 +1,4 @@
-:root{color-scheme:light dark;--night:#16123F;--bg:#FCF8F9;--ink:#100A24;--muted:#5B5673;--line:#ECDFE4;--band:#F5EDF0;--card:#fff;--cta:#FF7A59;--A:#FF7A59;--B:#2EC4B6;--At:#B23C22;--Bt:#0B7A70;--sky:linear-gradient(120deg,#16123F 0%,#3E1858 55%,#9E3456 100%);--r:16px;--shadow:0 1px 2px rgba(16,10,36,.04),0 12px 32px rgba(16,10,36,.06);
+:root{color-scheme:light dark;--night:#16123F;--bg:#FCF8F9;--ink:#100A24;--muted:#5B5673;--line:#ECDFE4;--band:#F5EDF0;--card:#fff;--cta:#FF7A59;--A:#FF7A59;--B:#2EC4B6;--C:#9D8CFF;--At:#B23C22;--Bt:#0B7A70;--sky:linear-gradient(120deg,#16123F 0%,#3E1858 55%,#9E3456 100%);--r:16px;--shadow:0 1px 2px rgba(16,10,36,.04),0 12px 32px rgba(16,10,36,.06);
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#100C26;--ink:#F3F1FB;--muted:#B3A9CC;--line:#30264F;--band:#161030;--card:#1B1438;--night:#0E0B26;--At:#FF9A7E;--Bt:#4FE0D2}}
 :root[data-theme="light"]{color-scheme:light}
@@ -50,10 +50,10 @@ p{max-width:62ch;margin:0 0 1rem}a{color:inherit}:focus-visible{outline:3px soli
 
 /* Offers */
 .ptag{display:inline-block;font-weight:600;font-size:.85rem;padding:.25rem .8rem;border-radius:999px;color:#100A24;margin-bottom:.8rem}
-.ptag.a{background:var(--A)}.ptag.b{background:var(--B)}
+.ptag.a{background:var(--A)}.ptag.b{background:var(--B)}.ptag.c{background:var(--C)}
 .offers{display:grid;gap:1.25rem}
 .offer{background:var(--card);border:1px solid var(--line);border-top:6px solid var(--A);border-radius:var(--r);padding:1.6rem;display:flex;flex-direction:column;box-shadow:var(--shadow)}
-.offer.b{border-top-color:var(--B)}.offer h3,.offer h2{font-size:2rem;margin:0 0 .3rem}
+.offer.b{border-top-color:var(--B)}.offer.c{border-top-color:var(--C)}.offer h3,.offer h2{font-size:2rem;margin:0 0 .3rem}
 .oprice{font:400 2.8rem/1 var(--font-display),sans-serif;margin:.4rem 0 1rem}
 .ofocus{color:var(--muted)}
 .ofacts{list-style:none;padding:0;margin:0 0 1.6rem;display:grid;gap:.5rem;border-top:1px solid var(--line);padding-top:1rem}
@@ -73,7 +73,7 @@ p{max-width:62ch;margin:0 0 1rem}a{color:inherit}:focus-visible{outline:3px soli
 .combo span{color:var(--muted);font-size:.9rem}
 @media(hover:hover){.combo:hover{border-color:var(--muted)}}
 .res{margin-top:1.25rem;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--A);border-radius:var(--r);padding:1.4rem;display:grid;gap:1rem;align-items:center;box-shadow:var(--shadow)}
-.res.b{border-left-color:var(--B)}.res h3{margin:0 0 .3rem}.res p{color:var(--muted);margin:0 0 .3rem}.res .btn{justify-self:start}
+.res.b{border-left-color:var(--B)}.res.c{border-left-color:var(--C)}.res h3{margin:0 0 .3rem}.res p{color:var(--muted);margin:0 0 .3rem}.res .btn{justify-self:start}
 .more{margin:1.2rem 0 0;color:var(--muted)}.more a{color:var(--ink);font-weight:600}
 
 /* How it works / why */
@@ -100,7 +100,7 @@ p{max-width:62ch;margin:0 0 1rem}a{color:inherit}:focus-visible{outline:3px soli
 
 @media(min-width:760px){
   .hero{padding-top:5rem}.hero .wrap{grid-template-columns:1.1fr .9fr;align-items:center;gap:2rem}
-  .offers{grid-template-columns:1fr 1fr}.shared ul{grid-template-columns:1fr 1fr}
+  .offers{grid-template-columns:repeat(3,1fr)}.shared ul{grid-template-columns:1fr 1fr}
   .combos{grid-template-columns:repeat(3,1fr)}.res{grid-template-columns:1fr auto}
   .steps,.why{grid-template-columns:repeat(3,1fr)}
   .fwrap{grid-template-columns:2fr 1fr 1fr}.foot{padding-bottom:3rem}
@@ -193,7 +193,7 @@ html.splash-seen .splash{display:none}html.splash-out .splash{opacity:0;pointer-
 /* Palette "Miami adouci": sunset gradient behind the header and the hero; each formula has its
    colour, down to its buy buttons (Pré-saison coral, Maintien en saison turquoise). */
 .bar,.hero{background:var(--sky)}
-.offer.b .btn,.res.b .btn,.buy.b .bpay{background:var(--B)}
+.offer.b .btn,.res.b .btn,.buy.b .bpay{background:var(--B)}.offer.c .btn,.res.c .btn,.buy.c .bpay{background:var(--C)}
 .offer.b .btn:hover,.res.b .btn:hover,.buy.b .bpay:hover{box-shadow:0 8px 24px rgba(46,196,182,.35)}
 
 /* Customer reviews */
