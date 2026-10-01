@@ -66,3 +66,4 @@
 /* Saison complète: the 3 parts and when each one starts. */
 .bparts{margin:0 0 1.2rem;padding:0 0 0 1.2rem;display:grid;gap:.25rem;color:var(--muted);font-size:.95rem}.bparts strong{color:var(--ink)}
 .bplace > b{font-size:1.1rem}
+.bparent{display:grid;gap:.8rem;margin-top:.2rem;padding:.9rem 1rem;border:1px solid var(--line);border-radius:12px;background:var(--card)}

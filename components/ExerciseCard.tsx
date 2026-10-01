@@ -51,6 +51,7 @@ export default function ExerciseCard({ lang, id, option, back }: { lang: Lang; i
         <p dangerouslySetInnerHTML={{ __html: md(tr(ex.how, lang) ?? "") }} />
         {ex.band && <p className="exo-cues"><strong>{fr ? "Avec un élastique :" : "With a band:"}</strong> {tr(ex.band, lang)}</p>}
         {ex.cues && <p className="exo-cues"><strong>{fr ? "Points clés :" : "Key points:"}</strong> {tr(ex.cues, lang)}</p>}
+        {ex.jeune && <p className="exo-cues"><strong>{fr ? "Moins de 15 ans (filles) ou de 16 ans (garçons) :" : "Under 15 (girls) or 16 (boys):"}</strong> {tr(ex.jeune, lang)}</p>}
       </div>
       <div className="exo-back-msg" role="status">
         <p className="exo-back-t">{fr ? "Pour revenir à ton programme" : "To go back to your program"}</p>

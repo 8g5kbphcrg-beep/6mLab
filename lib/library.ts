@@ -6,8 +6,8 @@ import { DR, TXT } from "@/lib/club-drills";
 // drills and tests, and only the individual exercises used in the club programs.
 export const FAMILIES: [string, string, string[]][] = [
   ["Échauffement et mobilité", "Warm-up and mobility", ["footing-dynamique", "montees-genoux", "fente-rotation", "ouverture-hanche", "hanches-9090", "cheville-mur", "rotation-thoracique"]],
-  ["Sauts et explosivité", "Jumps and power", ["saut-reception", "reception-unipodale", "snap-down", "pogos", "squat-jump", "squat-jump-leste", "skater-hop", "bonds", "box-jump", "drop-jump"]],
-  ["Vitesse et appuis", "Speed and footwork", ["accelerations", "departs-10", "departs-reactifs", "sprint-20", "freinage", "navette-5105"]],
+  ["Sauts et explosivité", "Jumps and power", ["saut-reception", "reception-unipodale", "snap-down", "pogos", "squat-jump", "saut-cmj", "squat-jump-leste", "skater-hop", "bonds", "box-jump", "drop-jump"]],
+  ["Vitesse et appuis", "Speed and footwork", ["accelerations", "departs-10", "departs-reactifs", "sprint-20", "freinage", "navette-5105", "pas-chasses-depart"]],
   ["Force", "Strength", ["squat", "squat-lourd", "fente-arriere", "squat-bulgare", "squat-une-jambe", "sdt-roumain", "hip-thrust", "hip-thrust-lourd", "pompes", "pompes-explosives", "developpe-couche", "developpe-militaire", "rowing", "tirage-lourd", "tractions", "fermier"]],
   ["Lancers", "Throws", ["lancer-poitrine", "lancer-rotation", "lancer-haut"]],
   ["Gainage", "Core", ["planche", "gainage-lateral", "dead-bug", "pallof", "copenhague"]],

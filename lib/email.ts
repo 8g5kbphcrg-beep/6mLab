@@ -1,7 +1,6 @@
 import { nextHref, nextStep, type NextStep } from "@/lib/next-step";
 import { FRIEND_PERCENT, POINTS_FOR_REWARD, POINTS_PER_FRIEND, SPONSOR_PERCENT, type PointsNews } from "@/lib/referral";
-import { access, readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { readProgram } from "@/lib/program-store";
 import nodemailer from "nodemailer";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { accessWeeks, MARGIN_WEEKS, MAX_DEVICES, offerOf, PROGRAM_WEEKS, type Offer } from "@/lib/access";
@@ -37,6 +36,8 @@ export type Order = {
   firstName: string;
   age: string;
   gender: string;
+  // Under 18: the parent or legal guardian who placed the order (terms of sale).
+  parent?: string;
   amount: number;
   // The buyer's code to share with teammates (lib/referral.ts), when it could be created.
   referral?: string;
@@ -81,8 +82,8 @@ export async function sendBackup(date: string, content: Buffer, summary: string[
 export const deliversNow = (goals: string[]) => process.env.PROGRAMMES_ENVOI_AUTO === "1" && !goals.includes("reathletisation");
 
 // The files of one part of an order: the name the customer gets, and where the PDF is on disk.
-// Also used by the admin page that finds an order's PDFs for sending by hand. The 1re and 2e
-// partie have no PDF yet (their content is being written): they are sent by hand until then.
+// Also used by the admin page that finds an order's PDFs for sending by hand. The 2e partie has
+// no PDF yet (its content is being written): it is sent by hand until then.
 export type OrderFilesInput = Pick<Order, "program" | "goals" | "running" | "gender" | "lieu" | "plang">;
 export function orderFiles(o: OrderFilesInput) {
   const goals = [...o.goals].sort((a, b) => goalOrder.indexOf(a) - goalOrder.indexOf(b));
@@ -91,8 +92,9 @@ export function orderFiles(o: OrderFilesInput) {
   // the silhouette matching the gender (femme, homme). The customer gets them under the names
   // above.
   const sil = o.gender === "femme" || o.gender === "homme" ? `-${o.gender}` : "";
-  const dir = o.plang === "en" ? join(process.cwd(), "programmes", "en") : join(process.cwd(), "programmes");
-  return names.map((filename) => ({ filename, path: join(dir, filename.replace(/\.pdf$/, `-${o.lieu}${filename.startsWith("seances-") ? sil : ""}.pdf`)) }));
+  // path: inside programmes/ (lib/program-store.ts reads it from the Blob store or the folder).
+  const dir = o.plang === "en" ? "en/" : "";
+  return names.map((filename) => ({ filename, path: dir + filename.replace(/\.pdf$/, `-${o.lieu}${filename.startsWith("seances-") ? sil : ""}.pdf`) }));
 }
 
 // The PDFs of one part of an order (the first by default), or null when they cannot go out
@@ -100,14 +102,11 @@ export function orderFiles(o: OrderFilesInput) {
 // starting at a given week, is not produced yet either).
 export async function programFiles(o: Order, part: ProgramSlug = o.program) {
   if (!deliversNow(o.goals) || (o.debut && part === o.program)) return null;
-  const files = orderFiles({ ...o, program: part }), names = files.map((f) => f.filename), paths = files.map((f) => f.path);
-  try {
-    await Promise.all(paths.map((p) => access(p)));
-  } catch {
-    return null;
-  }
+  const files = orderFiles({ ...o, program: part });
+  const pdfs = await Promise.all(files.map((f) => readProgram(f.path)));
+  if (pdfs.some((p) => !p)) return null;
   const ref = o.id.slice(-12);
-  return Promise.all(names.map(async (filename, i) => ({ filename, content: await personal(await readFile(paths[i]), o.firstName, ref, o.plang) })));
+  return Promise.all(files.map(async ({ filename }, i) => ({ filename, content: await personal(pdfs[i]!, o.firstName, ref, o.plang) })));
 }
 
 // Each PDF carries the customer's first name and order reference at the foot of every page:
@@ -140,6 +139,7 @@ export async function sendConfirmation(o: Order) {
       : `${p.name} (${o.debut ? buy[o.lang].fromWeek(o.debut).toLowerCase() : p.duration})`],
     [fr ? "Objectifs" : "Goals", goalsTitle(o.goals, o.lang)],
     [fr ? "Lieu" : "Place", buy[o.lang].places[o.lieu][0]],
+    ...(o.parent ? [[fr ? "Commandé par (parent ou représentant légal)" : "Ordered by (parent or legal guardian)", o.parent] as [string, string]] : []),
     [buy[o.lang].plangT, buy[o.lang].plangs[o.plang]],
     ...(o.running ? [[fr ? "Option" : "Option", fr ? "Programme course à pied" : "Running program"] as [string, string]] : []),
     [fr ? "Total payé" : "Total paid", fmtPrice(o.amount, o.lang)],
@@ -214,6 +214,7 @@ export async function notifyOwner(o: Order, delivered: boolean) {
     `Option course : ${o.running ? "oui" : "non"}`,
     `Prénom : ${o.firstName}`,
     `Âge : ${o.age}`,
+    ...(o.parent ? [`Mineur : commande passée par ${o.parent} (parent ou représentant légal, accord coché)`] : []),
     `Genre : ${o.gender}`,
     `Email : ${o.email}`,
     `Langue : ${o.lang}`,
@@ -427,7 +428,8 @@ const leadMail = async (to: string, lang: Lang, unsub: string, subject: string, 
 // The session PDF, right after the request.
 export async function sendFreeSession(to: string, lang: Lang, unsub: string) {
   const fr = lang === "fr";
-  const content = await readFile(join(process.cwd(), "programmes", ...(fr ? [] : ["en"]), "seance-decouverte.pdf"));
+  const content = await readProgram(fr ? "seance-decouverte.pdf" : "en/seance-decouverte.pdf");
+  if (!content) throw new Error("seance-decouverte.pdf introuvable");
   await leadMail(to, lang, unsub, fr ? "Ta séance gratuite 6M Lab" : "Your free 6M Lab session",
     fr
       ? ["Salut,", `Voici ta séance découverte en pièce jointe : 15 minutes de prévention des blessures pour le handball, sans matériel. Touche l'œil à côté de chaque exercice pour le voir en mouvement, ou retrouve les 8 animations sur <a href="${SITE}/fr/exercices/seance-gratuite">cette page</a>.`, "Fais-la 2 fois par semaine, en fin d'échauffement ou un jour sans handball. Dans les prochains jours, je t'envoie 3 conseils pour mieux te préparer.", "Raphaël, 6M Lab"]

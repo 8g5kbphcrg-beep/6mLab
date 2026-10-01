@@ -69,6 +69,7 @@ export async function POST(req: NextRequest) {
         firstName: m.firstName ?? "",
         age: m.age ?? "",
         gender: m.gender ?? "",
+        parent: m.parent || undefined,
         amount: s.amount_total ?? 0,
       };
       // The buyer's own code to share, shown in the confirmation email.

@@ -16,6 +16,7 @@ import { chromium } from "playwright";
 import { exercices } from "../programmes/source/exercices.mjs";
 import { objectifs, ordre, solos } from "../programmes/source/objectifs.mjs";
 import { formules } from "../programmes/source/communs.mjs";
+import { BLOCS, EPAULES, p1, p1Solo, TREVE } from "../programmes/source/premiere-partie.mjs";
 import optionCourse from "../programmes/source/option-course.mjs";
 import { figure, variants } from "../programmes/source/figures.mjs";
 import { LIEUX, doseFor, exoFor, precFor } from "../programmes/source/lieux.mjs";
@@ -42,13 +43,14 @@ const UI = {
     seeAnim: "Voir l'animation",
     eyeNote: "<strong>Important : regarde l'animation de chaque exercice avant de le faire.</strong> Touche l'œil à côté de son nom. L'animation montre ce que le texte ne peut pas dire : le placement exact, le sens du mouvement, le rythme et les appuis. Ne te contente pas de lire le programme, surtout pour un exercice que tu ne connais pas : c'est ce qui rend chaque séance efficace et sans risque.",
     labels: { poids: "Au poids du corps", maison: "À la maison", elastique: "Avec un élastique", materiel: "Avec matériel", salle: "En salle" },
-    band: "Avec un élastique :", cues: "Points clés :", easier: "Plus facile :",
+    band: "Avec un élastique :", cues: "Points clés :", easier: "Plus facile :", young: "Moins de 15 ans (filles) ou de 16 ans (garçons) :",
     disc: "Document réservé à un usage personnel, ne pas diffuser.",
     health: "Programme destiné aux personnes en bonne santé : en cas de douleur, de blessure ou de doute, arrête et demande l'avis d'un professionnel de santé.",
     guideTitle: (n) => `${n} : le guide`, guideSub: "Comment fonctionne ton programme : planning, déroulé des séances, progression et règles à connaître.",
     duration: "Durée", frequency: "Fréquence", session: "Séance", place: "Lieu", formula: "Formule",
     warmup: "Échauffement", core: "Gainage et prévention", cooldown: "Retour au calme", sessionK: (k) => `Séance ${k}`,
     bonusIntro: "Semaine après semaine, tu peux ajouter la séance bonus, facultative :", prevMob: "Prévention et mobilité",
+    shoulderIntro: "Toute la saison, tu peux ajouter un troisième jour la routine épaules, facultative (10 min, par exemple avant l'entraînement du club) :", treveWork: "Le travail",
     twoSessions: "Tes deux séances", placement: "<strong>Placement</strong> : la séance 1 au moins 3 jours avant le match, la séance 2 au plus tard 2 jours avant. Jamais la veille d'un match.",
     s1: "Séance 1 · la plus exigeante, loin du match", s2: "Séance 2 · plus légère",
     yourGoal: "Ton objectif", yourGoals: "Tes objectifs",
@@ -62,13 +64,14 @@ const UI = {
     seeAnim: "See the animation",
     eyeNote: "<strong>Important: watch each exercise's animation before doing it.</strong> Tap the eye next to its name. The animation shows what the text cannot: the exact position, the direction of the movement, the rhythm and the footwork. Do not just read the program, especially for an exercise you do not know: this is what makes every session effective and safe.",
     labels: { poids: "Body weight", maison: "At home", elastique: "With a band", materiel: "With equipment", salle: "At the gym" },
-    band: "With a band:", cues: "Key points:", easier: "Easier:",
+    band: "With a band:", cues: "Key points:", easier: "Easier:", young: "Under 15 (girls) or 16 (boys):",
     disc: "For personal use only, do not share.",
     health: "This program is for people in good health: if you feel pain, have an injury or are in doubt, stop and ask a health professional for advice.",
     guideTitle: (n) => `${n}: the guide`, guideSub: "How your program works: schedule, how the sessions run, progression and the rules to know.",
     duration: "Duration", frequency: "Frequency", session: "Session", place: "Place", formula: "Program",
     warmup: "Warm-up", core: "Core and prevention", cooldown: "Cool-down", sessionK: (k) => `Session ${k}`,
     bonusIntro: "Week after week, you can add the optional bonus session:", prevMob: "Prevention and mobility",
+    shoulderIntro: "All season, you can add the optional shoulder routine on a third day (10 min, for instance before club training):", treveWork: "The work",
     twoSessions: "Your two sessions", placement: "<strong>Timing</strong>: session 1 at least 3 days before the match, session 2 no later than 2 days before. Never the day before a match.",
     s1: "Session 1 · the more demanding one, far from the match", s2: "Session 2 · lighter",
     yourGoal: "Your goal", yourGoals: "Your goals",
@@ -124,7 +127,7 @@ const exerciseCard = (n, base, id, ctx = NEUTRAL) => {
   const e = id ? exoFor(base, id, ctx.lieu) : base;
   const figs = e.figs ?? (id ? variants(id).map((v) => [id, v, U().labels[v]]) : []);
   const fig = figs.length ? `<div class="figs">${figs.map(([fid, v, lab]) => `<div class="fig">${figs.length > 1 ? `<span class="flab">${esc(LANG === "fr" ? lab : ({ "À la maison": U().labels.maison, "En salle": U().labels.salle, "Avec un élastique": U().labels.elastique }[lab] ?? T(lab)))}</span>` : ""}${figure(fid, v, ctx.sex)}</div>`).join("")}</div>` : "";
-  return `<div class="ex${fig ? " hasfig" : ""}">${fig}<div class="extext"><div class="exname">${n ? `<span class="num">${n}</span>` : ""}${eye(id, ctx)}${md(e.name)}</div><p>${md(e.how)}</p>${e.band ? `<p class="lvl"><strong>${U().band}</strong> ${md(e.band)}</p>` : ""}${e.cues ? `<p class="cues"><strong>${U().cues}</strong> ${md(e.cues)}</p>` : ""}${e.easier ? `<p class="lvl"><strong>${U().easier}</strong> ${md(e.easier)}</p>` : ""}</div></div>`;
+  return `<div class="ex${fig ? " hasfig" : ""}">${fig}<div class="extext"><div class="exname">${n ? `<span class="num">${n}</span>` : ""}${eye(id, ctx)}${md(e.name)}</div><p>${md(e.how)}</p>${e.band ? `<p class="lvl"><strong>${U().band}</strong> ${md(e.band)}</p>` : ""}${e.cues ? `<p class="cues"><strong>${U().cues}</strong> ${md(e.cues)}</p>` : ""}${e.easier ? `<p class="lvl"><strong>${U().easier}</strong> ${md(e.easier)}</p>` : ""}${e.jeune ? `<p class="lvl young"><strong>${U().young}</strong> ${md(e.jeune)}</p>` : ""}</div></div>`;
 };
 
 // A session: its steps, each a small table of exercises numbered from the library.
@@ -198,12 +201,13 @@ const seancesDoc = (fid, pair, ctx) => {
   const nums = new Map();
   const num = (id) => { if (!exercices[id]) throw new Error("Exercice inconnu : " + id); if (!nums.has(id)) nums.set(id, nums.size + 1); return nums.get(id); };
   const dur = (isPre) => (isPre ? "15-20 min" : "10-12 min");
-  const goalSteps = (key, isPre) => solo
-    ? (isPre ? solo.pre[isPre][key] : solo.maintien[key]).map((rows, i) => ({ name: `${T(gs[0].name)} · ${T(solo.names[isPre || "maintien"][i])}`, duree: dur(isPre), rows }))
-    : gs.map((g) => ({ name: g.name, duree: dur(isPre), rows: isPre ? g.pre[isPre][key] : g.maintien[key] }));
-  const steps = (key, gainage, isPre) => [
+  // isPre: the Pré-saison phase; bloc: the 1re partie block (premiere-partie.mjs).
+  const goalSteps = (key, isPre, bloc) => solo
+    ? (isPre ? solo.pre[isPre][key] : p1Solo[pair[0]][bloc][key]).map((rows, i) => ({ name: `${T(gs[0].name)} · ${T(isPre ? solo.names[isPre][i] : p1Solo[pair[0]].names[i])}`, duree: dur(isPre), rows }))
+    : gs.map((g, i) => ({ name: g.name, duree: dur(isPre), rows: isPre ? g.pre[isPre][key] : p1[pair[i]][bloc][key] }));
+  const steps = (key, gainage, isPre, bloc) => [
     { name: U().warmup, duree: isPre ? "10-12 min" : "8 min", rows: f.echauffement.rows },
-    ...goalSteps(key, isPre),
+    ...goalSteps(key, isPre, bloc),
     { name: U().core, duree: "5-8 min", rows: gainage },
     { name: U().cooldown, duree: "5 min", text: f.retourAuCalme },
   ];
@@ -219,9 +223,20 @@ const seancesDoc = (fid, pair, ctx) => {
     const aff = gs.map((g) => g.affutage && `<strong>${esc(T(g.name))}</strong>${LANG === "fr" ? " :" : ":"} ${md(g.affutage)}`).filter(Boolean);
     sessions += `<h2>${esc(T(f.affutage.title))}</h2><p>${md(f.affutage.texte)}</p>${aff.length ? `<ul>${aff.map((a) => `<li>${a}</li>`).join("")}</ul>` : ""}`;
   } else {
-    sessions += `<h2>${U().twoSessions}</h2><p>${md(f.blocs)}</p><div class="note">${U().placement}</div>`;
-    sessions += session(U().s1, steps("s1", f.gainage["1"], null), num, ctx);
-    sessions += session(U().s2, steps("s2", f.gainage["2"], null), num, ctx);
+    // 1re partie: the 4 blocks, each with its two sessions; the shoulder routine after the first
+    // block; then the Christmas break (its 3 sessions without equipment, done at home).
+    sessions += `<h2>${U().twoSessions}</h2><div class="note">${U().placement}</div>`;
+    for (const b of f.blocs) {
+      sessions += `<div class="phase"><h2>${esc(T(b.title))}</h2><p>${md(b.texte)}</p>`;
+      sessions += session(U().s1, steps("s1", f.gainage["1"], null, b.id), num, ctx);
+      sessions += session(U().s2, steps("s2", f.gainage["2"], null, b.id), num, ctx);
+      if (b.id === BLOCS[0]) sessions += `<p class="stext">${U().shoulderIntro}</p>` + session(EPAULES.title, [{ name: U().prevMob, duree: "10 min", rows: EPAULES.rows }], num, ctx);
+      sessions += `</div>`;
+    }
+    const home = { ...ctx, lieu: "maison" };
+    sessions += `<div class="phase"><h2>${esc(T(f.treve.title))}</h2><p>${md(f.treve.texte)}</p>`;
+    for (const t of TREVE) sessions += session(t.title, [{ name: U().warmup, duree: "8 min", rows: f.echauffement.rows }, { name: U().treveWork, duree: "15-20 min", rows: t.rows }, { name: U().cooldown, duree: "5 min", text: f.retourAuCalme }], num, home);
+    sessions += `</div>`;
   }
   const goals = `<h2>${solo ? U().yourGoal : U().yourGoals}</h2>${solo ? `<p>${U().soloIntro}</p>` : ""}${gs.map((g) => `<div class="goal" style="--gc:${g.color}"><h3>${esc(T(g.name))}</h3><p>${md(g.intro)}</p><ul>${g.qualites.map((q) => `<li>${md(q)}</li>`).join("")}</ul><p><strong>${U().golden}</strong></p><ul>${g.regles.map((q) => `<li>${md(q)}</li>`).join("")}</ul>${(g.notes ?? []).map((b) => block(b, ctx.lieu)).join("")}</div>`).join("")}
   ${EYE_NOTE()}
@@ -247,7 +262,7 @@ const FREE = {
     after: (link) => `<h2>Et après ?</h2>
   <p>Cette séance entretient tes articulations. Pour progresser vraiment (explosivité, puissance, condition physique), il faut un programme construit semaine après semaine : c'est ce que proposent les programmes 6M Lab, avec une séance écrite en entier pour chaque jour et une animation pour chaque exercice.</p>
   <ul><li><strong>Pré-saison</strong> : 8 semaines pour reprendre fort, avant la reprise avec ton club.</li>
-  <li><strong>Maintien en saison</strong> : 2 séances de 30 à 40 min par semaine pour garder ton niveau toute la saison.</li></ul>
+  <li><strong>1re et 2e partie de saison</strong> : 2 séances de 30 à 40 min par semaine pour garder ton niveau toute la saison, jusqu'aux phases finales.</li></ul>
   <p>Découvre-les sur ${link}.</p>`,
     session: "Séance prévention · 15 min",
     d: { disc: "Séance offerte par 6M Lab : tu peux la partager avec tes coéquipiers.", title: "Séance découverte", tag: "Offerte", subtitle: "15 minutes de prévention des blessures pour le handball, sans matériel.", meta: [["Durée", "15 min"], ["Matériel", "Aucun"], ["Fréquence", "2 fois par semaine"]] },
@@ -264,7 +279,7 @@ const FREE = {
     after: (link) => `<h2>What next?</h2>
   <p>This session looks after your joints. To really progress (explosiveness, power, fitness), you need a program built week after week: that is what the 6M Lab programs offer, with every session written out in full and an animation for every exercise.</p>
   <ul><li><strong>Pre-season</strong>: 8 weeks to come back strong, before training restarts with your club.</li>
-  <li><strong>In-season maintenance</strong>: 2 sessions of 30 to 40 min per week to keep your level all season.</li></ul>
+  <li><strong>First and second half of the season</strong>: 2 sessions of 30 to 40 min per week to keep your level all season, up to the finals.</li></ul>
   <p>Find them on ${link}.</p>`,
     session: "Prevention session · 15 min",
     d: { disc: "Free session from 6M Lab: feel free to share it with your teammates.", title: "Free session", tag: "Free", subtitle: "15 minutes of injury prevention for handball, no equipment.", meta: [["Duration", "15 min"], ["Equipment", "None"], ["Frequency", "Twice a week"]] },

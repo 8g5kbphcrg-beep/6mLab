@@ -15,5 +15,5 @@ declare module "@/lib/mark.mjs" {
 }
 declare module "@/programmes/source/lieux.mjs" {
   export const LIEUX: Record<"maison" | "salle", { name: string; short: string }>;
-  export function exoFor<T extends object>(base: T, id: string, lieu: string): T & { name: string; how: string; cues?: string; easier?: string; band?: string; figs: [string, string, string][] | null };
+  export function exoFor<T extends object>(base: T, id: string, lieu: string): T & { name: string; how: string; cues?: string; easier?: string; band?: string; jeune?: string; figs: [string, string, string][] | null };
 }
